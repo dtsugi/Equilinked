@@ -1,0 +1,21 @@
+CREATE TABLE dbo.[Usuario]
+(
+	ID INT IDENTITY NOT NULL,
+	[Login] NVARCHAR(100) NOT NULL,
+	Password NVARCHAR(100) NOT NULL,
+	SignInDate DATETIME NOT NULL,
+	ExpirationDate DATETIME NULL
+)
+GO
+
+ALTER TABLE dbo.[Usuario]
+ADD CONSTRAINT PK_Usuario PRIMARY KEY (ID)
+GO
+
+ALTER TABLE dbo.Propietario
+ADD Usuario_ID INT NULL
+GO
+
+ALTER TABLE dbo.Propietario
+ADD CONSTRAINT FK_Propietario_Usuario FOREIGN KEY (Usuario_ID)
+REFERENCES dbo.[Usuario](ID)

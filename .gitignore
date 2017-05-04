@@ -1,0 +1,8 @@
+Core/*/bin/*
+Core/*/obj/*
+
+Core/Equilinked.APP/hooks/*
+Core/Equilinked.APP/node_modules/*
+Core/Equilinked.APP/platforms/*
+Core/Equilinked.APP/plugins/*
+Core/Equilinked.APP/www/*
