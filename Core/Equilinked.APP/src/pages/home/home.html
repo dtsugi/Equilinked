@@ -1,4 +1,4 @@
-<!--<ion-header>
+<ion-header>
     <menu-superior (menuChange)="menuChange($event);"></menu-superior>
 </ion-header>
 
@@ -7,7 +7,7 @@
         <caballos-ind></caballos-ind>
     </div>
     <div *ngIf="menuSelected == 'caballos_gru'">
-        <ion-label>Listado de grupos de caballos.</ion-label>
+        <grupos-caballos></grupos-caballos>
     </div>
     <div *ngIf="menuSelected == 'fotos_todas'">
         <ion-label>Listado de todas las fotos.</ion-label>
@@ -18,4 +18,4 @@
     <div *ngIf="menuSelected == 'veterinarios_ind'">
         <ion-label>Listado de veterinarios.</ion-label>
     </div>
-</ion-content>-->
+</ion-content>

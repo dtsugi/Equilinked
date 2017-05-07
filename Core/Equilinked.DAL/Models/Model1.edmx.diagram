@@ -4,34 +4,33 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6c3527f6f66649b3bc5de5da07a389d3" Name="Diagram1">
-        <EntityTypeShape EntityType="EquilinkedModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Alerta" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.AlertaCaballo" Width="1.5" PointX="8.5" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Alimentacion" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Caballo" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Criador" Width="1.5" PointX="0.75" PointY="11.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Establecimiento" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.EstadoProvincia" Width="1.5" PointX="0.75" PointY="17" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Evento" Width="1.5" PointX="7.5" PointY="2.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Genero" Width="1.5" PointX="0.75" PointY="19.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Grupo" Width="1.5" PointX="5.25" PointY="14.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Mail_Establecimiento" Width="1.5" PointX="6" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Numero_Establecimiento" Width="1.5" PointX="6" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.OtrasMarcas" Width="1.5" PointX="0.75" PointY="21.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Pais" Width="1.5" PointX="1.5" PointY="14.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Pedigree" Width="1.5" PointX="0.75" PointY="24.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Pelaje" Width="1.5" PointX="0.75" PointY="26.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.PersonaACargo" Width="1.5" PointX="0.75" PointY="28.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Propietario" Width="1.5" PointX="0.75" PointY="31.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Tipo_Mail" Width="1.5" PointX="3.75" PointY="20.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Tipo_Numero" Width="1.5" PointX="3.75" PointY="17.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="EquilinkedModel.Usuario" Width="1.5" PointX="1.5" PointY="35.875" IsExpanded="true" />
+      <Diagram DiagramId="6c3527f6f66649b3bc5de5da07a389d3" Name="Diagram1" ZoomLevel="72">
+        <EntityTypeShape EntityType="EquilinkedModel.C__MigrationHistory" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Alerta" Width="1.5" PointX="8.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.AlertaCaballo" Width="1.5" PointX="10.5" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Alimentacion" Width="1.5" PointX="8.25" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Caballo" Width="1.5" PointX="6" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Criador" Width="1.5" PointX="3.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Establecimiento" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.EstadoProvincia" Width="1.5" PointX="3.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Evento" Width="1.5" PointX="10.5" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Genero" Width="1.5" PointX="3.75" PointY="17.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Grupo" Width="1.5" PointX="8.25" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Mail_Establecimiento" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Numero_Establecimiento" Width="1.5" PointX="3" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.OtrasMarcas" Width="1.5" PointX="3.75" PointY="20.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Pais" Width="1.5" PointX="1.5" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Pedigree" Width="1.5" PointX="3.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Pelaje" Width="1.5" PointX="3.75" PointY="25.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.PersonaACargo" Width="1.5" PointX="3.75" PointY="27.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Propietario" Width="1.5" PointX="3.75" PointY="30.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Tipo_Mail" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Tipo_Numero" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EquilinkedModel.Usuario" Width="1.5" PointX="1.5" PointY="31.125" IsExpanded="true" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaCaballo_Alerta" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Alerta_dbo_Caballo_Caballo_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Evento_dbo_Alerta_Alerta_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaCaballo_Caballo" ManuallyRouted="false" />
-        <AssociationConnector Association="EquilinkedModel.FK_AlertaCaballo_Propietario" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.PK_Alimentacion_Caballo" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Caballo_dbo_Criador_Criador_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID" ManuallyRouted="false" />
@@ -51,7 +50,10 @@
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Mail_Establecimiento_dbo_Tipo_Mail_Tipo_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Numero_Establecimiento_dbo_Tipo_Numero_Tipo_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_Propietario_Usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="EquilinkedModel.GrupoCaballo" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="EquilinkedModel.GrupoCaballo" Width="1.5" PointX="10.5" PointY="11.625" />
+        <AssociationConnector Association="EquilinkedModel.FK_GrupoCaballo_Caballo_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_GrupoCaballo_Grupo_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_Grupo_Propietario_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

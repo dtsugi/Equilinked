@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -35,7 +35,6 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Alerta_ID" Type="int" Nullable="false" />
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
-          <Property Name="Propietario_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Alimentacion">
           <Key>
@@ -123,12 +122,13 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
+          <Property Name="Propietario_ID" Type="int" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
-            <PropertyRef Name="Grupo_ID" />
-            <PropertyRef Name="Caballo_ID" />
+            <PropertyRef Name="ID" />
           </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Grupo_ID" Type="int" Nullable="false" />
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
         </EntityType>
@@ -251,18 +251,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_AlertaCaballo_Propietario">
-          <End Role="Propietario" Type="Self.Propietario" Multiplicity="1" />
-          <End Role="AlertaCaballo" Type="Self.AlertaCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Propietario">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="AlertaCaballo">
-              <PropertyRef Name="Propietario_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="0..1" />
           <End Role="Alerta" Type="Self.Alerta" Multiplicity="*" />
@@ -491,19 +479,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Propietario_Usuario">
-          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
-          <End Role="Propietario" Type="Self.Propietario" Multiplicity="*" />
+        <Association Name="FK_Grupo_Propietario_ID">
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="0..1" />
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Usuario">
+            <Principal Role="Propietario">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="Propietario">
-              <PropertyRef Name="Usuario_ID" />
+            <Dependent Role="Grupo">
+              <PropertyRef Name="Propietario_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="GrupoCaballo_Caballo_ID">
+        <Association Name="FK_GrupoCaballo_Caballo_ID">
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
           <End Role="GrupoCaballo" Type="Self.GrupoCaballo" Multiplicity="*" />
           <ReferentialConstraint>
@@ -515,7 +503,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="GrupoCaballo_Grupo_ID">
+        <Association Name="FK_GrupoCaballo_Grupo_ID">
           <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
           <End Role="GrupoCaballo" Type="Self.GrupoCaballo" Multiplicity="*" />
           <ReferentialConstraint>
@@ -524,6 +512,18 @@
             </Principal>
             <Dependent Role="GrupoCaballo">
               <PropertyRef Name="Grupo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Propietario_Usuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Propietario">
+              <PropertyRef Name="Usuario_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -569,10 +569,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_AlertaCaballo_Caballo" Association="Self.FK_AlertaCaballo_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AlertaCaballo_Propietario" Association="Self.FK_AlertaCaballo_Propietario">
-            <End Role="Propietario" EntitySet="Propietario" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID" Association="Self.FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
@@ -651,25 +647,28 @@
             <End Role="EstadoProvincia" EntitySet="EstadoProvincia" />
             <End Role="Propietario" EntitySet="Propietario" />
           </AssociationSet>
-          <AssociationSet Name="FK_Propietario_Usuario" Association="Self.FK_Propietario_Usuario">
-            <End Role="Usuario" EntitySet="Usuario" />
+          <AssociationSet Name="FK_Grupo_Propietario_ID" Association="Self.FK_Grupo_Propietario_ID">
             <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="Grupo" EntitySet="Grupo" />
           </AssociationSet>
-          <AssociationSet Name="GrupoCaballo_Caballo_ID" Association="Self.GrupoCaballo_Caballo_ID">
+          <AssociationSet Name="FK_GrupoCaballo_Caballo_ID" Association="Self.FK_GrupoCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="GrupoCaballo" EntitySet="GrupoCaballo" />
           </AssociationSet>
-          <AssociationSet Name="GrupoCaballo_Grupo_ID" Association="Self.GrupoCaballo_Grupo_ID">
+          <AssociationSet Name="FK_GrupoCaballo_Grupo_ID" Association="Self.FK_GrupoCaballo_Grupo_ID">
             <End Role="Grupo" EntitySet="Grupo" />
             <End Role="GrupoCaballo" EntitySet="GrupoCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Propietario_Usuario" Association="Self.FK_Propietario_Usuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Propietario" EntitySet="Propietario" />
           </AssociationSet>
           <AssociationSet Name="PK_Alimentacion_Caballo" Association="Self.PK_Alimentacion_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="Alimentacion" EntitySet="Alimentacion" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EquilinkedModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -706,10 +705,8 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Alerta_ID" Type="Int32" Nullable="false" />
           <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
-          <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Alerta" Relationship="Self.FK_AlertaCaballo_Alerta" FromRole="AlertaCaballo" ToRole="Alerta" />
           <NavigationProperty Name="Caballo" Relationship="Self.FK_AlertaCaballo_Caballo" FromRole="AlertaCaballo" ToRole="Caballo" />
-          <NavigationProperty Name="Propietario" Relationship="Self.FK_AlertaCaballo_Propietario" FromRole="AlertaCaballo" ToRole="Propietario" />
         </EntityType>
         <EntityType Name="Alimentacion">
           <Key>
@@ -763,7 +760,7 @@
           <NavigationProperty Name="Pelaje" Relationship="Self.FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID" FromRole="Caballo" ToRole="Pelaje" />
           <NavigationProperty Name="PersonaACargo" Relationship="Self.FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID" FromRole="Caballo" ToRole="PersonaACargo" />
           <NavigationProperty Name="Propietario" Relationship="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID" FromRole="Caballo" ToRole="Propietario" />
-          <NavigationProperty Name="Grupo1" Relationship="Self.GrupoCaballo" FromRole="Caballo" ToRole="Grupo" />
+          <NavigationProperty Name="GrupoCaballo" Relationship="EquilinkedModel.FK_GrupoCaballo_Caballo_ID" FromRole="Caballo" ToRole="GrupoCaballo" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -823,7 +820,9 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Grupo_Grupo_ID" FromRole="Grupo" ToRole="Caballo" />
-          <NavigationProperty Name="Caballo1" Relationship="Self.GrupoCaballo" FromRole="Grupo" ToRole="Caballo" />
+          <NavigationProperty Name="GrupoCaballo" Relationship="EquilinkedModel.FK_GrupoCaballo_Grupo_ID" FromRole="Grupo" ToRole="GrupoCaballo" />
+          <Property Name="Propietario_ID" Type="Int32" />
+          <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Grupo" ToRole="Propietario" />
         </EntityType>
         <EntityType Name="Mail_Establecimiento">
           <Key>
@@ -905,10 +904,10 @@
           <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EstadoProvincia_Id" Type="Int32" />
           <Property Name="Usuario_ID" Type="Int32" />
-          <NavigationProperty Name="AlertaCaballo" Relationship="Self.FK_AlertaCaballo_Propietario" FromRole="Propietario" ToRole="AlertaCaballo" />
           <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID" FromRole="Propietario" ToRole="Caballo" />
           <NavigationProperty Name="EstadoProvincia" Relationship="Self.FK_dbo_Propietario_dbo_EstadoProvincia_EstadoProvincia_Id" FromRole="Propietario" ToRole="EstadoProvincia" />
           <NavigationProperty Name="Usuario" Relationship="Self.FK_Propietario_Usuario" FromRole="Propietario" ToRole="Usuario" />
+          <NavigationProperty Name="Grupo" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Propietario" ToRole="Grupo" />
         </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
@@ -982,18 +981,6 @@
             </Principal>
             <Dependent Role="AlertaCaballo">
               <PropertyRef Name="Caballo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AlertaCaballo_Propietario">
-          <End Role="Propietario" Type="Self.Propietario" Multiplicity="1" />
-          <End Role="AlertaCaballo" Type="Self.AlertaCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Propietario">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="AlertaCaballo">
-              <PropertyRef Name="Propietario_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1225,10 +1212,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="GrupoCaballo">
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <End Role="Grupo" Type="Self.Grupo" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="EquilinkedEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
           <EntitySet Name="Alerta" EntityType="Self.Alerta" />
@@ -1266,10 +1249,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_AlertaCaballo_Caballo" Association="Self.FK_AlertaCaballo_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AlertaCaballo_Propietario" Association="Self.FK_AlertaCaballo_Propietario">
-            <End Role="Propietario" EntitySet="Propietario" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
           </AssociationSet>
           <AssociationSet Name="PK_Alimentacion_Caballo" Association="Self.PK_Alimentacion_Caballo">
@@ -1348,11 +1327,66 @@
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Propietario" EntitySet="Propietario" />
           </AssociationSet>
-          <AssociationSet Name="GrupoCaballo" Association="Self.GrupoCaballo">
+          <EntitySet Name="GrupoCaballo" EntityType="EquilinkedModel.GrupoCaballo" />
+          <AssociationSet Name="FK_GrupoCaballo_Caballo_ID" Association="EquilinkedModel.FK_GrupoCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="GrupoCaballo" EntitySet="GrupoCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GrupoCaballo_Grupo_ID" Association="EquilinkedModel.FK_GrupoCaballo_Grupo_ID">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="GrupoCaballo" EntitySet="GrupoCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Grupo_Propietario_ID" Association="EquilinkedModel.FK_Grupo_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
             <End Role="Grupo" EntitySet="Grupo" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="GrupoCaballo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Grupo_ID" Type="Int32" Nullable="false" />
+          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Caballo" Relationship="EquilinkedModel.FK_GrupoCaballo_Caballo_ID" FromRole="GrupoCaballo" ToRole="Caballo" />
+          <NavigationProperty Name="Grupo" Relationship="EquilinkedModel.FK_GrupoCaballo_Grupo_ID" FromRole="GrupoCaballo" ToRole="Grupo" />
+        </EntityType>
+        <Association Name="FK_GrupoCaballo_Caballo_ID">
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
+          <End Type="EquilinkedModel.GrupoCaballo" Role="GrupoCaballo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoCaballo">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GrupoCaballo_Grupo_ID">
+          <End Type="EquilinkedModel.Grupo" Role="Grupo" Multiplicity="1" />
+          <End Type="EquilinkedModel.GrupoCaballo" Role="GrupoCaballo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GrupoCaballo">
+              <PropertyRef Name="Grupo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Grupo_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="0..1" />
+          <End Type="EquilinkedModel.Grupo" Role="Grupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Grupo">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1389,7 +1423,6 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Alerta_ID" ColumnName="Alerta_ID" />
                 <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
-                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1483,6 +1516,7 @@
           <EntitySetMapping Name="Grupo">
             <EntityTypeMapping TypeName="EquilinkedModel.Grupo">
               <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
               </MappingFragment>
@@ -1594,14 +1628,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="GrupoCaballo" TypeName="EquilinkedModel.GrupoCaballo" StoreEntitySet="GrupoCaballo">
-            <EndProperty Name="Caballo">
-              <ScalarProperty Name="ID" ColumnName="Caballo_ID" />
-            </EndProperty>
-            <EndProperty Name="Grupo">
-              <ScalarProperty Name="ID" ColumnName="Grupo_ID" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <EntitySetMapping Name="GrupoCaballo">
+            <EntityTypeMapping TypeName="EquilinkedModel.GrupoCaballo">
+              <MappingFragment StoreEntitySet="GrupoCaballo">
+                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
+                <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

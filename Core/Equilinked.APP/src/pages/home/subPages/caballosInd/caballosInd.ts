@@ -5,7 +5,7 @@ import { CommonService } from '../../../../services/common.service';
 import { Caballo } from '../../../../model/caballo';
 // import { CaballosService } from '../../../../services/caballos.service';
 // import { AdminCaballoPage } from '../../adminCaballo/adminCaballo';
-
+ 
 @Component({
   selector: 'caballos-ind',
   templateUrl: 'caballosInd.html',

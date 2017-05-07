@@ -6,9 +6,11 @@ import { FormsModule } from '@angular/forms';
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage} from '../pages/login/login';
+import { LoginPage } from '../pages/login/login';
 import { MenuSuperior } from '../pages/home/subPages/menuSuperior/menuSuperior';
 import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
+import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
+import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/admin-grupos-caballos";
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
     TabsPage,
     LoginPage,
     MenuSuperior,
-    CaballosInd
+    CaballosInd,
+    GruposCaballos,
+    AdminGruposCaballosPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -29,7 +33,8 @@ import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
     MyApp,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    AdminGruposCaballosPage
   ],
   providers: []
 })
