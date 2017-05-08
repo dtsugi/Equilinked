@@ -6,8 +6,6 @@ import { AppConfig } from '../app/app.config';
 import { Utils } from '../app/utils';
 import { UserSessionEntity} from '../model/UserSessionEntity';
 
-// import { Observable } from 'rxjs/Observable';
-
 @Injectable()
 export class UsuarioService {
     private actionUrl: string = AppConfig.API_URL + "api/usuario/";

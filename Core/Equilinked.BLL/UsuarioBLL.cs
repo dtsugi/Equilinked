@@ -20,10 +20,9 @@ namespace Equilinked.BLL
             return this._dbContext.Usuario.ToList();
         }
 
-        public bool Login(string username, string password)
+        public Usuario Login(string username, string password)
         {
-            Usuario user = this._dbContext.Usuario.Where(x => x.Login == username && x.Password == password).FirstOrDefault();
-            return (user != null ? true : false);
+            return this._dbContext.Usuario.Where(x => x.Login == username && x.Password == password).FirstOrDefault();
         }
     }
 }

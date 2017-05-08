@@ -1,0 +1,52 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title *ngIf="!isUpdate">
+            Nueva notificacion
+        </ion-title>
+        <ion-title *ngIf="isUpdate">
+            Editar notificacion
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <form [formGroup]="formNotificaciones" (ngSubmit)="saveNotificacion()">
+        <ion-item *ngIf="showId">
+            <ion-label>ID</ion-label>
+            <ion-input type="text" formControlName="Id"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Titulo</ion-label>
+            <ion-input type="text" formControlName="Titulo"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Fecha</ion-label>
+            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion" max="2050"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Hora</ion-label>
+            <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Tipo</ion-label>
+            <ion-select formControlName="TipoNotificacion">
+                <ion-option *ngFor="let tipoNotificacion of tiposAlertaList" [value]="tipoNotificacion">{{tipoNotificacion}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Activa</ion-label>
+            <ion-toggle checked="true" formControlName="Activa"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>Descripcion</ion-label>
+            <ion-input type="text" formControlName="Descripcion"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Caballo</ion-label>
+            <ion-select formControlName="CaballoId" multiple="false">
+                <ion-option *ngFor="let caballo of caballosList" [value]="caballo.ID">{{caballo.Nombre}}</ion-option>
+            </ion-select>
+        </ion-item>
+        <button ion-button block type="submit" [disabled]="!formNotificaciones.valid" *ngIf="!isUpdate">Guardar</button>
+        <button ion-button block type="submit" [disabled]="!formNotificaciones.valid" *ngIf="isUpdate">Modificar</button>
+    </form>
+</ion-content>

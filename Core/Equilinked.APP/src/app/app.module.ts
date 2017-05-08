@@ -6,22 +6,41 @@ import { FormsModule } from '@angular/forms';
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage } from '../pages/login/login';
+import { LoginPage} from '../pages/login/login';
 import { MenuSuperior } from '../pages/home/subPages/menuSuperior/menuSuperior';
 import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
+
+/* Notificaciones */
+import { NotificacionesPage } from '../pages/notificaciones/notificaciones';
+import { NotificacionesViewPage } from '../pages/notificaciones/notificaciones-view';
+import { NotificacionesInsertPage } from '../pages/notificaciones/notificaciones-insert';
+
+/* Caballos */
 import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/admin-grupos-caballos";
+
+/* Perfil */
+import { PerfilDatosPage } from "../pages/perfil/perfil-datos";
+import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
 
 @NgModule({
   declarations: [
     MyApp,
+    LoginPage,
     HomePage,
     TabsPage,
-    LoginPage,
     MenuSuperior,
     CaballosInd,
     GruposCaballos,
-    AdminGruposCaballosPage
+    /* Notificaciones */
+    NotificacionesPage,
+    NotificacionesViewPage,
+    NotificacionesInsertPage,
+    /* Caballos */
+    AdminGruposCaballosPage,
+    /* Perfil */
+    PerfilDatosPage,
+    PopoverDatosPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -34,7 +53,15 @@ import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/adm
     HomePage,
     TabsPage,
     LoginPage,
-    AdminGruposCaballosPage
+    /* Notificaciones */
+    NotificacionesPage,
+    NotificacionesViewPage,
+    NotificacionesInsertPage,
+    /* Caballos */
+    AdminGruposCaballosPage,
+    /* Perfil */
+    PerfilDatosPage,
+    PopoverDatosPage
   ],
   providers: []
 })

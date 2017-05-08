@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 
 import { HomePage } from '../home/home';
+import { NotificacionesPage } from '../notificaciones/notificaciones';
+import { PerfilDatosPage} from '../perfil/perfil-datos';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -11,10 +13,13 @@ export class TabsPage {
   homeRoot: any = HomePage;
   // calendarRoot: any = CalendarioPage;
   // cameraRoot: any = CamaraPage;
-  // eventsRoot: any = NotificacionesPage;
-  // ownerRoot: any = PropietariosPage;
+  eventsRoot: any = NotificacionesPage;
+  ownerRoot: any = PerfilDatosPage;
 
   constructor() {
+  }
 
+  ngOnInit() {
+    console.log("ENTRO");
   }
 }

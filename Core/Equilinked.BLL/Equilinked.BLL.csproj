@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlertaCaballoBLL.cs" />
     <Compile Include="BLLBase.cs" />
     <Compile Include="AlertaBLL.cs" />
     <Compile Include="AlimentacionBLL.cs" />
+    <Compile Include="CaballoBLL.cs" />
+    <Compile Include="GrupoCaballoBLL.cs" />
     <Compile Include="PersonaACargoBLL.cs" />
     <Compile Include="PropietarioBLL.cs" />
     <Compile Include="PelajeBLL.cs" />

@@ -6,11 +6,14 @@ import { CommonService } from '../../services/common.service';
 import { TabsPage } from '../tabs/tabs';
 import {UserSessionEntity} from '../../model/UserSessionEntity';
 import { UsuarioService} from '../../services/usuario.service';
+import { SecurityService} from '../../services/security.service';
+import { NotificacionesPage } from '../notificaciones/notificaciones';
+import { HomePage } from '../home/home';
 
 
 @Component({
     templateUrl: 'login.html',
-    providers: [CommonService, UsuarioService]
+    providers: [CommonService, UsuarioService, SecurityService]
 })
 export class LoginPage {
     form: any;
@@ -21,7 +24,8 @@ export class LoginPage {
         public navParams: NavParams,
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
-        private _usuarioService: UsuarioService) {
+        private _usuarioService: UsuarioService,
+        private _securityService: SecurityService) {
     }
 
     ngOnInit() {
@@ -42,13 +46,16 @@ export class LoginPage {
         this._usuarioService.login(this.form.value)
             .subscribe(res => {
                 console.log(res);
+                this._securityService.setInitialConfigSession(res);                
                 this._commonService.hideLoading();
                 this.navCtrl.setRoot(TabsPage);
+                // this.navCtrl.setRoot(NotificacionesPage);
+                // this.navCtrl.setRoot(HomePage);
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();
                 this._commonService.ShowErrorHttp(error, "Nombre de usuario o contraseña incorrectas ");
-            },
-            () => console.log("FINISHED LOGIN"));
+            });
+        // () => console.log("FINISHED LOGIN"));
     }
 }

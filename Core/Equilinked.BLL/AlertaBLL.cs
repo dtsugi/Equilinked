@@ -10,12 +10,6 @@ namespace Equilinked.BLL
 {
     public class AlertaBLL : BLLBase, IBase<Alerta>
     {
-
-        public List<Alerta> GetAllByPropietario(int propietarioId)
-        {            
-                return null;
-        }
-
         public Alerta GetById(int id)
         {
             return this._dbContext.Alerta.Where(x => x.ID == id).FirstOrDefault();
@@ -26,9 +20,20 @@ namespace Equilinked.BLL
             try
             {
                 Alerta entity = this._dbContext.Alerta.Find(id);
-                this._dbContext.Entry(entity).State = EntityState.Modified;
-                this._dbContext.SaveChanges();
-                return true;
+                if (entity != null)
+                {
+                    if (new AlertaCaballoBLL().DeleteByAlertaId(entity.ID))
+                    {
+                        this._dbContext.Alerta.Remove(entity);
+                        //this._dbContext.Entry(entity).State = EntityState.Deleted;
+                        this._dbContext.SaveChanges();
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                else
+                    return false;
             }
             catch (Exception ex)
             {
@@ -52,10 +57,25 @@ namespace Equilinked.BLL
             }
         }
 
-
         public List<Alerta> GetAll()
         {
             throw new NotImplementedException();
+        }
+
+        public List<sp_GetAlertasByPropietarioId_Result> GetAllByPropietario(int propietarioId, bool filterByFuture)
+        {
+            if (filterByFuture)
+            {
+                return this._dbContext.sp_GetAlertasByPropietarioId(propietarioId)
+                    .Where(x => x.DiffEnDias > 0)
+                    .ToList();
+            }
+            else
+            {
+                return this._dbContext.sp_GetAlertasByPropietarioId(propietarioId)
+                   .Where(x => x.DiffEnDias == 0)
+                   .ToList();
+            }
         }
     }
 }

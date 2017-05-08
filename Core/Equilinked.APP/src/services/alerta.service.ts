@@ -1,95 +1,64 @@
-// import { Injectable } from '@angular/core';
-// import { Http, Headers, RequestOptions } from '@angular/http';
-// import 'rxjs/add/operator/map';
-// import { Observable } from 'rxjs/Rx';
-// import { AppConfig } from '../app/app.config';
-// import { Utils } from '../app/utils';
-// // import { } from '../model/';
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Rx';
+import { AppConfig } from '../app/app.config';
+import { Utils } from '../app/utils';
+import {Alerta } from '../model/alerta';
 
-// @Injectable()
-// export class AlertasService {
-//     private actionUrl: string = AppConfig.API_URL + "api/Alerta/";
-//     private url = "";
+@Injectable()
+export class AlertaService {
+    private actionUrl: string = AppConfig.API_URL + "api/Alerta/";
+    private url = "";
 
-//     constructor(private _http: Http) { }
+    constructor(private _http: Http) { }
 
-//     getAllByIdCaballoTipoAlerta(idCaballo: number, tipoAlerta: number): any {
-//         console.log(this.actionUrlAlerta + "/" + idCaballo + "/" + tipoAlerta);
-//         return this._http.get(this.actionUrlAlerta + "/" + idCaballo + "/" + tipoAlerta)
-//             .map(response => response.json());
-//     }
+    getById(id: number) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetById/", [id]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 
-//     getAllByIdPropetario(idPropietario, date: string, filterByFuture: boolean): any {
-//         let url = this.actionUrlAlerta + "/" + idPropietario + "?date=" + date + "&filterByFuture=" + filterByFuture;
-//         console.log("URL" + url);
-//         return this._http.get(url)
-//             .map(response => response.json());
-//     }
+    getAllByPropietario(propietarioId: number, filterByFuture: boolean) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllByPropietarioId/", [propietarioId, filterByFuture]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 
-//     getById(idNota: string): any {
-//         return this._http.get(this.actionUrlAlerta + "/" + idNota)
-//             .map(response => response.json());
-//     }
+    getCurrentDate(year: string, month: string, day: string, culture: string): any {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetCurrentDate/", [year, month, day, culture]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 
-//     getTipoAlerta() {
-//         let url = this.actionUrlAlerta + "/GetTipoAlerta";
-//         console.log("URL" + url);
-//         return this._http.get(url)
-//             .map(response => response.json());
-//     }
+    getCurrentDateString(stringDate: string, culture: string) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetCurrentDate/", [stringDate, culture]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 
-//     // getCurrentDate(isTomorrow: boolean, culture: string): any {
-//     //     let url = this.actionUrlAlerta + "/GetCurrentDate?isTomorrow=" + isTomorrow;
-//     //     console.log("URL" + url);
-//     //     return this._http.get(url)
-//     //         .map(response => response.json());
-//     // }
+    save(alerta: Alerta): any {
+        let bodyString = JSON.stringify(alerta);
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers });
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "Save", []);
+        console.log("URL" + this.url);
+        return this._http.post(this.url, bodyString, options)
+            .map(response => response.json());
+    }
 
-//     getCurrentDate(year: string, month: string, day: string, culture: string): any {
-//         let url = this.actionUrlAlerta + "/GetCurrentDate?year=" + year + "&month=" + month + "&day=" + day;
-//         console.log("URL" + url);
-//         return this._http.get(url)
-//             .map(response => response.json());
-//     }
-
-//     getCurrentDateString(date: string, culture: string): any {
-//         let url = this.actionUrlAlerta + "/GetCurrentDate?stringDate=" + date;
-//         console.log("URL" + url);
-//         return this._http.get(url)
-//             .map(response => response.json());
-//     }
-
-//     deleteByIds(listIdNota: Array<number>) {
-//         let headers = new Headers({ 'Content-Type': 'application/json' });
-//         let options = new RequestOptions({ headers: headers });
-
-//         let uri = "?";
-//         for (var i = 0; i < listIdNota.length; i++) {
-//             uri = uri + "idList[" + i + "]=" + listIdNota[i] + "&";
-//         }
-
-//         return this._http.delete(this.actionUrlAlerta + "/DeleteAlertasByIds" + uri.slice(0, -1), options);
-//     }
-
-//     deleteById(id: number) {
-//         return this._http.delete(this.actionUrlAlerta + "/" + id)
-//             .map(response => response.json());
-//     }
-
-//     postNota(nota: Object): Observable<any> {
-//         let headers = new Headers({ 'Content-Type': 'application/json' });
-//         let options = new RequestOptions({ headers: headers });
-//         let bodyString = JSON.stringify(nota);
-
-//         return this._http.post(this.actionUrlAlerta, bodyString, options)
-//             .map(res => res.json());
-//     }
-
-//     putNota(nota: Object, idNota: number): Observable<any> {
-//         let headers = new Headers({ 'Content-Type': 'application/json' });
-//         let options = new RequestOptions({ headers: headers });
-//         let bodyString = JSON.stringify(nota);
-        
-//         return this._http.post(this.actionUrlAlerta + "/" + idNota, bodyString, options);
-//     }
-// }
+    delete(id: number): any {
+        let bodyString = JSON.stringify(id);
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers });
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "Delete", []);
+        console.log("URL" + this.url);
+        // return this._http.post(this.url, bodyString, options)
+        //     .map(response => response.json());
+        return this._http.delete(this.url + "?alertaId=" + id)
+    }
+}

@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Perfil</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="presentPopover($event)">
+                <ion-icon name="more"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-item>
+        <ion-icon name='person' item-left></ion-icon>
+        {{propietarioEntity.NombreCompleto}}
+    </ion-item>
+    <ion-item>
+        <ion-icon name='mail' item-left></ion-icon>
+        {{propietarioEntity.Mail}}
+    </ion-item>
+    <ion-item>
+        <ion-icon name='call' item-left></ion-icon>
+        {{propietarioEntity.Celular}}
+    </ion-item>
+    <ion-item>
+        <ion-icon name='flag' item-left></ion-icon>
+        {{propietarioEntity.EstadoProvincia_Nombre}}
+    </ion-item>    
+</ion-content>

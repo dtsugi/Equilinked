@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>Notificaciones</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goInsertNotificacion()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-segment>
+      <ion-segment-button (click)="goTodayNotifications()">
+        HOY
+      </ion-segment-button>
+      <ion-segment-button (click)="goFutureNotifications()">
+        PROXIMAS
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar></ion-searchbar>
+  <ion-list>
+    <ion-list-header>
+      <b>{{currentDate}}</b>
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
+      <!--<ion-item *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">-->
+      <ion-item>
+        <ion-avatar item-left>
+          <b><p style="font-size:25pt" [innerHTML]="notificacion.HoraNotificacion"></p></b>
+        </ion-avatar>
+        <h2 [innerHTML]="notificacion.Titulo"></h2>
+        <p [innerHTML]="notificacion.Descripcion"></p>
+        <h3 *ngIf="showFechaNotificacion">{{notificacion.FechaNotificacion}}</h3>
+      </ion-item>
+      <ion-item-options>
+        <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
+          <ion-icon name="trash"></ion-icon>       
+          Eliminar
+</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

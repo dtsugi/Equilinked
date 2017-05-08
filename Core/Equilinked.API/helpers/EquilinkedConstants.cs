@@ -6,6 +6,7 @@ namespace Equilinked.API.helpers
         #region Errors Messages
 
         public const string ERR_NOT_FOUND_ELEM = "No se encontró el elemento especificado";
+        public const string ERR_WITHOUT_DATA = "No se encontraron registros";
         public const string MSG_ERROR_GENERAL = "Hubo un error en el sistema, comúniquese con el administrador del sistema para más información";        
 
         #endregion

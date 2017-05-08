@@ -1,5 +1,6 @@
 ﻿using Equilinked.API.Models;
 using Equilinked.BLL;
+using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,20 @@ namespace Equilinked.API.Controllers
             try
             {
                 HttpResponseMessage response;
-                if (_usuarioBLL.Login(session.UserName, session.Password))
+                Usuario user = _usuarioBLL.Login(session.UserName, session.Password);
+                if (user != null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.OK, session);                    
+                    Propietario propietario = new PropietarioBLL().GetByUserId(user.ID);
+                    if (propietario != null)
+                    {
+                        session.IdUser = user.ID;
+                        session.PropietarioId = propietario.ID;
+                        response = Request.CreateResponse(HttpStatusCode.OK, session);
+                    }
+                    else
+                    {
+                        response = Request.CreateResponse(HttpStatusCode.PreconditionFailed, new { Message = "La cuenta no se encuentra correctamente configurada para iniciar sesion" });
+                    }
                 }
                 else
                 {

@@ -1,4 +1,5 @@
-﻿using Equilinked.DAL.Models;
+﻿using Equilinked.DAL.Dto;
+using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -51,6 +52,16 @@ namespace Equilinked.BLL
                 this.LogException(ex);
                 return null;
             }
+        }
+
+        public Propietario GetByUserId(int userId)
+        {
+            return this._dbContext.Propietario.Where(x => x.Usuario_ID == userId).FirstOrDefault();
+        }
+
+        public PropietarioDto GetSerializedById(int id)
+        {
+            return new PropietarioDto(this._dbContext.Propietario.Where(x => x.ID == id).FirstOrDefault());
         }
     }
 }
