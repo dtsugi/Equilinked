@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage} from '../pages/login/login';
+import { LoginPage } from '../pages/login/login';
 import { MenuSuperior } from '../pages/home/subPages/menuSuperior/menuSuperior';
 import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
+import { GruposCaballosDetailPage } from "../pages/home/subPages/grupos-caballos/grupos-caballos-detail";
 
 /* Notificaciones */
 import { NotificacionesPage } from '../pages/notificaciones/notificaciones';
@@ -21,7 +22,7 @@ import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/adm
 
 /* Perfil */
 import { PerfilDatosPage } from "../pages/perfil/perfil-datos";
-import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
+import { PopoverDatosPage } from '../pages/perfil/pop-over/pop-over-datos';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     MenuSuperior,
     CaballosInd,
     GruposCaballos,
+    GruposCaballosDetailPage,
     /* Notificaciones */
     NotificacionesPage,
     NotificacionesViewPage,
@@ -58,6 +60,7 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     NotificacionesViewPage,
     NotificacionesInsertPage,
     /* Caballos */
+    GruposCaballosDetailPage,
     AdminGruposCaballosPage,
     /* Perfil */
     PerfilDatosPage,

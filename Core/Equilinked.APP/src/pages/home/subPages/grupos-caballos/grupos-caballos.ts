@@ -1,43 +1,44 @@
 import { Component, OnInit } from "@angular/core";
 import { NavController, ToastController } from "ionic-angular";
-import { CommonService } from '../../../../services/common.service';
+import { CommonService } from "../../../../services/common.service";
 import { GruposCaballosService } from "../../../../services/grupos-caballos.service";
+import { SecurityService } from "../../../../services/security.service";
 import { AdminGruposCaballosPage } from "../../admin-grupos-caballos/admin-grupos-caballos";
+import { UserSessionEntity } from "../../../../model/userSession";
+import { GruposCaballosDetailPage } from "./grupos-caballos-detail";
 
 @Component({
     selector: "grupos-caballos",
     templateUrl: "./grupos-caballos.html",
-    providers: [CommonService, GruposCaballosService]
+    providers: [CommonService, GruposCaballosService, SecurityService]
 })
 export class GruposCaballos implements OnInit {
 
-    private PROPIETARIO_ID: number = 2; //Id propietario para usuario admin
+    grupos: Array<any> = [];
+    gruposRespaldo: Array<any> = [];
+    session: UserSessionEntity;
 
-    grupos = [];
-    gruposRespaldo = [];
     constructor(private commonService: CommonService,
         private navController: NavController,
         private toastController: ToastController,
-        private gruposCaballosService: GruposCaballosService) {
+        private gruposCaballosService: GruposCaballosService,
+        private securityService: SecurityService) {
     }
 
     ngOnInit(): void {
+        this.session = this.securityService.getInitialConfigSession();
         this.getGruposCaballos();
     }
 
     getGruposCaballos(): void {
         this.commonService.showLoading("Procesando..");
-        this.gruposCaballosService.getGruposCaballosByPropietarioId(this.PROPIETARIO_ID)
+        this.gruposCaballosService.getGruposCaballosByPropietarioId(this.session.PropietarioId)
             .then(grupos => {
-                console.info(grupos);
                 this.gruposRespaldo = grupos;
                 this.grupos = grupos;
                 this.commonService.hideLoading();
-            })
-            .catch(err => {
-                console.error(err);
-                this.commonService.hideLoading();
-                this.commonService.ShowToast(this.toastController, this.commonService.TOAST_POSITION.bottom, "Error al cargar los grupos", 2000);
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error al cargar los grupos");
             });
     }
 
@@ -45,11 +46,11 @@ export class GruposCaballos implements OnInit {
         this.grupos = this.gruposCaballosService.filterGrupoCaballo(evt.target.value, this.gruposRespaldo);
     }
 
-    seleccionarGrupo(grupo): void {
-        console.info(JSON.stringify(grupo));
+    viewGrupo(grupo: any): void {
+        this.navController.push(GruposCaballosDetailPage, { grupo: grupo, gruposCaballosPage: this });
     }
 
     newGrupo(): void {
-        this.navController.push(AdminGruposCaballosPage, { gruposCaballos: this });
+        this.navController.push(AdminGruposCaballosPage, { gruposCaballosPage: this });
     }
 }

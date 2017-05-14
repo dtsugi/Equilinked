@@ -10,6 +10,79 @@ namespace Equilinked.BLL
 {
     public class GrupoCaballoBLL : BLLBase, IBase<Grupo>
     {
+
+        public Grupo UpdateGrupo(int GrupoId, Grupo entity)
+        {
+            using (var db = this._dbContext)
+            {
+                String updateGrupo = "UPDATE Grupo SET Descripcion = @Descripcion WHERE ID = @Id";
+                String deleteGrupoCaballo = "DELETE FROM GrupoCaballo WHERE ID = @Id";
+                String insertGrupoCaballo = "INSERT INTO GrupoCaballo(Grupo_ID, Caballo_ID) VALUES(@GrupoId, @CaballoId)";
+
+                List<GrupoCaballo> caballosByPropietario = db.GrupoCaballo
+                    .Include("Caballo")
+                    .Where(gc => gc.Grupo_ID == GrupoId)
+                    .ToList();
+
+                db.Database.ExecuteSqlCommand(updateGrupo,
+                        new SqlParameter("Descripcion", entity.Descripcion),
+                        new SqlParameter("Id", GrupoId));
+                   
+                //Para eliminar los que ya quito el usuario
+                foreach(GrupoCaballo gc in caballosByPropietario)
+                {
+                    Boolean encontrado = true;
+                    foreach(Caballo c in entity.Caballo)
+                    {
+                        encontrado = c.ID == gc.Caballo_ID;
+                        if (encontrado)
+                        {
+                            break;
+                        }
+                    }
+                    if(!encontrado)
+                    {
+                        db.Database.ExecuteSqlCommand(deleteGrupoCaballo,
+                            new SqlParameter("Id", gc.ID));
+                    }
+                }
+
+                //Para agregar los nuevos
+                foreach (Caballo c in entity.Caballo)
+                {
+                    Boolean encontrado = true;
+                    foreach (GrupoCaballo gc in caballosByPropietario)
+                    {
+                        encontrado = c.ID == gc.Caballo_ID;
+                        if (encontrado)
+                        {
+                            break;
+                        }
+                    }
+                    if (!encontrado)
+                    {
+                        db.Database.ExecuteSqlCommand(insertGrupoCaballo,
+                            new SqlParameter("GrupoId", GrupoId),
+                            new SqlParameter("CaballoId", c.ID));
+                    }
+                }
+
+            }
+            return entity;
+        }
+
+        public List<GrupoCaballo> GetGrupoCaballosByGrupoId(int GrupoID)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.GrupoCaballo
+                    .Include("Caballo")
+                    .Where(gc => gc.Grupo_ID == GrupoID)
+                    .ToList();
+            }
+        }
+
         public List<Grupo> GetAllByPropietario(int PropietarioID)
         {
             using(var db = this._dbContext)
@@ -65,7 +138,6 @@ namespace Equilinked.BLL
 
         public Grupo Insert(Grupo entity)
         {
-            GrupoCaballo gc;
             using (var db = this._dbContext)
             {
                 ICollection<Caballo> caballos = entity.Caballo;

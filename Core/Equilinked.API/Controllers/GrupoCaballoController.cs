@@ -17,6 +17,21 @@ namespace Equilinked.API.Controllers
     {
         private GrupoCaballoBLL GrupoCaballoBLL = new GrupoCaballoBLL();
 
+        [HttpPut, Route("api/Grupo/{GrupoId}")]
+        [ResponseType(typeof(Grupo))]
+        public IHttpActionResult UpdateGrupo(int GrupoId, Grupo grupo)
+        {
+            try
+            {
+                return Ok(GrupoCaballoBLL.UpdateGrupo(GrupoId, grupo));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible actualizar el grupo"));
+            }
+        }
+
         [HttpGet, Route("api/Grupo/GetAllByPropietarioId/{PropietarioId}")]
         public IHttpActionResult GetAllByPropietarioId(int PropietarioId)
         {
@@ -28,6 +43,20 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible listar los grupos del propietario"));
+            }
+        }
+
+        [HttpGet, Route("api/Grupo/GetAllGrupoCaballoByGrupoId/{GrupoId}")]
+        public IHttpActionResult GetAllGrupoCaballoByGrupoId(int GrupoId)
+        {
+            try
+            {
+                return Ok(GrupoCaballoBLL.GetGrupoCaballosByGrupoId(GrupoId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible listar los caballos asociados al grupo"));
             }
         }
 

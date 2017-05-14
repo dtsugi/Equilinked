@@ -13,6 +13,13 @@ export class GruposCaballosService {
     constructor(private http: Http) {
     }
 
+    getCaballosByGroupId(groupId: number): Promise<any[]> {
+        let url = this.endPointGruposCaballos + "/GetAllGrupoCaballoByGrupoId/" + groupId;
+        return this.http.get(url)
+            .map(caballos => caballos.json() as any[])
+            .toPromise();
+    }
+
     getGruposCaballosByPropietarioId(idPropietario: number): Promise<any[]> {
         let url = this.endPointGruposCaballos + "/GetAllByPropietarioId/" + idPropietario;
         return this.http.get(url)
@@ -32,24 +39,27 @@ export class GruposCaballosService {
             .toPromise();
     }
 
+    updateGrupo(grupo: any): Promise<any> {
+        let url = this.endPointGruposCaballos + "/" + grupo.ID;
+        return this.http.put(url, grupo)
+            .toPromise();
+    }
+
+    filterGruposCaballos(value: string, gruposCaballos: any[]): any[] {
+        return value && value.trim() !== "" ? gruposCaballos.filter(gc => gc.Caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1) : gruposCaballos;
+    }
+
     filterGrupoCaballo(value: string, caballos: any[]): any[] {
-        if (value != null && value.trim() === "") {
-            return caballos;
-        } else {
-            return caballos.filter((c) => {
-                return c.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1;
-            });
-        }
+        return value && value.trim() !== "" ? caballos.filter(c => c.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1) : caballos;
     }
 
     filterCaballo(value: string, caballos: any[]): any[] {
-        if (value && value.trim() == "")
-            return caballos;
-        else {
+        if (value && value !== "") {
             return caballos.filter((c) => {
                 return ((c.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1)
                     || (c.caballo.Grupo != null && c.caballo.Grupo.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1));
-            })
+            });
         }
+        return caballos;
     }
 }
