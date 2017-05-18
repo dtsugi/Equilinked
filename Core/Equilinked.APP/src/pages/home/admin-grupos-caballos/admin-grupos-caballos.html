@@ -5,7 +5,7 @@
         </ion-title>
 
         <ion-buttons end>
-            <button ion-button icon-only (click)="save()" [disabled]="!grupoCaballosForm.valid || countCaballos() === 0">
+            <button ion-button icon-only (click)="save()" [disabled]="!grupoCaballosForm.valid">
                 <ion-icon name="done-all"></ion-icon>
             </button>
         </ion-buttons>
@@ -20,7 +20,17 @@
         </ion-item>
     </form>
 
-    <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+            </ion-col>
+            <ion-col col-12>
+                <button ion-button full (click)="selectAll()">Seleccionar todos</button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
     <ion-list no-lines>
         <ion-item *ngFor="let c of caballos" (click)="c.seleccion = !c.seleccion">
             <ion-avatar item-left>

@@ -43,12 +43,15 @@ export class AdminGruposCaballosPage implements OnInit {
         this.getAllCaballosByPropietario();
     }
 
-    filter(evt: any): void {
-        this.caballos = this.gruposCaballosService.filterCaballo(evt.target.value, this.caballosRespaldo);
+    selectAll(): void {
+        let selectAll: boolean = this.countCaballos() !== this.caballosRespaldo.length;
+        this.caballosRespaldo.forEach(c => {
+            c.seleccion = selectAll;
+        });
     }
 
-    countCaballos(): number {
-        return this.caballos.filter(c => c.seleccion).length;
+    filter(evt: any): void {
+        this.caballos = this.gruposCaballosService.filterCaballo(evt.target.value, this.caballosRespaldo);
     }
 
     save(): void {
@@ -67,6 +70,10 @@ export class AdminGruposCaballosPage implements OnInit {
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar el grupo");
         });
+    }
+
+    private countCaballos(): number {
+        return this.caballosRespaldo.filter(c => c.seleccion).length;
     }
 
     private getAllCaballosByPropietario(): void {

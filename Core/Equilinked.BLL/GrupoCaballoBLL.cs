@@ -31,7 +31,7 @@ namespace Equilinked.BLL
                 //Para eliminar los que ya quito el usuario
                 foreach(GrupoCaballo gc in caballosByPropietario)
                 {
-                    Boolean encontrado = true;
+                    Boolean encontrado = false;
                     foreach(Caballo c in entity.Caballo)
                     {
                         encontrado = c.ID == gc.Caballo_ID;
@@ -50,7 +50,7 @@ namespace Equilinked.BLL
                 //Para agregar los nuevos
                 foreach (Caballo c in entity.Caballo)
                 {
-                    Boolean encontrado = true;
+                    Boolean encontrado = false;
                     foreach (GrupoCaballo gc in caballosByPropietario)
                     {
                         encontrado = c.ID == gc.Caballo_ID;

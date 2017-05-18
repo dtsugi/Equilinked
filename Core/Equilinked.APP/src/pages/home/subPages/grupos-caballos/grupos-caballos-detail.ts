@@ -10,6 +10,7 @@ import { UserSessionEntity } from "../../../../model/userSession";
 @Component({
     selector: "grupos-caballos-detail",
     templateUrl: "./grupos-caballos-detail.html",
+    styles: [".text-center {text-align: center;}"],
     providers: [CaballoService, CommonService, GruposCaballosService, SecurityService]
 })
 export class GruposCaballosDetailPage implements OnInit {
@@ -39,6 +40,7 @@ export class GruposCaballosDetailPage implements OnInit {
         public toastController: ToastController
     ) {
         this.modoEdicion = false;
+        this.gruposCaballosRespaldo = [];
         this.caballos = [];
     }
 
@@ -52,8 +54,11 @@ export class GruposCaballosDetailPage implements OnInit {
         this.navController.pop();
     }
 
-    countCaballos(): number {
-        return this.caballos.filter(c => c.seleccion).length;
+    selectAll(): void {
+        let selectAll: boolean = this.countCaballos() !== this.caballosRespaldo.length;
+        this.caballosRespaldo.forEach(c => {
+            c.seleccion = selectAll;
+        });
     }
 
     filterGrupoCaballo(evt: any): void {
@@ -84,16 +89,6 @@ export class GruposCaballosDetailPage implements OnInit {
         this.modoEdicion = true;//Habilitamos la vista!
     }
 
-    private listCaballosByGrupo(): void {
-        this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
-            .then(caballos => {
-                this.gruposCaballosRespaldo = caballos;
-                this.gruposCaballos = caballos;
-            }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error consultando los caballos del grupo");
-            });
-    }
-
     save(): void {
         this.grupo.Descripcion = this.grupoCaballosForm.value.Descripcion;
         this.grupo.Caballo = this.caballos.filter(c => c.seleccion).map(c => c.caballo);
@@ -112,4 +107,17 @@ export class GruposCaballosDetailPage implements OnInit {
             });
     }
 
+    private listCaballosByGrupo(): void {
+        this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
+            .then(caballos => {
+                this.gruposCaballosRespaldo = caballos;
+                this.gruposCaballos = caballos;
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error consultando los caballos del grupo");
+            });
+    }
+
+    private countCaballos(): number {
+        return this.caballosRespaldo.filter(c => c.seleccion).length;
+    }
 }
