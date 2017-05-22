@@ -19,7 +19,5 @@ namespace Equilinked.DAL.Models
         public string SuplementosDietarios { get; set; }
         public string Pasto { get; set; }
         public int Caballo_ID { get; set; }
-    
-        public virtual Caballo Caballo { get; set; }
     }
 }

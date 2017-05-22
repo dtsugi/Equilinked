@@ -1,0 +1,141 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Nuevo Caballo
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <form [formGroup]="form" (ngSubmit)="save()">
+        <ion-grid>
+            <ion-row>
+                <ion-col col-3>Nombre</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="Nombre"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Género</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="Genero_ID">
+                            <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Pelaje</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="Pelaje_ID">
+                            <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Fecha de Nacimiento</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNacimiento"
+                            max="2050"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>ADN</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3># Chip</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="NumeroChip"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3># ID</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="Nombre"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Otras marcas</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-select formControlName="OtrasMarcas_ID">
+                            <ion-option *ngFor="let item of otrasMarcasList" [value]="item.Key">{{item.Value}}</ion-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row>
+                <ion-col><b>Registro Federación Nacional</b></ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3># Registro</ion-col>
+                <ion-col col-3>
+                    <ion-item>
+                        <ion-input type="text" formControlName="NumeroFEN"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col col-3>Pagado</ion-col>
+                <ion-col col-3>
+                    <ion-item>
+                        <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row>
+                <ion-col><b>Registro Federación Internacional (FEI)</b></ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3># Registro</ion-col>
+                <ion-col col-3>
+                    <ion-item>
+                        <ion-input type="text" formControlName="NumeroFEI"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col col-3>Pagado</ion-col>
+                <ion-col col-3>
+                    <ion-item>
+                        <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <hr>
+            <ion-row>
+                <ion-col><b>Deporte y cuidados</b></ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Embocadura</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="Embocadura"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col col-3>Extras de cabezada</ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" formControlName="ExtrasDeCabezada"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <button ion-button block type="submit" [disabled]="!form.valid" >Guardar</button>
+    </form>
+</ion-content>

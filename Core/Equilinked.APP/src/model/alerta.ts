@@ -1,14 +1,12 @@
-import { Caballo } from './caballo';
 export class Alerta {
     public ID: number;
     public Titulo: string;
     public FechaNotificacion: string;
     public HoraNotificacion: string;
-    public TipoAlerta: number;
+    public Tipo: number;
     public Activa: boolean;
-    public Descripcion: string;
-    public Caballo: Caballo;
-    public CaballoId:number;
+    public Descripcion: string;        
+    public CaballosList;
 
     constructor() { }
 }

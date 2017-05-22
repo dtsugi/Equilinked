@@ -32,15 +32,21 @@ export class NotificacionesPage {
         private _securityService: SecurityService) { }
 
     ngOnInit() {
-        this.isFutureNotifications = false;        
+        this.isFutureNotifications = false;
         let dateTimeNow: DateObject = Utils.getDateNow();
         this.session = this._securityService.getInitialConfigSession();
         console.log(this.session);
-        this.updateNotificationList(dateTimeNow, false);        
+        this.updateNotificationList(dateTimeNow, false);
     }
 
     goInsertNotificacion() {
-        this.navCtrl.push(NotificacionesInsertPage);
+        this.navCtrl.push(NotificacionesInsertPage,
+            {
+                alertaEntity: new Alerta(),
+                isFromNotas: false,
+                isUpdate: false,
+                callbackController: this
+            });
     }
 
     goViewNotificacion(notificacion: Alerta) {
@@ -122,5 +128,9 @@ export class NotificacionesPage {
 
     clearNotificationList() {
         this.notificacionList = [];
+    }
+
+    reloadController() {
+        this.ngOnInit();
     }
 }

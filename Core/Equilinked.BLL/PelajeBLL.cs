@@ -1,4 +1,5 @@
-﻿using Equilinked.DAL.Models;
+﻿using Equilinked.DAL.Dto;
+using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -50,6 +51,17 @@ namespace Equilinked.BLL
                 this.LogException(ex);
                 return null;
             }
+        }
+
+        public List<ComboBoxDto> GetAllComboBox()
+        {
+            List<Pelaje> listPelaje = this.GetAll();
+            List<ComboBoxDto> listCombo = new List<ComboBoxDto>();
+            foreach (Pelaje item in listPelaje)
+            {
+                listCombo.Add(new ComboBoxDto(item.ID.ToString(), item.Descripcion));
+            }
+            return listCombo;
         }
 
     }

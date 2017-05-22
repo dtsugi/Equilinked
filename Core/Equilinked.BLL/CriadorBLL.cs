@@ -9,41 +9,41 @@ using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
-    public class GeneroBLL : BLLBase, IBase<Genero>
+    public class CriadorBLL : BLLBase, IBase<Criador>
     {
 
-        public List<Genero> GetAll()
+        public List<Criador> GetAll()
         {
-            return this._dbContext.Genero.ToList();
+            return this._dbContext.Criador.ToList();
         }
 
-        public Genero GetById(int id)
+        public Criador GetById(int id)
         {
-            return this._dbContext.Genero.Where(x => x.ID == id).FirstOrDefault();
+            return this._dbContext.Criador.Where(x => x.ID == id).FirstOrDefault();
         }
 
         public bool DeleteById(int id)
         {
-            Genero entity = this._dbContext.Genero.Find(id);
+            Criador entity = this._dbContext.Criador.Find(id);
             this._dbContext.Entry(entity).State = EntityState.Modified;
             this._dbContext.SaveChanges();
             return true;
         }
 
-        public Genero Insert(Genero entity)
+        public Criador Insert(Criador entity)
         {
-            this._dbContext.Genero.Add(entity);
+            this._dbContext.Criador.Add(entity);
             this._dbContext.SaveChanges();
             return entity;
         }
 
         public List<ComboBoxDto> GetAllComboBox()
         {
-            List<Genero> list = this.GetAll();
+            List<Criador> list = this.GetAll();
             List<ComboBoxDto> listCombo = new List<ComboBoxDto>();
-            foreach (Genero item in list)
+            foreach (Criador item in list)
             {
-                listCombo.Add(new ComboBoxDto(item.ID.ToString(), item.Descripcion));
+                listCombo.Add(new ComboBoxDto(item.ID.ToString(), item.Nombre));
             }
             return listCombo;
         }

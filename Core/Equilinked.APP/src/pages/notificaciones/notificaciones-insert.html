@@ -20,7 +20,8 @@
         </ion-item>
         <ion-item>
             <ion-label>Fecha</ion-label>
-            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion" max="2050"></ion-datetime>
+            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion"
+                max="2050"></ion-datetime>
         </ion-item>
         <ion-item>
             <ion-label>Hora</ion-label>
@@ -28,8 +29,8 @@
         </ion-item>
         <ion-item>
             <ion-label>Tipo</ion-label>
-            <ion-select formControlName="TipoNotificacion">
-                <ion-option *ngFor="let tipoNotificacion of tiposAlertaList" [value]="tipoNotificacion">{{tipoNotificacion}}</ion-option>
+            <ion-select formControlName="Tipo">
+                <ion-option *ngFor="let item of tiposAlertaList" [disabled]="disableFromNotas" [value]="item.Key">{{item.Value}}</ion-option>
             </ion-select>
         </ion-item>
         <ion-item>
@@ -41,9 +42,9 @@
             <ion-input type="text" formControlName="Descripcion"></ion-input>
         </ion-item>
         <ion-item>
-            <ion-label>Caballo</ion-label>
-            <ion-select formControlName="CaballoId" multiple="false">
-                <ion-option *ngFor="let caballo of caballosList" [value]="caballo.ID">{{caballo.Nombre}}</ion-option>
+            <ion-label>Caballos</ion-label>
+            <ion-select formControlName="CaballosList" multiple="true">
+                <ion-option *ngFor="let item of selectCaballos" [disabled]="disableFromNotas" [value]="item.Key">{{item.Value}}</ion-option>
             </ion-select>
         </ion-item>
         <button ion-button block type="submit" [disabled]="!formNotificaciones.valid" *ngIf="!isUpdate">Guardar</button>

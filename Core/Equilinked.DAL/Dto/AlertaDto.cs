@@ -1,4 +1,5 @@
-﻿using Equilinked.DAL.Models;
+﻿using Equilinked.DAL.Dto;
+using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,10 @@ namespace Equilinked.DAL.Dto
         public string Titulo { get; set; }
         public DateTime FechaNotificacion { get; set; }
         public string HoraNotificacion { get; set; }
-        public int Tipo { get; set; }
+        public int Tipo{ get; set; }
         public bool Activa { get; set; }
         public string Descripcion { get; set; }
-        public Nullable<int> Caballo_ID { get; set; }
-        public IDictionary<int, string> DictionaryCaballos { get; set; }
+        public List<int> CaballosList { get; set; }
 
         public AlertaDto() { }
 
@@ -30,10 +30,23 @@ namespace Equilinked.DAL.Dto
             this.Tipo = alerta.Tipo;
             this.Activa = alerta.Activa;
             this.Descripcion = alerta.Descripcion;
-            //if (alerta.Caballo1 != null && alerta.Caballo1.Count > 0)
-            //{
-            //    this.DictionaryCaballos = alerta.Caballo1.ToDictionary(x => x.ID, z => z.Nombre);
-            //}
+        }
+    }
+}
+
+namespace Equilinked.DAL.Models
+{
+    public partial class Alerta
+    {
+        public Alerta(AlertaDto alertaDto)
+        {
+            this.ID = alertaDto.ID;
+            this.Titulo = alertaDto.Titulo;
+            this.FechaNotificacion = alertaDto.FechaNotificacion;
+            this.HoraNotificacion = alertaDto.HoraNotificacion;
+            this.Tipo = alertaDto.Tipo;
+            this.Activa = alertaDto.Activa;
+            this.Descripcion = alertaDto.Descripcion;
         }
     }
 }

@@ -697,8 +697,6 @@
           <Property Name="Activa" Type="Boolean" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Caballo_ID" Type="Int32" />
-          <NavigationProperty Name="AlertaCaballo" Relationship="Self.FK_AlertaCaballo_Alerta" FromRole="Alerta" ToRole="AlertaCaballo" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Alerta_dbo_Caballo_Caballo_ID" FromRole="Alerta" ToRole="Caballo" />
           <NavigationProperty Name="Evento" Relationship="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID" FromRole="Alerta" ToRole="Evento" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
@@ -708,8 +706,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Alerta_ID" Type="Int32" Nullable="false" />
           <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Alerta" Relationship="Self.FK_AlertaCaballo_Alerta" FromRole="AlertaCaballo" ToRole="Alerta" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_AlertaCaballo_Caballo" FromRole="AlertaCaballo" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Alimentacion">
           <Key>
@@ -720,7 +716,6 @@
           <Property Name="SuplementosDietarios" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Pasto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Caballo" Relationship="Self.PK_Alimentacion_Caballo" FromRole="Alimentacion" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Caballo">
           <Key>
@@ -750,8 +745,6 @@
           <Property Name="Pelaje_ID" Type="Int32" Nullable="false" />
           <Property Name="PersonaACargo_ID" Type="Int32" />
           <Property Name="Propietario_ID" Type="Int32" />
-          <NavigationProperty Name="Alerta" Relationship="Self.FK_dbo_Alerta_dbo_Caballo_Caballo_ID" FromRole="Caballo" ToRole="Alerta" />
-          <NavigationProperty Name="AlertaCaballo" Relationship="Self.FK_AlertaCaballo_Caballo" FromRole="Caballo" ToRole="AlertaCaballo" />
           <NavigationProperty Name="Alimentacion1" Relationship="Self.PK_Alimentacion_Caballo" FromRole="Caballo" ToRole="Alimentacion" />
           <NavigationProperty Name="Criador" Relationship="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID" FromRole="Caballo" ToRole="Criador" />
           <NavigationProperty Name="Establecimiento" Relationship="Self.FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID" FromRole="Caballo" ToRole="Establecimiento" />

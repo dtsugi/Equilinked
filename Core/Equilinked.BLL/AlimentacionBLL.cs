@@ -23,34 +23,39 @@ namespace Equilinked.BLL
 
         public bool DeleteById(int id)
         {
-            try
-            {
-                Alimentacion entity = this._dbContext.Alimentacion.Find(id);
-                this._dbContext.Entry(entity).State = EntityState.Modified;
-                this._dbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                this.LogException(ex);
-                return false;
-            }
-
+            Alimentacion entity = this._dbContext.Alimentacion.Find(id);
+            this._dbContext.Entry(entity).State = EntityState.Deleted;
+            this._dbContext.SaveChanges();
+            return true;
         }
 
         public Alimentacion Insert(Alimentacion entity)
         {
-            try
+            this._dbContext.Alimentacion.Add(entity);
+            this._dbContext.SaveChanges();
+            return entity;
+        }
+
+        public Alimentacion Update(Alimentacion entity)
+        {
+            this._dbContext.Entry(entity).State = EntityState.Modified;
+            this._dbContext.SaveChanges();
+            return entity;
+        }
+        public Alimentacion GetByCaballoId(int idCaballo)
+        {
+            return this._dbContext.Alimentacion.Where(x => x.Caballo_ID == idCaballo).FirstOrDefault();
+        }
+
+        public bool DeleteByCaballoId(int caballoId)
+        {
+            Alimentacion entity = this._dbContext.Alimentacion.Where(x => x.Caballo_ID == caballoId).FirstOrDefault();
+            if (entity != null)
             {
-                this._dbContext.Alimentacion.Add(entity);
+                this._dbContext.Entry(entity).State = EntityState.Deleted;
                 this._dbContext.SaveChanges();
-                return entity;
             }
-            catch (Exception ex)
-            {
-                this.LogException(ex);
-                return null;
-            }
+            return true;
         }
     }
 }

@@ -116,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Caballo\" />
-    <Folder Include="Views\Propietario\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -138,6 +136,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\ExtendedCaballoController.cs" />
+    <Compile Include="Controllers\AlertaCaballoController.cs" />
+    <Compile Include="Controllers\AlimentacionController.cs" />
     <Compile Include="Controllers\AlertaController.cs" />
     <Compile Include="Controllers\CaballoController.cs" />
     <Compile Include="Controllers\EquilinkedBaseController.cs" />

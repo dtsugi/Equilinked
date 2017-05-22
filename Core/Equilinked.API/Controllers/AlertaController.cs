@@ -1,5 +1,6 @@
 ﻿using Equilinked.API.helpers;
 using Equilinked.BLL;
+using Equilinked.DAL.Dto;
 using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -82,20 +83,26 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpPost, Route("api/Alerta/Save")]
-        [ResponseType(typeof(Alerta))]
-        public async Task<HttpResponseMessage> Save(Alerta alerta)
+        [ResponseType(typeof(AlertaDto))]
+        public async Task<HttpResponseMessage> Save(AlertaDto alertaDto)
         {
             try
             {
                 HttpResponseMessage response;
-                _alertaBLL.Insert(alerta);
-                if (alerta.ID > 0)
+                AlertaCaballoBLL _alertaCaballoBLL = new AlertaCaballoBLL();                
+                Alerta alerta = new Alerta(alertaDto);
+                if (alertaDto.ID <= 0)
                 {
+                    _alertaBLL.Insert(alerta);
+                    _alertaCaballoBLL.InsertFromCaballosList(alerta.ID, alertaDto.CaballosList);
                     response = Request.CreateResponse(HttpStatusCode.OK, alerta);
                 }
                 else
                 {
-                    response = Request.CreateResponse(HttpStatusCode.PreconditionFailed, new { Message = EquilinkedConstants.MSG_ERROR_CREATE });
+                    _alertaBLL.Update(alerta);
+                    _alertaCaballoBLL.DeleteByAlertaId(alerta.ID);
+                    _alertaCaballoBLL.InsertFromCaballosList(alerta.ID, alertaDto.CaballosList);
+                    response = Request.CreateResponse(HttpStatusCode.OK, alerta);
                 }
                 return response;
             }
@@ -126,6 +133,34 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible crear la notificacion"));
+            }
+        }
+
+        [HttpGet, Route("api/Alerta/GetAllTiposAlerta")]
+        public IHttpActionResult GetAllTiposAlerta()
+        {
+            try
+            {
+                return Ok(_alertaBLL.GetAllTiposAlerta());
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
+            }
+        }
+
+        [HttpGet, Route("api/Alerta/GetAllByCaballoId/{caballoId}/{tipoAlertasEnum}")]
+        public IHttpActionResult GetAllByCaballoId(int caballoId, int tipoAlertasEnum = 0)
+        {
+            try
+            {
+                return Ok(_alertaBLL.GetAllByCaballoId(caballoId, tipoAlertasEnum));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
             }
         }
     }

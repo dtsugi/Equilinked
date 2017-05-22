@@ -61,4 +61,18 @@ export class AlertaService {
         //     .map(response => response.json());
         return this._http.delete(this.url + "?alertaId=" + id)
     }
+
+    getAllTiposAlerta() {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllTiposAlerta/", []);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
+
+    getAllByCaballoId(caballoId: number, tipoAlertasEnum: number) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllByCaballoId/", [caballoId, tipoAlertasEnum]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 }

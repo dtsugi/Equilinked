@@ -27,21 +27,21 @@ export class NotificacionesViewPage {
         private _caballoService: CaballoService) {
     }
 
-    // ionViewDidLoad() { console.log("ionViewDidLoad"); }
-    // ionViewWillEnter() { console.log("ionViewWillEnter"); }
-    // ionViewDidEnter() {
-    //     console.log("ionViewDidEnter");
-    // }
-    // ionViewWillLeave() { console.log("ionViewWillLeave"); }
-    // ionViewWillUnload() { console.log("ionViewWillUnload"); }
-    // ionViewCanEnter() { console.log("ionViewCanEnter"); }
-    // ionViewCanLeave() { console.log("ionViewCanLeave"); }
+    ionViewDidLoad() { console.log("ionViewDidLoad"); }
+    ionViewWillEnter() { console.log("ionViewWillEnter"); }
+    ionViewDidEnter() {
+        console.log("ionViewDidEnter");
+    }
+    ionViewWillLeave() { console.log("ionViewWillLeave"); }
+    ionViewWillUnload() { console.log("ionViewWillUnload"); }
+    ionViewCanEnter() { console.log("ionViewCanEnter"); }
+    ionViewCanLeave() { console.log("ionViewCanLeave"); }
 
     ngOnInit() {
         console.log("ngOnInit");
         this.alertaEntity = this.navParams.get("notificacionSelected");
         // let fechaNotificacion = this.navParams.get("fecha");
-        this.getCaballoInfo(this.alertaEntity.CaballoId, this.alertaEntity.FechaNotificacion);
+        // this.getCaballoInfo(this.alertaEntity.CaballoId, this.alertaEntity.FechaNotificacion);
     }
 
     getCaballoInfo(caballoId: number, fechaNotificacion: string) {
@@ -75,9 +75,9 @@ export class NotificacionesViewPage {
 
     // OBTENER NOMBRE DEL GRUPO DE CABALLO, SI LO POSEE
     getDescGrupoCaballo(caballo: Caballo): string {
-        if (caballo.Grupo != null)
-            return caballo.Grupo.Descripcion;
-        else
+        // if (caballo.Grupo != null)
+        //     return caballo.Grupo.Descripcion;
+        // else
             return "";
         // return "Grupo del caballo";
     }

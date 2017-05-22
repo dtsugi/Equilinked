@@ -17,8 +17,5 @@ namespace Equilinked.DAL.Models
         public int ID { get; set; }
         public int Alerta_ID { get; set; }
         public int Caballo_ID { get; set; }
-    
-        public virtual Alerta Alerta { get; set; }
-        public virtual Caballo Caballo { get; set; }
     }
 }

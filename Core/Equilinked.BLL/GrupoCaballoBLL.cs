@@ -27,12 +27,12 @@ namespace Equilinked.BLL
                 db.Database.ExecuteSqlCommand(updateGrupo,
                         new SqlParameter("Descripcion", entity.Descripcion),
                         new SqlParameter("Id", GrupoId));
-                   
+
                 //Para eliminar los que ya quito el usuario
-                foreach(GrupoCaballo gc in caballosByPropietario)
+                foreach (GrupoCaballo gc in caballosByPropietario)
                 {
                     Boolean encontrado = false;
-                    foreach(Caballo c in entity.Caballo)
+                    foreach (Caballo c in entity.Caballo)
                     {
                         encontrado = c.ID == gc.Caballo_ID;
                         if (encontrado)
@@ -40,7 +40,7 @@ namespace Equilinked.BLL
                             break;
                         }
                     }
-                    if(!encontrado)
+                    if (!encontrado)
                     {
                         db.Database.ExecuteSqlCommand(deleteGrupoCaballo,
                             new SqlParameter("Id", gc.ID));
@@ -73,7 +73,7 @@ namespace Equilinked.BLL
 
         public List<GrupoCaballo> GetGrupoCaballosByGrupoId(int GrupoID)
         {
-            using(var db = this._dbContext)
+            using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
                 return db.GrupoCaballo
@@ -85,7 +85,7 @@ namespace Equilinked.BLL
 
         public List<Grupo> GetAllByPropietario(int PropietarioID)
         {
-            using(var db = this._dbContext)
+            using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
                 return db.Grupo
@@ -94,7 +94,7 @@ namespace Equilinked.BLL
                     .OrderBy(g => g.Descripcion)
                     .ToList();
             }
-            
+
         }
 
         public List<Caballo> GetAllCaballosByPropietario(int PropietarioID)
@@ -146,14 +146,26 @@ namespace Equilinked.BLL
                 db.SaveChanges();
                 foreach (Caballo c in caballos)
                 {
-                    
+
                     db.Database.ExecuteSqlCommand("INSERT INTO GrupoCaballo(Grupo_ID, Caballo_ID) VALUES(@GrupoId, @CaballoId)",
-                        new SqlParameter("GrupoId",entity.ID),
+                        new SqlParameter("GrupoId", entity.ID),
                         new SqlParameter("CaballoId", c.ID));
                 }
-                
+
                 return entity;
             }
+        }
+
+        public bool DeleteByCaballoId(int caballoId)
+        {
+            List<GrupoCaballo> listToRemove = this._dbContext.GrupoCaballo
+                .Where(x => x.Caballo_ID == caballoId).ToList();
+            if (listToRemove != null && listToRemove.Count > 0)
+            {
+                _dbContext.GrupoCaballo.RemoveRange(listToRemove);
+                _dbContext.SaveChanges();
+            }
+            return true;
         }
     }
 }

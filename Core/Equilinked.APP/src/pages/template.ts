@@ -20,7 +20,9 @@ export class TemplatePage {
     }
 
     ngOnInit() {
-        this.initForm();
+        if (this._commonService.IsValidParams(this.navParams, [""])) {
+            this.initForm();
+        }
     }
 
     initForm() {

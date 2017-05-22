@@ -23,13 +23,18 @@ namespace Equilinked.BLL
 
         public bool DeleteById(int id)
         {
-            throw new NotImplementedException();
+            Caballo entity = this._dbContext.Caballo.Find(id);
+            this._dbContext.Entry(entity).State = EntityState.Deleted;
+            this._dbContext.SaveChanges();
+            return true;
         }
 
         public Caballo Insert(Caballo entity)
         {
-            throw new NotImplementedException();
-        }        
+            this._dbContext.Caballo.Add(entity);
+            this._dbContext.SaveChanges();
+            return entity;
+        }
 
         public List<CaballoDto> GetAllSerializedByPropietarioId(int propietarioId)
         {
@@ -42,9 +47,42 @@ namespace Equilinked.BLL
             return listSerialized;
         }
 
+        public List<ComboBoxDto> GetAllComboBoxByPropietarioId(int propietarioId)
+        {
+            List<ComboBoxDto> listSerialized = new List<ComboBoxDto>();
+            List<Caballo> listCaballo = this.GetAllByPropietarioId(propietarioId);
+            foreach (Caballo item in listCaballo)
+            {
+                listSerialized.Add(new ComboBoxDto(item.ID.ToString(), item.Nombre));
+            }
+            return listSerialized;
+        }
+
         private List<Caballo> GetAllByPropietarioId(int propietarioId)
         {
             return _dbContext.Caballo.Where(x => x.Propietario_ID == propietarioId).ToList();
+        }
+
+        public bool DeleteWihFKById(int caballoId, out string messageError)
+        {
+            messageError = string.Empty;
+            AlertaCaballoBLL _alertaCaballoBLL = new AlertaCaballoBLL();
+            if (_alertaCaballoBLL.DeleteByCaballoId(caballoId))
+            {
+                GrupoCaballoBLL _grupoCaballoBLL = new GrupoCaballoBLL();
+                if (_grupoCaballoBLL.DeleteByCaballoId(caballoId))
+                {
+                    AlimentacionBLL _alimentacionBLL = new AlimentacionBLL();
+                    if (_alimentacionBLL.DeleteByCaballoId(caballoId))
+                    {
+                        return this.DeleteById(caballoId);
+                    }
+                    else { messageError = "Error eliminando la alimentacion del caballo"; }
+                }
+                else { messageError = "Error eliminando los grupos del caballo"; }
+            }
+            else { messageError = "Error eliminando las alertas del caballo"; }
+            return false;
         }
     }
 }

@@ -8,8 +8,9 @@ import { CaballoService } from '../../../../services/caballo.service';
 import { SecurityService} from '../../../../services/security.service';
 import { Caballo } from '../../../../model/caballo';
 import { UserSessionEntity } from '../../../../model/userSession';
-// import { AdminCaballoPage } from '../../adminCaballo/adminCaballo';
-// import { FichaCaballo } from '../../fichaCaballo/fichaCaballo';
+import { FichaCaballoPage} from '../../ficha-caballo/ficha-caballo-home';
+import { AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
+
 
 @Component({
   selector: 'caballos-ind',
@@ -20,6 +21,7 @@ export class CaballosInd {
   caballos: Array<Caballo>;
   caballosList: Array<Caballo>;
   session: UserSessionEntity;
+  isDeleting: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -65,17 +67,40 @@ export class CaballosInd {
   // }
 
   // NAVEGACIÓN A FICHA DE CABALLO
-  goToFicha(anIdCaballo: number): void {
-    // let caballoSeleccionado = this.caballosList.filter((caballo) => {
-    //   return (caballo.ID == anIdCaballo);
-    // })[0];
-    // this.navController.push(FichaCaballo, {
-    //   unCaballo: caballoSeleccionado
-    // });
+  goToFicha(caballoSelected: Caballo): void {
+    /* Flag para determinar que no se este eliminando al mismo tiempo */
+    if (!this.isDeleting) {
+      this.navCtrl.push(FichaCaballoPage, {
+        caballoSelected: caballoSelected
+      });
+    }
   }
 
   // NAVEGACIÓN A NUEVA FICHA DE CABALLO
-  goToNuevaFicha(): void {
-    // this.navController.push(AdminCaballoPage);
+  goInsertCaballo(): void {
+    this.navCtrl.push(AdminCaballosInsertPage, {
+      callbackController: this
+    });
+
+  }
+
+  deleteCaballo(caballoId: number) {
+    console.log("ELIMINANDO ID:", caballoId);
+    this.isDeleting = true;
+    this._commonService.showLoading("Eliminando..");
+    this._caballoService.delete(caballoId)
+      .subscribe(res => {
+        this._commonService.hideLoading();
+        console.log(res);
+        this.reloadController();
+        this.isDeleting = false;
+      }, error => {
+        this._commonService.ShowErrorHttp(error, "Error al eliminar el caballo");
+        this.isDeleting = false;
+      });
+  }
+
+  reloadController() {
+    this.loadcaballos();
   }
 }
