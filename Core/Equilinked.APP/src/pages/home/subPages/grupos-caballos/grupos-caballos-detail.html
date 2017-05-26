@@ -14,7 +14,7 @@
         <ion-title *ngIf="modoEdicion">Edición de grupo</ion-title>
 
         <ion-buttons right>
-            <button *ngIf="!modoEdicion" ion-button icon-only (click)="editGrupos()">
+            <button *ngIf="!modoEdicion" ion-button icon-only [disabled]="grupo.GrupoDefault" (click)="editGrupos()">
                 <ion-icon name="create"></ion-icon>
             </button>
 
@@ -36,8 +36,8 @@
                 </ion-avatar>
                 <h2>{{gc.Caballo.Nombre}}</h2>
             </ion-item>
-            <ion-item class="text-center" *ngIf="gruposCaballosRespaldo.length === 0">
-                Sin caballos en el grupo
+            <ion-item class="text-center" [hidden]="!loadData">
+                <div [hidden]="gruposCaballosRespaldo.length > 0">Sin caballos en el grupo</div>
             </ion-item>
         </ion-list>
     </div>

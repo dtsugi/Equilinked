@@ -58,7 +58,8 @@ export class AdminGruposCaballosPage implements OnInit {
         let grupo = {
             Caballo: this.caballos.filter(c => c.seleccion).map(c => c.caballo),
             Descripcion: this.grupoCaballosForm.value.Descripcion,
-            Propietario_ID: this.session.PropietarioId
+            Propietario_ID: this.session.PropietarioId,
+            GrupoDefault: false
         };
 
         this.commonService.showLoading("Procesando..");

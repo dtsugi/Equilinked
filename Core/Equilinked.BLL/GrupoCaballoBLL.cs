@@ -88,11 +88,14 @@ namespace Equilinked.BLL
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
+                //1. Preguntar si existe el grupo default (GrupoDefault = 0)
+                //1.1 Si no existe crear el grupo "Todos mis caballos"
+                //1.2 Asignar todos los caballos del propietario a ese grupo
                 return db.Grupo
                     .Include("GrupoCaballo")
                     .Where(g => g.Propietario_ID == PropietarioID)
                     .OrderBy(g => g.Descripcion)
-                    .ToList();
+                    .ToList(); //1.3 Listar todos los grupos
             }
 
         }

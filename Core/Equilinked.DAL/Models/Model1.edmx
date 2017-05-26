@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -123,6 +123,7 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
           <Property Name="Propietario_ID" Type="int" />
+          <Property Name="GrupoDefault" Type="bit" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
@@ -819,6 +820,7 @@
           <NavigationProperty Name="GrupoCaballo" Relationship="Self.FK_GrupoCaballo_Grupo_ID" FromRole="Grupo" ToRole="GrupoCaballo" />
           <Property Name="Propietario_ID" Type="Int32" />
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Grupo" ToRole="Propietario" />
+          <Property Name="GrupoDefault" Type="Boolean" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
@@ -1525,6 +1527,7 @@
           <EntitySetMapping Name="Grupo">
             <EntityTypeMapping TypeName="EquilinkedModel.Grupo">
               <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="GrupoDefault" ColumnName="GrupoDefault" />
                 <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />

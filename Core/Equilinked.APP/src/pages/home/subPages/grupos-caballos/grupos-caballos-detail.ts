@@ -29,6 +29,8 @@ export class GruposCaballosDetailPage implements OnInit {
     private modoEdicion: boolean; //Para habilitar el div de edición
     private session: UserSessionEntity;
 
+    private loadData: boolean = false;
+
     constructor(
         private caballoService: CaballoService,
         private commonService: CommonService,
@@ -70,6 +72,7 @@ export class GruposCaballosDetailPage implements OnInit {
     }
 
     editGrupos(): void {
+        this.commonService.showLoading("Procesando..");
         this.grupoCaballosForm = this.formBuilder.group({
             Descripcion: [this.grupo.Descripcion, Validators.required]
         });
@@ -83,6 +86,7 @@ export class GruposCaballosDetailPage implements OnInit {
                     };
                 });
                 this.caballos = this.caballosRespaldo;
+                this.commonService.hideLoading();
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error consultando los caballos del propietario");
             });
@@ -108,10 +112,13 @@ export class GruposCaballosDetailPage implements OnInit {
     }
 
     private listCaballosByGrupo(): void {
+        this.commonService.showLoading("Procesando..");
         this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
-            .then(caballos => {
+            .then(caballos => { 
                 this.gruposCaballosRespaldo = caballos;
                 this.gruposCaballos = caballos;
+                this.loadData = true;
+                this.commonService.hideLoading();
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error consultando los caballos del grupo");
             });

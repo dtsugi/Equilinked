@@ -1,0 +1,2 @@
+ALTER TABLE Grupo ADD GrupoDefault BIT DEFAULT 0 
+GO
