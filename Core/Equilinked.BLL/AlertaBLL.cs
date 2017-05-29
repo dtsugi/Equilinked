@@ -101,7 +101,7 @@ namespace Equilinked.BLL
             foreach (var item in listAlertaCaballo)
             {
                 Alerta alerta;
-                if (tipoAlertasEnum != null)
+                if (tipoAlertasEnum > 0)
                 {
                     alerta = this._dbContext.Alerta.Where(x => x.ID == item.Key && x.Tipo == tipoAlertasEnum).FirstOrDefault();
                 }
@@ -121,6 +121,17 @@ namespace Equilinked.BLL
                 }
             }
             return listAlertas;
+        }
+
+        public List<AlertaDto> GetAllSerializedByCaballoId(int caballoId, int tipoAlertasEnum)
+        {
+            List<Alerta> listAlerta = this.GetAllByCaballoId(caballoId, tipoAlertasEnum);
+            List<AlertaDto> listDto = new List<AlertaDto>();
+            foreach (Alerta item in listAlerta)
+            {
+                listDto.Add(new AlertaDto(item));
+            }
+            return listDto;
         }
     }
 }

@@ -49,6 +49,7 @@
     <Compile Include="CaballoBLL.cs" />
     <Compile Include="CriadorBLL.cs" />
     <Compile Include="GrupoCaballoBLL.cs" />
+    <Compile Include="OtrasMarcasBLL.cs" />
     <Compile Include="PersonaACargoBLL.cs" />
     <Compile Include="PropietarioBLL.cs" />
     <Compile Include="PelajeBLL.cs" />

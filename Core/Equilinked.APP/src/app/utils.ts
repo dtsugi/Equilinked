@@ -48,6 +48,7 @@ export class Utils {
 }
 
 export class ConstantsConfig {
+
     static USER_ID_LS = "userIdLS";
     static USER_NAME_LS = "usernameLS";
     static USER_PASSWORD_LS = "userPasswordLS";
@@ -58,4 +59,9 @@ export class ConstantsConfig {
     static RES_NN = "Sin valor asignado";
     static RES_SIN_REGISTROS = "No se encontraron registros";
 
+    static ALERTA_TIPO_HERRAJE = 1;
+    static ALERTA_TIPO_DESPARACITACION = 2;
+    static ALERTA_TIPO_EVENTOS = 3;
+    static ALERTA_TIPO_DENTISTA = 4;
+    static ALERTA_TIPO_NOTASVARIAS = 5;
 }

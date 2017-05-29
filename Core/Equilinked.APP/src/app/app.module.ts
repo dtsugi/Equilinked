@@ -14,6 +14,7 @@ import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
 import { NotificacionesPage } from '../pages/notificaciones/notificaciones';
 import { NotificacionesViewPage } from '../pages/notificaciones/notificaciones-view';
 import { NotificacionesInsertPage } from '../pages/notificaciones/notificaciones-insert';
+import { NotificacionesExtendedInsertPage } from '../pages/notificaciones/notificaciones-extended-insert';
 
 /* Caballos */
 import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/admin-grupos-caballos";
@@ -28,6 +29,10 @@ import {AlimentacionEditPage } from "../pages/home/ficha-caballo/alimentacion/al
 import {PopoverAlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/pop-over/pop-over-alimentacion";
 /* Caballos-Notas */
 import {NotasPage } from "../pages/home/ficha-caballo/notas/notas";
+/* Caballos-Datos */
+import {DatosViewPage } from "../pages/home/ficha-caballo/datos/datos-view";
+/* Caballos-Herrajes */
+import { HerrajesPage } from "../pages/home/ficha-caballo/herrajes/herrajes";
 /* Perfil */
 import { PerfilDatosPage } from "../pages/perfil/perfil-datos";
 import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
@@ -39,11 +44,12 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     HomePage,
     TabsPage,
     MenuSuperior,
-    CaballosInd,    
+    CaballosInd,
     /* Notificaciones */
     NotificacionesPage,
     NotificacionesViewPage,
     NotificacionesInsertPage,
+    NotificacionesExtendedInsertPage,
     /* Caballos */
     AdminGruposCaballosPage,
     FichaCaballoPage,
@@ -57,6 +63,10 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     PopoverAlimentacionPage,
     /* Caballos-Notas */
     NotasPage,
+    /* Caballos-Datos */
+    DatosViewPage,
+    /* Caballos-Herrajes */
+    HerrajesPage,
     /* Perfil */
     PerfilDatosPage,
     PopoverDatosPage
@@ -76,11 +86,12 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     NotificacionesPage,
     NotificacionesViewPage,
     NotificacionesInsertPage,
+    NotificacionesExtendedInsertPage,
     /* Caballos */
     AdminGruposCaballosPage,
     FichaCaballoPage,
     AdminCaballosInsertPage,
-    /* Caballos-Grupos */    
+    /* Caballos-Grupos */
     GruposCaballosDetailPage,
     /* Caballos-Alimentacion */
     AlimentacionPage,
@@ -88,6 +99,10 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     PopoverAlimentacionPage,
     /* Caballos-Notas */
     NotasPage,
+    /* Caballos-Datos */
+    DatosViewPage,
+    /* Caballos-Herrajes */
+    HerrajesPage,
     /* Perfil */
     PerfilDatosPage,
     PopoverDatosPage

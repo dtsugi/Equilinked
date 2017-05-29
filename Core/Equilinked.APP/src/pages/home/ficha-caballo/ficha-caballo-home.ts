@@ -4,8 +4,10 @@ import { NavController, NavParams} from 'ionic-angular';
 import {Utils} from '../../../app/utils'
 import { CommonService } from '../../../services/common.service';
 import { Caballo } from '../../../model/caballo';
+import {DatosViewPage} from './datos/datos-view';
 import {AlimentacionPage} from './alimentacion/alimentacion';
 import {NotasPage} from './notas/notas';
+import {HerrajesPage} from './herrajes/herrajes';
 
 @Component({
     templateUrl: 'ficha-caballo-home.html',
@@ -43,7 +45,15 @@ export class FichaCaballoPage {
         switch (idOption) {
             // DATOS
             case 1:
-                console.log("DATOS");
+                this.navCtrl.push(DatosViewPage, {
+                    idCaballoSelected: this.caballo.ID
+                });
+                break;
+            // HERRAJES
+            case 5:
+                this.navCtrl.push(HerrajesPage, {
+                    idCaballoSelected: this.caballo.ID
+                });
                 break;
             // ALIMENTACION
             case 6:
@@ -51,6 +61,7 @@ export class FichaCaballoPage {
                     idCaballoSelected: this.caballo.ID
                 });
                 break;
+            // NOTAS VARIAS
             case 8:
                 this.navCtrl.push(NotasPage, {
                     idCaballoSelected: this.caballo.ID

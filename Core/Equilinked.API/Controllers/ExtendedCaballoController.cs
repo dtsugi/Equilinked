@@ -15,14 +15,17 @@ namespace Equilinked.API.Controllers
 {
     public class ExtendedCaballoController : EquilinkedBaseController
     {
-        private GeneroBLL _generoBLL = new GeneroBLL();
-        private PelajeBLL _pelajeBLL = new PelajeBLL();
+        private GeneroBLL _generoBLL;
+        private PelajeBLL _pelajeBLL;
+        private CriadorBLL _criadorBLL;
+        private OtrasMarcasBLL _otrasMarcasBLL;
 
         [HttpGet, Route("api/ExtendedCaballo/GetAllGeneroComboBox")]
         public IHttpActionResult GetAllGeneroComboBox()
         {
             try
             {
+                _generoBLL = new GeneroBLL();
                 return Ok(_generoBLL.GetAllComboBox());
             }
             catch (Exception ex)
@@ -37,12 +40,43 @@ namespace Equilinked.API.Controllers
         {
             try
             {
+                _pelajeBLL = new PelajeBLL();
                 return Ok(_pelajeBLL.GetAllComboBox());
             }
             catch (Exception ex)
             {
                 this.LogException(ex);
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+        }
+
+        [HttpGet, Route("api/ExtendedCaballo/GetAllCriadorComboBox")]
+        public IHttpActionResult GetAllCriadorComboBox()
+        {
+            try
+            {
+                _criadorBLL = new CriadorBLL();
+                return Ok(_criadorBLL.GetAllComboBox());
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);                
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+        }
+
+        [HttpGet, Route("api/ExtendedCaballo/GetAllOtrasMarcasComboBox")]
+        public IHttpActionResult GetAllOtrasMarcasComboBox()
+        {
+            try
+            {
+                _otrasMarcasBLL = new OtrasMarcasBLL();
+                return Ok(_otrasMarcasBLL.GetAllComboBox());
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
         }

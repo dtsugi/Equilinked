@@ -2,11 +2,13 @@ export class Alerta {
     public ID: number;
     public Titulo: string;
     public FechaNotificacion: string;
+    public FechaNotificacionToString: string;
     public HoraNotificacion: string;
     public Tipo: number;
     public Activa: boolean;
-    public Descripcion: string;        
+    public Descripcion: string;
     public CaballosList;
+    public NombreProfesional: string;
 
     constructor() { }
 }

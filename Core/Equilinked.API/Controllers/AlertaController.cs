@@ -89,7 +89,7 @@ namespace Equilinked.API.Controllers
             try
             {
                 HttpResponseMessage response;
-                AlertaCaballoBLL _alertaCaballoBLL = new AlertaCaballoBLL();                
+                AlertaCaballoBLL _alertaCaballoBLL = new AlertaCaballoBLL();
                 Alerta alerta = new Alerta(alertaDto);
                 if (alertaDto.ID <= 0)
                 {
@@ -156,6 +156,20 @@ namespace Equilinked.API.Controllers
             try
             {
                 return Ok(_alertaBLL.GetAllByCaballoId(caballoId, tipoAlertasEnum));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
+            }
+        }
+
+        [HttpGet, Route("api/Alerta/GetAllSerializedByCaballoId/{caballoId}/{tipoAlertasEnum}")]
+        public IHttpActionResult GetAllSerializedByCaballoId(int caballoId, int tipoAlertasEnum = 0)
+        {
+            try
+            {
+                return Ok(_alertaBLL.GetAllSerializedByCaballoId(caballoId, tipoAlertasEnum));
             }
             catch (Exception ex)
             {

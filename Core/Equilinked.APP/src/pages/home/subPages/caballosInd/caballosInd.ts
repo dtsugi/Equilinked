@@ -79,9 +79,10 @@ export class CaballosInd {
   // NAVEGACIÓN A NUEVA FICHA DE CABALLO
   goInsertCaballo(): void {
     this.navCtrl.push(AdminCaballosInsertPage, {
+      caballoEntity: new Caballo(),
+      isUpdate: false,
       callbackController: this
     });
-
   }
 
   deleteCaballo(caballoId: number) {

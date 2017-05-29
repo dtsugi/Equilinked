@@ -19,7 +19,7 @@ namespace Equilinked.BLL
 
         public Caballo GetById(int id)
         {
-            throw new NotImplementedException();
+            return this._dbContext.Caballo.Where(x => x.ID == id).FirstOrDefault();
         }
 
         public bool DeleteById(int id)
@@ -37,8 +37,13 @@ namespace Equilinked.BLL
 
             _dbContext.Database.ExecuteSqlCommand("EXECUTE ValidarGrupoDefaultPropietario @PropietarioId",
                     new SqlParameter("PropietarioId", entity.Propietario_ID));
-
             return entity;
+        }
+
+        public void Update(Caballo entity)
+        {
+            this._dbContext.Entry(entity).State = EntityState.Modified;
+            this._dbContext.SaveChanges();
         }
 
         public List<CaballoDto> GetAllSerializedByPropietarioId(int propietarioId)
@@ -88,6 +93,11 @@ namespace Equilinked.BLL
             }
             else { messageError = "Error eliminando las alertas del caballo"; }
             return false;
+        }
+
+        public CaballoDto GetSerializedById(int id)
+        {
+            return new CaballoDto(this.GetById(id));
         }
     }
 }

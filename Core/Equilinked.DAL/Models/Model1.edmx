@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -750,7 +750,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Pais_ID" Type="Int32" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID" FromRole="Criador" ToRole="Caballo" />
           <NavigationProperty Name="Pais" Relationship="Self.FK_dbo_Criador_dbo_Pais_Pais_ID" FromRole="Criador" ToRole="Pais" />
         </EntityType>
         <EntityType Name="Establecimiento">
@@ -792,7 +791,6 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Genero_Genero_ID" FromRole="Genero" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Grupo">
           <Key>
@@ -845,7 +843,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_OtrasMarcas_OtrasMarcas_ID" FromRole="OtrasMarcas" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Pais">
           <Key>
@@ -853,8 +850,6 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Criador" Relationship="Self.FK_dbo_Criador_dbo_Pais_Pais_ID" FromRole="Pais" ToRole="Criador" />
-          <NavigationProperty Name="EstadoProvincia" Relationship="Self.FK_dbo_EstadoProvincia_dbo_Pais_Pais_ID" FromRole="Pais" ToRole="EstadoProvincia" />
         </EntityType>
         <EntityType Name="Pedigree">
           <Key>
@@ -864,7 +859,6 @@
           <Property Name="Padre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Madre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Imagen" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Pedigree_Pedigree_ID" FromRole="Pedigree" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Pelaje">
           <Key>
@@ -872,7 +866,6 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID" FromRole="Pelaje" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="PersonaACargo">
           <Key>
@@ -882,7 +875,6 @@
           <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Telefono" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Mail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Caballo" Relationship="Self.FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID" FromRole="PersonaACargo" ToRole="Caballo" />
         </EntityType>
         <EntityType Name="Propietario">
           <Key>

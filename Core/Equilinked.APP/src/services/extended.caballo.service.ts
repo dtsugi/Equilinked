@@ -26,4 +26,18 @@ export class ExtendedCaballoService {
         return this._http.get(this.url)
             .map(response => response.json());
     }
+
+    getAllCriadorComboBox() {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllCriadorComboBox/", []);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
+
+    getAllOtrasMarcasComboBox() {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllOtrasMarcasComboBox/", []);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 }

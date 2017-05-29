@@ -36,6 +36,7 @@ namespace Equilinked.DAL.Dto
         public int Pelaje_ID { get; set; }
         public int PersonaACargo_ID { get; set; }
         public int Propietario_ID { get; set; }
+        public string Observaciones { get; set; }
 
         public CaballoDto() { }
 
@@ -64,6 +65,7 @@ namespace Equilinked.DAL.Dto
             Pelaje_ID = caballo.Pelaje_ID;
             PersonaACargo_ID = this.ValidateIntParam(caballo.PersonaACargo_ID);
             Propietario_ID = this.ValidateIntParam(caballo.Propietario_ID);
+            Observaciones = this.Observaciones;
         }
 
     }

@@ -45,4 +45,11 @@ export class CaballoService {
         console.log("URL" + this.url);
         return this._http.delete(this.url + "?caballoId=" + id)
     }
+
+    getSerializedById(caballoId: number) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetSerializedById/", [caballoId]);
+        console.log("URL" + this.url);
+        return this._http.get(this.url)
+            .map(response => response.json());
+    }
 }

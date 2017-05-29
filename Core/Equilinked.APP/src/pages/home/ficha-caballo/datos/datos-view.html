@@ -1,25 +1,34 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>
-            Nuevo Caballo
-        </ion-title>
-    </ion-navbar>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-title>Datos del caballo</ion-title>
+        <ion-buttons right>
+            <button ion-button icon-only (click)="edit()">
+                <ion-icon name="create"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form">
         <ion-grid>
             <ion-row>
                 <ion-col col-4 class="title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="Nombre"></ion-input>
+                        {{caballoEntity.Nombre}}
                     </ion-item>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col col-4 class="title-form">Género</ion-col>
                 <ion-col>
-                    <ion-select formControlName="Genero_ID">
+                    <ion-select [disabled]="true" formControlName="Genero_ID">
                         <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
@@ -27,7 +36,7 @@
             <ion-row>
                 <ion-col col-4 class="title-form">Pelaje</ion-col>
                 <ion-col>
-                    <ion-select formControlName="Pelaje_ID">
+                    <ion-select [disabled]="true" formControlName="Pelaje_ID">
                         <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
@@ -36,8 +45,7 @@
                 <ion-col col-4 class="title-form">Fecha de Nacimiento</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNacimiento"
-                            max="2050"></ion-datetime>
+                        {{caballoEntity.FechaNacimiento}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -56,7 +64,7 @@
             <ion-row>
                 <ion-col col-4 class="title-form">Criador</ion-col>
                 <ion-col>
-                    <ion-select formControlName="Criador_ID">
+                    <ion-select [disabled]="true" formControlName="Criador_ID">
                         <ion-option *ngFor="let item of criadorList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
@@ -64,14 +72,14 @@
             <ion-row>
                 <ion-col col-4 class="title-form">ADN</ion-col>
                 <ion-col>
-                    <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
+                    <ion-toggle [disabled]="true" checked="false" formControlName="ADN"></ion-toggle>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col col-4 class="title-form"># Chip</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="NumeroChip"></ion-input>
+                        {{caballoEntity.NumeroChip}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -79,14 +87,14 @@
                 <ion-col col-4 class="title-form"># ID</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="Nombre"></ion-input>
+                        {{caballoEntity.Nombre}}
                     </ion-item>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col col-4 class="title-form">Otras marcas</ion-col>
                 <ion-col>
-                    <ion-select formControlName="OtrasMarcas_ID">
+                    <ion-select [disabled]="true" formControlName="OtrasMarcas_ID">
                         <ion-option *ngFor="let item of otrasMarcasList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
@@ -101,14 +109,14 @@
                 <ion-col col-4 class="title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="NumeroFEN"></ion-input>
+                        {{caballoEntity.NumeroFEN}}
                     </ion-item>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col col-4 class="title-form">Pagado</ion-col>
                 <ion-col>
-                    <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
+                    <ion-toggle [disabled]="true" checked="false" formControlName="EstadoFEN"></ion-toggle>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -121,14 +129,14 @@
                 <ion-col col-4 class="title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="NumeroFEI"></ion-input>
+                        {{caballoEntity.NumeroFEI}}
                     </ion-item>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col col-4 class="title-form">Pagado</ion-col>
                 <ion-col>
-                    <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
+                    <ion-toggle [disabled]="true" checked="false" formControlName="EstadoFEI"></ion-toggle>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -141,7 +149,7 @@
                 <ion-col col-4 class="title-form">Protectores</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="Protector"></ion-input>
+                        {{caballoEntity.Protector}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -151,7 +159,7 @@
             <ion-row>
                 <ion-col>
                     <ion-item>
-                        <ion-textarea rows="2" formControlName="Observaciones"></ion-textarea>
+                        {{caballoEntity.Observaciones}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -159,7 +167,7 @@
                 <ion-col col-4 class="title-form">Embocadura</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="Embocadura"></ion-input>
+                        {{caballoEntity.Embocadura}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -167,7 +175,7 @@
                 <ion-col col-4 class="title-form">Extras de cabezada</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="ExtrasDeCabezada"></ion-input>
+                        {{caballoEntity.ExtrasDeCabezada}}
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -181,15 +189,15 @@
                 <ion-col col-4 class="title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text"></ion-input>
+                        <ion-input [disabled]="true" type="text"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Teléfono</ion-col>
+                <ion-col col-4 class=" title-form ">Teléfono</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text"></ion-input>
+                        <ion-input [disabled]="true " type="text"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -197,11 +205,10 @@
                 <ion-col col-4 class="title-form">Correo electronico</ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text"></ion-input>
+                        <ion-input [disabled]="true" type="text"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
         </ion-grid>
-        <button ion-button block type="submit" [disabled]="!form.valid">{{btnPostTitle}}</button>
     </form>
 </ion-content>

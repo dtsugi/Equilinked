@@ -1,29 +1,28 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, NavParams} from 'ionic-angular';
-import {Utils} from '../../../app/utils'
-import { CommonService } from '../../../services/common.service';
-import { SecurityService} from '../../../services/security.service';
-import { CaballoService } from '../../../services/caballo.service';
-import { ExtendedCaballoService } from '../../../services/extended.caballo.service';
-import { Caballo } from '../../../model/caballo';
-import { UserSessionEntity } from '../../../model/userSession';
+import {Utils} from '../../../../app/utils'
+import { CommonService } from '../../../../services/common.service';
+import { SecurityService} from '../../../../services/security.service';
+import { CaballoService } from '../../../../services/caballo.service';
+import { ExtendedCaballoService } from '../../../../services/extended.caballo.service';
+import { Caballo } from '../../../../model/caballo';
+import { UserSessionEntity } from '../../../../model/userSession';
+import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
 
 
 @Component({
-    templateUrl: 'admin-caballos-insert.html',
+    templateUrl: 'datos-view.html',
     providers: [CommonService, SecurityService, CaballoService, ExtendedCaballoService]
 })
-export class AdminCaballosInsertPage {
+export class DatosViewPage {
     form: any;
+    idCaballo: number;
     caballoEntity: Caballo;
     generoList = [];
     pelajeList = [];
     criadorList = [];
     otrasMarcasList = [];
-    session: UserSessionEntity;
-    isUpdate: boolean = false;
-    btnPostTitle: string = "Guardar";
 
     constructor(
         public navCtrl: NavController,
@@ -37,21 +36,14 @@ export class AdminCaballosInsertPage {
 
     ngOnInit() {
         this.caballoEntity = new Caballo();
-        this.session = this._securityService.getInitialConfigSession();
-        if (this._commonService.IsValidParams(this.navParams, ["caballoEntity", "isUpdate", "callbackController"])) {
-            this.caballoEntity = this.navParams.get("caballoEntity");
-            this.isUpdate = this.navParams.get("isUpdate");
-            if (this.isUpdate) {
-                this.btnPostTitle = "Modificar";
-            } else {
-                this.caballoEntity.FechaNacimiento = Utils.getDateNow().ToString();
-                this.caballoEntity.Propietario_ID = this.session.PropietarioId;
-            }
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
+            this.idCaballo = this.navParams.get("idCaballoSelected");
+            this.getCaballo(this.idCaballo);
+            this.getPelajeList();
+            this.getGeneroList();
+            this.getCriadorList();
+            this.getOtrasMarcasList();
         }
-        this.getPelajeList();
-        this.getGeneroList();
-        this.getCriadorList();
-        this.getOtrasMarcasList();
         this.initForm();
     }
 
@@ -59,29 +51,32 @@ export class AdminCaballosInsertPage {
         console.log("CABALLO:", this.caballoEntity);
         this.form = this.formBuilder.group({
             ID: [this.caballoEntity.ID],
-            Nombre: [this.caballoEntity.Nombre, Validators.required],
-            FechaNacimiento: [this.caballoEntity.FechaNacimiento],
-            NumeroChip: [this.caballoEntity.NumeroChip],
-            NumeroFEI: [this.caballoEntity.NumeroFEI],
             EstadoFEI: [this.caballoEntity.EstadoFEI],
-            Protector: [this.caballoEntity.Protector],
-            Embocadura: [this.caballoEntity.Embocadura],
-            ExtrasDeCabezada: [this.caballoEntity.ExtrasDeCabezada],
             ADN: [this.caballoEntity.ADN],
-            NumeroFEN: [this.caballoEntity.NumeroFEN],
             EstadoFEN: [this.caballoEntity.EstadoFEN],
             Criador_ID: [this.caballoEntity.Criador_ID],
             Establecimiento_ID: [this.caballoEntity.Establecimiento_ID],
             EstadoProvincia_Id: [this.caballoEntity.EstadoProvincia_Id],
-            Genero_ID: [this.caballoEntity.Genero_ID, Validators.required],
+            Genero_ID: [this.caballoEntity.Genero_ID],
             Grupo_ID: [this.caballoEntity.Grupo_ID],
             OtrasMarcas_ID: [this.caballoEntity.OtrasMarcas_ID],
             Pedigree_ID: [this.caballoEntity.Pedigree_ID],
-            Pelaje_ID: [this.caballoEntity.Pelaje_ID, Validators.required],
+            Pelaje_ID: [this.caballoEntity.Pelaje_ID],
             PersonaACargo_ID: [this.caballoEntity.PersonaACargo_ID],
-            Propietario_ID: [this.caballoEntity.Propietario_ID],
-            Observaciones: [this.caballoEntity.Observaciones]
+            Propietario_ID: [this.caballoEntity.Propietario_ID]
         });
+    }
+
+    getCaballo(caballoId) {
+        this._caballoService.getSerializedById(caballoId)
+            .subscribe(res => {
+                console.log(res);
+                this.caballoEntity = res;
+                this.reloadForm();
+            }, error => {
+                console.log(error);
+                this._commonService.ShowErrorHttp(error, "Error cargando los datos del caballo");
+            });
     }
 
     getGeneroList() {
@@ -132,29 +127,24 @@ export class AdminCaballosInsertPage {
             });
     }
 
-    save() {
-        this._commonService.showLoading("Guardando..");
-        console.log(this.form.value);
-        this._caballoService.save(this.form.value)
-            .subscribe(res => {
-                console.log(res);
-                this._commonService.hideLoading();
-                this._commonService.ShowInfo("El caballo se guardo exitosamente");
-                this.updateCallbackController();
-                this.navCtrl.pop();
-            }, error => {
-                console.log(error);
-                this._commonService.hideLoading();
-                this._commonService.ShowInfo("Error al guardar el caballo");
-            });
-    }
-
     reloadForm() {
         this.initForm();
     }
 
-    updateCallbackController() {
-        let callbackController = this.navParams.get("callbackController");
-        callbackController.reloadController();
+    edit() {
+        this.navCtrl.push(AdminCaballosInsertPage, {
+            caballoEntity: this.caballoEntity,
+            isUpdate: true,
+            callbackController: this
+        });
+
+    }
+
+    goBack() {
+        this.navCtrl.pop();
+    }
+
+    reloadController() {
+        this.getCaballo(this.idCaballo);
     }
 }

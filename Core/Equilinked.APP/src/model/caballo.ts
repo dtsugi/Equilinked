@@ -73,4 +73,6 @@ export class Caballo {
   Pelaje_ID: number;
   PersonaACargo_ID: number;
   Propietario_ID: number;
+
+  Observaciones: string;
 }

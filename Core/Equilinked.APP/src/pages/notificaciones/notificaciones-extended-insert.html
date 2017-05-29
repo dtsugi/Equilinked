@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            {{title}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <form [formGroup]="form" (ngSubmit)="save()">
+        <ion-item *ngIf="showId">
+            <ion-label>ID</ion-label>
+            <ion-input type="text" formControlName="Id"></ion-input>            
+        </ion-item>
+        <ion-item>
+            <ion-label>Nombe del {{profesionalLabel}}</ion-label>
+            <ion-input type="text" formControlName="NombreProfesional"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Fecha</ion-label>
+            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion"
+                max="2050"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Hora</ion-label>
+            <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Descripcion</ion-label>
+            <ion-input type="text" formControlName="Descripcion"></ion-input>
+        </ion-item>
+        <button ion-button block type="submit" [disabled]="!form.valid">{{btnSubmitText}}</button>
+    </form>
+</ion-content>

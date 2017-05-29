@@ -53,7 +53,14 @@ namespace Equilinked.API.Controllers
             {
                 HttpResponseMessage response;
                 Caballo caballo = new Caballo(caballoDto);
-                _caballoBLL.Insert(caballo);
+                if (caballo.ID > 0)
+                {
+                    _caballoBLL.Update(caballo);
+                }
+                else
+                {
+                    _caballoBLL.Insert(caballo);
+                }
                 response = Request.CreateResponse(HttpStatusCode.OK, caballo.ID);
                 return response;
             }
@@ -85,6 +92,20 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar el caballo"));
+            }
+        }
+
+        [HttpGet, Route("api/Caballo/GetSerializedById/{caballoId}")]
+        public IHttpActionResult GetSerializedById(int caballoId)
+        {
+            try
+            {
+                return Ok(_caballoBLL.GetSerializedById(caballoId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
             }
         }
     }
