@@ -26,7 +26,7 @@ namespace Equilinked.DAL.Models
         public int Tipo { get; set; }
         public bool Activa { get; set; }
         public string Descripcion { get; set; }
-        public Nullable<int> Caballo_ID { get; set; }
+        public string NombreProfesional { get; set; }
     
         public virtual ICollection<Evento> Evento { get; set; }
     }

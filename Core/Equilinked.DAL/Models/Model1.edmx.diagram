@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2cdceef12ca3439db903bba8743c8d19" Name="Diagram1">
+      <Diagram DiagramId="2cdceef12ca3439db903bba8743c8d19" Name="Diagram1" ZoomLevel="67">
         <EntityTypeShape EntityType="EquilinkedModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EquilinkedModel.Alerta" Width="1.5" PointX="5.25" PointY="11.125" IsExpanded="true" />
         <EntityTypeShape EntityType="EquilinkedModel.AlertaCaballo" Width="1.5" PointX="8.5" PointY="9.75" IsExpanded="true" />
@@ -29,7 +29,6 @@
         <EntityTypeShape EntityType="EquilinkedModel.Tipo_Numero" Width="1.5" PointX="3.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="EquilinkedModel.Usuario" Width="1.5" PointX="1.5" PointY="38" IsExpanded="true" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaCaballo_Alerta" ManuallyRouted="false" />
-        <AssociationConnector Association="EquilinkedModel.FK_dbo_Alerta_dbo_Caballo_Caballo_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_dbo_Evento_dbo_Alerta_Alerta_ID" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaCaballo_Caballo" ManuallyRouted="false" />
         <AssociationConnector Association="EquilinkedModel.PK_Alimentacion_Caballo" ManuallyRouted="false" />

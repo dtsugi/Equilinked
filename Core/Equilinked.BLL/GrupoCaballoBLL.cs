@@ -88,9 +88,11 @@ namespace Equilinked.BLL
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                //1. Preguntar si existe el grupo default (GrupoDefault = 0)
-                //1.1 Si no existe crear el grupo "Todos mis caballos"
-                //1.2 Asignar todos los caballos del propietario a ese grupo
+                //Mandamos a validar lo del grupo por default "Todos mis caballos"
+                db.Database.ExecuteSqlCommand("EXECUTE ValidarGrupoDefaultPropietario @PropietarioId",
+                    new SqlParameter("PropietarioId", PropietarioID));
+
+                //Listamos los grupos
                 return db.Grupo
                     .Include("GrupoCaballo")
                     .Where(g => g.Propietario_ID == PropietarioID)

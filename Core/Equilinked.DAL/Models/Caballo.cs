@@ -33,7 +33,6 @@ namespace Equilinked.DAL.Models
         public string NumeroId { get; set; }
         public Nullable<int> NumeroFEN { get; set; }
         public Nullable<bool> EstadoFEN { get; set; }
-        public string Alimentacion { get; set; }
         public Nullable<int> Criador_ID { get; set; }
         public Nullable<int> Establecimiento_ID { get; set; }
         public Nullable<int> EstadoProvincia_Id { get; set; }
@@ -44,6 +43,7 @@ namespace Equilinked.DAL.Models
         public int Pelaje_ID { get; set; }
         public Nullable<int> PersonaACargo_ID { get; set; }
         public Nullable<int> Propietario_ID { get; set; }
+        public string Observaciones { get; set; }
     
         public virtual ICollection<Alimentacion> Alimentacion1 { get; set; }
         public virtual Criador Criador { get; set; }

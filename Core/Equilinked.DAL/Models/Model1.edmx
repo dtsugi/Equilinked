@@ -26,7 +26,7 @@
           <Property Name="Tipo" Type="int" Nullable="false" />
           <Property Name="Activa" Type="bit" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
-          <Property Name="Caballo_ID" Type="int" />
+          <Property Name="NombreProfesional" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -63,7 +63,6 @@
           <Property Name="NumeroId" Type="nvarchar(max)" />
           <Property Name="NumeroFEN" Type="int" />
           <Property Name="EstadoFEN" Type="bit" />
-          <Property Name="Alimentacion" Type="nvarchar(max)" />
           <Property Name="Criador_ID" Type="int" />
           <Property Name="Establecimiento_ID" Type="int" />
           <Property Name="EstadoProvincia_Id" Type="int" />
@@ -74,6 +73,7 @@
           <Property Name="Pelaje_ID" Type="int" Nullable="false" />
           <Property Name="PersonaACargo_ID" Type="int" />
           <Property Name="Propietario_ID" Type="int" />
+          <Property Name="Observaciones" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -248,18 +248,6 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="AlertaCaballo">
-              <PropertyRef Name="Caballo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="0..1" />
-          <End Role="Alerta" Type="Self.Alerta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Caballo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Alerta">
               <PropertyRef Name="Caballo_ID" />
             </Dependent>
           </ReferentialConstraint>
@@ -575,10 +563,6 @@
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID" Association="Self.FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
-            <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="Alerta" EntitySet="Alerta" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Criador_Criador_ID" Association="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID">
             <End Role="Criador" EntitySet="Criador" />
             <End Role="Caballo" EntitySet="Caballo" />
@@ -697,8 +681,8 @@
           <Property Name="Tipo" Type="Int32" Nullable="false" />
           <Property Name="Activa" Type="Boolean" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Caballo_ID" Type="Int32" />
           <NavigationProperty Name="Evento" Relationship="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID" FromRole="Alerta" ToRole="Evento" />
+          <Property Name="NombreProfesional" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -735,7 +719,6 @@
           <Property Name="NumeroId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NumeroFEN" Type="Int32" />
           <Property Name="EstadoFEN" Type="Boolean" />
-          <Property Name="Alimentacion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Criador_ID" Type="Int32" />
           <Property Name="Establecimiento_ID" Type="Int32" />
           <Property Name="EstadoProvincia_Id" Type="Int32" />
@@ -758,6 +741,7 @@
           <NavigationProperty Name="PersonaACargo" Relationship="Self.FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID" FromRole="Caballo" ToRole="PersonaACargo" />
           <NavigationProperty Name="Propietario" Relationship="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID" FromRole="Caballo" ToRole="Propietario" />
           <NavigationProperty Name="GrupoCaballo" Relationship="Self.FK_GrupoCaballo_Caballo_ID" FromRole="Caballo" ToRole="GrupoCaballo" />
+          <Property Name="Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -953,18 +937,6 @@
             </Principal>
             <Dependent Role="AlertaCaballo">
               <PropertyRef Name="Alerta_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="0..1" />
-          <End Role="Alerta" Type="Self.Alerta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Caballo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Alerta">
-              <PropertyRef Name="Caballo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1272,10 +1244,6 @@
             <End Role="Alerta" EntitySet="Alerta" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Alerta_dbo_Caballo_Caballo_ID" Association="Self.FK_dbo_Alerta_dbo_Caballo_Caballo_ID">
-            <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="Alerta" EntitySet="Alerta" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Evento_dbo_Alerta_Alerta_ID" Association="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID">
             <End Role="Alerta" EntitySet="Alerta" />
             <End Role="Evento" EntitySet="Evento" />
@@ -1417,6 +1385,7 @@
           <EntitySetMapping Name="Alerta">
             <EntityTypeMapping TypeName="EquilinkedModel.Alerta">
               <MappingFragment StoreEntitySet="Alerta">
+                <ScalarProperty Name="NombreProfesional" ColumnName="NombreProfesional" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Titulo" ColumnName="Titulo" />
                 <ScalarProperty Name="FechaNotificacion" ColumnName="FechaNotificacion" />
@@ -1424,7 +1393,6 @@
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="Activa" ColumnName="Activa" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1451,6 +1419,7 @@
           <EntitySetMapping Name="Caballo">
             <EntityTypeMapping TypeName="EquilinkedModel.Caballo">
               <MappingFragment StoreEntitySet="Caballo">
+                <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
@@ -1464,7 +1433,6 @@
                 <ScalarProperty Name="NumeroId" ColumnName="NumeroId" />
                 <ScalarProperty Name="NumeroFEN" ColumnName="NumeroFEN" />
                 <ScalarProperty Name="EstadoFEN" ColumnName="EstadoFEN" />
-                <ScalarProperty Name="Alimentacion" ColumnName="Alimentacion" />
                 <ScalarProperty Name="Criador_ID" ColumnName="Criador_ID" />
                 <ScalarProperty Name="Establecimiento_ID" ColumnName="Establecimiento_ID" />
                 <ScalarProperty Name="EstadoProvincia_Id" ColumnName="EstadoProvincia_Id" />

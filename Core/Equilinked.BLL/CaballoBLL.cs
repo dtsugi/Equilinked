@@ -32,11 +32,11 @@ namespace Equilinked.BLL
         public Caballo Insert(Caballo entity)
         {
             this._dbContext.Caballo.Add(entity);
-            //1. preguntar por grupo default (GrupoDefault = 0)
-            //1.1. Si existe asignar el caballo a ese grupo
-            //1.2.1 Si no existe crear el grupo "todos mis caballos"
-            //1.2.2 Asignar todos los caballos al grupo
             this._dbContext.SaveChanges();
+
+            _dbContext.Database.ExecuteSqlCommand("EXECUTE ValidarGrupoDefaultPropietario @PropietarioId",
+                    new SqlParameter("PropietarioId", entity.Propietario_ID));
+
             return entity;
         }
 
