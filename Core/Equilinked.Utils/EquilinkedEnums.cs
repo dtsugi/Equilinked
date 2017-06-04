@@ -16,5 +16,12 @@ namespace Equilinked.Utils
             DENTISTA = 4,
             NOTASVARIAS = 5
         }
+
+        public enum FilterAlertaEnum
+        {
+            ALL = 1,
+            HISTORY = 2,
+            NEXT = 3
+        }
     }
 }

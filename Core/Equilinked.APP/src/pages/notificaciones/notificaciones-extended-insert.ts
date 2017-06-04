@@ -35,16 +35,15 @@ export class NotificacionesExtendedInsertPage {
     ngOnInit() {
         this.alertaEntity = new Alerta();
         this.session = this._securityService.getInitialConfigSession();
-        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate", "callbackController"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate","title", "callbackController"])) {
+            this.title= this.navParams.get("title");
             this.alertaEntity = this.navParams.get("alertaEntity");
             this.tipoAlerta = this.alertaEntity.Tipo;
             console.log("TIPO ALERTA:", this.tipoAlerta);
             this.isUpdate = this.navParams.get("isUpdate");
             if (this.isUpdate) {
-                this.title = "Editar notificación";
                 this.btnSubmitText = "Modificar";
             } else {
-                this.title = "Nueva notificación";
                 this.btnSubmitText = "Guardar";
                 this.alertaEntity.FechaNotificacion = Utils.getDateNow().ToString();
             }

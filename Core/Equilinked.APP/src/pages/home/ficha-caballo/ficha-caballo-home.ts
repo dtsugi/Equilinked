@@ -8,6 +8,7 @@ import {DatosViewPage} from './datos/datos-view';
 import {AlimentacionPage} from './alimentacion/alimentacion';
 import {NotasPage} from './notas/notas';
 import {HerrajesPage} from './herrajes/herrajes';
+import { DentistaPage} from './dentista/dentista';
 
 @Component({
     templateUrl: 'ficha-caballo-home.html',
@@ -58,6 +59,12 @@ export class FichaCaballoPage {
             // ALIMENTACION
             case 6:
                 this.navCtrl.push(AlimentacionPage, {
+                    idCaballoSelected: this.caballo.ID
+                });
+                break;
+            // DENTISTA
+            case 7:
+                this.navCtrl.push(DentistaPage, {
                     idCaballoSelected: this.caballo.ID
                 });
                 break;

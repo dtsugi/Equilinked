@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, ToastController } from 'ionic-angular'
+import { LoadingController, ToastController, AlertController } from 'ionic-angular'
 
 
 @Injectable()
@@ -7,8 +7,10 @@ export class CommonService {
     loader: any;
     TOAST_POSITION = { top: 'top', middle: 'middle', bottom: 'bottom' };
 
-    constructor(private loadingCtrl: LoadingController,
-        public toastCtrl: ToastController) { }
+    constructor(
+        private loadingCtrl: LoadingController,
+        public toastCtrl: ToastController,
+        private alertCtrl: AlertController) { }
 
     // Mostrar la animación de 'Loading'
     showLoading(mje: string) {
@@ -49,26 +51,9 @@ export class CommonService {
         console.log("object:", object, "typeof:", typeof object, "instance of Array:", object instanceof Array);
     }
 
-    // IsValidParams(data, params) {
-    //     console.log(data,params)
-    //     let isValid: boolean = true;
-    //     let dataJson = JSON.stringify(data);
-    //     this.ShowTypeObject(dataJson);
-    //     for (var index = 0; index < params.length; index++) {
-    //         if (!dataJson.includes(params[index])) {
-    //             isValid = false;
-    //             break;
-    //         }
-    //     }
-    //     if(!isValid){
-    //         this.ShowInfo("No se encontraron todos los parametros");
-    //     }        
-    //     return isValid;
-    // }
-
     IsValidParams(navParams, params) {
         let isValid: boolean = true;
-        console.log("PARAMS:",params)
+        console.log("PARAMS:", params)
         if (params !== undefined) {
             for (var index = 0; index < params.length; index++) {
                 let paramData = navParams.get(params[index]);
@@ -83,5 +68,25 @@ export class CommonService {
             this.ShowInfo("No se encontraron todos los parametros");
         }
         return isValid;
+    }
+
+    ShowConfirmAlert(title: string, message: string, buttons) {
+        let confirm = this.alertCtrl.create({
+            title: title,
+            message: message,
+            buttons: buttons
+        });
+        confirm.present();
+    }
+
+    NewButtonAlert(buttonId, text: string, callbackCtrl) {
+        return {
+            text: text,
+            handler: () => {
+                if (callbackCtrl != null) {
+                    callbackCtrl._callbackConfirmAlert(buttonId);
+                }
+            }
+        }
     }
 }

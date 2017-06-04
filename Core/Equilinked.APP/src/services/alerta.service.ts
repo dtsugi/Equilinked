@@ -76,8 +76,8 @@ export class AlertaService {
             .map(response => response.json());
     }
 
-    getAllSerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
-        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllSerializedByCaballoId/", [caballoId, tipoAlertasEnum]);
+    getAllSerializedByCaballoId(caballoId: number, filterAlertaEnum: number, tipoAlertasEnum: number) {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllSerializedByCaballoId/", [caballoId, filterAlertaEnum, tipoAlertasEnum]);
         console.log("URL" + this.url);
         return this._http.get(this.url)
             .map(response => response.json());

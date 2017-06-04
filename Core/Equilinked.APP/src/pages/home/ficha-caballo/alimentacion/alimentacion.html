@@ -1,37 +1,50 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>Alimentacion</ion-title>
-        <ion-buttons end>
-            <button ion-button icon-only (click)="presentPopover($event)">
-                <ion-icon name="more"></ion-icon>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-navbar>
+
+        <ion-title>Alimentación</ion-title>
+        <ion-buttons right>
+            <button ion-button icon-only (click)="edit()">
+                <ion-icon name="create"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-card>
-        <ion-card-header>
-            Solido
-        </ion-card-header>
-        <ion-card-content>
-            {{alimentacion.Solido}}
-        </ion-card-content>
-    </ion-card>
-    <ion-card>
-        <ion-card-header>
+    <ion-grid>
+        <ion-row class="title-form">
+            Sólido
+        </ion-row>
+        <ion-row>
+            <hr>
+        </ion-row>
+        <ion-row>
+            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.Solido}}" [disabled]="true"></ion-textarea>
+        </ion-row>
+
+        <ion-row class="title-form">
             Suplementos dietarios
-        </ion-card-header>
-        <ion-card-content>
-            {{alimentacion.SuplementosDietarios}}
-        </ion-card-content>
-    </ion-card>
-    <ion-card>
-        <ion-card-header>
+        </ion-row>
+        <ion-row>
+            <hr>
+        </ion-row>
+        <ion-row>
+            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.SuplementosDietarios}}" [disabled]="true"></ion-textarea>
+        </ion-row>
+
+        <ion-row class="title-form">
             Pasto
-        </ion-card-header>
-        <ion-card-content>
-            {{alimentacion.Pasto}}
-        </ion-card-content>
-    </ion-card>
+        </ion-row>
+        <ion-row>
+            <hr>
+        </ion-row>
+        <ion-row>
+            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.Pasto}}" [disabled]="true"></ion-textarea>
+        </ion-row>
+    </ion-grid>
 </ion-content>

@@ -7,6 +7,7 @@ import { AlimentacionService} from '../../../../services/alimentacion.service';
 import { Alimentacion} from '../../../../model/alimentacion';
 import {PopoverAlimentacionPage} from './pop-over/pop-over-alimentacion';
 import {FichaCaballoPage} from '../ficha-caballo-home';
+import {AlimentacionEditPage} from './alimentacion-edit';
 
 
 @Component({
@@ -62,16 +63,20 @@ export class AlimentacionPage {
         });
     }
 
-    reloadController() {
-        this.getAlimentacionByIdCaballo(this.idCaballo);
+    edit() {
+        this.navCtrl.push(AlimentacionEditPage, {
+            alimentacionEntity: this.alimentacion,
+            callbackController: this
+        });
+
     }
 
     goBack() {
-        // this.navCtrl.push(FichaCaballoPage, {
-        //     idCaballoSelected: this.alimentacion.Caballo_ID
-        // });
-        // this.callback();
         this.navCtrl.pop();
+    }
+
+    reloadController() {
+        this.getAlimentacionByIdCaballo(this.idCaballo);
     }
 
 }

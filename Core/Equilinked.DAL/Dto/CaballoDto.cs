@@ -65,7 +65,7 @@ namespace Equilinked.DAL.Dto
             Pelaje_ID = caballo.Pelaje_ID;
             PersonaACargo_ID = this.ValidateIntParam(caballo.PersonaACargo_ID);
             Propietario_ID = this.ValidateIntParam(caballo.Propietario_ID);
-            Observaciones = this.Observaciones;
+            Observaciones = caballo.Observaciones;
         }
 
     }
@@ -100,6 +100,7 @@ namespace Equilinked.DAL.Models
             Pelaje_ID = caballoDto.Pelaje_ID;
             PersonaACargo_ID = this.ValidateIntParamToEF(caballoDto.PersonaACargo_ID);
             Propietario_ID = this.ValidateIntParamToEF(caballoDto.Propietario_ID);
+            Observaciones = caballoDto.Observaciones;
         }
     }
 }

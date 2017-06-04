@@ -12,8 +12,6 @@ namespace Equilinked.BLL
 {
     public class AlertaBLL : BLLBase, IBase<Alerta>
     {
-        private AlertaCaballoBLL _alertaCaballoBLL;
-
         public Alerta GetById(int id)
         {
             return this._dbContext.Alerta.Where(x => x.ID == id).FirstOrDefault();
@@ -111,21 +109,30 @@ namespace Equilinked.BLL
                 }
                 if (alerta != null)
                 {
-                    //List<int> caballosList = this._dbContext.AlertaCaballo
-                    //    .Select(c => c.Caballo_ID)
-                    //    .Where(x=>x.)
-                    //    .ToList();
-                    //AlertaDto alertaDto = new AlertaDto(alerta);
-                    //alertaDto.CaballosList = caballosList;
                     listAlertas.Add(alerta);
                 }
             }
             return listAlertas;
         }
 
-        public List<AlertaDto> GetAllSerializedByCaballoId(int caballoId, int tipoAlertasEnum)
+        public List<AlertaDto> GetAllSerializedByCaballoId(int caballoId, int tipoAlertasEnum, DateTime dateToCompare, int filterAlertaEnum)
         {
-            List<Alerta> listAlerta = this.GetAllByCaballoId(caballoId, tipoAlertasEnum);
+            List<Alerta> listAlerta = this.GetAllByCaballoId(caballoId, tipoAlertasEnum).OrderBy(x => x.FechaNotificacion).ToList();
+            switch (filterAlertaEnum)
+            {
+                case (int)Equilinked.Utils.EquilinkedEnums.FilterAlertaEnum.HISTORY:
+                    listAlerta = listAlerta
+                    .Where(x => (x.FechaNotificacion - dateToCompare).Days < 0)
+                    .OrderByDescending(x => x.FechaNotificacion)
+                    .ToList();
+                    break;
+                case (int)Equilinked.Utils.EquilinkedEnums.FilterAlertaEnum.NEXT:
+                    // Se listan las alertas proximas a la fecha actual
+                    listAlerta = listAlerta
+                        .Where(x => (x.FechaNotificacion - dateToCompare).Days >= 0)
+                        .ToList();
+                    break;
+            }
             List<AlertaDto> listDto = new List<AlertaDto>();
             foreach (Alerta item in listAlerta)
             {

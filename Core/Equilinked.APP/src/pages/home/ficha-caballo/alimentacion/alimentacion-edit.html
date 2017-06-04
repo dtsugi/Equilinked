@@ -1,58 +1,54 @@
 <ion-header>
-    <ion-navbar hideBackButton>
+    <ion-navbar>
+        <ion-title>
+            Modificar Alimentación
+        </ion-title>
+    </ion-navbar>
+    <!--<ion-navbar hideBackButton>
         <ion-buttons start>
             <button ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-round-back"></ion-icon>
       </button>
-        </ion-buttons>        
+        </ion-buttons>
         <ion-title>Modificar Alimentacion</ion-title>
-    </ion-navbar>
+    </ion-navbar>-->
 </ion-header>
 <ion-content>
     <form [formGroup]="form" (ngSubmit)="save()">
-        <!--<ion-card>
-            <ion-card-header>
-                Solido
-            </ion-card-header>
-            <ion-card-content>
-                <ion-item>
-                    <ion-input type="text" formControlName="Solido"></ion-input>
-                </ion-item>
-            </ion-card-content>
-        </ion-card>
-        <ion-card>
-            <ion-card-header>
+        <ion-grid>
+            <ion-row class="title-form">
+                Sólido
+            </ion-row>
+            <ion-row>
+                <hr>
+            </ion-row>
+            <ion-row>
+                <ion-textarea rows="6" formControlName="Solido"></ion-textarea>
+            </ion-row>
+
+            <ion-row class="title-form">
                 Suplementos dietarios
-            </ion-card-header>
-            <ion-card-content>
-                <ion-item>
-                    <ion-textarea rows="6" formControlName="SuplementosDietarios"></ion-textarea>
-                </ion-item>                
-            </ion-card-content>
-        </ion-card>
-        <ion-card>
-            <ion-card-header>
+            </ion-row>
+            <ion-row>
+                <hr>
+            </ion-row>
+            <ion-row>
+                <ion-textarea rows="6" formControlName="SuplementosDietarios"></ion-textarea>
+            </ion-row>
+
+            <ion-row class="title-form">
                 Pasto
-            </ion-card-header>
-            <ion-card-content>
-                <ion-input type="text" formControlName="Pasto"></ion-input>
-            </ion-card-content>
-        </ion-card>-->
-        Solido
-        <hr>
-        <ion-item>
-            <ion-textarea rows="6" formControlName="Solido"></ion-textarea>
-        </ion-item>
-        <br> Suplementos dietarios
-        <hr>
-        <ion-item>
-            <ion-textarea rows="6" formControlName="SuplementosDietarios"></ion-textarea>
-        </ion-item>
-        <br> Pasto
-        <hr>
-        <ion-item>
-            <ion-textarea rows="6" formControlName="Pasto"></ion-textarea>
-        </ion-item>
-        <button ion-button block type="submit" [disabled]="!form.valid">Guardar</button>
+            </ion-row>
+            <ion-row>
+                <hr>
+            </ion-row>
+            <ion-row>
+                <ion-textarea rows="6" formControlName="Pasto"></ion-textarea>
+            </ion-row>
+
+            <ion-row>
+                <button ion-button block type="submit" [disabled]="!form.valid">Guardar</button>
+            </ion-row>
+        </ion-grid>
     </form>
 </ion-content>

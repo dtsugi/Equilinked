@@ -3,6 +3,7 @@ export class Alerta {
     public Titulo: string;
     public FechaNotificacion: string;
     public FechaNotificacionToString: string;
+    public FechaNotificacionToCurrentCulture:string;
     public HoraNotificacion: string;
     public Tipo: number;
     public Activa: boolean;

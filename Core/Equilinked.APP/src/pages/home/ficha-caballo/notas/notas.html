@@ -15,18 +15,36 @@
         </ion-item>
     </ion-list>
     <ion-list>
-        <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
-            <ion-item>
-                <b><p style="font-size:25pt" [innerHTML]="notificacion.Titulo"></p></b>
-                <p [innerHTML]="notificacion.Descripcion"></p>
-                <h3>{{notificacion.FechaNotificacion}}</h3>
-            </ion-item>
-            <ion-item-options>
-                <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
+        <ion-grid>
+            <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
+                <ion-item>
+                    <ion-row>
+                        <ion-col col-8 class="title-form">
+                            {{notificacion.Titulo}}
+                        </ion-col>
+                        <ion-col col-4 class="text-align-right">
+                            <ion-icon name="notifications"></ion-icon>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col col-8>
+                            {{notificacion.Descripcion}}
+                        </ion-col>
+                        <ion-col col-4 class="text-align-right">
+                            {{notificacion.FechaNotificacionToString}}
+                        </ion-col>
+                    </ion-row>
+                    <!--<b><p style="font-size:25pt" [innerHTML]="notificacion.Titulo"></p></b>
+                    <p [innerHTML]="notificacion.Descripcion"></p>
+                    <h3>{{notificacion.FechaNotificacion}}</h3>-->
+                </ion-item>
+                <ion-item-options>
+                    <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
           <ion-icon name="trash"></ion-icon>       
           Eliminar
 </button>
-            </ion-item-options>
-        </ion-item-sliding>
+                </ion-item-options>
+            </ion-item-sliding>
+        </ion-grid>
     </ion-list>
 </ion-content>

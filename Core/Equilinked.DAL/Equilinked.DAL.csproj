@@ -76,6 +76,12 @@
     <Compile Include="Models\Establecimiento.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Establo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EstabloCaballo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EstadoProvincia.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

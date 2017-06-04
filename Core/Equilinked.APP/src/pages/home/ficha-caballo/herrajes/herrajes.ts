@@ -13,7 +13,8 @@ import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notifica
 })
 export class HerrajesPage {
     idCaballo: number;
-    notificacionList = [];
+    historyNotificacionList = [];
+    nextNotificacionList = [];
     tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_HERRAJE;
     isDeleting: boolean = false;
 
@@ -29,19 +30,32 @@ export class HerrajesPage {
     ngOnInit() {
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
-            this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
         }
     }
 
-    getAllNotificacionesByCaballoId(caballoId: number, tipoAlertasEnum: number) {
+    getHistorySerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
         this._commonService.showLoading("Procesando..");
-        this._alertaService.getAllSerializedByCaballoId(caballoId, tipoAlertasEnum)
+        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_HISTORY, tipoAlertasEnum)
             .subscribe(res => {
                 console.log("RES:", res);
-                this.notificacionList = res;
+                this.historyNotificacionList = res;
                 this._commonService.hideLoading();
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo las notificaciones");
+                this._commonService.ShowErrorHttp(error, "Error obteniendo el historial de herrajes");
+            });
+    }
+
+    getNextSerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
+        this._commonService.showLoading("Procesando..");
+        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_NEXT, tipoAlertasEnum)
+            .subscribe(res => {
+                console.log("RES:", res);
+                this.nextNotificacionList = res;
+                this._commonService.hideLoading();
+            }, error => {
+                this._commonService.ShowErrorHttp(error, "Error obteniendo los proximos herrajes");
             });
     }
 
@@ -53,8 +67,8 @@ export class HerrajesPage {
             this.navCtrl.push(NotificacionesExtendedInsertPage,
                 {
                     alertaEntity: notificacion,
-                    tipoAlerta: this.tipoAlerta,
                     isUpdate: true,
+                    title: "Editar Herraje",
                     callbackController: this
                 });
         }
@@ -69,6 +83,7 @@ export class HerrajesPage {
             {
                 alertaEntity: notificacion,
                 isUpdate: false,
+                title: "Nuevo Herraje",
                 callbackController: this
             });
     }
@@ -89,6 +104,7 @@ export class HerrajesPage {
     }
 
     reloadController() {
-        this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
+        this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+        this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
     }
 }

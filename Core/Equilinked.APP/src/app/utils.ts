@@ -64,4 +64,9 @@ export class ConstantsConfig {
     static ALERTA_TIPO_EVENTOS = 3;
     static ALERTA_TIPO_DENTISTA = 4;
     static ALERTA_TIPO_NOTASVARIAS = 5;
+
+    static ALERTA_FILTER_ALL = 1;
+    static ALERTA_FILTER_HISTORY = 2;
+    static ALERTA_FILTER_NEXT = 3;
+
 }

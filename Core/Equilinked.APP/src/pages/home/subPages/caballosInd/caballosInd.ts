@@ -22,6 +22,7 @@ export class CaballosInd {
   caballosList: Array<Caballo>;
   session: UserSessionEntity;
   isDeleting: boolean = false;
+  tmpCaballoIdSelected: number = 0;
 
   constructor(
     public navCtrl: NavController,
@@ -99,6 +100,23 @@ export class CaballosInd {
         this._commonService.ShowErrorHttp(error, "Error al eliminar el caballo");
         this.isDeleting = false;
       });
+  }
+
+  confirmDeleteCaballo(caballoId: number) {
+    this.tmpCaballoIdSelected = caballoId;
+    this.isDeleting = true;
+    let buttons = [];
+    buttons.push(this._commonService.NewButtonAlert(0, "Cancelar", this));
+    buttons.push(this._commonService.NewButtonAlert(1, "Aceptar", this));
+    this._commonService.ShowConfirmAlert("Eliminar caballo", "¿ Está seguro de eliminar toda la información asociada a este caballo ?", buttons)
+  }
+
+  _callbackConfirmAlert(buttonIdClicked) {
+    if (buttonIdClicked === 1) {
+      this.deleteCaballo(this.tmpCaballoIdSelected);
+    } else {
+      this.isDeleting = false;
+    }
   }
 
   reloadController() {

@@ -164,18 +164,18 @@ namespace Equilinked.API.Controllers
             }
         }
 
-        [HttpGet, Route("api/Alerta/GetAllSerializedByCaballoId/{caballoId}/{tipoAlertasEnum}")]
-        public IHttpActionResult GetAllSerializedByCaballoId(int caballoId, int tipoAlertasEnum = 0)
+        [HttpGet, Route("api/Alerta/GetAllSerializedByCaballoId/{caballoId}/{filterAlertaEnum}/{tipoAlertasEnum}")]
+        public IHttpActionResult GetAllSerializedByCaballoId(int caballoId, int filterAlertaEnum,int tipoAlertasEnum = 0)
         {
             try
             {
-                return Ok(_alertaBLL.GetAllSerializedByCaballoId(caballoId, tipoAlertasEnum));
+                return Ok(_alertaBLL.GetAllSerializedByCaballoId(caballoId, tipoAlertasEnum, DateTime.Now, filterAlertaEnum));
             }
             catch (Exception ex)
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
             }
-        }
+        }        
     }
 }

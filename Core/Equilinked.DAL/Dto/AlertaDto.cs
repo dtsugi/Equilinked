@@ -14,6 +14,7 @@ namespace Equilinked.DAL.Dto
         public string Titulo { get; set; }
         public DateTime FechaNotificacion { get; set; }
         public string FechaNotificacionToString { get; set; }
+        public string FechaNotificacionToCurrentCulture { get; set; }
         public string HoraNotificacion { get; set; }
         public int Tipo { get; set; }
         public bool Activa { get; set; }
@@ -29,11 +30,20 @@ namespace Equilinked.DAL.Dto
             this.Titulo = alerta.Titulo;
             this.FechaNotificacion = alerta.FechaNotificacion;
             this.FechaNotificacionToString = alerta.FechaNotificacion.ToShortDateString();
+            this.FechaNotificacionToCurrentCulture = this.ToDateToCurrentCulture(alerta.FechaNotificacion);
             this.HoraNotificacion = alerta.HoraNotificacion;
             this.Tipo = alerta.Tipo;
             this.Activa = alerta.Activa;
             this.Descripcion = alerta.Descripcion;
             this.NombreProfesional = alerta.NombreProfesional;
+        }
+
+        private string ToDateToCurrentCulture(DateTime date)
+        {
+            string culture = "es-AR";
+            System.Globalization.CultureInfo cultureInfo = System.Globalization.CultureInfo.CreateSpecificCulture(culture);
+            System.Globalization.DateTimeFormatInfo dateFormatInfo = cultureInfo.DateTimeFormat;
+            return string.Format("{0}, {1} de {2} de {3}", dateFormatInfo.GetDayName(date.DayOfWeek), date.Day, dateFormatInfo.GetMonthName(date.Month), date.Year);
         }
     }
 }

@@ -5,16 +5,17 @@ import {Utils, ConstantsConfig} from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import {AlertaService} from '../../../../services/alerta.service';
 import {Alerta} from '../../../../model/alerta';
-import {NotificacionesInsertPage} from '../../../notificaciones/notificaciones-insert';
+import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
 
 @Component({
-    templateUrl: 'notas.html',
+    templateUrl: 'dentista.html',
     providers: [CommonService, AlertaService]
 })
-export class NotasPage {
+export class DentistaPage {
     idCaballo: number;
-    notificacionList = [];
-    tipoAlerta: number = 5;
+    historyNotificacionList = [];
+    nextNotificacionList = [];
+    tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DENTISTA;
     isDeleting: boolean = false;
 
     constructor(
@@ -29,51 +30,65 @@ export class NotasPage {
     ngOnInit() {
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
-            this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
         }
     }
 
-    getAllNotificacionesByCaballoId(caballoId: number, tipoAlertasEnum: number) {
+    getHistorySerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
         this._commonService.showLoading("Procesando..");
-        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_ALL, tipoAlertasEnum)
+        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_HISTORY, tipoAlertasEnum)
             .subscribe(res => {
                 console.log("RES:", res);
-                this.notificacionList = res;
+                this.historyNotificacionList = res;
                 this._commonService.hideLoading();
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo las notificaciones");
+                this._commonService.ShowErrorHttp(error, "Error obteniendo el historial de dentistas");
             });
     }
 
-    goViewNotificacion(notificacion) {
+    getNextSerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
+        this._commonService.showLoading("Procesando..");
+        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_NEXT, tipoAlertasEnum)
+            .subscribe(res => {
+                console.log("RES:", res);
+                this.nextNotificacionList = res;
+                this._commonService.hideLoading();
+            }, error => {
+                this._commonService.ShowErrorHttp(error, "Error obteniendo los proximos dentistas");
+            });
+    }
+
+    view(notificacion) {
         /* Flag para determinar que no se este eliminando al mismo tiempo */
         if (!this.isDeleting) {
-            this.navCtrl.push(NotificacionesInsertPage,
+            notificacion.CaballosList = new Array();
+            notificacion.CaballosList.push(this.idCaballo);
+            this.navCtrl.push(NotificacionesExtendedInsertPage,
                 {
                     alertaEntity: notificacion,
-                    isFromNotas: true,
                     isUpdate: true,
-                    callbackController: this,
-                    callbackMethodController: this.reloadController
+                    title: "Editar cita dentista",
+                    callbackController: this
                 });
         }
     }
 
-    goInsertNotificacion() {
+    insert() {
         let notificacion: Alerta = new Alerta();
         notificacion.Tipo = this.tipoAlerta;
         notificacion.CaballosList = new Array();
         notificacion.CaballosList.push(this.idCaballo);
-        this.navCtrl.push(NotificacionesInsertPage,
+        this.navCtrl.push(NotificacionesExtendedInsertPage,
             {
                 alertaEntity: notificacion,
-                isFromNotas: true,
                 isUpdate: false,
+                title: "Nuev cita con dentista",
                 callbackController: this
             });
     }
 
-    deleteNotification(notificacion: Alerta) {
+    delete(notificacion: Alerta) {
         this.isDeleting = true;
         this._commonService.showLoading("Eliminando..");
         this._alertaService.delete(notificacion.ID)
@@ -83,12 +98,13 @@ export class NotasPage {
                 this.reloadController();
                 this.isDeleting = false;
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al eliminar la nota");
+                this._commonService.ShowErrorHttp(error, "Error al eliminar la cita con el dentista");
                 this.isDeleting = false;
             });
     }
 
     reloadController() {
-        this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
+        this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+        this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
     }
 }

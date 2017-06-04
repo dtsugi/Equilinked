@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -162,18 +162,6 @@
           <Property Name="Establecimiento_ID" Type="int" />
           <Property Name="Tipo_ID" Type="int" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'FivetApi.dbo.Modulo' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="Modulo">
-          <Property Name="id_modulo" Type="int" />
-          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
-        </EntityType>-->
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'FivetApi.dbo.Modulo_Perfil' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="Modulo_Perfil">
-          <Property Name="id_modulo" Type="int" />
-          <Property Name="id_perfil" Type="int" />
-        </EntityType>-->
         <EntityType Name="Numero_Establecimiento">
           <Key>
             <PropertyRef Name="ID" />
@@ -214,12 +202,6 @@ advertencia 6013: La tabla o vista 'FivetApi.dbo.Modulo_Perfil' no tiene definid
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'FivetApi.dbo.Perfil' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="Perfil">
-          <Property Name="id_perfil" Type="int" />
-          <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
-        </EntityType>-->
         <EntityType Name="PersonaACargo">
           <Key>
             <PropertyRef Name="ID" />
@@ -1426,14 +1408,14 @@ advertencia 6013: La tabla o vista 'FivetApi.dbo.Perfil' no tiene definida una c
             <End Role="Grupo" EntitySet="Grupo" />
           </AssociationSet>
           <EntitySet Name="Establo" EntityType="EquilinkedModel.Establo" />
-          <AssociationSet Name="FK_Establo_Propietario_ID" Association="EquilinkedModel.FK_Establo_Propietario_ID">
-            <End Role="Propietario" EntitySet="Propietario" />
-            <End Role="Establo" EntitySet="Establo" />
-          </AssociationSet>
           <EntitySet Name="EstabloCaballo" EntityType="EquilinkedModel.EstabloCaballo" />
           <AssociationSet Name="FK_EstabloCaballo_Caballo_ID" Association="EquilinkedModel.FK_EstabloCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="EstabloCaballo" EntitySet="EstabloCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Establo_Propietario_ID" Association="EquilinkedModel.FK_Establo_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="Establo" EntitySet="Establo" />
           </AssociationSet>
           <AssociationSet Name="FK_EstabloCaballo_Establo_ID" Association="EquilinkedModel.FK_EstabloCaballo_Establo_ID">
             <End Role="Establo" EntitySet="Establo" />
@@ -1476,18 +1458,6 @@ advertencia 6013: La tabla o vista 'FivetApi.dbo.Perfil' no tiene definida una c
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Establo_Propietario_ID" FromRole="Establo" ToRole="Propietario" />
           <NavigationProperty Name="EstabloCaballo" Relationship="EquilinkedModel.FK_EstabloCaballo_Establo_ID" FromRole="Establo" ToRole="EstabloCaballo" />
         </EntityType>
-        <Association Name="FK_Establo_Propietario_ID">
-          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
-          <End Type="EquilinkedModel.Establo" Role="Establo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Propietario">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Establo">
-              <PropertyRef Name="Propietario_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="EstabloCaballo">
           <Key>
             <PropertyRef Name="ID" />
@@ -1507,6 +1477,18 @@ advertencia 6013: La tabla o vista 'FivetApi.dbo.Perfil' no tiene definida una c
             </Principal>
             <Dependent Role="EstabloCaballo">
               <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Establo_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
+          <End Type="EquilinkedModel.Establo" Role="Establo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Establo">
+              <PropertyRef Name="Propietario_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
