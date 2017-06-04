@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
-import { LoginPage} from '../pages/login/login';
+import { LoginPage } from '../pages/login/login';
 import { MenuSuperior } from '../pages/home/subPages/menuSuperior/menuSuperior';
 import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
 
@@ -18,24 +18,29 @@ import { NotificacionesExtendedInsertPage } from '../pages/notificaciones/notifi
 
 /* Caballos */
 import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/admin-grupos-caballos";
-import {FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home";
-import {AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
+import { FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home";
+import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
 /* Caballos-Grupos */
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
 import { GruposCaballosDetailPage } from "../pages/home/subPages/grupos-caballos/grupos-caballos-detail";
 /* Caballos-ALimentacion */
-import {AlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion";
-import {AlimentacionEditPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion-edit";
-import {PopoverAlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/pop-over/pop-over-alimentacion";
+import { AlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion";
+import { AlimentacionEditPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion-edit";
+import { PopoverAlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/pop-over/pop-over-alimentacion";
 /* Caballos-Notas */
-import {NotasPage } from "../pages/home/ficha-caballo/notas/notas";
+import { NotasPage } from "../pages/home/ficha-caballo/notas/notas";
 /* Caballos-Datos */
-import {DatosViewPage } from "../pages/home/ficha-caballo/datos/datos-view";
+import { DatosViewPage } from "../pages/home/ficha-caballo/datos/datos-view";
 /* Caballos-Herrajes */
 import { HerrajesPage } from "../pages/home/ficha-caballo/herrajes/herrajes";
 /* Perfil */
-import { PerfilDatosPage } from "../pages/perfil/perfil-datos";
-import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
+import { PerfilDatosPage } from "../pages/perfil/datos/perfil-datos";
+import { PopoverDatosPage } from '../pages/perfil/pop-over/pop-over-datos';
+/* Establos */
+import { ListadoEstablosPage } from "../pages/perfil/establos/establos";
+import { AdminEstablosPage } from "../pages/perfil/establos/admin-establo/admin-establo";
+import { CaballosEstabloModal } from "../pages/perfil/establos/admin-establo/caballos-establo/caballos-establo-modal";
+import { InfoEstabloPage } from "../pages/perfil/establos/admin-establo/info-establo";
 
 @NgModule({
   declarations: [
@@ -69,7 +74,12 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     HerrajesPage,
     /* Perfil */
     PerfilDatosPage,
-    PopoverDatosPage
+    PopoverDatosPage,
+    /* Establos */
+    ListadoEstablosPage,
+    AdminEstablosPage,
+    CaballosEstabloModal,
+    InfoEstabloPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -105,7 +115,12 @@ import {PopoverDatosPage} from '../pages/perfil/pop-over/pop-over-datos';
     HerrajesPage,
     /* Perfil */
     PerfilDatosPage,
-    PopoverDatosPage
+    PopoverDatosPage,
+    /* Establos */
+    ListadoEstablosPage,
+    AdminEstablosPage,
+    CaballosEstabloModal,
+    InfoEstabloPage
   ],
   providers: []
 })

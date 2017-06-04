@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, PopoverController} from 'ionic-angular';
-import {Utils} from '../../app/utils'
-import { CommonService } from '../../services/common.service';
-import { SecurityService } from '../../services/security.service';
-import { PropietarioService} from '../../services/propietario.service';
-import { UserSessionEntity} from '../../model/userSession';
-import { Propietario} from '../../model/propietario';
-import {PopoverDatosPage} from './pop-over/pop-over-datos';
+import { FormBuilder } from '@angular/forms';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { CommonService } from '../../../services/common.service';
+import { SecurityService } from '../../../services/security.service';
+import { PropietarioService } from '../../../services/propietario.service';
+import { UserSessionEntity } from '../../../model/userSession';
+import { Propietario } from '../../../model/propietario';
+import { PopoverDatosPage } from './../pop-over/pop-over-datos';
+import { ListadoEstablosPage } from "../establos/establos";
 
 @Component({
+    selector: "perfil-datos",
     templateUrl: 'perfil-datos.html',
     providers: [CommonService, SecurityService, PropietarioService]
 })
@@ -17,6 +18,7 @@ export class PerfilDatosPage {
     form: any;
     session: UserSessionEntity;
     propietarioEntity: Propietario;
+    selectedTab: string;
 
     constructor(
         public navCtrl: NavController,
@@ -26,12 +28,26 @@ export class PerfilDatosPage {
         private _securityService: SecurityService,
         private _propietarioService: PropietarioService,
         private formBuilder: FormBuilder) {
+        this.selectedTab = "datos";
     }
 
     ngOnInit() {
         this.propietarioEntity = new Propietario();
         this.session = this._securityService.getInitialConfigSession();
         this.getPerfilPropietarioId(this.session.PropietarioId);
+    }
+
+    changeTab(): void {
+        console.log(this.selectedTab);
+        if (this.selectedTab === "establos") {
+            if (this.navCtrl.getViews().length > 1) {
+                this.navCtrl.pop({ animate: false, duration: 0 }).then(() => {
+                    this.navCtrl.push(ListadoEstablosPage, {}, { animate: false, duration: 0 });
+                });
+            } else {
+                this.navCtrl.push(ListadoEstablosPage, {}, { animate: false, duration: 0 });
+            }
+        }
     }
 
     getPerfilPropietarioId(idPropietario: number) {

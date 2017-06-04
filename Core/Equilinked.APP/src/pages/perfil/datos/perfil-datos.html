@@ -1,14 +1,28 @@
 <ion-header>
-    <ion-navbar>
+    <ion-toolbar>
         <ion-title>Perfil</ion-title>
-        <ion-buttons end>
+        <ion-buttons right>
             <button ion-button icon-only (click)="presentPopover($event)">
                 <ion-icon name="more"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-navbar>
+    </ion-toolbar>
 </ion-header>
+
 <ion-content>
+
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="selectedTab" color="primary" (ionChange)="changeTab()">
+            <ion-segment-button value="datos">
+                DATOS
+            </ion-segment-button>
+            <ion-segment-button value="establos">
+                ESTABLO(S)
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+
+
     <ion-item>
         <ion-icon name='person' item-left></ion-icon>
         {{propietarioEntity.NombreCompleto}}
@@ -24,5 +38,5 @@
     <ion-item>
         <ion-icon name='flag' item-left></ion-icon>
         {{propietarioEntity.EstadoProvincia_Nombre}}
-    </ion-item>    
+    </ion-item>
 </ion-content>

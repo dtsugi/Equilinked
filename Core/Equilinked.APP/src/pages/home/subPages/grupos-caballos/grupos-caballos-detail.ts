@@ -6,6 +6,7 @@ import { GruposCaballosService } from "../../../../services/grupos-caballos.serv
 import { SecurityService } from "../../../../services/security.service";
 import { CaballoService } from "../../../../services/caballo.service";
 import { UserSessionEntity } from "../../../../model/userSession";
+import { FichaCaballoPage } from "../../ficha-caballo/ficha-caballo-home";
 
 @Component({
     selector: "grupos-caballos-detail",
@@ -63,6 +64,13 @@ export class GruposCaballosDetailPage implements OnInit {
         });
     }
 
+    viewDetail(caballo: any): void {
+        //caballo.Caballo
+        this.navController.push(FichaCaballoPage, {
+            caballoSelected: caballo.Caballo
+        });
+    }
+
     filterGrupoCaballo(evt: any): void {
         this.gruposCaballos = this.gruposCaballosService.filterGruposCaballos(evt.target.value, this.gruposCaballosRespaldo);
     }
@@ -114,7 +122,7 @@ export class GruposCaballosDetailPage implements OnInit {
     private listCaballosByGrupo(): void {
         this.commonService.showLoading("Procesando..");
         this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
-            .then(caballos => { 
+            .then(caballos => {
                 this.gruposCaballosRespaldo = caballos;
                 this.gruposCaballos = caballos;
                 this.loadData = true;

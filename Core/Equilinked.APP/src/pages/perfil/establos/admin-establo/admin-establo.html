@@ -1,0 +1,50 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Crear establo
+        </ion-title>
+
+        <ion-buttons end>
+            <button ion-button icon-only [disabled]="!establoForm.valid" (click)="save()">
+                <ion-icon name="done-all"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="establoForm">
+        <ion-list no-lines>
+            <ion-item>
+                <ion-icon name="home" item-left></ion-icon>
+                <ion-input type="text" formControlName="Nombre" placeholder="Nombre"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="person" item-left></ion-icon>
+                <ion-input type="text" formControlName="Manager" placeholder="Manager"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="mail" item-left></ion-icon>
+                <ion-input type="text" formControlName="CorreoElectronico" placeholder="Correo electrónico"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="call" item-left></ion-icon>
+                <ion-input type="text" formControlName="Telefono" placeholder="Número telefónico"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="pin" item-left></ion-icon>
+                <ion-input type="text" formControlName="Direccion" placeholder="Dirección"></ion-input>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon name="list-box" item-left></ion-icon>
+                {{caballos.length}} caballo(s)
+                <ion-icon name="add-circle" item-right (click)="showSelectionModal()"></ion-icon>
+            </ion-item>
+        </ion-list>
+    </form>
+</ion-content>

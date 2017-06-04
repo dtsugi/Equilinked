@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { HomePage } from '../home/home';
 import { NotificacionesPage } from '../notificaciones/notificaciones';
-import { PerfilDatosPage} from '../perfil/perfil-datos';
+import { PerfilDatosPage } from "../perfil/datos/perfil-datos";
 
 @Component({
   templateUrl: 'tabs.html'

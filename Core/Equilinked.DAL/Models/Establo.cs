@@ -12,14 +12,22 @@ namespace Equilinked.DAL.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Mail_Establecimiento
+    public partial class Establo
     {
-        public int ID { get; set; }
-        public string MailDesc { get; set; }
-        public Nullable<int> Establecimiento_ID { get; set; }
-        public Nullable<int> Tipo_ID { get; set; }
+        public Establo()
+        {
+            this.EstabloCaballo = new HashSet<EstabloCaballo>();
+        }
     
-        public virtual Establecimiento Establecimiento { get; set; }
-        public virtual Tipo_Mail Tipo_Mail { get; set; }
+        public int ID { get; set; }
+        public string Nombre { get; set; }
+        public string Manager { get; set; }
+        public string CorreoElectronico { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
+        public int Propietario_ID { get; set; }
+    
+        public virtual Propietario Propietario { get; set; }
+        public virtual ICollection<EstabloCaballo> EstabloCaballo { get; set; }
     }
 }

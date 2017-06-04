@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams, NavController } from 'ionic-angular';
 import { CommonService } from '../../../services/common.service';
 import { SecurityService } from '../../../services/security.service';
-import { LoginPage} from '../../login/login';
+import { LoginPage } from '../../login/login';
 
 @Component({
     selector: 'pop-over-datos',
@@ -24,6 +24,6 @@ export class PopoverDatosPage {
         console.log("LOGOUT");
         this._securityService.logout();
         this.navCtrl.setRoot(LoginPage);
-        this.navCtrl.push(LoginPage);        
-    }    
+        this.navCtrl.push(LoginPage);
+    }
 }

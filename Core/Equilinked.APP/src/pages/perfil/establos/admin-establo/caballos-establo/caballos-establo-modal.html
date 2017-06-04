@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-navbar>
+        <ion-buttons start>
+            <button ion-button icon-only (click)="close()">
+                 <ion-icon name="close"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-title>
+            Seleccionar caballos
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+            </ion-col>
+            <ion-col col-12>
+                <button (click)="selectAll()" ion-button full>Seleccionar todos</button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <div *ngIf="showSpinner" style="text-align: center;">
+        <ion-spinner></ion-spinner>
+    </div>
+
+    <ion-list no-lines>
+        <ion-item *ngFor="let c of caballos" (click)="c.seleccion = !c.seleccion">
+            <ion-avatar item-left>
+                <img src="assets/img/caballo.jpg">
+            </ion-avatar>
+
+            <h2>{{c.caballo.Nombre}}</h2>
+            <p>{{c.caballo.Grupo ? c.caballo.Grupo.Descripcion : ''}}</p>
+
+            <ion-icon *ngIf="c.seleccion" name="remove-circle" item-right></ion-icon>
+            <ion-icon *ngIf="!c.seleccion" name="add-circle" item-right></ion-icon>
+        </ion-item>
+    </ion-list>
+
+</ion-content>

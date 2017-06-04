@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Establo {{establo.Nombre}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list no-lines>
+        <ion-item>
+            <ion-icon name="person" item-left></ion-icon>
+            {{establo.Manager}}
+        </ion-item>
+
+        <ion-item>
+            <ion-icon name="mail" item-left></ion-icon>
+            {{establo.CorreoElectronico}}
+        </ion-item>
+
+        <ion-item>
+            <ion-icon name="call" item-left></ion-icon>
+            {{establo.Telefono}}
+        </ion-item>
+
+        <ion-item>
+            <ion-icon name="flag" item-left></ion-icon>
+            {{establo.Direccion}}
+        </ion-item>
+
+        <ion-item>
+            <ion-icon name="list-box" item-left></ion-icon>
+            {{establo.EstabloCaballo.length}} caballo(s)
+        </ion-item>
+    </ion-list>
+</ion-content>
