@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonService } from "../../../services/common.service";
-import { NavController } from "ionic-angular";
+import { NavController, AlertController } from "ionic-angular";
 import { UserSessionEntity } from "../../../model/userSession";
 import { SecurityService } from "../../../services/security.service";
 import { EstablosService } from "../../../services/establos.service";
@@ -19,19 +19,26 @@ export class ListadoEstablosPage implements OnInit {
     selectedTab: string;
     establos: any[];
     establosRespaldo: any[];
+    modoEdicion: boolean;
 
     constructor(
+        private alertController: AlertController,
         private commonService: CommonService,
         private establosService: EstablosService,
         private navCtrl: NavController,
         private securityService: SecurityService
     ) {
+        this.modoEdicion = false;
         this.selectedTab = "establos";
     }
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
-        this.listEstablosByPropietarioId(); //Listar establos del propietario
+        this.listEstablosByPropietarioId(true); //Listar establos del propietario
+    }
+
+    goBack(): void {
+        this.navCtrl.pop();
     }
 
     changeTab(): void {
@@ -46,13 +53,22 @@ export class ListadoEstablosPage implements OnInit {
         }
     }
 
-    listEstablosByPropietarioId(): void {
-        this.commonService.showLoading("Procesando..");
+    listEstablosByPropietarioId(showLoading: boolean): void {
+        if (showLoading) {
+            this.commonService.showLoading("Procesando..");
+        }
         this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
             .then(establos => {
-                this.establos = establos;
-                this.establosRespaldo = establos;
-                this.commonService.hideLoading();
+                this.establos = establos.map(e => {
+                    return {
+                        seleccion: false,
+                        establo: e
+                    };
+                });
+                this.establosRespaldo = this.establos;
+                if (showLoading) {
+                    this.commonService.hideLoading();
+                }
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error obteniendo los establos del propietario");
             });
@@ -63,15 +79,76 @@ export class ListadoEstablosPage implements OnInit {
             .filterEstablosByNombreOrDireccion(evt.target.value, this.establosRespaldo);
     }
 
+    edit(): void {
+        this.modoEdicion = true;
+    }
+
+    cancelEdit(): void {
+        this.establosRespaldo.forEach(e => {
+            e.seleccion = false;
+        });
+        this.modoEdicion = false;
+    }
+
+    selectAll(): void {
+        let countSeleted = this.establosRespaldo.filter(e => e.seleccion).length;
+        let selectAll: boolean = countSeleted !== this.establosRespaldo.length;
+        this.establosRespaldo.forEach(e => {
+            e.seleccion = selectAll;
+        });
+    }
+
+    delete(): void {
+        this.alertController.create({
+            title: "Alerta!",
+            message: "Se eliminarán los establos seleccionados",
+            buttons: [
+                {
+                    text: "Cancelar",
+                    role: "cancel"
+                },
+                {
+                    text: "Aceptar",
+                    handler: () => {
+                        this.commonService.showLoading("Procesando..");
+                        this.establosService.deleteEstablosByIds(
+                            this.establosRespaldo.filter(e => e.seleccion).map(e => e.establo.ID)
+                        ).then(() => {
+                            this.listEstablosByPropietarioId(false);//Refrescar los establos!
+                            this.commonService.hideLoading();
+                            this.modoEdicion = false;
+                        }).catch(err => {
+                            this.commonService.ShowErrorHttp(err, "Error al eliminar los establos");
+                        });
+                    }
+                }
+            ]
+        }).present();
+    }
+
+    countEstablosForDelete(): number {
+        return this.establosRespaldo.filter(e => e.seleccion).length;
+    }
+
     newEstablo(): void {
         //acceder a la pantalla de creacion
         let params: any = { establosPage: this };
         this.navCtrl.push(AdminEstablosPage, params);
     }
 
-    viewEstablo(establo: any): void {
-        console.info(establo);
-        let params: any = { establo: establo };
+    selectEstablo(establo): void {
+        if (this.modoEdicion) {
+            establo.seleccion = !establo.seleccion;
+        } else {
+            this.viewEstablo(establo.establo);
+        }
+    }
+
+    private viewEstablo(establo: any): void {
+        let params: any = {
+            establoId: establo.ID,
+            establosPage: this
+        };
         this.navCtrl.push(InfoEstabloPage, params);
     }
 }

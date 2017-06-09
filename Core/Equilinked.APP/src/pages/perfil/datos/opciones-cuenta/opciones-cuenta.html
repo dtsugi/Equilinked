@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-title>Cuenta</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-list-header>
+            Opciones de cuenta
+        </ion-list-header>
+        <ion-item *ngFor="let opcion of opciones" (click)="showPageOptionSelected(opcion)">
+            <h2>{{opcion.texto}}</h2>
+        </ion-item>
+    </ion-list>
+</ion-content>

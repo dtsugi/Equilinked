@@ -58,6 +58,11 @@
         <AssociationConnector Association="EquilinkedModel.FK_EstabloCaballo_Caballo_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_Establo_Propietario_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_EstabloCaballo_Establo_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.EstabloTelefono" Width="1.5" PointX="12" PointY="2" />
+        <AssociationConnector Association="EquilinkedModel.FK_EstabloTelefono_Establo_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_EstabloTelefono_Tipo_Numero_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.EstabloCorreo" Width="1.5" PointX="8.625" PointY="1" />
+        <AssociationConnector Association="EquilinkedModel.FK_EstabloCorreo_Establo_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

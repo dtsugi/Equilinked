@@ -64,7 +64,6 @@ export class CaballosEstabloModal implements OnInit {
         this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
             .toPromise()
             .then(caballos => {
-
                 let mapCaballosSeleccionados: Map<number, any> = new Map<number, any>();
                 this.caballosSeleccionados.forEach(cs => {
                     mapCaballosSeleccionados.set(cs.Caballo_ID, cs);
