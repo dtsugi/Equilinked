@@ -35,6 +35,8 @@ import { DatosViewPage } from "../pages/home/ficha-caballo/datos/datos-view";
 import { HerrajesPage } from "../pages/home/ficha-caballo/herrajes/herrajes";
 /* Caballos-Dentista */
 import { DentistaPage } from "../pages/home/ficha-caballo/dentista/dentista";
+/* Caballos-Desparasitacion */
+import { DesparasitacionPage } from "../pages/home/ficha-caballo/desparasitacion/desparasitacion";
 /* Perfil */
 import { PerfilDatosPage } from "../pages/perfil/datos/perfil-datos";
 import { PopoverDatosPage } from '../pages/perfil/datos/pop-over/pop-over-datos';
@@ -79,6 +81,8 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     HerrajesPage,
     /* Caballos-Dentista */
     DentistaPage,
+    /* Caballos-Desparasitacion */
+    DesparasitacionPage,
     /* Perfil */
     PerfilDatosPage,
     PopoverDatosPage,
@@ -125,6 +129,8 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     HerrajesPage,
     /* Caballos-Dentista */
     DentistaPage,
+    /* Caballos-Desparasitacion */
+    DesparasitacionPage,
     /* Perfil */
     PerfilDatosPage,
     PopoverDatosPage,

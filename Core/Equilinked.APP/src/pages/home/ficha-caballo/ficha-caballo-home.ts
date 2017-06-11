@@ -9,6 +9,7 @@ import {AlimentacionPage} from './alimentacion/alimentacion';
 import {NotasPage} from './notas/notas';
 import {HerrajesPage} from './herrajes/herrajes';
 import { DentistaPage} from './dentista/dentista';
+import { DesparasitacionPage } from './desparasitacion/desparasitacion';
 
 @Component({
     templateUrl: 'ficha-caballo-home.html',
@@ -68,8 +69,14 @@ export class FichaCaballoPage {
                     idCaballoSelected: this.caballo.ID
                 });
                 break;
-            // NOTAS VARIAS
+            // DESPARASITACION
             case 8:
+                this.navCtrl.push(DesparasitacionPage, {
+                    idCaballoSelected: this.caballo.ID
+                });
+                break;
+            // NOTAS VARIAS
+            case 9:
                 this.navCtrl.push(NotasPage, {
                     idCaballoSelected: this.caballo.ID
                 });

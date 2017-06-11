@@ -35,8 +35,8 @@ export class NotificacionesExtendedInsertPage {
     ngOnInit() {
         this.alertaEntity = new Alerta();
         this.session = this._securityService.getInitialConfigSession();
-        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate","title", "callbackController"])) {
-            this.title= this.navParams.get("title");
+        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate", "title", "callbackController"])) {
+            this.title = this.navParams.get("title");
             this.alertaEntity = this.navParams.get("alertaEntity");
             this.tipoAlerta = this.alertaEntity.Tipo;
             console.log("TIPO ALERTA:", this.tipoAlerta);
@@ -59,6 +59,9 @@ export class NotificacionesExtendedInsertPage {
                 break;
             case ConstantsConfig.ALERTA_TIPO_DENTISTA:
                 this.profesionalLabel = "Dentista";
+                break;
+            case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
+                this.profesionalLabel = "Aplicante";
                 break;
         }
     }

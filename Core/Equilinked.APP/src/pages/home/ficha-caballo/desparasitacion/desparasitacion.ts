@@ -8,14 +8,14 @@ import {Alerta} from '../../../../model/alerta';
 import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
 
 @Component({
-    templateUrl: 'dentista.html',
+    templateUrl: 'desparasitacion.html',
     providers: [CommonService, AlertaService]
 })
-export class DentistaPage {
+export class DesparasitacionPage {
     idCaballo: number;
     historyNotificacionList = [];
     nextNotificacionList = [];
-    tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DENTISTA;
+    tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DESPARACITACION;
     isDeleting: boolean = false;
 
     constructor(
@@ -43,7 +43,7 @@ export class DentistaPage {
                 this.historyNotificacionList = res;
                 this._commonService.hideLoading();
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo el historial de dentistas");
+                this._commonService.ShowErrorHttp(error, "Error obteniendo el historial de desparasitaciones");
             });
     }
 
@@ -55,7 +55,7 @@ export class DentistaPage {
                 this.nextNotificacionList = res;
                 this._commonService.hideLoading();
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo los proximos dentistas");
+                this._commonService.ShowErrorHttp(error, "Error obteniendo las proximas desparasitaciones");
             });
     }
 
@@ -68,7 +68,7 @@ export class DentistaPage {
                 {
                     alertaEntity: notificacion,
                     isUpdate: true,
-                    title: "Editar cita dentista",
+                    title: "Editar desparasitacion",
                     callbackController: this
                 });
         }
@@ -83,7 +83,7 @@ export class DentistaPage {
             {
                 alertaEntity: notificacion,
                 isUpdate: false,
-                title: "Nueva cita con dentista",
+                title: "Nueva desparasitacion",
                 callbackController: this
             });
     }
@@ -98,7 +98,7 @@ export class DentistaPage {
                 this.reloadController();
                 this.isDeleting = false;
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al eliminar la cita con el dentista");
+                this._commonService.ShowErrorHttp(error, "Error al eliminar la desparasitacion");
                 this.isDeleting = false;
             });
     }
