@@ -63,6 +63,15 @@
         <AssociationConnector Association="EquilinkedModel.FK_EstabloTelefono_Tipo_Numero_ID" />
         <EntityTypeShape EntityType="EquilinkedModel.EstabloCorreo" Width="1.5" PointX="8.625" PointY="1" />
         <AssociationConnector Association="EquilinkedModel.FK_EstabloCorreo_Establo_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.MensajeContacto" Width="1.5" PointX="3" PointY="34.25" />
+        <EntityTypeShape EntityType="EquilinkedModel.MotivoContacto" Width="1.5" PointX="0.75" PointY="41.625" />
+        <AssociationConnector Association="EquilinkedModel.FK_MensajeContacto_MotivoContacto_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_MensajeContacto_Propietario_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.ConfiguracionCorreo" Width="1.5" PointX="11.375" PointY="6" />
+        <EntityTypeShape EntityType="EquilinkedModel.InvitacionAmigo" Width="1.5" PointX="3" PointY="30.5" />
+        <EntityTypeShape EntityType="EquilinkedModel.PlantillaCorreo" Width="1.5" PointX="13.625" PointY="6.25" />
+        <AssociationConnector Association="EquilinkedModel.FK_PlantillaCorreo_ConfiguracionCorreo_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

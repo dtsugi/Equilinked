@@ -42,6 +42,9 @@ import { PerfilDatosPage } from "../pages/perfil/datos/perfil-datos";
 import { PopoverDatosPage } from '../pages/perfil/datos/pop-over/pop-over-datos';
 import { OpcionesCuentaPage } from "../pages/perfil/datos/opciones-cuenta/opciones-cuenta";
 import { CambioContrasenaPage } from "../pages/perfil/datos/opciones-cuenta/cambio-contrasena/cambio-contrasena";
+import { TerminosPrivacidadPage } from "../pages/perfil/datos/opciones-cuenta/terminos-privacidad/terminos-privacidad";
+import { ContactoPage } from "../pages/perfil/datos/opciones-cuenta/contacto/contacto";
+import { RecomendacionPage } from "../pages/perfil/datos/opciones-cuenta/recomendacion/recomendacion";
 /* Establos */
 import { ListadoEstablosPage } from "../pages/perfil/establos/establos";
 import { AdminEstablosPage } from "../pages/perfil/establos/admin-establo/admin-establo";
@@ -88,6 +91,9 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     PopoverDatosPage,
     OpcionesCuentaPage,
     CambioContrasenaPage,
+    TerminosPrivacidadPage,
+    ContactoPage,
+    RecomendacionPage,
     /* Establos */
     ListadoEstablosPage,
     AdminEstablosPage,
@@ -136,6 +142,9 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     PopoverDatosPage,
     OpcionesCuentaPage,
     CambioContrasenaPage,
+    TerminosPrivacidadPage,
+    ContactoPage,
+    RecomendacionPage,
     /* Establos */
     ListadoEstablosPage,
     AdminEstablosPage,

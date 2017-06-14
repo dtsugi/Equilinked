@@ -24,7 +24,6 @@ export class PopoverDatosPage {
     }
 
     showOptionsAcount(): void {
-        console.info("Meow");
         this.viewController.dismiss();
         this.navCtrl.push(OpcionesCuentaPage);
     }

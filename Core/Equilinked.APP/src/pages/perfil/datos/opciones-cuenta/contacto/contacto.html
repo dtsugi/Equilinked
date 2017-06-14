@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Contáctanos
+        </ion-title>
+
+        <ion-buttons end>
+            <button ion-button icon-only [disabled]="!mensaje.Descripcion" (click)="sendMessage()">
+                <ion-icon name="send"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <form>
+        <ion-list>
+            <ion-item>
+                <h2>Motivo del contato</h2>
+            </ion-item>
+            <ion-item>
+                <ion-select name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
+                    <ion-option *ngFor="let motivo of motivos" value="{{motivo.ID}}">{{motivo.Descripcion}}</ion-option>
+                </ion-select>
+            </ion-item>
+            <ion-item>
+                <h2>Descripción</h2>
+            </ion-item>
+            <ion-item>
+                <ion-textarea name="descripcion" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="Describa el problema y/o sugerencia"></ion-textarea>
+            </ion-item>
+            <ion-item></ion-item>
+        </ion-list>
+    </form>
+</ion-content>

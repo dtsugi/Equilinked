@@ -1,4 +1,5 @@
 ﻿using Equilinked.API.Models;
+using Equilinked.DAL.Dto;
 using Equilinked.BLL;
 using Equilinked.DAL.Models;
 using System;
@@ -77,6 +78,21 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible obtener el usuario"));
+            }
+        }
+
+        [HttpPut, Route("api/Usuario/ChangePassword/{UsuarioId}")]
+        [ResponseType(typeof(CambioPassword))]
+        public IHttpActionResult UpdateGrupo(int UsuarioId, CambioPassword Passwords)
+        {
+            try
+            {
+                return Ok(_usuarioBLL.ChangePasswordByUsuarioId(UsuarioId, Passwords));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible actualizar el password del usuario"));
             }
         }
     }

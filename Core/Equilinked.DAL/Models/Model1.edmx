@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="EquilinkedModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="__MigrationHistory">
           <Key>
             <PropertyRef Name="MigrationId" />
@@ -74,6 +74,18 @@
           <Property Name="PersonaACargo_ID" Type="int" />
           <Property Name="Propietario_ID" Type="int" />
           <Property Name="Observaciones" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="ConfiguracionCorreo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Contrasena" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Host" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Puerto" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="EnableSsl" Type="bit" Nullable="false" />
+          <Property Name="UseDefaultCredentials" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -168,6 +180,16 @@
           <Property Name="Grupo_ID" Type="int" Nullable="false" />
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="InvitacionAmigo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Propietario_ID" Type="int" Nullable="false" />
+          <Property Name="CorreoDestinatario" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Mensaje" Type="text" Nullable="false" />
+          <Property Name="FechaEnvio" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="Mail_Establecimiento">
           <Key>
             <PropertyRef Name="ID" />
@@ -176,6 +198,23 @@
           <Property Name="MailDesc" Type="nvarchar(max)" />
           <Property Name="Establecimiento_ID" Type="int" />
           <Property Name="Tipo_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="MensajeContacto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MotivoContacto_ID" Type="int" Nullable="false" />
+          <Property Name="Mensaje" Type="text" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Propietario_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MotivoContacto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="Numero_Establecimiento">
           <Key>
@@ -225,6 +264,15 @@
           <Property Name="Nombre" Type="nvarchar(max)" />
           <Property Name="Telefono" Type="nvarchar(max)" />
           <Property Name="Mail" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="PlantillaCorreo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Asunto" Type="text" Nullable="false" />
+          <Property Name="Contenido" Type="text" Nullable="false" />
+          <Property Name="ConfiguracionCorreo_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Propietario">
           <Key>
@@ -611,6 +659,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_InvitacionAmigo_Propietario_ID">
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="1" />
+          <End Role="InvitacionAmigo" Type="Self.InvitacionAmigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvitacionAmigo">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MensajeContacto_MotivoContacto_ID">
+          <End Role="MotivoContacto" Type="Self.MotivoContacto" Multiplicity="1" />
+          <End Role="MensajeContacto" Type="Self.MensajeContacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivoContacto">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MensajeContacto">
+              <PropertyRef Name="MotivoContacto_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MensajeContacto_Propietario_ID">
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="1" />
+          <End Role="MensajeContacto" Type="Self.MensajeContacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MensajeContacto">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlantillaCorreo_ConfiguracionCorreo_ID">
+          <End Role="ConfiguracionCorreo" Type="Self.ConfiguracionCorreo" Multiplicity="1" />
+          <End Role="PlantillaCorreo" Type="Self.PlantillaCorreo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfiguracionCorreo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlantillaCorreo">
+              <PropertyRef Name="ConfiguracionCorreo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Propietario_Usuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="0..1" />
           <End Role="Propietario" Type="Self.Propietario" Multiplicity="*" />
@@ -644,6 +740,7 @@
           <EntitySet Name="AlertaCaballo" EntityType="Self.AlertaCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Alimentacion" EntityType="Self.Alimentacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caballo" EntityType="Self.Caballo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConfiguracionCorreo" EntityType="Self.ConfiguracionCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Criador" EntityType="Self.Criador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Establecimiento" EntityType="Self.Establecimiento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Establo" EntityType="Self.Establo" Schema="dbo" store:Type="Tables" />
@@ -655,13 +752,17 @@
           <EntitySet Name="Genero" EntityType="Self.Genero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Grupo" EntityType="Self.Grupo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GrupoCaballo" EntityType="Self.GrupoCaballo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvitacionAmigo" EntityType="Self.InvitacionAmigo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mail_Establecimiento" EntityType="Self.Mail_Establecimiento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MensajeContacto" EntityType="Self.MensajeContacto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MotivoContacto" EntityType="Self.MotivoContacto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Numero_Establecimiento" EntityType="Self.Numero_Establecimiento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OtrasMarcas" EntityType="Self.OtrasMarcas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pais" EntityType="Self.Pais" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pedigree" EntityType="Self.Pedigree" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pelaje" EntityType="Self.Pelaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PersonaACargo" EntityType="Self.PersonaACargo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlantillaCorreo" EntityType="Self.PlantillaCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Propietario" EntityType="Self.Propietario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Mail" EntityType="Self.Tipo_Mail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Numero" EntityType="Self.Tipo_Numero" Schema="dbo" store:Type="Tables" />
@@ -781,6 +882,22 @@
           <AssociationSet Name="FK_GrupoCaballo_Grupo_ID" Association="Self.FK_GrupoCaballo_Grupo_ID">
             <End Role="Grupo" EntitySet="Grupo" />
             <End Role="GrupoCaballo" EntitySet="GrupoCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvitacionAmigo_Propietario_ID" Association="Self.FK_InvitacionAmigo_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="InvitacionAmigo" EntitySet="InvitacionAmigo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MensajeContacto_MotivoContacto_ID" Association="Self.FK_MensajeContacto_MotivoContacto_ID">
+            <End Role="MotivoContacto" EntitySet="MotivoContacto" />
+            <End Role="MensajeContacto" EntitySet="MensajeContacto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MensajeContacto_Propietario_ID" Association="Self.FK_MensajeContacto_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="MensajeContacto" EntitySet="MensajeContacto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlantillaCorreo_ConfiguracionCorreo_ID" Association="Self.FK_PlantillaCorreo_ConfiguracionCorreo_ID">
+            <End Role="ConfiguracionCorreo" EntitySet="ConfiguracionCorreo" />
+            <End Role="PlantillaCorreo" EntitySet="PlantillaCorreo" />
           </AssociationSet>
           <AssociationSet Name="FK_Propietario_Usuario" Association="Self.FK_Propietario_Usuario">
             <End Role="Usuario" EntitySet="Usuario" />
@@ -1029,6 +1146,8 @@
           <NavigationProperty Name="Usuario" Relationship="Self.FK_Propietario_Usuario" FromRole="Propietario" ToRole="Usuario" />
           <NavigationProperty Name="Grupo" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Propietario" ToRole="Grupo" />
           <NavigationProperty Name="Establo" Relationship="EquilinkedModel.FK_Establo_Propietario_ID" FromRole="Propietario" ToRole="Establo" />
+          <NavigationProperty Name="MensajeContacto" Relationship="EquilinkedModel.FK_MensajeContacto_Propietario_ID" FromRole="Propietario" ToRole="MensajeContacto" />
+          <NavigationProperty Name="InvitacionAmigo" Relationship="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" FromRole="Propietario" ToRole="InvitacionAmigo" />
         </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
@@ -1500,6 +1619,27 @@
             <End Role="Establo" EntitySet="Establo" />
             <End Role="EstabloCorreo" EntitySet="EstabloCorreo" />
           </AssociationSet>
+          <EntitySet Name="MensajeContacto" EntityType="EquilinkedModel.MensajeContacto" />
+          <EntitySet Name="MotivoContacto" EntityType="EquilinkedModel.MotivoContacto" />
+          <AssociationSet Name="FK_MensajeContacto_MotivoContacto_ID" Association="EquilinkedModel.FK_MensajeContacto_MotivoContacto_ID">
+            <End Role="MotivoContacto" EntitySet="MotivoContacto" />
+            <End Role="MensajeContacto" EntitySet="MensajeContacto" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MensajeContacto_Propietario_ID" Association="EquilinkedModel.FK_MensajeContacto_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="MensajeContacto" EntitySet="MensajeContacto" />
+          </AssociationSet>
+          <EntitySet Name="ConfiguracionCorreo" EntityType="EquilinkedModel.ConfiguracionCorreo" />
+          <EntitySet Name="InvitacionAmigo" EntityType="EquilinkedModel.InvitacionAmigo" />
+          <EntitySet Name="PlantillaCorreo" EntityType="EquilinkedModel.PlantillaCorreo" />
+          <AssociationSet Name="FK_PlantillaCorreo_ConfiguracionCorreo_ID" Association="EquilinkedModel.FK_PlantillaCorreo_ConfiguracionCorreo_ID">
+            <End Role="ConfiguracionCorreo" EntitySet="ConfiguracionCorreo" />
+            <End Role="PlantillaCorreo" EntitySet="PlantillaCorreo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InvitacionAmigo_Propietario_ID" Association="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="InvitacionAmigo" EntitySet="InvitacionAmigo" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1636,6 +1776,108 @@
             </Principal>
             <Dependent Role="EstabloCorreo">
               <PropertyRef Name="Establo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="MensajeContacto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MotivoContacto_ID" Type="Int32" Nullable="false" />
+          <Property Name="Mensaje" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MotivoContacto" Relationship="EquilinkedModel.FK_MensajeContacto_MotivoContacto_ID" FromRole="MensajeContacto" ToRole="MotivoContacto" />
+          <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_MensajeContacto_Propietario_ID" FromRole="MensajeContacto" ToRole="Propietario" />
+        </EntityType>
+        <EntityType Name="MotivoContacto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MensajeContacto" Relationship="EquilinkedModel.FK_MensajeContacto_MotivoContacto_ID" FromRole="MotivoContacto" ToRole="MensajeContacto" />
+        </EntityType>
+        <Association Name="FK_MensajeContacto_MotivoContacto_ID">
+          <End Type="EquilinkedModel.MotivoContacto" Role="MotivoContacto" Multiplicity="1" />
+          <End Type="EquilinkedModel.MensajeContacto" Role="MensajeContacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MotivoContacto">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MensajeContacto">
+              <PropertyRef Name="MotivoContacto_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MensajeContacto_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
+          <End Type="EquilinkedModel.MensajeContacto" Role="MensajeContacto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MensajeContacto">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ConfiguracionCorreo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Correo" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Host" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Puerto" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="EnableSsl" Type="Boolean" Nullable="false" />
+          <Property Name="UseDefaultCredentials" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="PlantillaCorreo" Relationship="EquilinkedModel.FK_PlantillaCorreo_ConfiguracionCorreo_ID" FromRole="ConfiguracionCorreo" ToRole="PlantillaCorreo" />
+        </EntityType>
+        <EntityType Name="InvitacionAmigo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
+          <Property Name="CorreoDestinatario" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Mensaje" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEnvio" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" FromRole="InvitacionAmigo" ToRole="Propietario" />
+        </EntityType>
+        <EntityType Name="PlantillaCorreo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Asunto" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Contenido" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ConfiguracionCorreo_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ConfiguracionCorreo" Relationship="EquilinkedModel.FK_PlantillaCorreo_ConfiguracionCorreo_ID" FromRole="PlantillaCorreo" ToRole="ConfiguracionCorreo" />
+        </EntityType>
+        <Association Name="FK_PlantillaCorreo_ConfiguracionCorreo_ID">
+          <End Type="EquilinkedModel.ConfiguracionCorreo" Role="ConfiguracionCorreo" Multiplicity="1" />
+          <End Type="EquilinkedModel.PlantillaCorreo" Role="PlantillaCorreo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ConfiguracionCorreo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlantillaCorreo">
+              <PropertyRef Name="ConfiguracionCorreo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InvitacionAmigo_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
+          <End Type="EquilinkedModel.InvitacionAmigo" Role="InvitacionAmigo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="InvitacionAmigo">
+              <PropertyRef Name="Propietario_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1939,6 +2181,59 @@
               <MappingFragment StoreEntitySet="EstabloCorreo">
                 <ScalarProperty Name="Establo_ID" ColumnName="Establo_ID" />
                 <ScalarProperty Name="CorreoElectronico" ColumnName="CorreoElectronico" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MensajeContacto">
+            <EntityTypeMapping TypeName="EquilinkedModel.MensajeContacto">
+              <MappingFragment StoreEntitySet="MensajeContacto">
+                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+                <ScalarProperty Name="MotivoContacto_ID" ColumnName="MotivoContacto_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MotivoContacto">
+            <EntityTypeMapping TypeName="EquilinkedModel.MotivoContacto">
+              <MappingFragment StoreEntitySet="MotivoContacto">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConfiguracionCorreo">
+            <EntityTypeMapping TypeName="EquilinkedModel.ConfiguracionCorreo">
+              <MappingFragment StoreEntitySet="ConfiguracionCorreo">
+                <ScalarProperty Name="UseDefaultCredentials" ColumnName="UseDefaultCredentials" />
+                <ScalarProperty Name="EnableSsl" ColumnName="EnableSsl" />
+                <ScalarProperty Name="Puerto" ColumnName="Puerto" />
+                <ScalarProperty Name="Host" ColumnName="Host" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvitacionAmigo">
+            <EntityTypeMapping TypeName="EquilinkedModel.InvitacionAmigo">
+              <MappingFragment StoreEntitySet="InvitacionAmigo">
+                <ScalarProperty Name="FechaEnvio" ColumnName="FechaEnvio" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+                <ScalarProperty Name="CorreoDestinatario" ColumnName="CorreoDestinatario" />
+                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlantillaCorreo">
+            <EntityTypeMapping TypeName="EquilinkedModel.PlantillaCorreo">
+              <MappingFragment StoreEntitySet="PlantillaCorreo">
+                <ScalarProperty Name="ConfiguracionCorreo_ID" ColumnName="ConfiguracionCorreo_ID" />
+                <ScalarProperty Name="Contenido" ColumnName="Contenido" />
+                <ScalarProperty Name="Asunto" ColumnName="Asunto" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

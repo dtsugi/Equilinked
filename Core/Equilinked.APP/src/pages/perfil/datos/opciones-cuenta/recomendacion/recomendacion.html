@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Recomendar a un amigo</ion-title>
+
+        <ion-buttons end>
+            <button ion-button icon-only [disabled]="!invitacionForm.valid" (click)="sendInvitation()">
+                <ion-icon name="done-all"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="invitacionForm">
+        <ion-list>
+            <ion-item>
+                <h2>Recomendar a un amigo</h2>
+            </ion-item>
+            <ion-item>
+                <ion-input formControlName="CorreoDestinatario" type="email" placeholder="Ingresar su correo electrónico">
+                </ion-input>
+            </ion-item>
+
+            <ion-item>
+                <h2>Descripción</h2>
+            </ion-item>
+            <ion-item>
+                <ion-textarea formControlName="Mensaje" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos"></ion-textarea>
+            </ion-item>
+            <ion-item></ion-item>
+        </ion-list>
+    </form>
+
+</ion-content>

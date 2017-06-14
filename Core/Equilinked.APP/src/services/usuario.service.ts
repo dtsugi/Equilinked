@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { AppConfig } from '../app/app.config';
 import { Utils } from '../app/utils';
-import { UserSessionEntity} from '../model/UserSessionEntity';
+import { UserSessionEntity } from '../model/UserSessionEntity';
 
 @Injectable()
 export class UsuarioService {
@@ -13,7 +13,7 @@ export class UsuarioService {
 
     constructor(private _http: Http) { }
 
-    login(session: UserSessionEntity): any {        
+    login(session: UserSessionEntity): any {
         let bodyString = JSON.stringify(session);
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers });
@@ -21,5 +21,15 @@ export class UsuarioService {
         console.log("URL" + this.url);
         return this._http.post(this.url, bodyString, options)
             .map(response => response.json());
+    }
+
+    changePassword(usuarioId: number, password: string, newPassword: string): Promise<any> {
+        let url: string = this.actionUrl + "ChangePassword/" + usuarioId;
+        return this._http.put(url, {
+            NuevaContrasena: newPassword,
+            ContrasenaActual: password
+        })
+            .map(response => response.json())
+            .toPromise();
     }
 }

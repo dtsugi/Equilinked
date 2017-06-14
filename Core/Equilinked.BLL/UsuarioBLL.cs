@@ -1,9 +1,7 @@
 ﻿using Equilinked.DAL.Models;
-using System;
+using Equilinked.DAL.Dto;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
@@ -23,6 +21,28 @@ namespace Equilinked.BLL
         public Usuario Login(string username, string password)
         {
             return this._dbContext.Usuario.Where(x => x.Login == username && x.Password == password).FirstOrDefault();
+        }
+
+        public CambioPassword ChangePasswordByUsuarioId(int UsuarioId, CambioPassword Passwords)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                Usuario usuario = db.Usuario.Where(u => u.ID == UsuarioId).FirstOrDefault();
+                if(usuario.Password == Passwords.ContrasenaActual)
+                {
+                    usuario.Password = Passwords.NuevaContrasena;
+                    db.SaveChanges();
+                    Passwords.StatusCambio = true;
+                } else
+                {
+                    Passwords.StatusCambio = false;
+                }
+                Passwords.NuevaContrasena = null;
+                Passwords.ContrasenaActual = null;
+                return Passwords;
+            }
         }
     }
 }
