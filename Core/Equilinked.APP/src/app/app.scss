@@ -19,10 +19,14 @@
     text-align: center;
 }
 .toolbar-top-title {
-    font-size: 2rem !important;
+    text-transform: uppercase !important;
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
 }
 .toolbar-top-subtitle {
     font-size: 1.5rem !important;
+    font-style: italic !important;
+    color: #00A7A5 !important;
 }
 .item-without-padding {
     padding-left: 0px;
