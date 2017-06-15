@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, NavController, ViewController } from 'ionic-angular';
+import { AlertController, NavParams, NavController, ViewController } from 'ionic-angular';
 import { CommonService } from '../../../../services/common.service';
 import { SecurityService } from '../../../../services/security.service';
 import { LoginPage } from '../../../login/login';
@@ -12,7 +12,10 @@ import { OpcionesCuentaPage } from "../opciones-cuenta/opciones-cuenta";
 })
 export class PopoverDatosPage {
 
-    constructor(public navCtrl: NavController,
+    private navCtrlDatos: NavController;
+    constructor(
+        private alertController: AlertController,
+        public navCtrl: NavController,
         public navParams: NavParams,
         private _commonService: CommonService,
         private _securityService: SecurityService,
@@ -21,17 +24,33 @@ export class PopoverDatosPage {
     }
 
     ngOnInit() {
+        this.navCtrlDatos = this.navParams.get("navController");
     }
 
     showOptionsAcount(): void {
         this.viewController.dismiss();
-        this.navCtrl.push(OpcionesCuentaPage);
+        this.navCtrlDatos.push(OpcionesCuentaPage, { navCtrlMenu: this.navCtrl });
     }
 
     logout() {
-        console.log("LOGOUT");
-        this._securityService.logout();
-        this.navCtrl.setRoot(LoginPage);
-        this.navCtrl.push(LoginPage);
+        this.viewController.dismiss();
+        let alert = this.alertController.create({
+            subTitle: "Cerrar sesión",
+            buttons: [
+                {
+                    text: "Cancelar",
+                    role: "cancel"
+                },
+                {
+                    text: "Aceptar",
+                    handler: () => {
+                        this._securityService.logout();
+                        this.navCtrl.setRoot(LoginPage);
+                        this.navCtrl.push(LoginPage);
+                    }
+                }
+            ]
+        });
+        alert.present();
     }
 }

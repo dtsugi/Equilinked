@@ -6,15 +6,16 @@
             </button>
         </ion-buttons>
 
-        <ion-title>Cuenta</ion-title>
+        <ion-title class="toolbar-top-center">
+            <span class="toolbar-top-title">Mi perfil</span>
+            <br />
+            <span class="toolbar-top-subtitle">Cuenta</span>
+        </ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-list>
-        <ion-list-header>
-            Opciones de cuenta
-        </ion-list-header>
         <ion-item *ngFor="let opcion of opciones" (click)="showPageOptionSelected(opcion)">
             <h2>{{opcion.texto}}</h2>
         </ion-item>

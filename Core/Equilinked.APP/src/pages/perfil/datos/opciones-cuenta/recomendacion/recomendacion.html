@@ -1,33 +1,31 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>Recomendar a un amigo</ion-title>
-
+        <ion-title></ion-title>
         <ion-buttons end>
-            <button ion-button icon-only [disabled]="!invitacionForm.valid" (click)="sendInvitation()">
-                <ion-icon name="done-all"></ion-icon>
+            <button ion-button icon-only class="button-text" [disabled]="!invitacionForm.valid" (click)="sendInvitation()">
+                Aceptar
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
     <form [formGroup]="invitacionForm">
         <ion-list>
-            <ion-item>
-                <h2>Recomendar a un amigo</h2>
+            <ion-item class="item-without-padding">
+                <h2 class="label-input">Recomendar a un amigo</h2>
             </ion-item>
-            <ion-item>
+            <ion-item class="item-without-padding">
                 <ion-input formControlName="CorreoDestinatario" type="email" placeholder="Ingresar su correo electrónico">
                 </ion-input>
             </ion-item>
 
-            <ion-item>
-                <h2>Descripción</h2>
+            <ion-item class="item-without-padding">
+                <h2 class="label-input">Descripción</h2>
             </ion-item>
-            <ion-item>
-                <ion-textarea formControlName="Mensaje" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos"></ion-textarea>
+            <ion-item class="item-without-padding">
+                <ion-textarea formControlName="Mensaje" [attr.rows]="4" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos. https://equilinked.com/download"></ion-textarea>
             </ion-item>
-            <ion-item></ion-item>
         </ion-list>
     </form>
 

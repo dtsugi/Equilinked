@@ -1,41 +1,34 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>Cambiar contraseña</ion-title>
-
+        <ion-title></ion-title>
         <ion-buttons end>
-            <button ion-button icon-only [disabled]="!formCambioPass.valid" (click)="changePassword()">
-                <ion-icon name="done-all"></ion-icon>
+            <button ion-button icon-only class="button-text" [disabled]="!formCambioPass.valid" (click)="changePassword()">
+                Aceptar
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
     <form [formGroup]="formCambioPass">
-        <ion-list>
-            <ion-item>
-                <h2>Contraseña actual</h2>
-            </ion-item>
-            <ion-item>
-                <ion-input formControlName="ContrasenaActual" type="password" placeholder="Ingresar contraseña actual"></ion-input>
-            </ion-item>
 
-            <ion-item>
-                <h2>Contraseña nueva</h2>
-            </ion-item>
-            <ion-item>
-                <ion-input formControlName="NuevaContrasena" type="password" placeholder="Ingresar contraseña nueva"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="Confirmar contraseña nueva"></ion-input>
-            </ion-item>
-            <ion-item *ngIf="formCambioPass.get('NuevaContrasena').hasError('nomatch')">
-                <p style="color: #f53d3d;">Las nuevas contraseñas no coinciden</p>
-            </ion-item>
-            <ion-item>
-                <h2><a>¿Olvidaste tu contraseña? restablécela</a></h2>
-            </ion-item>
-        </ion-list>
+        <ion-item class="item-without-padding">
+            <h2 class="label-input">Contraseña actual</h2>
+        </ion-item>
+        <ion-item class="item-without-padding">
+            <ion-input formControlName="ContrasenaActual" type="password" placeholder="Ingresar contraseña actual"></ion-input>
+        </ion-item>
+        <ion-item class="item-without-padding">
+            <h2 class="label-input">Contraseña nueva</h2>
+        </ion-item>
+        <ion-item class="item-without-padding">
+            <ion-input formControlName="NuevaContrasena" type="password" placeholder="Ingresar contraseña nueva"></ion-input>
+        </ion-item>
+        <ion-item class="item-without-padding">
+            <ion-input formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="Confirmar contraseña nueva"></ion-input>
+        </ion-item>
+        <p *ngIf="formCambioPass.get('NuevaContrasena').hasError('nomatch')" style="color: #f53d3d;">Las nuevas contraseñas no coinciden</p>
+        <p><a style="color: #00A7A5;">¿Olvidaste tu contraseña? restablécela</a></p>
     </form>
 
 </ion-content>

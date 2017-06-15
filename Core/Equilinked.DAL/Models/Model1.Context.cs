@@ -59,6 +59,7 @@ namespace Equilinked.DAL.Models
         public virtual DbSet<ConfiguracionCorreo> ConfiguracionCorreo { get; set; }
         public virtual DbSet<InvitacionAmigo> InvitacionAmigo { get; set; }
         public virtual DbSet<PlantillaCorreo> PlantillaCorreo { get; set; }
+        public virtual DbSet<PreguntaFrecuente> PreguntaFrecuente { get; set; }
     
         public virtual ObjectResult<sp_GetAlertasByPropietarioId_Result> sp_GetAlertasByPropietarioId(Nullable<int> pROPIETARIO_ID)
         {

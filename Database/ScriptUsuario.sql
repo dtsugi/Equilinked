@@ -4,7 +4,8 @@ CREATE TABLE dbo.[Usuario]
 	[Login] NVARCHAR(100) NOT NULL,
 	Password NVARCHAR(100) NOT NULL,
 	SignInDate DATETIME NOT NULL,
-	ExpirationDate DATETIME NULL
+	ExpirationDate DATETIME NULL,
+	Activo BIT NOT NULL
 )
 GO
 

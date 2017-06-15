@@ -274,6 +274,15 @@
           <Property Name="Contenido" Type="text" Nullable="false" />
           <Property Name="ConfiguracionCorreo_ID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="PreguntaFrecuente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Pregunta" Type="text" Nullable="false" />
+          <Property Name="Respuesta" Type="text" Nullable="false" />
+          <Property Name="Orden" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Propietario">
           <Key>
             <PropertyRef Name="ID" />
@@ -310,6 +319,7 @@
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="SignInDate" Type="datetime" Nullable="false" />
           <Property Name="ExpirationDate" Type="datetime" />
+          <Property Name="Activo" Type="bit" />
         </EntityType>
         <Association Name="FK_AlertaCaballo_Alerta">
           <End Role="Alerta" Type="Self.Alerta" Multiplicity="1" />
@@ -763,6 +773,7 @@
           <EntitySet Name="Pelaje" EntityType="Self.Pelaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PersonaACargo" EntityType="Self.PersonaACargo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlantillaCorreo" EntityType="Self.PlantillaCorreo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PreguntaFrecuente" EntityType="Self.PreguntaFrecuente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Propietario" EntityType="Self.Propietario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Mail" EntityType="Self.Tipo_Mail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Numero" EntityType="Self.Tipo_Numero" Schema="dbo" store:Type="Tables" />
@@ -1175,6 +1186,7 @@
           <Property Name="SignInDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ExpirationDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Propietario" Relationship="Self.FK_Propietario_Usuario" FromRole="Usuario" ToRole="Propietario" />
+          <Property Name="Activo" Type="Boolean" />
         </EntityType>
         <Association Name="FK_AlertaCaballo_Alerta">
           <End Role="Alerta" Type="Self.Alerta" Multiplicity="1" />
@@ -1640,6 +1652,7 @@
             <End Role="Propietario" EntitySet="Propietario" />
             <End Role="InvitacionAmigo" EntitySet="InvitacionAmigo" />
           </AssociationSet>
+          <EntitySet Name="PreguntaFrecuente" EntityType="EquilinkedModel.PreguntaFrecuente" />
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1881,6 +1894,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PreguntaFrecuente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Pregunta" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Respuesta" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Orden" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2124,6 +2146,7 @@
           <EntitySetMapping Name="Usuario">
             <EntityTypeMapping TypeName="EquilinkedModel.Usuario">
               <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -2234,6 +2257,16 @@
                 <ScalarProperty Name="ConfiguracionCorreo_ID" ColumnName="ConfiguracionCorreo_ID" />
                 <ScalarProperty Name="Contenido" ColumnName="Contenido" />
                 <ScalarProperty Name="Asunto" ColumnName="Asunto" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PreguntaFrecuente">
+            <EntityTypeMapping TypeName="EquilinkedModel.PreguntaFrecuente">
+              <MappingFragment StoreEntitySet="PreguntaFrecuente">
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Respuesta" ColumnName="Respuesta" />
+                <ScalarProperty Name="Pregunta" ColumnName="Pregunta" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

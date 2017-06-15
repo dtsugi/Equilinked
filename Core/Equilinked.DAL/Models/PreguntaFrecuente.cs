@@ -12,20 +12,11 @@ namespace Equilinked.DAL.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Usuario
+    public partial class PreguntaFrecuente
     {
-        public Usuario()
-        {
-            this.Propietario = new HashSet<Propietario>();
-        }
-    
         public int ID { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public System.DateTime SignInDate { get; set; }
-        public Nullable<System.DateTime> ExpirationDate { get; set; }
-        public Nullable<bool> Activo { get; set; }
-    
-        public virtual ICollection<Propietario> Propietario { get; set; }
+        public string Pregunta { get; set; }
+        public string Respuesta { get; set; }
+        public int Orden { get; set; }
     }
 }

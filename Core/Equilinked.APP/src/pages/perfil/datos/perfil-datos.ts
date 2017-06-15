@@ -63,10 +63,7 @@ export class PerfilDatosPage {
     }
 
     presentPopover(ev) {
-        // let popover = this.popoverCtrl.create((PopoverDatosPage, {
-        //     alertaEntity: this.alertaEntity
-        // });
-        let popover = this.popoverCtrl.create(PopoverDatosPage, {});
+        let popover = this.popoverCtrl.create(PopoverDatosPage, { navController: this.navCtrl });
         popover.present({
             ev: ev
         });

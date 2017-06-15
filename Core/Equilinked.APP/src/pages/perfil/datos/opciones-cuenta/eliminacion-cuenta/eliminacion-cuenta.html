@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-navbar>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <h2 class="label-input">Eliminar cuenta</h2>
+    <hr />
+    <p>
+        Al eliminar tu cuenta de Equilinked:
+    </p>
+    <ul>
+        <li>Se eliminará tu perfil y datos cargados a la cuenta</li>
+        <li>Se eliminará tu historial de mensajes</li>
+        <li>Perderás contacto con tus veterinarios</li>
+    </ul>
+    <hr />
+
+    <p class="content-title-text">Para eliminar tu cuenta, deberás confirmar tu correo electrónico y contraseña</p>
+    <hr />
+
+    <form [formGroup]="cuentaForm" (submit)="deleteAcount()">
+        <ion-item class="item-without-padding">
+            <ion-input formControlName="Correo" type="email" placeholder="Ingresar correo electrónico"></ion-input>
+        </ion-item>
+        <ion-item class="item-without-padding">
+            <ion-input formControlName="Password" type="password" placeholder="Ingresar contraseña"></ion-input>
+        </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col col-8 offset-2>
+                    <button type="submit" ion-button block outline color="danger" [disabled]="!cuentaForm.valid">ELIMINAR CUENTA</button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>

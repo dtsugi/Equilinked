@@ -14,3 +14,40 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.toolbar-top-center {
+    text-align: center;
+}
+.toolbar-top-title {
+    font-size: 2rem !important;
+}
+.toolbar-top-subtitle {
+    font-size: 1.5rem !important;
+}
+.item-without-padding {
+    padding-left: 0px;
+}
+.content-title-text {
+    font-size: 1.6rem;
+    font-weight: normal;
+}
+.title-4 {
+    font-weight: 500;
+    font-size: 2rem;
+}
+
+.label-input {
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+}
+
+.sublabel-input {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+}
+
+.button-text {
+    text-transform: none !important;
+    color: #00A7A5 !important;
+    font-size: 1.6rem !important;
+}

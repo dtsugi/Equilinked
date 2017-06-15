@@ -83,7 +83,7 @@ namespace Equilinked.API.Controllers
 
         [HttpPut, Route("api/Usuario/ChangePassword/{UsuarioId}")]
         [ResponseType(typeof(CambioPassword))]
-        public IHttpActionResult UpdateGrupo(int UsuarioId, CambioPassword Passwords)
+        public IHttpActionResult ChangeUserPassword(int UsuarioId, CambioPassword Passwords)
         {
             try
             {
@@ -93,6 +93,21 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible actualizar el password del usuario"));
+            }
+        }
+
+        [HttpDelete, Route("api/Usuario/{usuarioId}")]
+        [ResponseType(typeof(CuentaEliminacion))]
+        public IHttpActionResult UpdateGrupo(int usuarioId, CuentaEliminacion cuenta)
+        {
+            try
+            {
+                return Ok(_usuarioBLL.DeleteAccountUser(usuarioId, cuenta));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar la cuenta del usuario"));
             }
         }
     }

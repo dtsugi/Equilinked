@@ -72,6 +72,7 @@
         <EntityTypeShape EntityType="EquilinkedModel.PlantillaCorreo" Width="1.5" PointX="13.625" PointY="6.25" />
         <AssociationConnector Association="EquilinkedModel.FK_PlantillaCorreo_ConfiguracionCorreo_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.PreguntaFrecuente" Width="1.5" PointX="11.75" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

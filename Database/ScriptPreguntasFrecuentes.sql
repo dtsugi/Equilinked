@@ -1,0 +1,10 @@
+CREATE TABLE PreguntaFrecuente (
+	ID INT IDENTITY NOT NULL,
+	Pregunta TEXT NOT NULL,
+	Respuesta TEXT NOT NULL,
+	Orden INT NOT NULL
+)
+GO
+
+ALTER TABLE PreguntaFrecuente ADD CONSTRAINT PK_PreguntaFrecuente PRIMARY KEY(ID)
+GO

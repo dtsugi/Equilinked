@@ -45,6 +45,9 @@ import { CambioContrasenaPage } from "../pages/perfil/datos/opciones-cuenta/camb
 import { TerminosPrivacidadPage } from "../pages/perfil/datos/opciones-cuenta/terminos-privacidad/terminos-privacidad";
 import { ContactoPage } from "../pages/perfil/datos/opciones-cuenta/contacto/contacto";
 import { RecomendacionPage } from "../pages/perfil/datos/opciones-cuenta/recomendacion/recomendacion";
+import { PreguntasFrecuentesPage } from "../pages/perfil/datos/opciones-cuenta/preguntas-frecuentes/preguntas-frecuentes";
+import { EliminacionCuentaPage } from "../pages/perfil/datos/opciones-cuenta/eliminacion-cuenta/eliminacion-cuenta";
+
 /* Establos */
 import { ListadoEstablosPage } from "../pages/perfil/establos/establos";
 import { AdminEstablosPage } from "../pages/perfil/establos/admin-establo/admin-establo";
@@ -94,6 +97,8 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     TerminosPrivacidadPage,
     ContactoPage,
     RecomendacionPage,
+    PreguntasFrecuentesPage,
+    EliminacionCuentaPage,
     /* Establos */
     ListadoEstablosPage,
     AdminEstablosPage,
@@ -145,6 +150,8 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     TerminosPrivacidadPage,
     ContactoPage,
     RecomendacionPage,
+    PreguntasFrecuentesPage,
+    EliminacionCuentaPage,
     /* Establos */
     ListadoEstablosPage,
     AdminEstablosPage,

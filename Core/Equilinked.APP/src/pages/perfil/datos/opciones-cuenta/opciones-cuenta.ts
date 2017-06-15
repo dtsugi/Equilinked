@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController } from "ionic-angular";
+import { NavController, NavParams } from "ionic-angular";
 import { CambioContrasenaPage } from "./cambio-contrasena/cambio-contrasena";
 import { TerminosPrivacidadPage } from "./terminos-privacidad/terminos-privacidad";
 import { ContactoPage } from "./contacto/contacto";
 import { RecomendacionPage } from "./recomendacion/recomendacion";
+import { PreguntasFrecuentesPage } from "./preguntas-frecuentes/preguntas-frecuentes";
+import { EliminacionCuentaPage } from "./eliminacion-cuenta/eliminacion-cuenta";
 
 @Component({
     templateUrl: "./opciones-cuenta.html",
@@ -11,15 +13,19 @@ import { RecomendacionPage } from "./recomendacion/recomendacion";
 })
 export class OpcionesCuentaPage implements OnInit {
 
+    private navCtrlMenu: NavController;
     opciones: Array<any>;
 
     constructor(
-        private navController: NavController
+        private navController: NavController,
+        private navParams: NavParams
     ) {
         this.opciones = new Array<any>();
     }
 
     ngOnInit(): void {
+        this.navCtrlMenu = this.navParams.get("navCtrlMenu");
+
         this.opciones.push({
             texto: "Cambiar contraseña",
             page: CambioContrasenaPage
@@ -33,14 +39,16 @@ export class OpcionesCuentaPage implements OnInit {
             page: TerminosPrivacidadPage
         });
         this.opciones.push({
-            texto: "Preguntas frecuentes"
+            texto: "Preguntas frecuentes",
+            page: PreguntasFrecuentesPage
         });
         this.opciones.push({
             texto: "Contáctanos",
             page: ContactoPage
         });
         this.opciones.push({
-            texto: "Eliminar cuenta"
+            texto: "Eliminar cuenta",
+            page: EliminacionCuentaPage
         });
     }
 
@@ -50,7 +58,7 @@ export class OpcionesCuentaPage implements OnInit {
 
     showPageOptionSelected(opcion: any): void {
         if (opcion.page) {
-            this.navController.push(opcion.page);
+            this.navController.push(opcion.page, { navCtrlMenu: this.navCtrlMenu });
         }
     }
 }

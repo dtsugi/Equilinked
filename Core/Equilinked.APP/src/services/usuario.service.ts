@@ -32,4 +32,15 @@ export class UsuarioService {
             .map(response => response.json())
             .toPromise();
     }
+
+    deleteAccount(usuarioId: number, email: string, password: string): Promise<any> {
+        let url = this.actionUrl + "/" + usuarioId;
+        let account: any = {
+            Correo: email,
+            Password: password
+        };
+        return this._http.delete(url, new RequestOptions({ body: account }))
+            .map(response => response.json())
+            .toPromise();
+    }
 }
