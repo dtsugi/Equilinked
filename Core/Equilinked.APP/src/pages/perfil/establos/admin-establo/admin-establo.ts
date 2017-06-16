@@ -91,11 +91,15 @@ export class AdminEstablosPage implements OnInit {
         }
     }
 
+    goBack(): void {
+        this.navController.pop();
+    }
+
     private listAllTipoNumeros(): void {
         this.tipoNumeroService.getAll()
             .then(tiposTelefono => {
                 this.tiposTelefono = tiposTelefono;
-                if (!this.establo.ID) {
+                if (!this.establo.ID || this.establo.EstabloTelefono.Numero == null) {
                     this.tipoTelefonoPorTelefono[0].tipoTelefono = this.tiposTelefono[0].ID.toString();
                 }
             }).catch(err => {
@@ -183,14 +187,20 @@ export class AdminEstablosPage implements OnInit {
         establo.Manager = this.establoForm.get("Manager").value;
         establo.Direccion = this.establoForm.get("Direccion").value;
         establo.EstabloCaballo = this.caballos;
-        (this.establoForm.get("Telefonos") as FormArray).controls.forEach((telefono, index) => {
-            establo.EstabloTelefono[index].Numero = telefono.value;
-            establo.EstabloTelefono[index].Tipo_Numero_ID = +this.tipoTelefonoPorTelefono[index].tipoTelefono;
-        });
+        (this.establoForm.get("Telefonos") as FormArray).controls
+            .forEach((telefono, index) => {
+                establo.EstabloTelefono[index].Numero = telefono.value;
+                establo.EstabloTelefono[index].Tipo_Numero_ID = +this.tipoTelefonoPorTelefono[index].tipoTelefono;
+            });
 
-        (this.establoForm.get("Correos") as FormArray).controls.forEach((correo, index) => {
-            establo.EstabloCorreo[index].CorreoElectronico = correo.value;
-        });
+        (this.establoForm.get("Correos") as FormArray).controls
+            .forEach((correo, index) => {
+                establo.EstabloCorreo[index].CorreoElectronico = correo.value;
+            });
+
+        //Limpiamos los que van vacios!
+        establo.EstabloTelefono = establo.EstabloTelefono.filter(et => et.Numero != "");
+        establo.EstabloCorreo = establo.EstabloCorreo.filter(ec => ec.CorreoElectronico != "");
 
         this.commonService.showLoading("Procesando..");
         let prom: Promise<any>;
@@ -215,14 +225,14 @@ export class AdminEstablosPage implements OnInit {
     private initEstabloForm(): void {
         this.establoForm = new FormGroup({
             Nombre: new FormControl("", [Validators.required]),
-            Manager: new FormControl("", [Validators.required]),
+            Manager: new FormControl("", []),
             Correos: new FormArray([
-                new FormControl("", [Validators.required])
+                new FormControl("", [])
             ]),
             Telefonos: new FormArray([
-                new FormControl("", [Validators.required])
+                new FormControl("", [])
             ]),
-            Direccion: new FormControl("", [Validators.required])
+            Direccion: new FormControl("", [])
         });
 
         if (this.establo) {
@@ -255,17 +265,27 @@ export class AdminEstablosPage implements OnInit {
             }
         }
 
-        this.establoForm.get("Correos").setValue(
-            this.establo.EstabloCorreo.map(c => c.CorreoElectronico)
-        );
-        this.establoForm.get("Telefonos").setValue(
-            this.establo.EstabloTelefono.map(t => t.Numero)
-        );
-        this.tipoTelefonoPorTelefono = this.establo.EstabloTelefono.map(
-            t => {
-                return { tipoTelefono: t.Tipo_Numero_ID.toString() }
-            }
-        );
+        if (this.establo.EstabloCorreo.length > 0) {
+            this.establoForm.get("Correos").setValue(
+                this.establo.EstabloCorreo.map(c => c.CorreoElectronico)
+            );
+        } else {
+            this.establo.EstabloCorreo = [{ CorreoElectronico: null }];
+        }
+
+        if (this.establo.EstabloTelefono.length > 0) {
+            this.establoForm.get("Telefonos").setValue(
+                this.establo.EstabloTelefono.map(t => t.Numero)
+            );
+            this.tipoTelefonoPorTelefono = this.establo.EstabloTelefono.map(
+                t => {
+                    return { tipoTelefono: t.Tipo_Numero_ID.toString() }
+                }
+            );
+        } else {
+            this.establo.EstabloTelefono = [{ Tipo_Numero_ID: null, Numero: null }];
+        }
+
         this.caballos = this.establo.EstabloCaballo;
     }
 }

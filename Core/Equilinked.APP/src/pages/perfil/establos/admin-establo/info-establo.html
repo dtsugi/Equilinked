@@ -1,12 +1,12 @@
 <ion-header>
     <ion-navbar>
-        <ion-title *ngIf="establo">
-            {{establo.Nombre}}
+        <ion-title *ngIf="establo" class="toolbar-top-center">
+            <span class="toolbar-top-title">{{establo.Nombre}}</span>
         </ion-title>
 
         <ion-buttons end>
-            <button ion-button icon-only (click)="edit()">
-                <ion-icon name="create"></ion-icon>
+            <button ion-button class="button-text" (click)="edit()">
+                Editar
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -14,7 +14,7 @@
 
 <ion-content>
     <ion-list *ngIf="establo">
-        <ion-item>
+        <ion-item *ngIf="establo.Manager != ''">
             <ion-icon name="person" item-left></ion-icon>
             {{establo.Manager}}
         </ion-item>
@@ -32,14 +32,14 @@
             </ion-note>
         </ion-item>
 
-        <ion-item>
+        <ion-item *ngIf="establo.Direccion != ''">
             <ion-icon name="flag" item-left></ion-icon>
             {{establo.Direccion}}
         </ion-item>
 
         <ion-item>
             <ion-icon name="list-box" item-left></ion-icon>
-            <a (click)="viewCaballos()">{{establo.EstabloCaballo.length}} caballo(s)</a>
+            <a style="color: #00A7A5 !important;" (click)="viewCaballos()">{{establo.EstabloCaballo.length}} caballo(s)</a>
         </ion-item>
     </ion-list>
 </ion-content>

@@ -15,58 +15,51 @@ namespace Equilinked.BLL
         {
             using (var db = this._dbContext)
             {
-                String updateGrupo = "UPDATE Grupo SET Descripcion = @Descripcion WHERE ID = @Id";
-                String deleteGrupoCaballo = "DELETE FROM GrupoCaballo WHERE ID = @Id";
-                String insertGrupoCaballo = "INSERT INTO GrupoCaballo(Grupo_ID, Caballo_ID) VALUES(@GrupoId, @CaballoId)";
+                db.Configuration.LazyLoadingEnabled = false;
+                    
+                Grupo grupoo = db.Grupo //Actualizamos el grupo
+                    .Where(g => g.ID == GrupoId).FirstOrDefault();
+                grupoo.Descripcion = entity.Descripcion;
 
-                List<GrupoCaballo> caballosByPropietario = db.GrupoCaballo
-                    .Include("Caballo")
-                    .Where(gc => gc.Grupo_ID == GrupoId)
+                List<int> idsCaballosAct = new List<int>(); // los ids actuales
+                List<int> idsCaballosMod = new List<int>(); //los nuevo ids
+                foreach (var c in entity.Caballo)
+                {
+                    idsCaballosMod.Add(c.ID);
+                }
+
+                foreach(var c in db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoo.ID).ToList())
+                {
+                    idsCaballosAct.Add(c.Caballo_ID);
+                }
+
+                List<Caballo> caballosNuevos = db.Caballo.Where(c =>
+                c.Propietario_ID == grupoo.Propietario_ID &&
+                !idsCaballosAct.Contains(c.ID) &&
+                idsCaballosMod.Contains(c.ID)
+                 ).ToList();
+
+                if(caballosNuevos != null && caballosNuevos.Count() > 0)
+                {
+                    GrupoCaballo gcc;
+                    foreach(var c in caballosNuevos) //Agregamos los nuevos
+                    {
+                        gcc = new GrupoCaballo();
+                        gcc.Caballo_ID = c.ID;
+                        gcc.Grupo_ID = grupoo.ID;
+                        db.GrupoCaballo.Add(gcc);
+                    }
+                }
+
+                List<GrupoCaballo> caballosEliminar = db.GrupoCaballo
+                    .Where(gc => gc.Grupo_ID == grupoo.ID && !idsCaballosMod.Contains(gc.Caballo_ID))
                     .ToList();
 
-                db.Database.ExecuteSqlCommand(updateGrupo,
-                        new SqlParameter("Descripcion", entity.Descripcion),
-                        new SqlParameter("Id", GrupoId));
-
-                //Para eliminar los que ya quito el usuario
-                foreach (GrupoCaballo gc in caballosByPropietario)
+                if(caballosEliminar != null && caballosEliminar.Count() > 0)
                 {
-                    Boolean encontrado = false;
-                    foreach (Caballo c in entity.Caballo)
-                    {
-                        encontrado = c.ID == gc.Caballo_ID;
-                        if (encontrado)
-                        {
-                            break;
-                        }
-                    }
-                    if (!encontrado)
-                    {
-                        db.Database.ExecuteSqlCommand(deleteGrupoCaballo,
-                            new SqlParameter("Id", gc.ID));
-                    }
+                    db.GrupoCaballo.RemoveRange(caballosEliminar);//Eliminamos los que no están
                 }
-
-                //Para agregar los nuevos
-                foreach (Caballo c in entity.Caballo)
-                {
-                    Boolean encontrado = false;
-                    foreach (GrupoCaballo gc in caballosByPropietario)
-                    {
-                        encontrado = c.ID == gc.Caballo_ID;
-                        if (encontrado)
-                        {
-                            break;
-                        }
-                    }
-                    if (!encontrado)
-                    {
-                        db.Database.ExecuteSqlCommand(insertGrupoCaballo,
-                            new SqlParameter("GrupoId", GrupoId),
-                            new SqlParameter("CaballoId", c.ID));
-                    }
-                }
-
+                db.SaveChanges();
             }
             return entity;
         }
@@ -114,18 +107,6 @@ namespace Equilinked.BLL
             }
         }
 
-        public Propietario GetPropietarioByUser(string user)
-        {
-            using (var db = this._dbContext)
-            {
-                db.Configuration.LazyLoadingEnabled = false;
-                return db.Propietario
-                    .Include("Usuario")
-                    .Where(p => p.Usuario.Login == user)
-                    .First();
-            }
-        }
-
         public bool DeleteById(int id)
         {
             throw new NotImplementedException();
@@ -145,18 +126,13 @@ namespace Equilinked.BLL
         {
             using (var db = this._dbContext)
             {
-                ICollection<Caballo> caballos = entity.Caballo;
-                entity.Caballo = null;
                 db.Grupo.Add(entity);
-                db.SaveChanges();
-                foreach (Caballo c in caballos)
+                foreach(var gc in entity.GrupoCaballo)
                 {
-
-                    db.Database.ExecuteSqlCommand("INSERT INTO GrupoCaballo(Grupo_ID, Caballo_ID) VALUES(@GrupoId, @CaballoId)",
-                        new SqlParameter("GrupoId", entity.ID),
-                        new SqlParameter("CaballoId", c.ID));
+                    gc.Grupo_ID = entity.ID;
+                    db.GrupoCaballo.Add(gc);
                 }
-
+                db.SaveChanges();
                 return entity;
             }
         }

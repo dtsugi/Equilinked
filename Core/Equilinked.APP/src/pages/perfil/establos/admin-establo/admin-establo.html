@@ -1,14 +1,16 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>
-            {{establo.ID ? 'Editar establo' : 'Crear establo'}}
-        </ion-title>
-        <ion-buttons end>
-            <button ion-button icon-only [disabled]="!establoForm.valid" (click)="save()">
-                <ion-icon name="done-all"></ion-icon>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button class="button-text" (click)="goBack()">
+                Cancelar
             </button>
         </ion-buttons>
-    </ion-navbar>
+        <ion-buttons right>
+            <button ion-button class="button-text" [disabled]="!establoForm.valid" (click)="save()">
+                Guardar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>

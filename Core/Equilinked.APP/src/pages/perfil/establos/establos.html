@@ -1,19 +1,21 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button icon-only *ngIf="modoEdicion" (click)="cancelEdit()">
-                  <ion-icon name="close"></ion-icon>
+            <button ion-button class="button-text" *ngIf="modoEdicion" (click)="cancelEdit()">
+                Cancelar
             </button>
         </ion-buttons>
 
-        <ion-title>Establos</ion-title>
+        <ion-title class="toolbar-top-center">
+            <span class="toolbar-top-title">Mi perfil</span>
+        </ion-title>
 
         <ion-buttons right>
-            <button ion-button icon-only *ngIf="!modoEdicion" (click)="edit()">
-                <ion-icon name="create"></ion-icon>
+            <button ion-button class="button-text" *ngIf="!modoEdicion" (click)="edit()">
+                Editar            
             </button>
-            <button ion-button icon-only *ngIf="modoEdicion" [disabled]="countEstablosForDelete() == 0" (click)="delete()">
-                  <ion-icon name="trash"></ion-icon>
+            <button ion-button class="button-text" *ngIf="modoEdicion" [disabled]="countEstablosForDelete() == 0" (click)="delete()">
+                Eliminar
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -37,13 +39,15 @@
             <ion-col col-12>
                 <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar establos'"></ion-searchbar>
             </ion-col>
-            <ion-col col-12 *ngIf="modoEdicion">
-                <button (click)="selectAll()" ion-button full>Seleccionar todos</button>
-            </ion-col>
         </ion-row>
     </ion-grid>
 
     <ion-list no-lines *ngIf="establos">
+        <ion-item *ngIf="modoEdicion" (click)="selectAll()">
+            Seleccionar todos los caballos
+            <ion-icon name="square" class="color-checks" *ngIf="getCountSelected() != establosRespaldo.length" item-right></ion-icon>
+            <ion-icon name="checkbox" class="color-checks" *ngIf="getCountSelected() == establosRespaldo.length" item-right></ion-icon>
+        </ion-item>
         <ion-item *ngIf="!modoEdicion" (click)="newEstablo()">
             <ion-avatar item-left>
                 <img src="assets/img/add.png">
@@ -56,12 +60,12 @@
                 <img src="assets/img/caballo.jpg">
             </ion-avatar>
             <h2>{{e.establo.Nombre}}</h2>
-            <p>
+            <p *ngIf="e.establo.Direccion != ''">
                 <ion-icon name="pin"></ion-icon> {{e.establo.Direccion}}
             </p>
 
-            <ion-icon name="square" *ngIf="modoEdicion && !e.seleccion" item-right></ion-icon>
-            <ion-icon name="checkbox" *ngIf="modoEdicion && e.seleccion" item-right></ion-icon>
+            <ion-icon name="square" class="color-checks" *ngIf="modoEdicion && !e.seleccion" item-right></ion-icon>
+            <ion-icon name="checkbox" class="color-checks" *ngIf="modoEdicion && e.seleccion" item-right></ion-icon>
         </ion-item>
     </ion-list>
 

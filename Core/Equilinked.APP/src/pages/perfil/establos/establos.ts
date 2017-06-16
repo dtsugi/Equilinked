@@ -11,7 +11,12 @@ import { InfoEstabloPage } from "./admin-establo/info-establo";
 @Component({
     selector: "listado-establos",
     templateUrl: "./establos.html",
-    providers: [CommonService, EstablosService, SecurityService]
+    providers: [CommonService, EstablosService, SecurityService],
+    styles: [`
+    .color-checks {
+        color: #00A7A5 !important;
+    }
+    `]
 })
 export class ListadoEstablosPage implements OnInit {
 
@@ -91,11 +96,14 @@ export class ListadoEstablosPage implements OnInit {
     }
 
     selectAll(): void {
-        let countSeleted = this.establosRespaldo.filter(e => e.seleccion).length;
-        let selectAll: boolean = countSeleted !== this.establosRespaldo.length;
+        let selectAll: boolean = this.getCountSelected() !== this.establosRespaldo.length;
         this.establosRespaldo.forEach(e => {
             e.seleccion = selectAll;
         });
+    }
+
+    getCountSelected(): number {
+        return this.establosRespaldo.filter(e => e.seleccion).length;
     }
 
     delete(): void {

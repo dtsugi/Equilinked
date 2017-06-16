@@ -56,7 +56,10 @@ export class AdminGruposCaballosPage implements OnInit {
 
     save(): void {
         let grupo = {
-            Caballo: this.caballos.filter(c => c.seleccion).map(c => c.caballo),
+            GrupoCaballo: this.caballos.filter(c => c.seleccion).map(c => {
+                return { Caballo_ID: c.caballo.ID };
+            }),
+            //Caballo: this.caballos.filter(c => c.seleccion).map(c => c.caballo),
             Descripcion: this.grupoCaballosForm.value.Descripcion,
             Propietario_ID: this.session.PropietarioId,
             GrupoDefault: false

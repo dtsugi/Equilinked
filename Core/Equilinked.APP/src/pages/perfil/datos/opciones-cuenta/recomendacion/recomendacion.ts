@@ -48,7 +48,7 @@ export class RecomendacionPage implements OnInit {
     private initForm(): void {
         this.invitacionForm = new FormGroup({
             CorreoDestinatario: new FormControl("", [Validators.required]),
-            Mensaje: new FormControl("", [Validators.required])
+            Mensaje: new FormControl("¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos. https://equilinked.com/download", [Validators.required])
         });
     }
 }
