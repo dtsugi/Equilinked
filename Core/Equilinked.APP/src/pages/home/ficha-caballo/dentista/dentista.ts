@@ -7,7 +7,7 @@ import {AlertaService} from '../../../../services/alerta.service';
 import {Alerta} from '../../../../model/alerta';
 import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
 
-@Component({
+@Component({ 
     templateUrl: 'dentista.html',
     providers: [CommonService, AlertaService]
 })

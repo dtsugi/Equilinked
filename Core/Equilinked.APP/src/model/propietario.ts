@@ -10,6 +10,7 @@ export class Propietario {
   FechaNacimiento: Date;
   EstadoProvincia_Id: number;
   EstadoProvincia_Nombre: string;
+  PaisNombre: string;
   Usuario_ID: number;
 
   constructor() { }

@@ -3,9 +3,9 @@ import { NavController, ToastController } from "ionic-angular";
 import { CommonService } from "../../../../services/common.service";
 import { GruposCaballosService } from "../../../../services/grupos-caballos.service";
 import { SecurityService } from "../../../../services/security.service";
-import { AdminGruposCaballosPage } from "../../admin-grupos-caballos/admin-grupos-caballos";
+import { CreacionGrupoPage } from "./creacion-grupo/creacion-grupo";
 import { UserSessionEntity } from "../../../../model/userSession";
-import { GruposCaballosDetailPage } from "./grupos-caballos-detail";
+import { AdministracionGrupoPage } from "./administracion-grupo/administracion-grupo";
 
 @Component({
     selector: "grupos-caballos",
@@ -27,16 +27,18 @@ export class GruposCaballos implements OnInit {
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
-        this.getGruposCaballos();
+        this.getGruposCaballos(true);
     }
 
-    getGruposCaballos(): void {
-        this.commonService.showLoading("Procesando..");
+    getGruposCaballos(showLoading: boolean): void {
+        if (showLoading)
+            this.commonService.showLoading("Procesando..");
         this.gruposCaballosService.getGruposCaballosByPropietarioId(this.session.PropietarioId)
             .then(grupos => {
                 this.gruposRespaldo = grupos;
                 this.grupos = grupos;
-                this.commonService.hideLoading();
+                if (showLoading)
+                    this.commonService.hideLoading();
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error al cargar los grupos");
             });
@@ -47,10 +49,11 @@ export class GruposCaballos implements OnInit {
     }
 
     viewGrupo(grupo: any): void {
-        this.navController.push(GruposCaballosDetailPage, { grupo: grupo, gruposCaballosPage: this });
+        console.info(grupo);
+        this.navController.push(AdministracionGrupoPage, { grupoId: grupo.ID, gruposCaballosPage: this });
     }
 
     newGrupo(): void {
-        this.navController.push(AdminGruposCaballosPage, { gruposCaballosPage: this });
+        this.navController.push(CreacionGrupoPage, { gruposCaballosPage: this });
     }
 }

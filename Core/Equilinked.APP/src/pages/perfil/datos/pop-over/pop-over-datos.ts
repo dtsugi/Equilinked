@@ -3,7 +3,9 @@ import { AlertController, NavParams, NavController, ViewController } from 'ionic
 import { CommonService } from '../../../../services/common.service';
 import { SecurityService } from '../../../../services/security.service';
 import { LoginPage } from '../../../login/login';
+import { PerfilDatosPage } from "../perfil-datos";
 import { OpcionesCuentaPage } from "../opciones-cuenta/opciones-cuenta";
+import { EdicionPerfilPage } from "../edicion-perfil/edicion-perfil";
 
 @Component({
     selector: 'pop-over-datos',
@@ -13,6 +15,8 @@ import { OpcionesCuentaPage } from "../opciones-cuenta/opciones-cuenta";
 export class PopoverDatosPage {
 
     private navCtrlDatos: NavController;
+    private perfilDatosPage: PerfilDatosPage;
+
     constructor(
         private alertController: AlertController,
         public navCtrl: NavController,
@@ -25,9 +29,15 @@ export class PopoverDatosPage {
 
     ngOnInit() {
         this.navCtrlDatos = this.navParams.get("navController");
+        this.perfilDatosPage = this.navParams.get("perfilDatosPage");
     }
 
-    showOptionsAcount(): void {
+    editAccount(): void {
+        this.viewController.dismiss();
+        this.navCtrlDatos.push(EdicionPerfilPage, { perfilDatosPage: this.perfilDatosPage });
+    }
+
+    showOptionsAccount(): void {
         this.viewController.dismiss();
         this.navCtrlDatos.push(OpcionesCuentaPage, { navCtrlMenu: this.navCtrl });
     }

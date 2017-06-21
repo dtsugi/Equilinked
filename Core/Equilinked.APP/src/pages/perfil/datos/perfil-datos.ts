@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { CommonService } from '../../../services/common.service';
 import { SecurityService } from '../../../services/security.service';
 import { PropietarioService } from '../../../services/propietario.service';
@@ -23,6 +23,7 @@ export class PerfilDatosPage {
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
+        public events: Events,
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private _securityService: SecurityService,
@@ -34,7 +35,8 @@ export class PerfilDatosPage {
     ngOnInit() {
         this.propietarioEntity = new Propietario();
         this.session = this._securityService.getInitialConfigSession();
-        this.getPerfilPropietarioId(this.session.PropietarioId);
+        this.getPerfilPropietarioId(this.session.PropietarioId, true);
+        this.registerEvents();
     }
 
     changeTab(): void {
@@ -50,22 +52,34 @@ export class PerfilDatosPage {
         }
     }
 
-    getPerfilPropietarioId(idPropietario: number) {
-        this._commonService.showLoading("Procesando..");
+    getPerfilPropietarioId(idPropietario: number, showLoading: boolean) {
+        if (showLoading)
+            this._commonService.showLoading("Procesando..");
         this._propietarioService.getSerializedById(idPropietario)
             .subscribe(res => {
                 console.log(res);
                 this.propietarioEntity = res;
-                this._commonService.hideLoading();
+                if (showLoading)
+                    this._commonService.hideLoading();
             }, error => {
                 this._commonService.ShowErrorHttp(error, "Error obteniendo el perfil del usuario");
             });
     }
 
     presentPopover(ev) {
-        let popover = this.popoverCtrl.create(PopoverDatosPage, { navController: this.navCtrl });
+        let popover = this.popoverCtrl.create(PopoverDatosPage, {
+            navController: this.navCtrl,
+            perfilDatosPage: this
+        });
         popover.present({
             ev: ev
+        });
+    }
+
+    private registerEvents(): void {
+        this.events.subscribe("perfil:updated", () => {
+            console.info("Te mandé a traer de la edición!");
+            this.getPerfilPropietarioId(this.session.PropietarioId, false);
         });
     }
 }

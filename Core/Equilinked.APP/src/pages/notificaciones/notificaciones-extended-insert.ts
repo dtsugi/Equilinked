@@ -13,7 +13,7 @@ import { UserSessionEntity } from '../../model/userSession';
     providers: [CommonService, AlertaService, SecurityService]
 })
 
-export class NotificacionesExtendedInsertPage {
+export class NotificacionesExtendedInsertPage { 
     alertaEntity: Alerta;
     showId: boolean = false;
     form: any;

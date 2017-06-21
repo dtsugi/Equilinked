@@ -1,0 +1,18 @@
+<ion-grid>
+    <ion-row>
+        <ion-col>
+            <img src="assets/img/ficha-grupo.PNG" />
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-4 *ngFor="let option of options">
+            <button ion-button block (click)="selectOption(option)">
+                <div>
+                    <ion-icon name="{{option.icon}}"></ion-icon>
+                    <br />
+                    <label>{{option.label}}</label>
+                </div>
+            </button>
+        </ion-col>
+    </ion-row>
+</ion-grid>

@@ -27,18 +27,24 @@
 
     <ion-item>
         <ion-icon name='person' item-left></ion-icon>
-        {{propietarioEntity.NombreCompleto}}
+        {{propietarioEntity.Nombre}}
     </ion-item>
+
     <ion-item>
         <ion-icon name='mail' item-left></ion-icon>
         {{propietarioEntity.Mail}}
     </ion-item>
-    <ion-item>
-        <ion-icon name='call' item-left></ion-icon>
-        {{propietarioEntity.Celular}}
+
+    <ion-item *ngFor="let telefono of propietarioEntity.PropietarioTelefono; let i = index">
+        <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" item-left></ion-icon>
+        {{telefono.Numero}}
+        <ion-note item-right>
+            {{telefono.Tipo_Numero.Descripcion}}
+        </ion-note>
     </ion-item>
+
     <ion-item>
         <ion-icon name='flag' item-left></ion-icon>
-        {{propietarioEntity.EstadoProvincia_Nombre}}
+        {{propietarioEntity.EstadoProvincia_Nombre}}, {{propietarioEntity.PaisNombre}}
     </ion-item>
 </ion-content>

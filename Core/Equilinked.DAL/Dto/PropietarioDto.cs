@@ -17,8 +17,11 @@ namespace Equilinked.DAL.Dto
         public string Celular { get; set; }
         public System.DateTime FechaNacimiento { get; set; }
         public Nullable<int> EstadoProvincia_Id { get; set; }
+        public Nullable<int> Pais_ID { get; set; }
         public string EstadoProvincia_Nombre { get; set; }
+        public string PaisNombre { get; set; }
         public Nullable<int> Usuario_ID { get; set; }
+        public List<PropietarioTelefono> PropietarioTelefono { get; set; }
 
         public PropietarioDto() { }
 
@@ -35,8 +38,11 @@ namespace Equilinked.DAL.Dto
             if (propietario.EstadoProvincia != null)
             {
                 this.EstadoProvincia_Nombre = propietario.EstadoProvincia.Nombre;
+                this.Pais_ID = propietario.EstadoProvincia.Pais_ID;
+                this.PaisNombre = propietario.EstadoProvincia.Pais.Descripcion;
             }
             this.Usuario_ID = propietario.Usuario_ID;
+            this.PropietarioTelefono = new List<PropietarioTelefono>(propietario.PropietarioTelefono);
         }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="InvitacionBLL.cs" />
     <Compile Include="OtrasMarcasBLL.cs" />
     <Compile Include="PersonaACargoBLL.cs" />
+    <Compile Include="PreguntaFrecuenteBLL.cs" />
     <Compile Include="PropietarioBLL.cs" />
     <Compile Include="PelajeBLL.cs" />
     <Compile Include="PedigreeBLL.cs" />

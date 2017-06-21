@@ -13,7 +13,19 @@ namespace Equilinked.BLL
 
         public List<Pais> GetAll()
         {
-            return this._dbContext.Pais.ToList();
+            return this._dbContext.Pais.OrderBy(p => p.Descripcion).ToList();
+        }
+
+        public List<EstadoProvincia> GetAllEstadoProvinciaByPaisId(int paisId)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.EstadoProvincia
+                    .Where(ep => ep.Pais_ID == paisId)
+                    .OrderBy(ep => ep.Nombre)
+                    .ToList();
+            }
         }
 
         public Pais GetById(int id)

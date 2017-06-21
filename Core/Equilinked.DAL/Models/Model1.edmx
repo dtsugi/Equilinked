@@ -296,6 +296,15 @@
           <Property Name="EstadoProvincia_Id" Type="int" />
           <Property Name="Usuario_ID" Type="int" />
         </EntityType>
+        <EntityType Name="PropietarioTelefono">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Propietario_ID" Type="int" Nullable="false" />
+          <Property Name="Numero" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="TipoNumero_ID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
             <PropertyRef Name="ID" />
@@ -729,6 +738,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PropietarioTelefono_Propietario_ID">
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="1" />
+          <End Role="PropietarioTelefono" Type="Self.PropietarioTelefono" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PropietarioTelefono">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropietarioTelefono_TipoNumero_ID">
+          <End Role="Tipo_Numero" Type="Self.Tipo_Numero" Multiplicity="1" />
+          <End Role="PropietarioTelefono" Type="Self.PropietarioTelefono" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipo_Numero">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PropietarioTelefono">
+              <PropertyRef Name="TipoNumero_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="PK_Alimentacion_Caballo">
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
           <End Role="Alimentacion" Type="Self.Alimentacion" Multiplicity="*" />
@@ -775,6 +808,7 @@
           <EntitySet Name="PlantillaCorreo" EntityType="Self.PlantillaCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PreguntaFrecuente" EntityType="Self.PreguntaFrecuente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Propietario" EntityType="Self.Propietario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PropietarioTelefono" EntityType="Self.PropietarioTelefono" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Mail" EntityType="Self.Tipo_Mail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Numero" EntityType="Self.Tipo_Numero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
@@ -913,6 +947,14 @@
           <AssociationSet Name="FK_Propietario_Usuario" Association="Self.FK_Propietario_Usuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Propietario" EntitySet="Propietario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropietarioTelefono_Propietario_ID" Association="Self.FK_PropietarioTelefono_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropietarioTelefono_TipoNumero_ID" Association="Self.FK_PropietarioTelefono_TipoNumero_ID">
+            <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
+            <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
           </AssociationSet>
           <AssociationSet Name="PK_Alimentacion_Caballo" Association="Self.PK_Alimentacion_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
@@ -1159,6 +1201,7 @@
           <NavigationProperty Name="Establo" Relationship="EquilinkedModel.FK_Establo_Propietario_ID" FromRole="Propietario" ToRole="Establo" />
           <NavigationProperty Name="MensajeContacto" Relationship="EquilinkedModel.FK_MensajeContacto_Propietario_ID" FromRole="Propietario" ToRole="MensajeContacto" />
           <NavigationProperty Name="InvitacionAmigo" Relationship="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" FromRole="Propietario" ToRole="InvitacionAmigo" />
+          <NavigationProperty Name="PropietarioTelefono" Relationship="EquilinkedModel.FK_PropietarioTelefono_Propietario_ID" FromRole="Propietario" ToRole="PropietarioTelefono" />
         </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
@@ -1653,6 +1696,15 @@
             <End Role="InvitacionAmigo" EntitySet="InvitacionAmigo" />
           </AssociationSet>
           <EntitySet Name="PreguntaFrecuente" EntityType="EquilinkedModel.PreguntaFrecuente" />
+          <EntitySet Name="PropietarioTelefono" EntityType="EquilinkedModel.PropietarioTelefono" />
+          <AssociationSet Name="FK_PropietarioTelefono_Propietario_ID" Association="EquilinkedModel.FK_PropietarioTelefono_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropietarioTelefono_TipoNumero_ID" Association="EquilinkedModel.FK_PropietarioTelefono_TipoNumero_ID">
+            <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
+            <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1903,6 +1955,41 @@
           <Property Name="Respuesta" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Orden" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="PropietarioTelefono">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
+          <Property Name="Numero" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TipoNumero_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_PropietarioTelefono_Propietario_ID" FromRole="PropietarioTelefono" ToRole="Propietario" />
+          <NavigationProperty Name="Tipo_Numero" Relationship="EquilinkedModel.FK_PropietarioTelefono_TipoNumero_ID" FromRole="PropietarioTelefono" ToRole="Tipo_Numero" />
+        </EntityType>
+        <Association Name="FK_PropietarioTelefono_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
+          <End Type="EquilinkedModel.PropietarioTelefono" Role="PropietarioTelefono" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PropietarioTelefono">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropietarioTelefono_TipoNumero_ID">
+          <End Type="EquilinkedModel.Tipo_Numero" Role="Tipo_Numero" Multiplicity="1" />
+          <End Type="EquilinkedModel.PropietarioTelefono" Role="PropietarioTelefono" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipo_Numero">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PropietarioTelefono">
+              <PropertyRef Name="TipoNumero_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2267,6 +2354,16 @@
                 <ScalarProperty Name="Orden" ColumnName="Orden" />
                 <ScalarProperty Name="Respuesta" ColumnName="Respuesta" />
                 <ScalarProperty Name="Pregunta" ColumnName="Pregunta" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PropietarioTelefono">
+            <EntityTypeMapping TypeName="EquilinkedModel.PropietarioTelefono">
+              <MappingFragment StoreEntitySet="PropietarioTelefono">
+                <ScalarProperty Name="TipoNumero_ID" ColumnName="TipoNumero_ID" />
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -13,6 +13,20 @@ export class GruposCaballosService {
     constructor(private http: Http) {
     }
 
+    deleteGrupoById(grupoId: number): Promise<any> {
+        let url: string = this.endPointGruposCaballos + "/" + grupoId;
+        return this.http.delete(url)
+            .map(res => res.json())
+            .toPromise();
+    }
+
+    getGrupoById(grupoId: number): Promise<any> {
+        let url: string = this.endPointGruposCaballos + "/" + grupoId;
+        return this.http.get(url)
+            .map(grupo => grupo.json())
+            .toPromise();
+    }
+
     getCaballosByGroupId(groupId: number): Promise<any[]> {
         let url = this.endPointGruposCaballos + "/GetAllGrupoCaballoByGrupoId/" + groupId;
         return this.http.get(url)

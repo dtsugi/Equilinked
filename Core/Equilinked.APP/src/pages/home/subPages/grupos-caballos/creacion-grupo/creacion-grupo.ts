@@ -1,20 +1,19 @@
 import { Component, OnInit } from "@angular/core";
 import { NavController, NavParams, ToastController } from "ionic-angular";
-import { FormBuilder, Validators } from '@angular/forms';
-import { CommonService } from '../../../services/common.service';
-import { SecurityService } from "../../../services/security.service";
-import { GruposCaballosService } from "../../../services/grupos-caballos.service";
-import { CaballoService } from '../../../services/caballo.service';
-import { Grupo } from "../../../model/grupo";
-import { GruposCaballos } from "../subPages/grupos-caballos/grupos-caballos";
-import { UserSessionEntity } from "../../../model/userSession";
+import { FormBuilder, Validators } from "@angular/forms";
+import { CommonService } from "../../../../../services/common.service";
+import { SecurityService } from "../../../../../services/security.service";
+import { GruposCaballosService } from "../../../../../services/grupos-caballos.service";
+import { CaballoService } from "../../../../../services/caballo.service";
+import { Grupo } from "../../../../../model/grupo";
+import { UserSessionEntity } from "../../../../../model/userSession";
+import { GruposCaballos } from "../../grupos-caballos/grupos-caballos";
 
 @Component({
-    selector: "admin-grupos-caballos",
-    templateUrl: "./admin-grupos-caballos.html",
+    templateUrl: "./creacion-grupo.html",
     providers: [CaballoService, CommonService, GruposCaballosService, SecurityService]
 })
-export class AdminGruposCaballosPage implements OnInit {
+export class CreacionGrupoPage implements OnInit {
 
     caballos: Array<any>;
     caballosRespaldo: Array<any>;
@@ -69,8 +68,9 @@ export class AdminGruposCaballosPage implements OnInit {
         this.gruposCaballosService.saveGrupo(grupo).then(resp => {
             this.commonService.hideLoading();
             let gc: GruposCaballos = this.navParams.get("gruposCaballosPage");
-            this.navController.pop();
-            gc.getGruposCaballos();
+            this.navController.pop().then(() => {
+                gc.getGruposCaballos(false);
+            });
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar el grupo");
         });

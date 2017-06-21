@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button (click)="goBack()">
+                Cancelar
+            </button>
+        </ion-buttons>
+
+        <ion-buttons right>
+            <button ion-button [disabled]="!grupoForm.valid" (click)="save()">
+                Guardar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #grupoForm="ngForm">
+        <ion-item>
+            <ion-input type="text" name="descripcion" required="true" placeholder="Nombre del grupo" [(ngModel)]="grupo.Descripcion"></ion-input>
+        </ion-item>
+    </form>
+</ion-content>

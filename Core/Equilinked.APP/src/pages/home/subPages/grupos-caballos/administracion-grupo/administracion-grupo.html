@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{grupo.Descripcion}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only *ngIf="segmentSelection == 'ficha'" (click)="showOptionsFicha($event)">
+                <ion-icon name="more"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content>
+    <ion-toolbar>
+        <ion-segment [(ngModel)]="segmentSelection" color="primary">
+            <ion-segment-button value="ficha">
+                FICHA
+            </ion-segment-button>
+            <ion-segment-button value="caballos">
+                CABALLOS
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+
+    <div *ngIf="segmentSelection == 'ficha'">
+        <segment-ficha-grupo [grupo-id]="grupo.ID"></segment-ficha-grupo>
+    </div>
+
+    <div *ngIf="segmentSelection == 'caballos'"></div>
+</ion-content>

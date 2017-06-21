@@ -21,6 +21,7 @@ namespace Equilinked.DAL.Models
             this.Establo = new HashSet<Establo>();
             this.MensajeContacto = new HashSet<MensajeContacto>();
             this.InvitacionAmigo = new HashSet<InvitacionAmigo>();
+            this.PropietarioTelefono = new HashSet<PropietarioTelefono>();
         }
     
         public int ID { get; set; }
@@ -39,5 +40,6 @@ namespace Equilinked.DAL.Models
         public virtual ICollection<Establo> Establo { get; set; }
         public virtual ICollection<MensajeContacto> MensajeContacto { get; set; }
         public virtual ICollection<InvitacionAmigo> InvitacionAmigo { get; set; }
+        public virtual ICollection<PropietarioTelefono> PropietarioTelefono { get; set; }
     }
 }

@@ -19,4 +19,11 @@ export class PropietarioService {
         return this._http.get(this.url)
             .map(response => response.json());
     }
+
+    updatePropietario(propietario: any): Promise<any> {
+        let url: string = this.actionUrl + propietario.ID;
+        return this._http.put(url, propietario)
+            .map(res => res.json())
+            .toPromise();
+    }
 }

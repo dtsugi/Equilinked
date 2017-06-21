@@ -15,20 +15,6 @@ import { InfoEstabloPage } from "./info-establo";
     templateUrl: "./admin-establo.html",
     providers: [CaballoService, CommonService, EstablosService, SecurityService, TipoNumeroService],
     styles: [`
-    .icon-hidden {
-        visibility: hidden;
-    }
-
-    .icon-input {
-        font-size: 2.8rem;
-        line-height: 1;
-        margin-top: 11px;
-        margin-bottom: 10px;
-    }
-
-    .col-center {
-        text-align: center;
-    }
     .item-md {
         padding-left: 0px;
     }

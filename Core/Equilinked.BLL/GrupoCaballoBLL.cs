@@ -11,6 +11,19 @@ namespace Equilinked.BLL
     public class GrupoCaballoBLL : BLLBase, IBase<Grupo>
     {
 
+        public Grupo GetGrupoById(int grupoId)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                return db.Grupo
+                    .Include("GrupoCaballo")
+                    .Where(g => g.ID == grupoId)
+                    .FirstOrDefault();
+            }
+        }
+
         public Grupo UpdateGrupo(int GrupoId, Grupo entity)
         {
             using (var db = this._dbContext)
@@ -21,6 +34,7 @@ namespace Equilinked.BLL
                     .Where(g => g.ID == GrupoId).FirstOrDefault();
                 grupoo.Descripcion = entity.Descripcion;
 
+                /*
                 List<int> idsCaballosAct = new List<int>(); // los ids actuales
                 List<int> idsCaballosMod = new List<int>(); //los nuevo ids
                 foreach (var c in entity.Caballo)
@@ -58,7 +72,7 @@ namespace Equilinked.BLL
                 if(caballosEliminar != null && caballosEliminar.Count() > 0)
                 {
                     db.GrupoCaballo.RemoveRange(caballosEliminar);//Eliminamos los que no están
-                }
+                }*/
                 db.SaveChanges();
             }
             return entity;
@@ -109,7 +123,21 @@ namespace Equilinked.BLL
 
         public bool DeleteById(int id)
         {
-            throw new NotImplementedException();
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                Grupo grupo = db.Grupo
+                    .Include("GrupoCaballo")
+                    .Where(g => g.ID == id)
+                    .FirstOrDefault();
+
+                db.GrupoCaballo.RemoveRange(grupo.GrupoCaballo);
+                db.Grupo.Remove(grupo);
+
+                db.SaveChanges();
+                return true;
+            }
         }
 
         public List<Grupo> GetAll()

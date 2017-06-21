@@ -17,11 +17,15 @@ import { NotificacionesInsertPage } from '../pages/notificaciones/notificaciones
 import { NotificacionesExtendedInsertPage } from '../pages/notificaciones/notificaciones-extended-insert';
 
 /* Caballos */
-import { AdminGruposCaballosPage } from "../pages/home/admin-grupos-caballos/admin-grupos-caballos";
 import { FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home";
 import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
 /* Caballos-Grupos */
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
+import { CreacionGrupoPage } from "../pages/home/subPages/grupos-caballos/creacion-grupo/creacion-grupo";
+import { AdministracionGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/administracion-grupo";
+import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-grupo/segment-ficha";
+import { OpcionesFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/opciones-ficha/opciones-ficha";
+import { CambioNombrePage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/cambio-nombre/cambio-nombre";
 import { GruposCaballosDetailPage } from "../pages/home/subPages/grupos-caballos/grupos-caballos-detail";
 /* Caballos-ALimentacion */
 import { AlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion";
@@ -39,6 +43,7 @@ import { DentistaPage } from "../pages/home/ficha-caballo/dentista/dentista";
 import { DesparasitacionPage } from "../pages/home/ficha-caballo/desparasitacion/desparasitacion";
 /* Perfil */
 import { PerfilDatosPage } from "../pages/perfil/datos/perfil-datos";
+import { EdicionPerfilPage } from "../pages/perfil/datos/edicion-perfil/edicion-perfil";
 import { PopoverDatosPage } from '../pages/perfil/datos/pop-over/pop-over-datos';
 import { OpcionesCuentaPage } from "../pages/perfil/datos/opciones-cuenta/opciones-cuenta";
 import { CambioContrasenaPage } from "../pages/perfil/datos/opciones-cuenta/cambio-contrasena/cambio-contrasena";
@@ -47,7 +52,6 @@ import { ContactoPage } from "../pages/perfil/datos/opciones-cuenta/contacto/con
 import { RecomendacionPage } from "../pages/perfil/datos/opciones-cuenta/recomendacion/recomendacion";
 import { PreguntasFrecuentesPage } from "../pages/perfil/datos/opciones-cuenta/preguntas-frecuentes/preguntas-frecuentes";
 import { EliminacionCuentaPage } from "../pages/perfil/datos/opciones-cuenta/eliminacion-cuenta/eliminacion-cuenta";
-
 /* Establos */
 import { ListadoEstablosPage } from "../pages/perfil/establos/establos";
 import { AdminEstablosPage } from "../pages/perfil/establos/admin-establo/admin-establo";
@@ -69,11 +73,15 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
     /* Caballos */
-    AdminGruposCaballosPage,
     FichaCaballoPage,
     AdminCaballosInsertPage,
     /* Caballos-Grupos */
     GruposCaballos,
+    CreacionGrupoPage,
+    AdministracionGrupoPage,
+    SegmentFichaGrupo,
+    OpcionesFichaGrupo,
+    CambioNombrePage,
     GruposCaballosDetailPage,
     /* Caballos-ALimentacion */
     AlimentacionPage,
@@ -91,6 +99,7 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     DesparasitacionPage,
     /* Perfil */
     PerfilDatosPage,
+    EdicionPerfilPage,
     PopoverDatosPage,
     OpcionesCuentaPage,
     CambioContrasenaPage,
@@ -123,11 +132,14 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
     /* Caballos */
-    AdminGruposCaballosPage,
     FichaCaballoPage,
     AdminCaballosInsertPage,
     /* Caballos-Grupos */
     GruposCaballosDetailPage,
+    CreacionGrupoPage,
+    AdministracionGrupoPage,
+    OpcionesFichaGrupo,
+    CambioNombrePage,
     /* Caballos-Alimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -144,6 +156,7 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     DesparasitacionPage,
     /* Perfil */
     PerfilDatosPage,
+    EdicionPerfilPage,
     PopoverDatosPage,
     OpcionesCuentaPage,
     CambioContrasenaPage,

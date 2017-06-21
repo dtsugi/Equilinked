@@ -1,21 +1,45 @@
-﻿using Equilinked.API.helpers;
-using Equilinked.BLL;
+﻿using Equilinked.BLL;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http.Description;
 using Equilinked.DAL.Models;
-using System.Threading.Tasks;
 
 namespace Equilinked.API.Controllers
 {
     public class GrupoCaballoController: EquilinkedBaseController
     {
         private GrupoCaballoBLL GrupoCaballoBLL = new GrupoCaballoBLL();
+
+        [HttpDelete, Route("api/Grupo/{grupoId}")]
+        public IHttpActionResult DeleteGrupoById(int grupoId)
+        {
+            try
+            {
+                
+                return Ok(GrupoCaballoBLL.DeleteById(grupoId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar el grupo"));
+            }
+        }
+
+        [HttpGet, Route("api/Grupo/{grupoId}")]
+        public IHttpActionResult GetGrupoById(int grupoId)
+        {
+            try
+            {
+                return Ok(GrupoCaballoBLL.GetGrupoById(grupoId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible obtener el grupo"));
+            }
+        }
 
         [HttpPut, Route("api/Grupo/{GrupoId}")]
         [ResponseType(typeof(Grupo))]
