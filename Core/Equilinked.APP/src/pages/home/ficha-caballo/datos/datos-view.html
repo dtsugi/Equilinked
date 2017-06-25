@@ -1,16 +1,15 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
             <button ion-button icon-only (click)="goBack()">
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-
-        <ion-title>Datos del caballo</ion-title>
+        <ion-title class="equi-toolbar-title">Datos del caballo</ion-title>
         <ion-buttons right>
-            <button ion-button icon-only (click)="edit()">
-                <ion-icon name="create"></ion-icon>
-            </button>
+            <button class="equi-toolbar-btn" (click)="edit()">
+                Editar
+            </button>            
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -18,7 +17,7 @@
     <form [formGroup]="form">
         <ion-grid>
             <ion-row>
-                <ion-col col-4 class="title-form">Nombre</ion-col>
+                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.Nombre}}
@@ -26,7 +25,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Género</ion-col>
+                <ion-col col-4 class="equi-title-form">Género</ion-col>
                 <ion-col>
                     <ion-select [disabled]="true" formControlName="Genero_ID">
                         <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -34,7 +33,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pelaje</ion-col>
+                <ion-col col-4 class="equi-title-form">Pelaje</ion-col>
                 <ion-col>
                     <ion-select [disabled]="true" formControlName="Pelaje_ID">
                         <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -42,7 +41,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Fecha de Nacimiento</ion-col>
+                <ion-col col-4 class="equi-title-form">Fecha de Nacimiento</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.FechaNacimiento}}
@@ -50,7 +49,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Genealog&iacute;a</ion-col>
+                <ion-col col-4 class="equi-title-form">Genealog&iacute;a</ion-col>
                 <ion-col col-2>Padre</ion-col>
                 <ion-col>
                 </ion-col>
@@ -62,7 +61,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Criador</ion-col>
+                <ion-col col-4 class="equi-title-form">Criador</ion-col>
                 <ion-col>
                     <ion-select [disabled]="true" formControlName="Criador_ID">
                         <ion-option *ngFor="let item of criadorList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -70,13 +69,13 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">ADN</ion-col>
+                <ion-col col-4 class="equi-title-form">ADN</ion-col>
                 <ion-col>
                     <ion-toggle [disabled]="true" checked="false" formControlName="ADN"></ion-toggle>
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Chip</ion-col>
+                <ion-col col-4 class="equi-title-form"># Chip</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.NumeroChip}}
@@ -84,7 +83,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># ID</ion-col>
+                <ion-col col-4 class="equi-title-form"># ID</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.Nombre}}
@@ -92,7 +91,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Otras marcas</ion-col>
+                <ion-col col-4 class="equi-title-form">Otras marcas</ion-col>
                 <ion-col>
                     <ion-select [disabled]="true" formControlName="OtrasMarcas_ID">
                         <ion-option *ngFor="let item of otrasMarcasList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -103,10 +102,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Registro Federación Nacional</ion-col>
+                <ion-col class="equi-title-form center-text">Registro Federación Nacional</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Registro</ion-col>
+                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.NumeroFEN}}
@@ -114,7 +113,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pagado</ion-col>
+                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
                 <ion-col>
                     <ion-toggle [disabled]="true" checked="false" formControlName="EstadoFEN"></ion-toggle>
                 </ion-col>
@@ -123,10 +122,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Registro Federación Internacional (FEI)</ion-col>
+                <ion-col class="equi-title-form center-text">Registro Federación Internacional (FEI)</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Registro</ion-col>
+                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.NumeroFEI}}
@@ -134,7 +133,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pagado</ion-col>
+                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
                 <ion-col>
                     <ion-toggle [disabled]="true" checked="false" formControlName="EstadoFEI"></ion-toggle>
                 </ion-col>
@@ -143,10 +142,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Deporte y cuidados</ion-col>
+                <ion-col class="equi-title-form center-text">Deporte y cuidados</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Protectores</ion-col>
+                <ion-col col-4 class="equi-title-form">Protectores</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.Protector}}
@@ -154,7 +153,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form">Observaciones</ion-col>
+                <ion-col class="equi-title-form">Observaciones</ion-col>
             </ion-row>
             <ion-row>
                 <ion-col>
@@ -164,7 +163,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Embocadura</ion-col>
+                <ion-col col-4 class="equi-title-form">Embocadura</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.Embocadura}}
@@ -172,7 +171,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Extras de cabezada</ion-col>
+                <ion-col col-4 class="equi-title-form">Extras de cabezada</ion-col>
                 <ion-col>
                     <ion-item>
                         {{caballoEntity.ExtrasDeCabezada}}
@@ -183,10 +182,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Datos de la persona a cargo</ion-col>
+                <ion-col class="equi-title-form center-text">Datos de la persona a cargo</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Nombre</ion-col>
+                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input [disabled]="true" type="text"></ion-input>
@@ -194,7 +193,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class=" title-form ">Teléfono</ion-col>
+                <ion-col col-4 class=" equi-title-form ">Teléfono</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input [disabled]="true " type="text"></ion-input>
@@ -202,7 +201,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Correo electronico</ion-col>
+                <ion-col col-4 class="equi-title-form">Correo electronico</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input [disabled]="true" type="text"></ion-input>

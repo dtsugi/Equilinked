@@ -1,15 +1,19 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>
-            Nuevo Caballo
-        </ion-title>
-    </ion-navbar>
+    <ion-toolbar class="equi-toolbar">
+        <ion-buttons left>
+            <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
+        </ion-buttons>
+        <ion-title class="equi-toolbar-title">Datos Caballo</ion-title>
+        <ion-buttons right>
+            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">{{btnPostTitle}}</button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form [formGroup]="form" (ngSubmit)="save()">
+    <form [formGroup]="form">
         <ion-grid>
             <ion-row>
-                <ion-col col-4 class="title-form">Nombre</ion-col>
+                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="Nombre"></ion-input>
@@ -17,7 +21,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Género</ion-col>
+                <ion-col col-4 class="equi-title-form">Género</ion-col>
                 <ion-col>
                     <ion-select formControlName="Genero_ID">
                         <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -25,7 +29,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pelaje</ion-col>
+                <ion-col col-4 class="equi-title-form">Pelaje</ion-col>
                 <ion-col>
                     <ion-select formControlName="Pelaje_ID">
                         <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -33,7 +37,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Fecha de Nacimiento</ion-col>
+                <ion-col col-4 class="equi-title-form">Fecha de Nacimiento</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNacimiento"
@@ -42,7 +46,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Genealog&iacute;a</ion-col>
+                <ion-col col-4 class="equi-title-form">Genealog&iacute;a</ion-col>
                 <ion-col col-2>Padre</ion-col>
                 <ion-col>
                 </ion-col>
@@ -54,7 +58,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Criador</ion-col>
+                <ion-col col-4 class="equi-title-form">Criador</ion-col>
                 <ion-col>
                     <ion-select formControlName="Criador_ID">
                         <ion-option *ngFor="let item of criadorList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -62,13 +66,13 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">ADN</ion-col>
+                <ion-col col-4 class="equi-title-form">ADN</ion-col>
                 <ion-col>
                     <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Chip</ion-col>
+                <ion-col col-4 class="equi-title-form"># Chip</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="NumeroChip"></ion-input>
@@ -76,7 +80,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># ID</ion-col>
+                <ion-col col-4 class="equi-title-form"># ID</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="Nombre"></ion-input>
@@ -84,7 +88,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Otras marcas</ion-col>
+                <ion-col col-4 class="equi-title-form">Otras marcas</ion-col>
                 <ion-col>
                     <ion-select formControlName="OtrasMarcas_ID">
                         <ion-option *ngFor="let item of otrasMarcasList" [value]="item.Key">{{item.Value}}</ion-option>
@@ -95,10 +99,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Registro Federación Nacional</ion-col>
+                <ion-col class="equi-title-form center-text">Registro Federación Nacional</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Registro</ion-col>
+                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="NumeroFEN"></ion-input>
@@ -106,7 +110,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pagado</ion-col>
+                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
                 <ion-col>
                     <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
                 </ion-col>
@@ -115,10 +119,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Registro Federación Internacional (FEI)</ion-col>
+                <ion-col class="equi-title-form center-text">Registro Federación Internacional (FEI)</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form"># Registro</ion-col>
+                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="NumeroFEI"></ion-input>
@@ -126,7 +130,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Pagado</ion-col>
+                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
                 <ion-col>
                     <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
                 </ion-col>
@@ -135,10 +139,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Deporte y cuidados</ion-col>
+                <ion-col class="equi-title-form center-text">Deporte y cuidados</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Protectores</ion-col>
+                <ion-col col-4 class="equi-title-form">Protectores</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="Protector"></ion-input>
@@ -146,7 +150,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form">Observaciones</ion-col>
+                <ion-col class="equi-title-form">Observaciones</ion-col>
             </ion-row>
             <ion-row>
                 <ion-col>
@@ -156,7 +160,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Embocadura</ion-col>
+                <ion-col col-4 class="equi-title-form">Embocadura</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="Embocadura"></ion-input>
@@ -164,7 +168,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Extras de cabezada</ion-col>
+                <ion-col col-4 class="equi-title-form">Extras de cabezada</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text" formControlName="ExtrasDeCabezada"></ion-input>
@@ -175,10 +179,10 @@
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-col class="title-form center-text">Datos de la persona a cargo</ion-col>
+                <ion-col class="equi-title-form center-text">Datos de la persona a cargo</ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Nombre</ion-col>
+                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text"></ion-input>
@@ -186,7 +190,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Teléfono</ion-col>
+                <ion-col col-4 class="equi-title-form">Teléfono</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text"></ion-input>
@@ -194,7 +198,7 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col col-4 class="title-form">Correo electronico</ion-col>
+                <ion-col col-4 class="equi-title-form">Correo electronico</ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-input type="text"></ion-input>
@@ -202,6 +206,5 @@
                 </ion-col>
             </ion-row>
         </ion-grid>
-        <button ion-button block type="submit" [disabled]="!form.valid">{{btnPostTitle}}</button>
     </form>
 </ion-content>

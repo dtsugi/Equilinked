@@ -89,7 +89,7 @@ export class NotificacionesExtendedInsertPage {
                 this._commonService.hideLoading();
                 this._commonService.ShowInfo("El registro se modifico exitosamente");
                 this.updateCallbackController();
-                this.navCtrl.pop();
+                this.goBack();
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();
@@ -105,5 +105,9 @@ export class NotificacionesExtendedInsertPage {
         let callbackController = this.navParams.get("callbackController");
         callbackController.reloadController();
     }
+
+    goBack() {
+        this.navCtrl.pop();
+    }   
 }
 

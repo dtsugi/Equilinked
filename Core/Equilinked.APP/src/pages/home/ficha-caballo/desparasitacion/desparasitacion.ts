@@ -107,4 +107,8 @@ export class DesparasitacionPage {
         this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
         this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
     }
+
+    goBack() {        
+        this.navCtrl.pop();
+    }
 }

@@ -15,6 +15,16 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+@font-face {
+    font-family: NotoSans;
+    src: url(../assets/fonts/NotoSans-Regular.ttf);
+}
+
+body {
+    font-family: NotoSans !important;
+    font-size: 50px !important;
+}
+
 .toolbar-top-center {
     text-align: center;
 }
@@ -28,6 +38,7 @@
     font-style: italic !important;
     color: #00A7A5 !important;
 }
+
 .item-without-padding {
     padding-left: 0px;
 }
@@ -71,4 +82,31 @@
 
 .col-center {
     text-align: center;
+}
+
+/* Equilinked Styles */
+.equi-toolbar {    
+}
+
+#equi-toolbar-title-content{
+    border: 1px solid red;
+}
+.equi-toolbar-title{
+    font-size: 17px !important;
+    text-align: center;
+    margin: auto;    
+}
+.equi-toolbar-btn{
+    background-color: transparent;
+    color: #42A6AC;
+    font-size: 16px !important;    
+}
+
+.equi-title-form{
+    font-size: 14px !important;
+    font-weight: bold !important;  
+}
+
+.equi-edit{
+    color:#CCC6C8;
 }

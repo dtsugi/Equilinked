@@ -1,12 +1,17 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>Herraje / Desvasado</ion-title>
-    </ion-navbar>
+    <ion-toolbar class="equi-toolbar">
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title class="equi-toolbar-title">Herraje / Desvasado</ion-title>
+    </ion-toolbar>    
 </ion-header>
 <ion-content>
     <ion-grid>
         <ion-row>
-            <ion-col class="title-form">
+            <ion-col class="equi-title-form">
                 PRÓXIMO HERRAJE / DESVASADO
             </ion-col>
         </ion-row>
@@ -41,7 +46,7 @@
     </ion-list>
     <ion-grid>
         <ion-row>
-            <ion-col class="title-form">
+            <ion-col class="equi-title-form">
                 HISTORIAL
             </ion-col>
         </ion-row>

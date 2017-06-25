@@ -91,4 +91,8 @@ export class NotasPage {
     reloadController() {
         this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
     }
+
+    goBack() {        
+        this.navCtrl.pop();
+    }
 }

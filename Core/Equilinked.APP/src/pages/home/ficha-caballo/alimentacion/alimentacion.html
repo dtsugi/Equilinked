@@ -1,15 +1,14 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
             <button ion-button icon-only (click)="goBack()">
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-
-        <ion-title>Alimentación</ion-title>
+        <ion-title class="equi-toolbar-title">Alimentación</ion-title>
         <ion-buttons right>
-            <button ion-button icon-only (click)="edit()">
-                <ion-icon name="create"></ion-icon>
+            <button class="equi-toolbar-btn" (click)="edit()">
+                Editar
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -17,7 +16,7 @@
 
 <ion-content>
     <ion-grid>
-        <ion-row class="title-form">
+        <ion-row class="equi-title-form">
             Sólido
         </ion-row>
         <ion-row>
@@ -27,7 +26,7 @@
             <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.Solido}}" [disabled]="true"></ion-textarea>
         </ion-row>
 
-        <ion-row class="title-form">
+        <ion-row class="equi-title-form">
             Suplementos dietarios
         </ion-row>
         <ion-row>
@@ -37,7 +36,7 @@
             <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.SuplementosDietarios}}" [disabled]="true"></ion-textarea>
         </ion-row>
 
-        <ion-row class="title-form">
+        <ion-row class="equi-title-form">
             Pasto
         </ion-row>
         <ion-row>

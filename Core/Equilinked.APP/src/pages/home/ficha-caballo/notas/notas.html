@@ -1,7 +1,12 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>Notas</ion-title>
-    </ion-navbar>
+    <ion-toolbar class="equi-toolbar">
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-title class="equi-toolbar-title">Notas</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -19,7 +24,7 @@
             <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
                 <ion-item>
                     <ion-row>
-                        <ion-col col-8 class="title-form">
+                        <ion-col col-8 class="equi-title-form">
                             {{notificacion.Titulo}}
                         </ion-col>
                         <ion-col col-4 class="text-align-right">
