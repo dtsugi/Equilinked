@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="Dto\AlertaDto.cs" />
     <Compile Include="Dto\CaballoDto.cs" />
+    <Compile Include="Dto\CambioPassword.cs" />
     <Compile Include="Dto\ComboBoxDto.cs" />
+    <Compile Include="Dto\CuentaEliminacion.cs" />
     <Compile Include="Dto\EntidadBase.cs" />
     <Compile Include="Dto\PropietarioDto.cs" />
     <Compile Include="Models\Alerta.cs">
@@ -61,10 +63,16 @@
     <Compile Include="Models\AlertaCaballo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlertaGrupo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Alimentacion.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Caballo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConfiguracionCorreo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Criador.cs">
@@ -103,7 +111,13 @@
     <Compile Include="Models\GrupoCaballo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\InvitacionAmigo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Mail_Establecimiento.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MensajeContacto.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model1.Context.cs">
@@ -120,6 +134,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MotivoContacto.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Numero_Establecimiento.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -139,7 +156,16 @@
     <Compile Include="Models\PersonaACargo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PlantillaCorreo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PreguntaFrecuente.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Propietario.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PropietarioTelefono.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_GetAlertasByPropietarioId_Result.cs">

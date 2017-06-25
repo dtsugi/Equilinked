@@ -1,0 +1,37 @@
+<ion-header> 
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button (click)="goBack()">
+                Cancelar
+            </button>
+        </ion-buttons>
+
+        <ion-buttons right>
+            <button ion-button [disabled]="!alertaForm.valid" (click)="save()">
+                Guardar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form [formGroup]="alertaForm">
+        <ion-item>
+            <ion-label>Nombe del {{labels.profesional}}</ion-label>
+            <ion-input type="text" formControlName="NombreProfesional"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Fecha</ion-label>
+            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion"
+                max="2050"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Hora</ion-label>
+            <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label>Descripcion</ion-label>
+            <ion-input type="text" formControlName="Descripcion"></ion-input>
+        </ion-item>
+    </form>
+</ion-content>

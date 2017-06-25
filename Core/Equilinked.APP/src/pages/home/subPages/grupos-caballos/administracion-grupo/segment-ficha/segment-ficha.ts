@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 import { SecurityService } from "../../../../../../services/security.service";
 import { UserSessionEntity } from "../../../../../../model/userSession";
+import { AlertasFicha } from "../alertas-ficha/alertas-ficha";
+import { ConstantsConfig } from "../../../../../../app/utils"
 
 @Component({
     selector: "segment-ficha-grupo",
@@ -37,16 +39,28 @@ export class SegmentFichaGrupo implements OnInit {
                 icon: "pin"
             }, {
                 label: "Dentista",
-                icon: "medical"
+                icon: "medical",
+                page: AlertasFicha,
+                params: {
+                    tipoAlerta: ConstantsConfig.ALERTA_TIPO_DENTISTA
+                }
             }, {
                 label: "Veterinario",
                 icon: "medkit"
             }, {
                 label: "Herraje",
-                icon: "paw"
+                icon: "paw",
+                page: AlertasFicha,
+                params: {
+                    tipoAlerta: ConstantsConfig.ALERTA_TIPO_HERRAJE
+                }
             }, {
                 label: "Desparasitación",
-                icon: "nuclear"
+                icon: "nuclear",
+                page: AlertasFicha,
+                params: {
+                    tipoAlerta: ConstantsConfig.ALERTA_TIPO_DESPARACITACION
+                }
             }, {
                 label: "Notas",
                 icon: "paper"
@@ -55,5 +69,10 @@ export class SegmentFichaGrupo implements OnInit {
     }
 
     selectOption(option: any): void {
+        option.params.grupoId = this.grupoId;
+        console.info(option);
+        if (option.page) {
+            this.navController.push(option.page, option.params);
+        }
     }
 }

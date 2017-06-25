@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlertaCaballoBLL.cs" />
+    <Compile Include="AlertaGrupoBLL.cs" />
     <Compile Include="BLLBase.cs" />
     <Compile Include="AlertaBLL.cs" />
     <Compile Include="AlimentacionBLL.cs" />

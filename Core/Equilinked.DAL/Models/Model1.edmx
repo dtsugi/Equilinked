@@ -36,6 +36,14 @@
           <Property Name="Alerta_ID" Type="int" Nullable="false" />
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="AlertaGrupo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Alerta_ID" Type="int" Nullable="false" />
+          <Property Name="Grupo_ID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Alimentacion">
           <Key>
             <PropertyRef Name="ID" />
@@ -351,6 +359,30 @@
             </Principal>
             <Dependent Role="AlertaCaballo">
               <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaGrupo_Alerta_ID">
+          <End Role="Alerta" Type="Self.Alerta" Multiplicity="1" />
+          <End Role="AlertaGrupo" Type="Self.AlertaGrupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alerta">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaGrupo">
+              <PropertyRef Name="Alerta_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaGrupo_Grupo_ID">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
+          <End Role="AlertaGrupo" Type="Self.AlertaGrupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaGrupo">
+              <PropertyRef Name="Grupo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -781,6 +813,7 @@
           <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Alerta" EntityType="Self.Alerta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AlertaCaballo" EntityType="Self.AlertaCaballo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AlertaGrupo" EntityType="Self.AlertaGrupo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Alimentacion" EntityType="Self.Alimentacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caballo" EntityType="Self.Caballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConfiguracionCorreo" EntityType="Self.ConfiguracionCorreo" Schema="dbo" store:Type="Tables" />
@@ -819,6 +852,14 @@
           <AssociationSet Name="FK_AlertaCaballo_Caballo" Association="Self.FK_AlertaCaballo_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaGrupo_Alerta_ID" Association="Self.FK_AlertaGrupo_Alerta_ID">
+            <End Role="Alerta" EntitySet="Alerta" />
+            <End Role="AlertaGrupo" EntitySet="AlertaGrupo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaGrupo_Grupo_ID" Association="Self.FK_AlertaGrupo_Grupo_ID">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="AlertaGrupo" EntitySet="AlertaGrupo" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Criador_Criador_ID" Association="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID">
             <End Role="Criador" EntitySet="Criador" />
@@ -988,6 +1029,7 @@
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Evento" Relationship="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID" FromRole="Alerta" ToRole="Evento" />
           <Property Name="NombreProfesional" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AlertaGrupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" FromRole="Alerta" ToRole="AlertaGrupo" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -1109,6 +1151,7 @@
           <Property Name="Propietario_ID" Type="Int32" />
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Grupo" ToRole="Propietario" />
           <Property Name="GrupoDefault" Type="Boolean" />
+          <NavigationProperty Name="AlertaGrupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Grupo_ID" FromRole="Grupo" ToRole="AlertaGrupo" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
@@ -1705,6 +1748,15 @@
             <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
             <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
           </AssociationSet>
+          <EntitySet Name="AlertaGrupo" EntityType="EquilinkedModel.AlertaGrupo" />
+          <AssociationSet Name="FK_AlertaGrupo_Alerta_ID" Association="EquilinkedModel.FK_AlertaGrupo_Alerta_ID">
+            <End Role="Alerta" EntitySet="Alerta" />
+            <End Role="AlertaGrupo" EntitySet="AlertaGrupo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaGrupo_Grupo_ID" Association="EquilinkedModel.FK_AlertaGrupo_Grupo_ID">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="AlertaGrupo" EntitySet="AlertaGrupo" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1987,6 +2039,40 @@
             </Principal>
             <Dependent Role="PropietarioTelefono">
               <PropertyRef Name="TipoNumero_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AlertaGrupo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Alerta_ID" Type="Int32" Nullable="false" />
+          <Property Name="Grupo_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Alerta" Relationship="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" FromRole="AlertaGrupo" ToRole="Alerta" />
+          <NavigationProperty Name="Grupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Grupo_ID" FromRole="AlertaGrupo" ToRole="Grupo" />
+        </EntityType>
+        <Association Name="FK_AlertaGrupo_Alerta_ID">
+          <End Type="EquilinkedModel.Alerta" Role="Alerta" Multiplicity="1" />
+          <End Type="EquilinkedModel.AlertaGrupo" Role="AlertaGrupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alerta">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaGrupo">
+              <PropertyRef Name="Alerta_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaGrupo_Grupo_ID">
+          <End Type="EquilinkedModel.Grupo" Role="Grupo" Multiplicity="1" />
+          <End Type="EquilinkedModel.AlertaGrupo" Role="AlertaGrupo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaGrupo">
+              <PropertyRef Name="Grupo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2364,6 +2450,15 @@
                 <ScalarProperty Name="TipoNumero_ID" ColumnName="TipoNumero_ID" />
                 <ScalarProperty Name="Numero" ColumnName="Numero" />
                 <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AlertaGrupo">
+            <EntityTypeMapping TypeName="EquilinkedModel.AlertaGrupo">
+              <MappingFragment StoreEntitySet="AlertaGrupo">
+                <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
+                <ScalarProperty Name="Alerta_ID" ColumnName="Alerta_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

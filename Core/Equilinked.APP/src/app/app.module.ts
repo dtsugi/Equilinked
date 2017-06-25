@@ -3,6 +3,7 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { FormsModule } from '@angular/forms';
+import { MomentModule } from "angular2-moment";
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -23,7 +24,10 @@ import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caba
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
 import { CreacionGrupoPage } from "../pages/home/subPages/grupos-caballos/creacion-grupo/creacion-grupo";
 import { AdministracionGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/administracion-grupo";
-import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-grupo/segment-ficha";
+import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-ficha/segment-ficha";
+import { AlertasFicha } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/alertas-ficha";
+import { EdicionAlertaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/edicion-alerta/edicion-alerta";
+import { DetalleAlertaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/detalle-alerta/detalle-alerta";
 import { OpcionesFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/opciones-ficha/opciones-ficha";
 import { CambioNombrePage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/cambio-nombre/cambio-nombre";
 import { GruposCaballosDetailPage } from "../pages/home/subPages/grupos-caballos/grupos-caballos-detail";
@@ -80,6 +84,9 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     CreacionGrupoPage,
     AdministracionGrupoPage,
     SegmentFichaGrupo,
+    AlertasFicha,
+    EdicionAlertaPage,
+    DetalleAlertaPage,
     OpcionesFichaGrupo,
     CambioNombrePage,
     GruposCaballosDetailPage,
@@ -118,7 +125,8 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
   imports: [
     IonicModule.forRoot(MyApp),
     HttpModule,
-    FormsModule
+    FormsModule,
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -138,6 +146,9 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     GruposCaballosDetailPage,
     CreacionGrupoPage,
     AdministracionGrupoPage,
+    AlertasFicha,
+    EdicionAlertaPage,
+    DetalleAlertaPage,
     OpcionesFichaGrupo,
     CambioNombrePage,
     /* Caballos-Alimentacion */

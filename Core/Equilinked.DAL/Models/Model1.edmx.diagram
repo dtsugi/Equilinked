@@ -76,6 +76,9 @@
         <EntityTypeShape EntityType="EquilinkedModel.PropietarioTelefono" Width="1.5" PointX="6.375" PointY="18.875" />
         <AssociationConnector Association="EquilinkedModel.FK_PropietarioTelefono_Propietario_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_PropietarioTelefono_TipoNumero_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.AlertaGrupo" Width="1.5" PointX="9.25" PointY="16.875" />
+        <AssociationConnector Association="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_AlertaGrupo_Grupo_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

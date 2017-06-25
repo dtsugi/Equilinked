@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -116,6 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\AlertaGrupo\" />
+    <Folder Include="Views\Invitacion\" />
+    <Folder Include="Views\MensajeContacto\" />
+    <Folder Include="Views\MotivoContacto\" />
+    <Folder Include="Views\Pais\" />
+    <Folder Include="Views\PreguntaFrecuente\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -136,6 +143,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AlertaGrupoController.cs" />
     <Compile Include="Controllers\EstablosController.cs" />
     <Compile Include="Controllers\ExtendedCaballoController.cs" />
     <Compile Include="Controllers\AlertaCaballoController.cs" />
@@ -145,7 +153,13 @@
     <Compile Include="Controllers\EquilinkedBaseController.cs" />
     <Compile Include="Controllers\GrupoCaballoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvitacionController.cs" />
+    <Compile Include="Controllers\MensajeContactoController.cs" />
+    <Compile Include="Controllers\MotivoContactoController.cs" />
+    <Compile Include="Controllers\PaisController.cs" />
+    <Compile Include="Controllers\PreguntaFrecuenteController.cs" />
     <Compile Include="Controllers\PropietarioController.cs" />
+    <Compile Include="Controllers\TipoNumeroController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
