@@ -1,7 +1,7 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>
-            {{caballo.Nombre}}
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{caballo.Nombre}}</span>
         </ion-title>
         <ion-buttons end>
             <button ion-button icon-only (click)="openMenu($event)">
@@ -12,8 +12,7 @@
 </ion-header>
 
 <ion-content>
-    <img src="assetsss/img/caballo2.jpg" />
-    <!-- <p style="color: red;">Falta ajustar tamaño foto</p> -->
+    <img src="assetss/img/caballo2.jpg" />    
     <ion-toolbar>
         <ion-segment [(ngModel)]="menu" color="primary">
             <ion-segment-button (click)="SetVisibleMenu(true)">

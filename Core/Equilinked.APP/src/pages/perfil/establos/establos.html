@@ -1,20 +1,20 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button class="button-text" *ngIf="modoEdicion" (click)="cancelEdit()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="cancelEdit()">
                 Cancelar
             </button>
         </ion-buttons>
 
-        <ion-title class="toolbar-top-center">
-            <span class="toolbar-top-title">Mi perfil</span>
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">Mi perfil</span>
         </ion-title>
 
         <ion-buttons right>
-            <button ion-button class="button-text" *ngIf="!modoEdicion" (click)="edit()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
                 Editar            
             </button>
-            <button ion-button class="button-text" *ngIf="modoEdicion" [disabled]="countEstablosForDelete() == 0" (click)="delete()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" [disabled]="countEstablosForDelete() == 0" (click)="delete()">
                 Eliminar
             </button>
         </ion-buttons>

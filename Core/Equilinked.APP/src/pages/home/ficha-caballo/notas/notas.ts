@@ -13,6 +13,7 @@ import {NotificacionesInsertPage} from '../../../notificaciones/notificaciones-i
 })
 export class NotasPage {
     idCaballo: number;
+    nombreCaballo: string = "";
     notificacionList = [];
     tipoAlerta: number = 5;
     isDeleting: boolean = false;
@@ -27,8 +28,9 @@ export class NotasPage {
     }
 
     ngOnInit() {
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
-            this.idCaballo = this.navParams.get("idCaballoSelected");
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
+            this.idCaballo = this.navParams.get("idCaballoSelected");            
+            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
         }
     }
@@ -92,7 +94,7 @@ export class NotasPage {
         this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
     }
 
-    goBack() {        
+    goBack() {
         this.navCtrl.pop();
     }
 }

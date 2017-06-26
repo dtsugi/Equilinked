@@ -48,37 +48,43 @@ export class FichaCaballoPage {
             // DATOS
             case 1:
                 this.navCtrl.push(DatosViewPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
             // HERRAJES
             case 5:
                 this.navCtrl.push(HerrajesPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
             // ALIMENTACION
             case 6:
                 this.navCtrl.push(AlimentacionPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
             // DENTISTA
             case 7:
                 this.navCtrl.push(DentistaPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
             // DESPARASITACION
             case 8:
                 this.navCtrl.push(DesparasitacionPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
             // NOTAS VARIAS
             case 9:
                 this.navCtrl.push(NotasPage, {
-                    idCaballoSelected: this.caballo.ID
+                    idCaballoSelected: this.caballo.ID,
+                    nombreCaballoSelected:this.caballo.Nombre
                 });
                 break;
         }

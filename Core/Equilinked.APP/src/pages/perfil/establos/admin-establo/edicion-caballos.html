@@ -4,22 +4,22 @@
             <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
-            <button ion-button class="button-text" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
                   Cancelar
             </button>
         </ion-buttons>
 
-        <ion-title class="toolbar-top-center">
-            <span class="toolbar-top-title">{{establo.Nombre}}</span>
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{establo.Nombre}}</span>
             <br />
-            <span class="toolbar-top-subtitle">Caballos</span>
+            <span class="equi-toolbar-subtitle">Caballos</span>
         </ion-title>
 
         <ion-buttons right>
-            <button ion-button class="button-text" *ngIf="!modoEdicion" (click)="edit()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
                 Editar
             </button>
-            <button ion-button class="button-text" *ngIf="modoEdicion" (click)="save()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="save()">
                 Aceptar
             </button>
         </ion-buttons>

@@ -7,12 +7,13 @@ import {AlertaService} from '../../../../services/alerta.service';
 import {Alerta} from '../../../../model/alerta';
 import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
 
-@Component({ 
+@Component({
     templateUrl: 'dentista.html',
     providers: [CommonService, AlertaService]
 })
 export class DentistaPage {
     idCaballo: number;
+    nombreCaballo: string = "";
     historyNotificacionList = [];
     nextNotificacionList = [];
     tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DENTISTA;
@@ -28,8 +29,9 @@ export class DentistaPage {
     }
 
     ngOnInit() {
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
+            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
             this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
         }
@@ -108,7 +110,7 @@ export class DentistaPage {
         this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
     }
 
-    goBack() {        
+    goBack() {
         this.navCtrl.pop();
     }
 }

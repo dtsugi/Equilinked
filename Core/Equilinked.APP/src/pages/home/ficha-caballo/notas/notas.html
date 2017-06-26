@@ -5,7 +5,11 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title">Notas</ion-title>
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{nombreCaballo}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">Notas</span>
+        </ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -13,10 +17,8 @@
     <ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"></ion-searchbar>
     <ion-list no-lines>
         <ion-item (click)="goInsertNotificacion()">
-            <ion-avatar item-left>
-                <img src="assets/img/add.png">
-            </ion-avatar>
-            <h2>Nueva nota</h2>
+            <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+            <span class="equi-title-form-primary">Agregar nuevo</span>
         </ion-item>
     </ion-list>
     <ion-list>

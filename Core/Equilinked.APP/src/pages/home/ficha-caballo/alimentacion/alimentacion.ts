@@ -16,6 +16,7 @@ import {AlimentacionEditPage} from './alimentacion-edit';
 })
 export class AlimentacionPage {
     idCaballo: number;
+    nombreCaballo:string="";
     alimentacion: Alimentacion;
 
     constructor(
@@ -29,8 +30,9 @@ export class AlimentacionPage {
 
     ngOnInit() {
         this.alimentacion = new Alimentacion();
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected","nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
+            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             console.log(this.idCaballo);
             this.getAlimentacionByIdCaballo(this.idCaballo);
         }

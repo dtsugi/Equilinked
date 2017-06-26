@@ -5,8 +5,12 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title">Herraje / Desvasado</ion-title>
-    </ion-toolbar>    
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{nombreCaballo}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">Herraje / Desvasado</span>
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 <ion-content>
     <ion-grid>
@@ -53,14 +57,10 @@
         <ion-row>
             <hr>
         </ion-row>
-        <ion-row>
+        <ion-row (click)="insert()">
             <ion-col>
-                <ion-item (click)="insert()">
-                    <ion-avatar item-left>
-                        <img src="assets/img/add.png">
-                    </ion-avatar>
-                    <h2>Nuevo registro</h2>
-                </ion-item>
+                <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+                <span class="equi-title-form-primary">Agregar nuevo</span>
             </ion-col>
         </ion-row>
     </ion-grid>

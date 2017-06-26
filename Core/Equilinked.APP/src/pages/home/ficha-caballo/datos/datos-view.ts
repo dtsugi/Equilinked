@@ -18,6 +18,7 @@ import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-inser
 export class DatosViewPage {
     form: any;
     idCaballo: number;
+    nombreCaballo: string = "";
     caballoEntity: Caballo;
     generoList = [];
     pelajeList = [];
@@ -36,8 +37,9 @@ export class DatosViewPage {
 
     ngOnInit() {
         this.caballoEntity = new Caballo();
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
+            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             this.getCaballo(this.idCaballo);
             this.getPelajeList();
             this.getGeneroList();

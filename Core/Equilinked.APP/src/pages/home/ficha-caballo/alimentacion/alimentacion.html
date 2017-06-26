@@ -5,7 +5,11 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title">Alimentación</ion-title>
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{nombreCaballo}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">Alimentación</span>
+        </ion-title>
         <ion-buttons right>
             <button class="equi-toolbar-btn" (click)="edit()">
                 Editar

@@ -13,6 +13,7 @@ import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notifica
 })
 export class DesparasitacionPage {
     idCaballo: number;
+    nombreCaballo: string = "";
     historyNotificacionList = [];
     nextNotificacionList = [];
     tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DESPARACITACION;
@@ -28,8 +29,9 @@ export class DesparasitacionPage {
     }
 
     ngOnInit() {
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
+            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
             this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
         }
@@ -108,7 +110,7 @@ export class DesparasitacionPage {
         this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
     }
 
-    goBack() {        
+    goBack() {
         this.navCtrl.pop();
     }
 }

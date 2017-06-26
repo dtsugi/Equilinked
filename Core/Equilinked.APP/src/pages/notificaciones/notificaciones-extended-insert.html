@@ -3,7 +3,10 @@
         <ion-buttons left>
             <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title">{{title}}</ion-title>
+        <ion-title class="equi-toolbar-title-content">
+            <br>
+            <span class="equi-toolbar-subtitle">{{title}}</span>
+        </ion-title>
         <ion-buttons right>
             <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">{{btnSubmitText}}</button>
         </ion-buttons>

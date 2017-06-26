@@ -15,29 +15,31 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+$_EQUI_PRINCIPAL_COLOR:#42A6AC;
+
 @font-face {
     font-family: NotoSans;
     src: url(../assets/fonts/NotoSans-Regular.ttf);
 }
 
-body {
+body,ion-content {
     font-family: NotoSans !important;
-    font-size: 50px !important;
+        
 }
 
-.toolbar-top-center {
-    text-align: center;
-}
-.toolbar-top-title {
-    text-transform: uppercase !important;
-    font-size: 1.7rem !important;
-    font-weight: 700 !important;
-}
-.toolbar-top-subtitle {
-    font-size: 1.5rem !important;
-    font-style: italic !important;
-    color: #00A7A5 !important;
-}
+// .toolbar-top-center {
+//     text-align: center;
+// }
+// .toolbar-top-title {
+//     text-transform: uppercase !important;
+//     font-size: 1.7rem !important;
+//     font-weight: 700 !important;
+// }
+// .toolbar-top-subtitle {
+//     font-size: 1.5rem !important;
+//     font-style: italic !important;
+//     color: #00A7A5 !important;
+// }
 
 .item-without-padding {
     padding-left: 0px;
@@ -61,13 +63,13 @@ body {
     font-weight: 700 !important;
 }
 
-.button-text {
-    text-transform: none !important;
-    color: #00A7A5 !important;
-    font-size: 1.6rem !important;
-    padding-left: 5px !important;
-    padding-right: 5px !important;
-}
+// .button-text {
+//     text-transform: none !important;
+//     color: #00A7A5 !important;
+//     font-size: 1.6rem !important;
+//     padding-left: 5px !important;
+//     padding-right: 5px !important;
+// }
 
 .icon-hidden {
     visibility: hidden;
@@ -85,28 +87,50 @@ body {
 }
 
 /* Equilinked Styles */
+
 .equi-toolbar {    
 }
 
-#equi-toolbar-title-content{
-    border: 1px solid red;
-}
-.equi-toolbar-title{
-    font-size: 17px !important;
-    text-align: center;
+.equi-toolbar-title-content{    
     margin: auto;    
+    text-align: center;
+}
+.equi-toolbar-title{            
+    text-transform: uppercase !important;    
+    font-weight: 700 !important;
+    font-size: 17px !important;
+}
+
+.equi-toolbar-subtitle {
+    color: $_EQUI_PRINCIPAL_COLOR;
+    font-size: 13px !important;
+    font-style: italic !important;    
 }
 .equi-toolbar-btn{
     background-color: transparent;
-    color: #42A6AC;
-    font-size: 16px !important;    
+    color: $_EQUI_PRINCIPAL_COLOR;
+    font-size: 16px !important;   
+    text-transform: none !important; 
+    padding-left: 5px !important;
+    padding-right: 5px !important;
 }
 
-.equi-title-form{
+.equi-title-form,
+.equi-title-form-primary{
     font-size: 14px !important;
     font-weight: bold !important;  
 }
 
+.equi-title-form-primary{
+    color: $_EQUI_PRINCIPAL_COLOR;
+}
+
 .equi-edit{
     color:#CCC6C8;
+}
+
+.equi-icon-add{    
+    color: $_EQUI_PRINCIPAL_COLOR;
+    font-size: 30pt;
+    padding: 0 5px;
 }

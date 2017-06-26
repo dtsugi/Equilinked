@@ -1,11 +1,14 @@
 <ion-header>
     <ion-navbar>
-        <ion-title *ngIf="!isUpdate">
-            Nueva notificacion
+        <ion-title class="equi-toolbar-title-content">
+            <br />
+            <span *ngIf="!isUpdate" class="equi-toolbar-subtitle">Nueva notificacion</span>
+            <span *ngIf="isUpdate" class="equi-toolbar-subtitle">Editar notificacion</span>
         </ion-title>
-        <ion-title *ngIf="isUpdate">
-            Editar notificacion
-        </ion-title>
+        <ion-buttons right>
+            <button *ngIf="!isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Guardar</button>
+            <button *ngIf="isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Modificar</button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content>
@@ -47,7 +50,5 @@
                 <ion-option *ngFor="let item of selectCaballos" [disabled]="disableFromNotas" [value]="item.Key">{{item.Value}}</ion-option>
             </ion-select>
         </ion-item>
-        <button ion-button block type="submit" [disabled]="!formNotificaciones.valid" *ngIf="!isUpdate">Guardar</button>
-        <button ion-button block type="submit" [disabled]="!formNotificaciones.valid" *ngIf="isUpdate">Modificar</button>
     </form>
 </ion-content>
