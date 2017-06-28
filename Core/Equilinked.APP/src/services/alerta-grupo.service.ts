@@ -43,4 +43,40 @@ export class AlertaGrupoService {
         let url: string = this.urlAlertasGrupo + alertaGrupo.Grupo_ID + "/alertas/" + alertaGrupo.ID;
         return this.http.put(url, alertaGrupo).toPromise();
     }
+
+    deleteAlerta(alertaGrupo: any): Promise<any> {
+        let url: string = this.urlAlertasGrupo + alertaGrupo.Grupo_ID + "/alertas/" + alertaGrupo.ID;
+        return this.http.delete(url).toPromise();
+    }
+
+    deleteAlertasByIds(grupoId: number, ids: number[]): Promise<any> {
+        console.info("Para eliminar: %o", ids);
+        let url: string = this.urlAlertasGrupo + grupoId + "/alertas";
+        let params = new URLSearchParams();
+        ids.forEach(id => {
+            params.append("alertaGrupoId", id.toString());
+        });
+        return this.http.delete(url, new RequestOptions({ search: params }))
+            .toPromise();
+    }
+
+    filterCaballo(value: string, caballos: any[]): any[] {
+        if (value && value !== "") {
+            return caballos.filter((c) => {
+                return ((c.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1)
+                    || (c.caballo.Grupo != null && c.caballo.Grupo.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1));
+            });
+        }
+        return caballos;
+    }
+
+    filterNota(value: string, alertasGrupo: any[]): any[] {
+        if (value && value !== "") {
+            return alertasGrupo.filter(a => {
+                return ((a.nota.Alerta.Titulo.toUpperCase().indexOf(value.toUpperCase()) > -1)
+                    || (a.nota.Alerta.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1));
+            });
+        }
+        return alertasGrupo;
+    }
 }

@@ -40,10 +40,9 @@ export class OpcionesFichaGrupo {
             this.commonService.showLoading("Procesando...");
             this.gruposCaballosService.deleteGrupoById(this.grupo.ID)
                 .then(res => {
+                    this.events.publish("grupos:refresh");
                     this.commonService.hideLoading();
-                    this.navCtrlGrupo.pop().then(() => {
-                        this.events.publish("grupo:deleted");
-                    });
+                    this.navCtrlGrupo.pop();
                 }).catch(err => {
                     this.commonService.ShowErrorHttp(err, "Error al eliminar el grupo");
                 });

@@ -27,6 +27,7 @@
           <Property Name="Activa" Type="bit" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
           <Property Name="NombreProfesional" Type="nvarchar(max)" />
+          <Property Name="Ubicacion" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -1030,6 +1031,7 @@
           <NavigationProperty Name="Evento" Relationship="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID" FromRole="Alerta" ToRole="Evento" />
           <Property Name="NombreProfesional" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AlertaGrupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" FromRole="Alerta" ToRole="AlertaGrupo" />
+          <Property Name="Ubicacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -2095,6 +2097,7 @@
           <EntitySetMapping Name="Alerta">
             <EntityTypeMapping TypeName="EquilinkedModel.Alerta">
               <MappingFragment StoreEntitySet="Alerta">
+                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
                 <ScalarProperty Name="NombreProfesional" ColumnName="NombreProfesional" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Titulo" ColumnName="Titulo" />

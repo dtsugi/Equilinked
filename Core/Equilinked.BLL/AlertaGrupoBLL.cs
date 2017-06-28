@@ -66,6 +66,9 @@ namespace Equilinked.BLL
                 {
                     query = query.Where(ag => ag.Alerta.FechaNotificacion > fecha)
                         .OrderBy(ag => ag.Alerta.FechaNotificacion);
+                } else
+                {
+                    query = query.OrderBy(ag => ag.Alerta.FechaNotificacion);
                 }
 
                 return query.ToList();
@@ -76,19 +79,10 @@ namespace Equilinked.BLL
         {
             using(var db = this._dbContext)
             {
-                db.Configuration.LazyLoadingEnabled = false;
-
-                List<GrupoCaballo> caballos = db.GrupoCaballo
-                    .Where(gc => gc.Grupo_ID == alertaGrupo.Grupo_ID)
-                    .ToList();
-
                 db.Alerta.Add(alertaGrupo.Alerta);
 
-                AlertaCaballo alertaCaballo;
-                foreach(GrupoCaballo gc in caballos)
+                foreach(AlertaCaballo alertaCaballo in alertaGrupo.Alerta.AlertaCaballo)
                 {
-                    alertaCaballo = new AlertaCaballo();
-                    alertaCaballo.Caballo_ID = gc.Caballo_ID;
                     alertaCaballo.Alerta_ID = alertaGrupo.Alerta.ID;
 
                     db.AlertaCaballo.Add(alertaCaballo);
@@ -109,10 +103,79 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
 
                 Alerta alerta = db.Alerta.Where(a => a.ID == alertaGrupo.Alerta.ID).FirstOrDefault();
+                alerta.Titulo = alertaGrupo.Alerta.Titulo;
+                alerta.Descripcion = alertaGrupo.Alerta.Descripcion;
                 alerta.NombreProfesional = alertaGrupo.Alerta.NombreProfesional;
                 alerta.FechaNotificacion = alertaGrupo.Alerta.FechaNotificacion;
                 alerta.HoraNotificacion = alertaGrupo.Alerta.HoraNotificacion;
-                alerta.Descripcion = alertaGrupo.Alerta.Descripcion;
+                alerta.Ubicacion = alertaGrupo.Alerta.Ubicacion;
+
+                List<AlertaCaballo> alertasCaballosInsertar = new List<AlertaCaballo>();
+                List<int> idsAlertasCaballosViejas = new List<int>(); //Detectamos los ids que ya venian
+                foreach(AlertaCaballo ac in alertaGrupo.Alerta.AlertaCaballo)
+                {
+                    if(ac.ID == 0)
+                    {
+                        ac.Alerta_ID = alerta.ID;
+                        alertasCaballosInsertar.Add(ac);
+                    }
+                    else
+                    {
+                        idsAlertasCaballosViejas.Add(ac.ID);
+                    }
+                }
+
+                List<AlertaCaballo> alertasCaballosEliminar = db.AlertaCaballo
+                    .Where(ac => ac.Alerta_ID == alerta.ID)
+                    .Where(ac => !idsAlertasCaballosViejas.Contains(ac.ID))
+                    .ToList(); //Consultar las alertas existentes que no se encuentran en los ids detectados
+
+                db.AlertaCaballo.RemoveRange(alertasCaballosEliminar);
+                db.AlertaCaballo.AddRange(alertasCaballosInsertar);
+
+                db.SaveChanges();
+            }
+        }
+
+        public void Delete(int alertaGrupoId)
+        {
+            using(var db = this._dbContext)
+            {
+                AlertaGrupo alertaGrupo = db.AlertaGrupo
+                    .Where(ag => ag.ID == alertaGrupoId)
+                    .FirstOrDefault();
+
+                Alerta alerta = db.Alerta.Where(a => a.ID == alertaGrupo.Alerta_ID).FirstOrDefault();
+
+                List<AlertaCaballo> alertasCaballos = db.AlertaCaballo
+                    .Where(ac => ac.Alerta_ID == alertaGrupo.Alerta_ID).ToList();
+
+                db.AlertaCaballo.RemoveRange(alertasCaballos);
+                db.AlertaGrupo.Remove(alertaGrupo);
+                db.Alerta.Remove(alerta);
+
+                db.SaveChanges(); //Borramos todoo 
+            }
+        }
+
+        public void DeleteAlertasByIds(int[] alertaGrupoIds)
+        {
+            using(var db = this._dbContext)
+            {
+                Dictionary<int, AlertaGrupo> mapAlertasGrupo = db.AlertaGrupo
+                    .Where(ag => alertaGrupoIds.Contains(ag.ID))
+                    .ToDictionary(ag => ag.Alerta_ID);
+
+                List<int> idsAlertas = new List<int>(mapAlertasGrupo.Keys);
+
+                List<AlertaGrupo> alertasGrupo = new List<AlertaGrupo>(mapAlertasGrupo.Values);
+                List<AlertaCaballo> alertasCaballo = db.AlertaCaballo
+                    .Where(ac => idsAlertas.Contains(ac.Alerta_ID)).ToList();
+                List<Alerta> alertas = db.Alerta.Where(a => idsAlertas.Contains(a.ID)).ToList();
+
+                db.AlertaCaballo.RemoveRange(alertasCaballo);
+                db.AlertaGrupo.RemoveRange(alertasGrupo);
+                db.Alerta.RemoveRange(alertas);
 
                 db.SaveChanges();
             }

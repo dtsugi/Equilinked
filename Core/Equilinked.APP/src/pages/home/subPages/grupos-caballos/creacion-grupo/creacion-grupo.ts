@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController, NavParams, ToastController } from "ionic-angular";
+import { Events, NavController, NavParams, ToastController } from "ionic-angular";
 import { FormBuilder, Validators } from "@angular/forms";
 import { CommonService } from "../../../../../services/common.service";
 import { SecurityService } from "../../../../../services/security.service";
@@ -7,7 +7,6 @@ import { GruposCaballosService } from "../../../../../services/grupos-caballos.s
 import { CaballoService } from "../../../../../services/caballo.service";
 import { Grupo } from "../../../../../model/grupo";
 import { UserSessionEntity } from "../../../../../model/userSession";
-import { GruposCaballos } from "../../grupos-caballos/grupos-caballos";
 
 @Component({
     templateUrl: "./creacion-grupo.html",
@@ -24,9 +23,10 @@ export class CreacionGrupoPage implements OnInit {
     constructor(
         private caballoService: CaballoService,
         private commonService: CommonService,
+        private events: Events,
         private formBuilder: FormBuilder,
         private gruposCaballosService: GruposCaballosService,
-        private navController: NavController,
+        public navController: NavController,
         private navParams: NavParams,
         private securityService: SecurityService,
         public toastController: ToastController
@@ -58,7 +58,6 @@ export class CreacionGrupoPage implements OnInit {
             GrupoCaballo: this.caballos.filter(c => c.seleccion).map(c => {
                 return { Caballo_ID: c.caballo.ID };
             }),
-            //Caballo: this.caballos.filter(c => c.seleccion).map(c => c.caballo),
             Descripcion: this.grupoCaballosForm.value.Descripcion,
             Propietario_ID: this.session.PropietarioId,
             GrupoDefault: false
@@ -66,11 +65,9 @@ export class CreacionGrupoPage implements OnInit {
 
         this.commonService.showLoading("Procesando..");
         this.gruposCaballosService.saveGrupo(grupo).then(resp => {
+            this.events.publish("grupos:refresh");
             this.commonService.hideLoading();
-            let gc: GruposCaballos = this.navParams.get("gruposCaballosPage");
-            this.navController.pop().then(() => {
-                gc.getGruposCaballos(false);
-            });
+            this.navController.pop();
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar el grupo");
         });

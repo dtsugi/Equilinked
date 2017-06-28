@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController, NavParams, ToastController } from "ionic-angular";
+import { Events, NavController, NavParams, ToastController } from "ionic-angular";
 import { InfoEstabloPage } from "./info-establo";
 import { FichaCaballoPage } from "../../../home/ficha-caballo/ficha-caballo-home";
 import { CaballoService } from "../../../../services/caballo.service";
@@ -12,7 +12,6 @@ import { EstablosService } from "../../../../services/establos.service";
 })
 export class EdicionEstabloCaballosPage implements OnInit {
 
-    private infoEstabloPage: InfoEstabloPage;
     private establo: any;
 
     establoCabllos: Array<any>;
@@ -27,6 +26,7 @@ export class EdicionEstabloCaballosPage implements OnInit {
         private caballoService: CaballoService,
         private commonService: CommonService,
         private establosService: EstablosService,
+        private events: Events,
         private navController: NavController,
         private navParams: NavParams
     ) {
@@ -36,7 +36,6 @@ export class EdicionEstabloCaballosPage implements OnInit {
 
     ngOnInit(): void {
         this.establo = this.navParams.get("establo");
-        this.infoEstabloPage = this.navParams.get("infoEstabloPage");
 
         this.listCaballosByEstabloId(true); //Listamos los caballos del establo
     }
@@ -84,8 +83,8 @@ export class EdicionEstabloCaballosPage implements OnInit {
         this.commonService.showLoading("Procesando...");
         this.establosService.updateEstablo(this.establo)
             .then(() => {
-                this.listCaballosByEstabloId(false);
-                this.infoEstabloPage.getInfoEstablo(false);
+                this.events.publish("establo:refresh"); //Refresco el detalle del establo seleccioadno
+                this.listCaballosByEstabloId(false); //Refresco la lista actual
                 this.modoEdicion = false;
                 this.commonService.hideLoading();
             }).catch(err => {

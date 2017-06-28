@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { CommonService } from "../../../services/common.service";
-import { NavController, AlertController } from "ionic-angular";
+import { Events, NavController, AlertController } from "ionic-angular";
 import { UserSessionEntity } from "../../../model/userSession";
 import { SecurityService } from "../../../services/security.service";
 import { EstablosService } from "../../../services/establos.service";
@@ -18,7 +18,7 @@ import { InfoEstabloPage } from "./admin-establo/info-establo";
     }
     `]
 })
-export class ListadoEstablosPage implements OnInit {
+export class ListadoEstablosPage implements OnDestroy, OnInit {
 
     session: UserSessionEntity;
     selectedTab: string;
@@ -27,6 +27,7 @@ export class ListadoEstablosPage implements OnInit {
     modoEdicion: boolean;
 
     constructor(
+        private events: Events,
         private alertController: AlertController,
         private commonService: CommonService,
         private establosService: EstablosService,
@@ -40,6 +41,11 @@ export class ListadoEstablosPage implements OnInit {
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.listEstablosByPropietarioId(true); //Listar establos del propietario
+        this.registredEvents();
+    }
+
+    ngOnDestroy(): void {
+        this.unregistredEvents();
     }
 
     goBack(): void {
@@ -139,9 +145,7 @@ export class ListadoEstablosPage implements OnInit {
     }
 
     newEstablo(): void {
-        //acceder a la pantalla de creacion
-        let params: any = { establosPage: this };
-        this.navCtrl.push(AdminEstablosPage, params);
+        this.navCtrl.push(AdminEstablosPage);
     }
 
     selectEstablo(establo): void {
@@ -154,9 +158,18 @@ export class ListadoEstablosPage implements OnInit {
 
     private viewEstablo(establo: any): void {
         let params: any = {
-            establoId: establo.ID,
-            establosPage: this
+            establoId: establo.ID
         };
         this.navCtrl.push(InfoEstabloPage, params);
+    }
+
+    private registredEvents(): void {
+        this.events.subscribe("establos:refresh", () => {
+            this.listEstablosByPropietarioId(false);
+        });
+    }
+
+    private unregistredEvents(): void {
+        this.events.unsubscribe("establos:refresh");
     }
 }

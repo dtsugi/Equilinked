@@ -16,6 +16,8 @@
 // automatically applied to the <body> element in the app.
 
 $_EQUI_PRINCIPAL_COLOR:#42A6AC;
+$_EQUI_CONTENT_TABLE_COLOR: #D9F1F1;
+$_EQUI_TEXT_EDITION_COLOR: #CCC6C8;
 
 @font-face {
     font-family: NotoSans;
@@ -75,13 +77,6 @@ body,ion-content {
     visibility: hidden;
 }
 
-.icon-input {
-    font-size: 2.8rem;
-    line-height: 1;
-    margin-top: 11px;
-    margin-bottom: 10px;
-}
-
 .col-center {
     text-align: center;
 }
@@ -123,6 +118,19 @@ body,ion-content {
 
 .equi-title-form-primary{
     color: $_EQUI_PRINCIPAL_COLOR;
+    vertical-align: super;
+}
+
+.equi-normal-text {
+    font-family: NotoSans !important;
+    font-size: 16px !important;
+    font-weight: normal;
+}
+
+.equi-bold-text {
+    font-family: NotoSans !important;
+    font-size: 16px !important;
+    font-weight: bold;
 }
 
 .equi-edit{
@@ -133,4 +141,38 @@ body,ion-content {
     color: $_EQUI_PRINCIPAL_COLOR;
     font-size: 30pt;
     padding: 0 5px;
+}
+
+.equi-table-row-title {
+    background-color: $_EQUI_PRINCIPAL_COLOR;
+    color: white;
+    font-size: 16px !important;
+}
+
+.equi-table-row-content {
+    background-color: $_EQUI_CONTENT_TABLE_COLOR;
+    font-size: 16px !important;
+    border-bottom-color: $_EQUI_CONTENT_TABLE_COLOR;
+}
+
+.equi-text-link, .equi-principal-color, .equi-icon-selected {
+    color: $_EQUI_PRINCIPAL_COLOR !important;
+}
+
+.equi-note-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.equi-icon-unselected {
+    color: $_EQUI_TEXT_EDITION_COLOR !important;
+}
+
+.equi-icon-input {
+    font-size: 2.8rem;
+    line-height: 1;
+    margin-top: 11px;
+    margin-bottom: 10px;
+    color: $_EQUI_PRINCIPAL_COLOR;
 }

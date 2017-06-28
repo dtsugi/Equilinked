@@ -21,6 +21,7 @@ namespace Equilinked.DAL.Dto
         public string Descripcion { get; set; }
         public List<int> CaballosList { get; set; }
         public string NombreProfesional { get; set; }
+        public String Ubicacion { get; set; }
 
         public AlertaDto() { }
 
@@ -36,6 +37,7 @@ namespace Equilinked.DAL.Dto
             this.Activa = alerta.Activa;
             this.Descripcion = alerta.Descripcion;
             this.NombreProfesional = alerta.NombreProfesional;
+            this.Ubicacion = alerta.Ubicacion;
         }
 
         private string ToDateToCurrentCulture(DateTime date)
@@ -62,6 +64,7 @@ namespace Equilinked.DAL.Models
             this.Activa = alertaDto.Activa;
             this.Descripcion = alertaDto.Descripcion;
             this.NombreProfesional = alertaDto.NombreProfesional;
+            this.Ubicacion = alertaDto.Ubicacion;
         }
     }
 }

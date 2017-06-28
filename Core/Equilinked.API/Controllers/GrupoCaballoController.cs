@@ -112,5 +112,20 @@ namespace Equilinked.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible guardar el grupo"));
             }
         }
+
+        [HttpDelete, Route("api/grupo/{grupoId}/caballos")]
+        public IHttpActionResult DeleteGruposCaballosByIds(int grupoId, [FromUri] int[] grupoCaballoIds)
+        {
+            try
+            {
+                GrupoCaballoBLL.DeleteGrupoCaballoByIds(grupoCaballoIds);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar la asignación de caballos al grupo"));
+            }
+        }
     }
 }

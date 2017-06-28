@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { CommonService } from '../../../services/common.service';
@@ -14,7 +14,7 @@ import { ListadoEstablosPage } from "../establos/establos";
     templateUrl: 'perfil-datos.html',
     providers: [CommonService, SecurityService, PropietarioService]
 })
-export class PerfilDatosPage {
+export class PerfilDatosPage implements OnInit, OnDestroy {
     form: any;
     session: UserSessionEntity;
     propietarioEntity: Propietario;
@@ -37,6 +37,10 @@ export class PerfilDatosPage {
         this.session = this._securityService.getInitialConfigSession();
         this.getPerfilPropietarioId(this.session.PropietarioId, true);
         this.registerEvents();
+    }
+
+    ngOnDestroy(): void {
+        this.unregistredEvents();
     }
 
     changeTab(): void {
@@ -77,9 +81,13 @@ export class PerfilDatosPage {
     }
 
     private registerEvents(): void {
-        this.events.subscribe("perfil:updated", () => {
+        this.events.subscribe("perfil:refresh", () => {
             console.info("Te mandé a traer de la edición!");
             this.getPerfilPropietarioId(this.session.PropietarioId, false);
         });
+    }
+
+    private unregistredEvents(): void {
+        this.events.unsubscribe("perfil:refresh");
     }
 }

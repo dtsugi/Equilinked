@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { NavController, ToastController } from "ionic-angular";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Events, NavController, ToastController } from "ionic-angular";
 import { CommonService } from "../../../../services/common.service";
 import { GruposCaballosService } from "../../../../services/grupos-caballos.service";
 import { SecurityService } from "../../../../services/security.service";
@@ -12,13 +12,15 @@ import { AdministracionGrupoPage } from "./administracion-grupo/administracion-g
     templateUrl: "./grupos-caballos.html",
     providers: [CommonService, GruposCaballosService, SecurityService]
 })
-export class GruposCaballos implements OnInit {
+export class GruposCaballos implements OnDestroy, OnInit {
 
     grupos: Array<any> = [];
     gruposRespaldo: Array<any> = [];
     session: UserSessionEntity;
 
-    constructor(private commonService: CommonService,
+    constructor(
+        private events: Events,
+        private commonService: CommonService,
         private navController: NavController,
         private toastController: ToastController,
         private gruposCaballosService: GruposCaballosService,
@@ -28,6 +30,11 @@ export class GruposCaballos implements OnInit {
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.getGruposCaballos(true);
+        this.registredEvents();
+    }
+
+    ngOnDestroy(): void {
+        this.unregistredEvents();
     }
 
     getGruposCaballos(showLoading: boolean): void {
@@ -45,15 +52,24 @@ export class GruposCaballos implements OnInit {
     }
 
     filter(evt: any): void {
-        this.grupos = this.gruposCaballosService.filterGrupoCaballo(evt.target.value, this.gruposRespaldo);
+        this.grupos = this.gruposCaballosService.filterGruposByName(evt.target.value, this.gruposRespaldo);
     }
 
     viewGrupo(grupo: any): void {
-        console.info(grupo);
-        this.navController.push(AdministracionGrupoPage, { grupoId: grupo.ID, gruposCaballosPage: this });
+        this.navController.push(AdministracionGrupoPage, { grupoId: grupo.ID });
     }
 
     newGrupo(): void {
-        this.navController.push(CreacionGrupoPage, { gruposCaballosPage: this });
+        this.navController.push(CreacionGrupoPage);
+    }
+
+    private registredEvents(): void {
+        this.events.subscribe("grupos:refresh", () => {
+            this.getGruposCaballos(false);
+        });
+    }
+
+    private unregistredEvents(): void {
+        this.events.unsubscribe("grupos:refresh");
     }
 }

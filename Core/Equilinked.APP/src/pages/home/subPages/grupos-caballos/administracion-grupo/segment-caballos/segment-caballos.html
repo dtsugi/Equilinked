@@ -1,0 +1,23 @@
+<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+
+<ion-list no-lines>
+    <ion-item no-lines *ngIf="!parametrosCaballos.modoEdicion" (click)="addCaballos()">
+        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+        <span class="equi-title-form-primary">Agregar nuevo</span>
+    </ion-item>
+
+    <ion-item (click)="selectAll()" *ngIf="parametrosCaballos.modoEdicion">
+        <h2 class="equi-title-form">Seleccionar todos los caballos</h2>
+        <ion-icon class="equi-principal-color" name="{{getCountSelected() != caballosGrupoRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
+            item-right></ion-icon>
+    </ion-item>
+
+    <ion-item *ngFor="let cg of caballosGrupo" (click)="select(cg)">
+        <ion-avatar item-left>
+            <img src="assets/img/caballo.jpg">
+        </ion-avatar>
+        <h2 class="equi-title-form">{{cg.caballoGrupo.Caballo.Nombre}}</h2>
+        <ion-icon class="equi-principal-color" name="{{cg.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="parametrosCaballos.modoEdicion"
+            item-right></ion-icon>
+    </ion-item>
+</ion-list> 

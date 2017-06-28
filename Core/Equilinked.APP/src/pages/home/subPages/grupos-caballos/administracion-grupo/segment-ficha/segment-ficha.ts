@@ -3,6 +3,7 @@ import { NavController, NavParams } from "ionic-angular";
 import { SecurityService } from "../../../../../../services/security.service";
 import { UserSessionEntity } from "../../../../../../model/userSession";
 import { AlertasFicha } from "../alertas-ficha/alertas-ficha";
+import { NotasFichaPage } from "../notas-ficha/notas-ficha";
 import { ConstantsConfig } from "../../../../../../app/utils"
 
 @Component({
@@ -14,8 +15,8 @@ export class SegmentFichaGrupo implements OnInit {
 
     private session: UserSessionEntity;
 
-    @Input("grupo-id")
-    grupoId: number;
+    @Input("grupo")
+    grupo: any;
 
     options: Array<any>;
 
@@ -36,7 +37,8 @@ export class SegmentFichaGrupo implements OnInit {
         this.options = [
             {
                 label: "Ubicación",
-                icon: "pin"
+                icon: "pin",
+                params: {}
             }, {
                 label: "Dentista",
                 icon: "medical",
@@ -46,7 +48,8 @@ export class SegmentFichaGrupo implements OnInit {
                 }
             }, {
                 label: "Veterinario",
-                icon: "medkit"
+                icon: "medkit",
+                params: {}
             }, {
                 label: "Herraje",
                 icon: "paw",
@@ -63,13 +66,17 @@ export class SegmentFichaGrupo implements OnInit {
                 }
             }, {
                 label: "Notas",
-                icon: "paper"
+                icon: "paper",
+                page: NotasFichaPage,
+                params: {
+                    tipoAlerta: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS
+                }
             }
         ];
     }
 
     selectOption(option: any): void {
-        option.params.grupoId = this.grupoId;
+        option.params.grupo = this.grupo;
         console.info(option);
         if (option.page) {
             this.navController.push(option.page, option.params);

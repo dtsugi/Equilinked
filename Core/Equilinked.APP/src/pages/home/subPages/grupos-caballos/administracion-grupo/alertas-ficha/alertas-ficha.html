@@ -1,14 +1,17 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>{{labels.title}}</ion-title>
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">{{labels.title}}</span>
+        </ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-
     <ion-grid>
         <ion-row>
-            <ion-col class="title-form">
+            <ion-col class="equi-title-form">
                 {{labels.titleNextAlertas}}
             </ion-col>
         </ion-row>
@@ -20,35 +23,34 @@
     </ion-grid>
 
     <ion-list *ngIf="proximasAlertas">
-        <ion-grid>
-            <ion-item-sliding *ngFor="let alerta of proximasAlertas" (click)="viewNextAlert(alerta)">
-                <ion-item>
-                    <ion-row>
-                        <ion-col col-8>
-                            {{alerta.Fecha}}
-                        </ion-col>
-                        <ion-col>
-                            {{alerta.Hora}} 
-                        </ion-col>
-                        <ion-col col-1>
-                            <ion-icon name="notifications"></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                </ion-item>
-                <!--
-                <ion-item-options>
-                    <button ion-button color="danger" icon-left (click)="delete(notificacion)">
-                        <ion-icon name="trash"></ion-icon>       
-                        Eliminar
-                    </button>
-                </ion-item-options>-->
-            </ion-item-sliding>
-        </ion-grid>
+
+        <ion-item-sliding *ngFor="let alerta of proximasAlertas">
+            <ion-item (click)="viewNextAlert(alerta)" class="equi-principal-color">
+                <ion-row>
+                    <ion-col col-8>
+                        {{alerta.Fecha}}
+                    </ion-col>
+                    <ion-col col-3>
+                        {{alerta.Hora}}
+                    </ion-col>
+                    <ion-col col-1>
+                        <ion-icon name="notifications"></ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-item>
+
+            <ion-item-options>
+                <button ion-button color="danger" icon-left (click)="delete(alerta)">
+                    <ion-icon name="trash"></ion-icon>       
+                    Eliminar
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
     </ion-list>
 
     <ion-grid>
         <ion-row>
-            <ion-col class="title-form">
+            <ion-col class="equi-title-form">
                 HISTORIAL
             </ion-col>
         </ion-row>
@@ -59,38 +61,80 @@
         <ion-row>
             <ion-col>
                 <ion-item (click)="create()">
-                    <ion-avatar item-left>
-                        <img src="assets/img/add.png">
-                    </ion-avatar>
-                    <h2>Nuevo registro</h2>
+                    <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+                    <span class="equi-title-form-primary">Nuevo registro</span>
                 </ion-item>
             </ion-col>
         </ion-row>
     </ion-grid>
 
-    
     <ion-list>
-        <ion-grid>
-            <ion-item-sliding *ngFor="let alerta of historicoAlertas">
-                <ion-item>
-                    <ion-row>
-                        <ion-col col-4>
-                            {{alerta.Fecha}}
-                        </ion-col>
-                        <ion-col>
-                            {{alerta.Alerta.NombreProfesional}}
-                        </ion-col>
-                    </ion-row>
-                </ion-item>
-                <!--
-                <ion-item-options>
-                    <button ion-button color="danger" icon-left (click)="delete(notificacion)">
+        <div *ngFor="let alerta of historicoAlertas">
+            <div *ngIf="!alerta.ShowDetail">
+                <ion-item-sliding>
+                    <ion-item (click)="viewDetailHistoryAlert(alerta)">
+                        <ion-row>
+                            <ion-col col-4>
+                                {{alerta.Fecha}}
+                            </ion-col>
+                            <ion-col col-7>
+                                {{alerta.Alerta.NombreProfesional}}
+                            </ion-col>
+                            <ion-col col-1>
+                                <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
+                            </ion-col>
+                        </ion-row>
+                    </ion-item>
+
+                    <ion-item-options>
+                        <button ion-button color="danger" icon-left (click)="delete(alerta)">
                         <ion-icon name="trash"></ion-icon>       
                         Eliminar
                     </button>
-                </ion-item-options>-->
-            </ion-item-sliding>
-        </ion-grid>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </div>
+            <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
+                <ion-item no-lines>
+                    <ion-row class="equi-table-row-title">
+                        <ion-col col-8>
+                            {{alerta.Alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
+                        </ion-col>
+                        <ion-col col-3>
+                            <span (click)="editAlert(alerta)">EDITAR</span>
+                        </ion-col>
+                        <ion-col col-1>
+                            <ion-icon name="ios-arrow-down"></ion-icon>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row class="equi-table-row-content">
+                        <ion-col col-4>
+                            {{labels.tablePerson}}
+                        </ion-col>
+                        <ion-col col-8>
+                            {{alerta.Alerta.NombreProfesional}}
+                        </ion-col>
+                    </ion-row>
+                    <ion-row class="equi-table-row-content">
+                        <ion-col col-4>
+                            {{labels.tableDescription}}
+                        </ion-col>
+                        <ion-col col-8>
+                            {{alerta.Alerta.Descripcion}}
+                        </ion-col>
+                    </ion-row>
+                    <ion-row class="equi-table-row-content">
+                        <ion-col col-4>
+                            Caballos
+                        </ion-col>
+                        <ion-col col-8>
+                            {{alerta.AllCaballos ? 'Todos' : alerta.Alerta.AlertaCaballo.length + ' caballo(s)'}}
+                        </ion-col>
+                    </ion-row>
+                </ion-item>
+            </div>
+        </div>
+
     </ion-list>
 
 </ion-content>

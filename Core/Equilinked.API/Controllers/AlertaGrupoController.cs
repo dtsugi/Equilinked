@@ -70,5 +70,35 @@ namespace Equilinked.API.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible actualizar la alerta para el grupo"));
             }
         }
+
+        [HttpDelete, Route("api/grupos/{grupoId}/alertas/{alertaGrupoId}")]
+        public IHttpActionResult DeleteAlertaGrupo(int grupoId, int alertaGrupoId)
+        {
+            try
+            {
+                alertaGrupoBll.Delete(alertaGrupoId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar la alerta para el grupo"));
+            }
+        }
+
+        [HttpDelete, Route("api/grupos/{grupoId}/alertas")]
+        public IHttpActionResult DeleteAlertasByIds(int grupoId, [FromUri] int[] alertaGrupoId)
+        {
+            try
+            {
+                alertaGrupoBll.DeleteAlertasByIds(alertaGrupoId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar la alertas del grupo"));
+            }
+        }
     }
 }

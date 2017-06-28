@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController, ModalController, NavParams, ToastController, AlertController } from "ionic-angular";
+import { Events, NavController, ModalController, NavParams, ToastController, AlertController } from "ionic-angular";
 import { FormBuilder, Validators, FormGroup, FormControl, FormArray } from "@angular/forms";
 import { CommonService } from "../../../../services/common.service";
 import { SecurityService } from "../../../../services/security.service";
@@ -7,9 +7,7 @@ import { CaballoService } from '../../../../services/caballo.service';
 import { EstablosService } from "../../../../services/establos.service";
 import { TipoNumeroService } from "../../../../services/tipo-numero.service";
 import { UserSessionEntity } from "../../../../model/userSession";
-import { ListadoEstablosPage } from "../establos";
 import { CaballosEstabloModal } from "./caballos-establo/caballos-establo-modal";
-import { InfoEstabloPage } from "./info-establo";
 
 @Component({
     templateUrl: "./admin-establo.html",
@@ -23,8 +21,6 @@ import { InfoEstabloPage } from "./info-establo";
 export class AdminEstablosPage implements OnInit {
 
     private session: UserSessionEntity;
-    private establosPage: ListadoEstablosPage;
-    private infoEstabloPage: InfoEstabloPage;
 
     establoForm: FormGroup;
 
@@ -41,6 +37,7 @@ export class AdminEstablosPage implements OnInit {
         private caballoService: CaballoService,
         private commonService: CommonService,
         private establosService: EstablosService,
+        private events: Events,
         private formBuilder: FormBuilder,
         public modalController: ModalController,
         private navController: NavController,
@@ -57,8 +54,6 @@ export class AdminEstablosPage implements OnInit {
         this.tipoTelefonoPorTelefono = [{ tipoTelefono: null }];
 
         this.session = this.securityService.getInitialConfigSession();
-        this.establosPage = this.navParams.get("establosPage");
-        this.infoEstabloPage = this.navParams.get("infoEstabloPage");
         this.establo = this.navParams.get("establo");
 
         this.initEstabloForm();
@@ -197,12 +192,11 @@ export class AdminEstablosPage implements OnInit {
         }
         prom.then(r => {
             this.commonService.hideLoading();
-            if (this.infoEstabloPage) { //Si venia de editar toca actualizar la info del establo
-                this.infoEstabloPage.getInfoEstablo(false);
+            if (establo.ID) {
+                this.events.publish("establo:refresh"); //Refrescamos el detalle del establo
             }
-            this.navController.pop().then(() => {
-                this.establosPage.listEstablosByPropietarioId(false);//Listamos de nuevo las paginas
-            });
+            this.events.publish("establos:refresh"); //Refrescamos la lista de establos!
+            this.navController.pop()
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar el establo");
         });

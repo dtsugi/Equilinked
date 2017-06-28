@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Events, NavController, NavParams } from "ionic-angular";
 import { AlertaGrupoService } from "../../../../../../services/alerta-grupo.service";
 import { CommonService } from "../../../../../../services/common.service";
@@ -22,11 +22,15 @@ import "moment/locale/es";
         text-align: center;
         width: 100%;
     }
+    .col {
+        padding-left: 0px;
+        font-size: 1.6rem;
+    }
     `]
 })
-export class AlertasFicha implements OnInit {
+export class AlertasFicha implements OnInit, OnDestroy {
 
-    private grupoId: number;
+    private grupo: any;
     private tipoAlerta: number;
     private session: UserSessionEntity;
 
@@ -43,13 +47,14 @@ export class AlertasFicha implements OnInit {
         private securityService: SecurityService
     ) {
         this.labels = {};
+        this.grupo = {};
     }
 
     ngOnInit(): void {
         moment.locale("es"); //Espaniol!!!!
 
         this.session = this.securityService.getInitialConfigSession();
-        this.grupoId = this.navParams.get("grupoId");
+        this.grupo = this.navParams.get("grupo");
         this.tipoAlerta = this.navParams.get("tipoAlerta");
 
         this.applyLabels(); //Ajustar las leyendas según el tipo de alerta
@@ -57,16 +62,21 @@ export class AlertasFicha implements OnInit {
         this.registredEvents();
     }
 
+    ngOnDestroy(): void {
+        this.unregistredEvents();
+    }
+
     create(): void {
         let alertaGrupo: any = { //Ya cremos la alerta!
-            Grupo_ID: this.grupoId,
+            Grupo_ID: this.grupo.ID,
             Alerta: {
-                Tipo: this.tipoAlerta
+                Tipo: this.tipoAlerta,
+                AlertaCaballo: []
             }
         };
 
         let params: any = {
-            grupoId: this.grupoId,
+            grupoId: this.grupo.ID,
             tipoAlerta: this.tipoAlerta,
             alertaGrupo: alertaGrupo
         };
@@ -75,8 +85,48 @@ export class AlertasFicha implements OnInit {
 
     viewNextAlert(alertaGrupo: any): void {
         console.info(alertaGrupo);
-        let params: any = { grupoId: this.grupoId, alertaGrupoId: alertaGrupo.ID };
+        let params: any = { grupoId: this.grupo.ID, alertaGrupoId: alertaGrupo.ID };
         this.navController.push(DetalleAlertaPage, params);
+    }
+
+    editAlert(alertaGrupo: any): void {
+        let params: any = {
+            grupoId: this.grupo.ID,
+            tipoAlerta: alertaGrupo.Alerta.Tipo,
+            alertaGrupo: JSON.parse(JSON.stringify(alertaGrupo))
+        };
+        this.navController.push(EdicionAlertaPage, params);
+    }
+
+    viewDetailHistoryAlert(alertaGrupo: any): void {
+        this.commonService.showLoading("Procesando...");
+        this.alertaGrupoService.getAlertaById(this.grupo.ID, alertaGrupo.ID)
+            .then(ag => {
+                this.commonService.hideLoading();
+
+                alertaGrupo.Allcabalos = alertaGrupo.AllCaballos;
+                alertaGrupo.Alerta.AlertaCaballo = ag.Alerta.AlertaCaballo;
+                alertaGrupo.ShowDetail = true;
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error al consultar");
+            });
+    }
+
+    closeDetailtHistoryAlert(alertaGrupo: any): void {
+        alertaGrupo.ShowDetail = false;
+    }
+
+    delete(alertaGrupo: any): void {
+        console.info(alertaGrupo);
+        this.commonService.showLoading("Procesando...");
+        this.alertaGrupoService.deleteAlerta(alertaGrupo)
+            .then(() => {
+                this.getAlertasByGrupo(false);
+                this.commonService.ShowInfo("Eliminada con éxito");
+                this.commonService.hideLoading();
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error al eliminar");
+            });
     }
 
     private applyLabels(): void {
@@ -84,14 +134,20 @@ export class AlertasFicha implements OnInit {
             case ConstantsConfig.ALERTA_TIPO_DENTISTA:
                 this.labels.title = "Dentista";
                 this.labels.titleNextAlertas = "PRÓXIMA CITA CON DENTISTA";
+                this.labels.tablePerson = "Dentista";
+                this.labels.tableDescription = "Nota";
                 break;
             case ConstantsConfig.ALERTA_TIPO_HERRAJE:
                 this.labels.title = "Herraje / Desvasado";
                 this.labels.titleNextAlertas = "PRÓXIMO HERRAJE / DESVASADO";
+                this.labels.tablePerson = "Herrero";
+                this.labels.tableDescription = "Informes";
                 break;
             case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
                 this.labels.title = "Desparasitación";
                 this.labels.titleNextAlertas = "PRÓXIMA DESPARASITACIÓN";
+                this.labels.tablePerson = "Aplicante";
+                this.labels.tableDescription = "Nota";
                 break;
         }
     }
@@ -100,7 +156,7 @@ export class AlertasFicha implements OnInit {
         if (showLoading)
             this.commonService.showLoading("Procesando...");
 
-        this.alertaGrupoService.getAlertasByGrupo(this.grupoId, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_NEXT)
+        this.alertaGrupoService.getAlertasByGrupo(this.grupo.ID, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_NEXT)
             .then(alertas => { //Primero las proximas!
                 this.proximasAlertas = alertas.map(a => {
                     a.Fecha = moment(a.Alerta.FechaNotificacion).format("D [de] MMMM [de] YYYY");
@@ -108,7 +164,7 @@ export class AlertasFicha implements OnInit {
                     //debugger;
                     return a;
                 });
-                return this.alertaGrupoService.getAlertasByGrupo(this.grupoId, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_HISTORY);
+                return this.alertaGrupoService.getAlertasByGrupo(this.grupo.ID, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_HISTORY);
             }).then(alertas => {
                 this.historicoAlertas = alertas.map(a => {
                     a.Fecha = moment(a.Alerta.FechaNotificacion).format("DD/MM/YY");
@@ -123,11 +179,12 @@ export class AlertasFicha implements OnInit {
 
 
     private registredEvents(): void {
-        this.events.subscribe("alerta:saved", () => {
+        this.events.subscribe("alertas:refresh", () => {
             this.getAlertasByGrupo(false);
         });
-        this.events.subscribe("alerta:deleted", () => {
-            this.getAlertasByGrupo(false);
-        });
+    }
+
+    private unregistredEvents(): void {
+        this.events.unsubscribe("alertas:refresh");
     }
 }

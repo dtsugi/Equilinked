@@ -27,10 +27,15 @@ import { AdministracionGrupoPage } from "../pages/home/subPages/grupos-caballos/
 import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-ficha/segment-ficha";
 import { AlertasFicha } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/alertas-ficha";
 import { EdicionAlertaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/edicion-alerta/edicion-alerta";
+import { SeleccionCaballosPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/seleccion-caballos/seleccion-caballos";
 import { DetalleAlertaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/detalle-alerta/detalle-alerta";
+import { NotasFichaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/notas-ficha/notas-ficha";
+import { EdicionNotaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/notas-ficha/edicion-nota/edicion-nota";
+import { DetalleNotaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/notas-ficha/detalle-nota/detalle-nota";
 import { OpcionesFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/opciones-ficha/opciones-ficha";
 import { CambioNombrePage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/cambio-nombre/cambio-nombre";
-import { GruposCaballosDetailPage } from "../pages/home/subPages/grupos-caballos/grupos-caballos-detail";
+import { SegmentCaballosGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-caballos/segment-caballos";
+import { EdicionCaballosGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-caballos/edicion-caballos/edicion-caballos";
 /* Caballos-ALimentacion */
 import { AlimentacionPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion";
 import { AlimentacionEditPage } from "../pages/home/ficha-caballo/alimentacion/alimentacion-edit";
@@ -86,10 +91,15 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     SegmentFichaGrupo,
     AlertasFicha,
     EdicionAlertaPage,
+    SeleccionCaballosPage,
     DetalleAlertaPage,
+    NotasFichaPage,
+    EdicionNotaPage,
+    DetalleNotaPage,
     OpcionesFichaGrupo,
     CambioNombrePage,
-    GruposCaballosDetailPage,
+    SegmentCaballosGrupo,
+    EdicionCaballosGrupoPage,
     /* Caballos-ALimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -143,14 +153,18 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     FichaCaballoPage,
     AdminCaballosInsertPage,
     /* Caballos-Grupos */
-    GruposCaballosDetailPage,
     CreacionGrupoPage,
     AdministracionGrupoPage,
     AlertasFicha,
     EdicionAlertaPage,
+    SeleccionCaballosPage,
     DetalleAlertaPage,
+    NotasFichaPage,
+    EdicionNotaPage,
+    DetalleNotaPage,
     OpcionesFichaGrupo,
     CambioNombrePage,
+    EdicionCaballosGrupoPage,
     /* Caballos-Alimentacion */
     AlimentacionPage,
     AlimentacionEditPage,

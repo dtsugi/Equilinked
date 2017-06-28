@@ -142,10 +142,9 @@ export class EdicionPerfilPage implements OnInit {
         this.commonService.showLoading("Procesando...");
         this.propietarioService.updatePropietario(this.perfil)
             .then(res => {
+                this.events.publish("perfil:refresh");
                 this.commonService.hideLoading();
-                this.navController.pop().then(() => {
-                    this.events.publish("perfil:updated");
-                });
+                this.navController.pop();
                 console.info(res);
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error al actualizar el perfil del usuario");

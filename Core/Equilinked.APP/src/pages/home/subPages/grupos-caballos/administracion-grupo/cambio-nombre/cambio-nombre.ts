@@ -35,10 +35,10 @@ export class CambioNombrePage implements OnInit {
         this.commonService.showLoading("Procesando..");
         this.gruposCaballosService.updateGrupo(this.grupo)
             .then(resp => {
+                this.events.publish("grupo:refresh"); //Refresco la pantalla de grupo seleccionado
+                this.events.publish("grupos:refresh"); //Refresco la lista de grupos existentes
                 this.commonService.hideLoading();
-                this.navController.pop().then(() => {
-                    this.events.publish("grupo:updated");
-                });
+                this.navController.pop();
             }).catch(err => {
                 this.commonService.ShowErrorHttp(err, "Error al actualizar el nombre del grupo");
             });

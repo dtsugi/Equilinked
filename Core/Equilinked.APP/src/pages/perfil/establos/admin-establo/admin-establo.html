@@ -17,7 +17,7 @@
     <form [formGroup]="establoForm">
         <ion-row>
             <ion-col col-2 class="col-center">
-                <ion-icon class="icon-input" name="home"></ion-icon>
+                <ion-icon class="equi-icon-input" name="home"></ion-icon>
             </ion-col>
             <ion-col>
                 <ion-item>
@@ -28,7 +28,7 @@
 
         <ion-row>
             <ion-col col-2 class="col-center">
-                <ion-icon name="person" class="icon-input"></ion-icon>
+                <ion-icon name="person" class="equi-icon-input"></ion-icon>
             </ion-col>
             <ion-col>
                 <ion-item>
@@ -40,7 +40,7 @@
         <div formArrayName="Correos">
             <ion-row *ngFor="let correo of establoForm.get('Correos').controls; let i = index">
                 <ion-col col-2 class="col-center">
-                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="mail" class="icon-input"></ion-icon>
+                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="mail" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-8>
                     <ion-item>
@@ -49,8 +49,8 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Correos').controls.length - 1) && i < (establoForm.get('Correos').controls.length)"
-                        name="remove-circle" (click)="removeCorreo(i)" class="icon-input"></ion-icon>
-                    <ion-icon *ngIf="(establoForm.get('Correos').controls.length - 1) == i" name="add-circle" (click)="addOtherCorreo()" class="icon-input"></ion-icon>
+                        name="remove-circle" (click)="removeCorreo(i)" class="equi-icon-input"></ion-icon>
+                    <ion-icon *ngIf="(establoForm.get('Correos').controls.length - 1) == i" name="add-circle" (click)="addOtherCorreo()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
         </div>
@@ -58,7 +58,7 @@
         <div formArrayName="Telefonos">
             <ion-row *ngFor="let telefono of establoForm.get('Telefonos').controls; let i = index">
                 <ion-col col-2 class="col-center">
-                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="icon-input"></ion-icon>
+                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
                     <ion-item>
@@ -72,16 +72,16 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Telefonos').controls.length - 1) && i < (establoForm.get('Telefonos').controls.length)"
-                        name="remove-circle" (click)="removeTelefono(i)" class="icon-input"></ion-icon>
+                        name="remove-circle" (click)="removeTelefono(i)" class="equi-icon-input"></ion-icon>
                     <ion-icon *ngIf="(establoForm.get('Telefonos').controls.length - 1) == i" name="add-circle" (click)="addOtherTelefono()"
-                        class="icon-input"></ion-icon>
+                        class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
         </div>
 
         <ion-row>
             <ion-col col-2 class="col-center">
-                <ion-icon name="pin" class="icon-input"></ion-icon>
+                <ion-icon name="pin" class="equi-icon-input"></ion-icon>
             </ion-col>
             <ion-col>
                 <ion-item>
@@ -91,7 +91,7 @@
         </ion-row>
         <ion-row>
             <ion-col col-2 class="col-center">
-                <ion-icon name="list-box" class="icon-input"></ion-icon>
+                <ion-icon name="list-box" class="equi-icon-input"></ion-icon>
             </ion-col>
             <ion-col col-8>
                 <ion-item>
@@ -99,7 +99,7 @@
                 </ion-item>
             </ion-col>
             <ion-col col-2 class="col-center">
-                <ion-icon name="add-circle" class="icon-input" (click)="showSelectionModal()"></ion-icon>
+                <ion-icon name="add-circle" class="equi-icon-input" (click)="showSelectionModal()"></ion-icon>
             </ion-col>
         </ion-row>
     </form>

@@ -1,47 +1,26 @@
 <ion-header>
     <ion-navbar>
         <ion-buttons end>
-            <button ion-button (click)="edit(alertaGrupo)">
+            <button ion-button class="equi-toolbar-btn" (click)="edit(alertaGrupo)">
                 Editar
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
     <div *ngIf="alertaGrupo">
-        <ion-grid>
-            <ion-row>
-                <ion-col col-12>
-                    <ion-item no-lines>
-                        <h2>{{alertaGrupo.Fecha}}</h2>
-                    </ion-item>
-                </ion-col>
-
-                <ion-col col-12>
-                    <ion-item no-lines>
-                        <h2><span style="font-size: 3.5rem;font-weight: 700;">{{alertaGrupo.Hora}}</span> &nbsp; {{alertaGrupo.Meridiano}}</h2>
-                    </ion-item>
-                </ion-col>
-
-                <ion-col col-2 class="col-center">
-                    <ion-icon name="person" class="icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-10>
-                    <ion-item no-lines>
-                        <h2>{{alertaGrupo.Alerta.NombreProfesional}}</h2>
-                    </ion-item>
-                </ion-col>
-
-                <ion-col col-2 class="col-center">
-                    <ion-icon name="list-box" class="icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-10>
-                    <ion-item no-lines>
-                        <h2>{{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}</h2>
-                    </ion-item>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+        <p class="equi-normal-text">
+            {{alertaGrupo.Fecha}}
+        </p>
+        <p class="equi-normal-text">
+            <span style="font-size: 40px;font-weight: bold;">{{alertaGrupo.Hora}}</span> &nbsp; {{alertaGrupo.Meridiano}}
+        </p>
+        <p class="equi-normal-text">
+            <ion-icon name="person" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.Alerta.NombreProfesional}}
+        </p>
+        <p class="equi-normal-text">
+            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}
+        </p>
     </div>
 </ion-content>

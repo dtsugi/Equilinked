@@ -5,21 +5,19 @@ import { AlertaGrupoService } from "../../../../../../../services/alerta-grupo.s
 import { GruposCaballosService } from "../../../../../../../services/grupos-caballos.service";
 import { CommonService } from "../../../../../../../services/common.service";
 import { SeleccionCaballosPage } from "../../seleccion-caballos/seleccion-caballos";
-import { ConstantsConfig, Utils } from "../../../../../../../app/utils"
 import moment from "moment";
 
 @Component({
-    templateUrl: "edicion-alerta.html",
+    templateUrl: "edicion-nota.html",
     providers: [AlertaGrupoService, CommonService, GruposCaballosService]
 })
-export class EdicionAlertaPage implements OnInit {
+export class EdicionNotaPage implements OnInit {
 
     private grupoId: number;
     private tipoAlerta: number;
-    alertaGrupo: any;
-    labels: any;
 
-    alertaForm: FormGroup;
+    alertaGrupo: any;
+    notaForm: FormGroup;
 
     constructor(
         private alertaGrupoService: AlertaGrupoService,
@@ -29,7 +27,6 @@ export class EdicionAlertaPage implements OnInit {
         private navController: NavController,
         private navParams: NavParams
     ) {
-        this.labels = {};
     }
 
     ngOnInit(): void {
@@ -37,10 +34,9 @@ export class EdicionAlertaPage implements OnInit {
         this.tipoAlerta = this.navParams.get("tipoAlerta");
         this.alertaGrupo = this.navParams.get("alertaGrupo");
 
-        this.applyLabels();
         this.initForm();
         if (!this.alertaGrupo.ID) {
-            this.setCaballosForAlerta(); //asignarle los caballos del grupo
+            this.setCaballosForNota(); //asignarle los caballos del grupo
         }
     }
 
@@ -59,14 +55,14 @@ export class EdicionAlertaPage implements OnInit {
     save(): void {
         let alerta: any = this.alertaGrupo.Alerta;
 
-        alerta.FechaNotificacion = this.alertaForm.value.FechaNotificacion + " " + this.alertaForm.value.HoraNotificacion + ":00";
-        alerta.HoraNotificacion = this.alertaForm.value.HoraNotificacion;
-        alerta.NombreProfesional = this.alertaForm.value.NombreProfesional;
-        alerta.Descripcion = this.alertaForm.value.Descripcion;
+        alerta.Titulo = this.notaForm.value.Titulo;
+        alerta.Descripcion = this.notaForm.value.Descripcion;
+        alerta.FechaNotificacion = this.notaForm.value.FechaNotificacion + " " + this.notaForm.value.HoraNotificacion + ":00";
+        alerta.HoraNotificacion = this.notaForm.value.HoraNotificacion;
+        alerta.Ubicacion = this.notaForm.value.Ubicacion;
 
-        console.info("Alerta grupo que se enviará a guardar!");
+        console.info("nota grupo que se enviará a guardar!");
         console.info(this.alertaGrupo);
-
 
         this.commonService.showLoading("Procesando...");
         let res: any;
@@ -78,10 +74,10 @@ export class EdicionAlertaPage implements OnInit {
         res.then(() => {
             this.commonService.hideLoading();
             if (this.alertaGrupo.ID) {
-                this.events.publish("alerta:refresh"); //Refrescamos el detalle de la alerta seleccionada
+                this.events.publish("nota:refresh"); //Refrescamos el detalle de la nota seleccionada
             }
-            this.events.publish("alertas:refresh"); //Refrescamos la lista de alertas
-            this.navController.pop(); //pa atras!
+            this.events.publish("notas:refresh"); //Refrscamos la lista de notas del grupo
+            this.navController.pop();
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar");
         });
@@ -91,29 +87,16 @@ export class EdicionAlertaPage implements OnInit {
         let fecha: any = !this.alertaGrupo.Alerta.ID ? moment() : moment(this.alertaGrupo.Alerta.FechaNotificacion);
         this.alertaGrupo.Alerta.FechaNotificacion = fecha.format("YYYY-MM-DD");
 
-        this.alertaForm = new FormGroup({
-            NombreProfesional: new FormControl(this.alertaGrupo.Alerta.NombreProfesional, [Validators.required]),
+        this.notaForm = new FormGroup({
+            Titulo: new FormControl(this.alertaGrupo.Alerta.Titulo, [Validators.required]),
+            Descripcion: new FormControl(this.alertaGrupo.Alerta.Descripcion, [Validators.required]),
             FechaNotificacion: new FormControl(this.alertaGrupo.Alerta.FechaNotificacion, [Validators.required]),
             HoraNotificacion: new FormControl(this.alertaGrupo.Alerta.HoraNotificacion, [Validators.required]),
-            Descripcion: new FormControl(this.alertaGrupo.Alerta.Descripcion, [Validators.required])
+            Ubicacion: new FormControl(this.alertaGrupo.Alerta.Ubicacion, [Validators.required])
         });
     }
 
-    private applyLabels(): void {
-        switch (this.tipoAlerta) {
-            case ConstantsConfig.ALERTA_TIPO_DENTISTA:
-                this.labels.profesional = "dentista";
-                break;
-            case ConstantsConfig.ALERTA_TIPO_HERRAJE:
-                this.labels.profesional = "herrero";
-                break;
-            case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
-                this.labels.profesional = "aplicante";
-                break;
-        }
-    }
-
-    private setCaballosForAlerta(): void {
+    private setCaballosForNota(): void {
         this.commonService.showLoading("Procesando...");
 
         this.gruposCaballosService.getCaballosByGroupId(this.grupoId)

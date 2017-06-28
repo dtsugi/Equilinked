@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Events, NavController, NavParams } from "ionic-angular";
 import { AlertaGrupoService } from "../../../../../../../services/alerta-grupo.service";
 import { CommonService } from "../../../../../../../services/common.service";
-import { EdicionAlertaPage } from "../edicion-alerta/edicion-alerta";
+import { EdicionNotaPage } from "../edicion-nota/edicion-nota";
 import moment from "moment";
 import "moment/locale/es";
 
 @Component({
-    templateUrl: "detalle-alerta.html",
+    templateUrl: "detalle-nota.html",
     providers: [AlertaGrupoService, CommonService],
     styles: [`
     .col {
@@ -15,7 +15,7 @@ import "moment/locale/es";
     }
     `]
 })
-export class DetalleAlertaPage implements OnInit, OnDestroy {
+export class DetalleNotaPage implements OnInit, OnDestroy {
 
     private grupoId: number;
     private alertaGrupoId: number;
@@ -32,12 +32,12 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        moment.locale("es"); //Espaniol!!!!
+        moment.locale("es");
 
         this.grupoId = this.navParams.get("grupoId");
         this.alertaGrupoId = this.navParams.get("alertaGrupoId");
 
-        this.getAlerta(true); //consulta la informacion de la alerta
+        this.getNota(true); //consulta la informacion de la alerta
         this.registredEvents();
     }
 
@@ -45,7 +45,7 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
         this.unregistredEvents();
     }
 
-    getAlerta(showLoading: boolean): void {
+    getNota(showLoading: boolean): void {
         if (showLoading)
             this.commonService.showLoading("Procesando...");
         this.alertaGrupoService.getAlertaById(this.grupoId, this.alertaGrupoId)
@@ -66,22 +66,22 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
             });
     }
 
-    edit(alertaGrupo: any): void {
+    edit(): void {
         let params: any = {
             grupoId: this.grupoId,
-            tipoAlerta: alertaGrupo.Alerta.Tipo,
-            alertaGrupo: JSON.parse(JSON.stringify(alertaGrupo))
+            tipoAlerta: this.alertaGrupo.Alerta.Tipo,
+            alertaGrupo: JSON.parse(JSON.stringify(this.alertaGrupo))
         };
-        this.navController.push(EdicionAlertaPage, params);
+        this.navController.push(EdicionNotaPage, params);
     }
 
     private registredEvents(): void {
-        this.events.subscribe("alerta:refresh", () => {
-            this.getAlerta(false); //Refrescamo la info de la alarta!
+        this.events.subscribe("nota:refresh", () => {
+            this.getNota(false);
         });
     }
 
     private unregistredEvents(): void {
-        this.events.unsubscribe("alerta:refresh");
+        this.events.unsubscribe("nota:refresh");
     }
 }

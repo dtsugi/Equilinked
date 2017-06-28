@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button icon-only (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+        </ion-buttons>
+
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">Caballos</span>
+        </ion-title>
+
+        <ion-buttons right>
+            <button ion-button class="equi-toolbar-btn" (click)="save()">
+                Aceptar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col col-12>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+            </ion-col>
+            <ion-col col-12>
+                <button ion-button full (click)="selectAll()">Seleccionar todos</button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <ion-list no-lines>
+        <ion-item *ngFor="let cg of caballosGrupo" (click)="cg.seleccion = !cg.seleccion">
+            <ion-avatar item-left>
+                <img src="assets/img/caballo.jpg">
+            </ion-avatar>
+            <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': cg.seleccion}">{{cg.caballo.Nombre}}</h2>
+            <ion-icon name="{{cg.seleccion ? 'remove-circle' : 'add-circle'}}" [ngClass]="{'equi-icon-selected': cg.seleccion, 'equi-icon-unselected': !cg.seleccion}" item-right></ion-icon>
+        </ion-item>
+    </ion-list>
+</ion-content> 

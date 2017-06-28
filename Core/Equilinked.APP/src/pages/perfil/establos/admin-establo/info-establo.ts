@@ -1,6 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { NavController, NavParams, ToastController } from "ionic-angular";
-import { ListadoEstablosPage } from "../establos";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Events, NavController, NavParams, ToastController } from "ionic-angular";
 import { AdminEstablosPage } from "./admin-establo";
 import { EdicionEstabloCaballosPage } from "./edicion-caballos";
 import { EstablosService } from "../../../../services/establos.service";
@@ -15,14 +14,14 @@ import { CommonService } from "../../../../services/common.service";
         }
     `]
 })
-export class InfoEstabloPage implements OnInit {
+export class InfoEstabloPage implements OnDestroy, OnInit {
 
     private establoId: number;
-    private establosPage: ListadoEstablosPage;
 
     establo: any;
 
     constructor(
+        private events: Events,
         private commonService: CommonService,
         private establosService: EstablosService,
         private navController: NavController,
@@ -32,8 +31,12 @@ export class InfoEstabloPage implements OnInit {
 
     ngOnInit(): void {
         this.establoId = this.navParams.get("establoId");
-        this.establosPage = this.navParams.get("establosPage");
         this.getInfoEstablo(true);
+        this.registredEvents();
+    }
+
+    ngOnDestroy(): void {
+        this.unregistredEvents();
     }
 
     getInfoEstablo(showLoading: boolean): void {
@@ -54,9 +57,7 @@ export class InfoEstabloPage implements OnInit {
 
     edit(): void {
         let params: any = {
-            establo: JSON.parse(JSON.stringify(this.establo)),
-            establosPage: this.establosPage,
-            infoEstabloPage: this
+            establo: JSON.parse(JSON.stringify(this.establo))
         };
         this.navController.push(AdminEstablosPage, params);
     }
@@ -67,5 +68,15 @@ export class InfoEstabloPage implements OnInit {
             infoEstabloPage: this
         };
         this.navController.push(EdicionEstabloCaballosPage, params);
+    }
+
+    private registredEvents(): void {
+        this.events.subscribe("establo:refresh", () => {
+            this.getInfoEstablo(false);
+        });
+    }
+
+    private unregistredEvents(): void {
+        this.events.unsubscribe("establo:refresh");
     }
 }

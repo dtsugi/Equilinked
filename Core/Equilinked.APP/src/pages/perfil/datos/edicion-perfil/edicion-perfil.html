@@ -19,7 +19,7 @@
         <ion-grid>
             <ion-row>
                 <ion-col col-2 class="col-center">
-                    <ion-icon class="icon-input" name="person"></ion-icon>
+                    <ion-icon class="equi-icon-input" name="person"></ion-icon>
                 </ion-col>
                 <ion-col>
                     <ion-item>
@@ -30,7 +30,7 @@
 
             <ion-row>
                 <ion-col col-2 class="col-center">
-                    <ion-icon class="icon-input" name="mail"></ion-icon>
+                    <ion-icon class="equi-icon-input" name="mail"></ion-icon>
                 </ion-col>
                 <ion-col>
                     <ion-item>
@@ -42,7 +42,7 @@
 
             <ion-row *ngFor="let telefono of perfil.PropietarioTelefono; let i = index">
                 <ion-col col-2 class="col-center">
-                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="icon-input"></ion-icon>
+                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
                     <ion-item>
@@ -56,14 +56,14 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)" name="remove-circle"
-                        (click)="removeTelefono(i)" class="icon-input"></ion-icon>
-                    <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()" class="icon-input"></ion-icon>
+                        (click)="removeTelefono(i)" class="equi-icon-input"></ion-icon>
+                    <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
 
             <ion-row>
                 <ion-col col-2 class="col-center">
-                    <ion-icon class="icon-input" name="flag"></ion-icon>
+                    <ion-icon class="equi-icon-input" name="flag"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
                     <ion-item>

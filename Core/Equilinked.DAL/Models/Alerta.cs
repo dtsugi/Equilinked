@@ -29,8 +29,9 @@ namespace Equilinked.DAL.Models
         public bool Activa { get; set; }
         public string Descripcion { get; set; }
         public string NombreProfesional { get; set; }
+        public string Ubicacion { get; set; }
+        
         public ICollection<AlertaCaballo> AlertaCaballo { get; set; }
-
         public virtual ICollection<Evento> Evento { get; set; }
         public virtual ICollection<AlertaGrupo> AlertaGrupo { get; set; }
     }

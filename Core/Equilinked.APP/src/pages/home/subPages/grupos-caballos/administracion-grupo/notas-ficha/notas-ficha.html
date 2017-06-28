@@ -1,0 +1,66 @@
+<ion-header>
+    <ion-toolbar class="equi-toolbar">
+        <ion-buttons left>
+            <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = false">
+                Cancelar
+            </button>
+        </ion-buttons>
+
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">Notas</span>
+        </ion-title>
+
+        <ion-buttons right>
+            <button ion-button icon-only *ngIf="!modoEdicion" (click)="activeDelete()">
+                <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
+            </button>
+            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" [disabled]="getCountSelected() == 0" (click)="confirmDelete()">
+                Eliminar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-searchbar *ngIf="!modoEdicion" (ionInput)="filter($event)" [placeholder]="'Buscar'" [autocomplete]="true"></ion-searchbar>
+
+    <ion-item no-lines *ngIf="!modoEdicion" (click)="create()">
+        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+        <span class="equi-title-form-primary">Agregar nuevo</span>
+    </ion-item>
+
+    <ion-item *ngIf="modoEdicion" (click)="selectAll()">
+        <ion-icon class="equi-principal-color" name="{{getCountSelected() != notasRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
+            item-left></ion-icon>
+        <h2 class="equi-title-form">Seleccionar todo</h2>
+    </ion-item>
+
+    <ion-card *ngFor="let n of notas" (click)="select(n)">
+        <ion-card-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-8 class="equi-title-form">
+                        {{n.nota.Alerta.Titulo}}
+                    </ion-col>
+                    <ion-col col-4 class="text-align-right">
+                        <ion-icon class="equi-icon-input" name="{{n.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="modoEdicion"
+                            item-right></ion-icon>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-8 class="equi-note-description">
+                        {{n.nota.Alerta.Descripcion}}
+                    </ion-col>
+                    <ion-col col-4 class="text-align-right">
+                        {{n.nota.Fecha}}
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

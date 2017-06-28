@@ -1,12 +1,41 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title>{{grupo.Descripcion}}</ion-title>
-        <ion-buttons end>
+    <ion-toolbar>
+
+        <ion-buttons left>
+            <!-- Se visualiza en "FICHA" y "CABALLOS" -->
+            <button ion-button icon-only *ngIf="!parametrosCaballos.modoEdicion" (click)="goBack()">
+                <ion-icon name="arrow-back"></ion-icon>
+            </button>
+
+            <!-- Se visualiza en la ficha "CABALLOS" cuando esta activa la edicion -->
+            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion" (click)="disabledDeleteCaballos()">
+                Cancelar
+            </button>
+        </ion-buttons>
+
+        <ion-title class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+        </ion-title>
+
+        <ion-buttons right>
+            <!-- Se visualiza cuando está la pestana "FICHA" -->
             <button ion-button icon-only *ngIf="segmentSelection == 'ficha'" (click)="showOptionsFicha($event)">
                 <ion-icon name="more"></ion-icon>
             </button>
+
+            <!-- Se visualizan cuando está la pestana "CABALLOS" -->
+            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion" (click)="enabledDeleteCaballos()">
+                Editar
+            </button>
+            <button ion-button icon-only *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion" [disabled]="parametrosCaballos.getCountSelected() == 0"
+                (click)="delete()">
+                <div>
+                    <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
+                    <div class="equi-principal-color" style="font-size: 9px;">Eliminar</div>
+                </div>
+            </button>
         </ion-buttons>
-    </ion-navbar>
+    </ion-toolbar>
 </ion-header>
 <ion-content>
     <ion-toolbar>
@@ -21,8 +50,10 @@
     </ion-toolbar>
 
     <div *ngIf="segmentSelection == 'ficha'">
-        <segment-ficha-grupo [grupo-id]="grupo.ID"></segment-ficha-grupo>
+        <segment-ficha-grupo [grupo]="grupo"></segment-ficha-grupo>
     </div>
 
-    <div *ngIf="segmentSelection == 'caballos'"></div>
+    <div *ngIf="segmentSelection == 'caballos'">
+        <segment-caballos-grupo [grupo]="grupo" [parametros]="parametrosCaballos"></segment-caballos-grupo>
+    </div>
 </ion-content>

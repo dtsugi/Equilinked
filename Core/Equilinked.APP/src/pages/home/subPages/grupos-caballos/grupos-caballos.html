@@ -2,17 +2,15 @@
 
 <ion-list no-lines>
     <ion-item (click)="newGrupo()">
-        <ion-avatar item-left>
-            <img src="assets/img/add.png">
-        </ion-avatar>
-        <h2>Crear grupo</h2>
+        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+        <span class="equi-title-form-primary">Crear grupo</span>
     </ion-item>
 
     <ion-item *ngFor="let grupo of grupos" (click)="viewGrupo(grupo)">
         <ion-avatar item-left>
             <img src="assets/img/caballo.jpg">
         </ion-avatar>
-        <h2>{{grupo.Descripcion}}</h2>
-        <p>{{grupo.GrupoCaballo.length}} caballos</p>
+        <h2 class="equi-title-form">{{grupo.Descripcion}}</h2>
+        <p class="equi-principal-color">{{grupo.GrupoCaballo.length}} caballos</p>
     </ion-item>
 </ion-list>
