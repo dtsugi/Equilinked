@@ -49,7 +49,7 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Correos').controls.length - 1) && i < (establoForm.get('Correos').controls.length)"
-                        name="remove-circle" (click)="removeCorreo(i)" class="equi-icon-input"></ion-icon>
+                        name="remove-circle" (click)="removeCorreo(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
                     <ion-icon *ngIf="(establoForm.get('Correos').controls.length - 1) == i" name="add-circle" (click)="addOtherCorreo()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
@@ -67,12 +67,12 @@
                 </ion-col>
                 <ion-col col-3>
                     <ion-item>
-                        <ion-input type="text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)" [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
+                        <ion-input type="text" class="equi-principal-color equi-italic-text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)" [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Telefonos').controls.length - 1) && i < (establoForm.get('Telefonos').controls.length)"
-                        name="remove-circle" (click)="removeTelefono(i)" class="equi-icon-input"></ion-icon>
+                        name="remove-circle" (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
                     <ion-icon *ngIf="(establoForm.get('Telefonos').controls.length - 1) == i" name="add-circle" (click)="addOtherTelefono()"
                         class="equi-icon-input"></ion-icon>
                 </ion-col>

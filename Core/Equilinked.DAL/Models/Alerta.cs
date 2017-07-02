@@ -18,7 +18,6 @@ namespace Equilinked.DAL.Models
         {
             this.Evento = new HashSet<Evento>();
             this.AlertaGrupo = new HashSet<AlertaGrupo>();
-            this.AlertaCaballo = new HashSet<AlertaCaballo>();
         }
     
         public int ID { get; set; }
@@ -30,8 +29,8 @@ namespace Equilinked.DAL.Models
         public string Descripcion { get; set; }
         public string NombreProfesional { get; set; }
         public string Ubicacion { get; set; }
-        
-        public ICollection<AlertaCaballo> AlertaCaballo { get; set; }
+        public Nullable<bool> AlertaGrupal { get; set; }
+    
         public virtual ICollection<Evento> Evento { get; set; }
         public virtual ICollection<AlertaGrupo> AlertaGrupo { get; set; }
     }

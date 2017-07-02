@@ -5,7 +5,7 @@
                 Cerrar
             </button>
         </ion-buttons>
-
+ 
         <ion-title>
         </ion-title>
     </ion-navbar>
@@ -33,11 +33,10 @@
                 <img src="assets/img/caballo.jpg">
             </ion-avatar>
 
-            <h2>{{c.caballo.Nombre}}</h2>
-            <p>{{c.caballo.Grupo ? c.caballo.Grupo.Descripcion : ''}}</p>
+            <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': c.seleccion}">{{c.caballo.Nombre}}</h2>
 
-            <ion-icon *ngIf="c.seleccion" name="remove-circle" item-right></ion-icon>
-            <ion-icon *ngIf="!c.seleccion" name="add-circle" item-right></ion-icon>
+            <ion-icon *ngIf="c.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
+            <ion-icon *ngIf="!c.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
         </ion-item>
     </ion-list>
 

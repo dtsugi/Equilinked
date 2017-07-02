@@ -60,9 +60,7 @@ export class EdicionNotaPage implements OnInit {
         alerta.FechaNotificacion = this.notaForm.value.FechaNotificacion + " " + this.notaForm.value.HoraNotificacion + ":00";
         alerta.HoraNotificacion = this.notaForm.value.HoraNotificacion;
         alerta.Ubicacion = this.notaForm.value.Ubicacion;
-
-        console.info("nota grupo que se enviará a guardar!");
-        console.info(this.alertaGrupo);
+        alerta.AlertaGrupal = true;
 
         this.commonService.showLoading("Procesando...");
         let res: any;

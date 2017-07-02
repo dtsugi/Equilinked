@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { HomePage } from '../home/home';
 import { NotificacionesPage } from '../notificaciones/notificaciones';
-import { PerfilDatosPage } from "../perfil/datos/perfil-datos";
+import { PerfilPage } from "../perfil/perfil";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -14,7 +14,7 @@ export class TabsPage {
   // calendarRoot: any = CalendarioPage;
   // cameraRoot: any = CamaraPage;
   eventsRoot: any = NotificacionesPage;
-  ownerRoot: any = PerfilDatosPage;
+  ownerRoot: any = PerfilPage;
 
   constructor() {
   }

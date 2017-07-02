@@ -25,6 +25,11 @@
         <ion-grid>
             <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
                 <ion-item>
+                    <ion-row *ngIf="notificacion.AlertaGrupal">
+                        <ion-col class="equi-table-row-title">
+                            Nota grupal
+                        </ion-col>
+                    </ion-row>
                     <ion-row>
                         <ion-col col-8 class="equi-title-form">
                             {{notificacion.Titulo}}
@@ -45,7 +50,7 @@
                     <p [innerHTML]="notificacion.Descripcion"></p>
                     <h3>{{notificacion.FechaNotificacion}}</h3>-->
                 </ion-item>
-                <ion-item-options>
+                <ion-item-options *ngIf="!notificacion.AlertaGrupal">
                     <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
           <ion-icon name="trash"></ion-icon>       
           Eliminar

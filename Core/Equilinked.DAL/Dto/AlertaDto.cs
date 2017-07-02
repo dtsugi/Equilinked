@@ -22,6 +22,7 @@ namespace Equilinked.DAL.Dto
         public List<int> CaballosList { get; set; }
         public string NombreProfesional { get; set; }
         public String Ubicacion { get; set; }
+        public Nullable<bool> AlertaGrupal { get; set; }
 
         public AlertaDto() { }
 
@@ -38,6 +39,7 @@ namespace Equilinked.DAL.Dto
             this.Descripcion = alerta.Descripcion;
             this.NombreProfesional = alerta.NombreProfesional;
             this.Ubicacion = alerta.Ubicacion;
+            this.AlertaGrupal = alerta.AlertaGrupal;
         }
 
         private string ToDateToCurrentCulture(DateTime date)
@@ -54,6 +56,8 @@ namespace Equilinked.DAL.Models
 {
     public partial class Alerta
     {
+        public ICollection<AlertaCaballo> AlertaCaballo { get; set; } = new HashSet<AlertaCaballo>();
+
         public Alerta(AlertaDto alertaDto)
         {
             this.ID = alertaDto.ID;
@@ -65,6 +69,7 @@ namespace Equilinked.DAL.Models
             this.Descripcion = alertaDto.Descripcion;
             this.NombreProfesional = alertaDto.NombreProfesional;
             this.Ubicacion = alertaDto.Ubicacion;
+            this.AlertaGrupal = alertaDto.AlertaGrupal;
         }
     }
 }

@@ -77,7 +77,8 @@ export class NotificacionesInsertPage {
             Tipo: [this.alertaEntity.Tipo, Validators.required],
             Activa: [this.alertaEntity.Activa],
             Descripcion: [this.alertaEntity.Descripcion, Validators.required],
-            CaballosList: [(this.alertaEntity.CaballosList)]
+            CaballosList: [(this.alertaEntity.CaballosList)],
+            AlertaGrupal: [false]
         });
     }
 

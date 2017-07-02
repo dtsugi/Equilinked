@@ -113,9 +113,11 @@ namespace Equilinked.BLL
 
                 Grupo grupo = db.Grupo
                     .Include("GrupoCaballo")
+                    .Include("AlertaGrupo")
                     .Where(g => g.ID == id)
                     .FirstOrDefault();
 
+                db.AlertaGrupo.RemoveRange(grupo.AlertaGrupo);
                 db.GrupoCaballo.RemoveRange(grupo.GrupoCaballo);
                 db.Grupo.Remove(grupo);
 

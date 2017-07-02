@@ -56,7 +56,7 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)" name="remove-circle"
-                        (click)="removeTelefono(i)" class="equi-icon-input"></ion-icon>
+                        (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
                     <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>

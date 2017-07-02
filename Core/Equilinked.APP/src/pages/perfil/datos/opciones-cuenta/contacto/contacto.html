@@ -4,7 +4,7 @@
         </ion-title>
 
         <ion-buttons end>
-            <button ion-button icon-only class="equi-toolbar-btn" [disabled]="!mensaje.Descripcion" (click)="sendMessage()">
+            <button ion-button class="equi-toolbar-btn" [disabled]="!mensaje.Descripcion" (click)="sendMessage()">
                 Enviar
             </button>
         </ion-buttons>
@@ -15,7 +15,7 @@
     <form>
         <ion-list>
             <ion-item class="item-without-padding">
-                <h2 class="label-input">Motivo del contato</h2>
+                <h2 class="equi-bold-text">Motivo del contato</h2>
             </ion-item>
             <ion-item class="item-without-padding">
                 <ion-select name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
@@ -23,7 +23,7 @@
                 </ion-select>
             </ion-item>
             <ion-item class="item-without-padding">
-                <h2 class="label-input">Descripción</h2>
+                <h2 class="equi-bold-text">Descripción</h2>
             </ion-item>
             <ion-item class="item-without-padding">
                 <ion-textarea name="descripcion" [attr.rows]="5" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="Describa el problema y/o sugerencia"></ion-textarea>

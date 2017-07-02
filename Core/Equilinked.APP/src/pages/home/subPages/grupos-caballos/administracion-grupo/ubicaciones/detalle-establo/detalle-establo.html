@@ -4,42 +4,43 @@
             <span class="equi-toolbar-title">{{establo.Nombre}}</span>
         </ion-title>
 
-        <ion-buttons end>
+        <!--<ion-buttons end>
             <button ion-button class="equi-toolbar-btn" (click)="edit()">
                 Editar
             </button>
-        </ion-buttons>
+        </ion-buttons>-->
     </ion-navbar>
 </ion-header>
 
 <ion-content>
     <ion-list *ngIf="establo">
         <ion-item *ngIf="establo.Manager != ''">
-            <ion-icon name="person" class="equi-icon-input" item-left></ion-icon>
+            <ion-icon name="person" item-left></ion-icon>
             {{establo.Manager}}
         </ion-item>
 
         <ion-item *ngFor="let correo of establo.EstabloCorreo; let i = index">
-            <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="mail" item-left></ion-icon>
+            <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="mail" item-left></ion-icon>
             {{correo.CorreoElectronico}}
         </ion-item>
 
         <ion-item *ngFor="let telefono of establo.EstabloTelefono; let i = index">
-            <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="call" item-left></ion-icon>
+            <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" item-left></ion-icon>
             {{telefono.Numero}}
-            <ion-note class="equi-principal-color equi-italic-text" item-right>
+            <ion-note item-right>
                 {{telefono.Tipo_Numero.Descripcion}}
             </ion-note>
         </ion-item>
 
         <ion-item *ngIf="establo.Direccion != ''">
-            <ion-icon name="flag" class="equi-icon-input" item-left></ion-icon>
+            <ion-icon name="flag" item-left></ion-icon>
             {{establo.Direccion}}
         </ion-item>
 
         <ion-item>
-            <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
-            <a class="equi-principal-color" (click)="viewCaballos()">{{establo.EstabloCaballo.length}} caballo(s)</a>
+            <ion-icon name="list-box" item-left></ion-icon>
+            <!--(click)="viewCaballos()"-->
+            <a class="equi-text-link">{{establo.EstabloCaballo.length}} caballo(s)</a>
         </ion-item>
     </ion-list>
 </ion-content>

@@ -20,9 +20,6 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     segmentSelection: string;
     parametrosCaballos: any;
 
-
-    modoEdicionCaballos: boolean; //Esta variable afecta el componente que renderiza la lista de caballos del grupo
-
     constructor(
         private commonService: CommonService,
         private events: Events,
@@ -36,10 +33,9 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
         this.grupo = {};
         this.segmentSelection = "ficha";
         this.parametrosCaballos = { modoEdicion: false, getCountSelected: null };
-        this.modoEdicionCaballos = false;
     }
 
-    ngOnInit(): void {
+    ngOnInit(): void { 
         this.session = this.securityService.getInitialConfigSession();
         this.grupoId = this.navParams.get("grupoId");
         this.getInfoGrupo(true);

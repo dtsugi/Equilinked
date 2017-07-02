@@ -18,6 +18,7 @@
 $_EQUI_PRINCIPAL_COLOR:#42A6AC;
 $_EQUI_CONTENT_TABLE_COLOR: #D9F1F1;
 $_EQUI_TEXT_EDITION_COLOR: #CCC6C8;
+$_EQUI_DANGER_COLOR: #f53d3d;
 
 @font-face {
     font-family: NotoSans;
@@ -124,13 +125,24 @@ body,ion-content {
 .equi-normal-text {
     font-family: NotoSans !important;
     font-size: 16px !important;
-    font-weight: normal;
+    font-weight: normal !important;
 }
 
 .equi-bold-text {
     font-family: NotoSans !important;
     font-size: 16px !important;
-    font-weight: bold;
+    font-weight: bold !important;
+}
+
+.equi-italic-text {
+    font-family: NotoSans !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+    font-style: italic !important;
+}
+
+.equi-danger-color {
+    color: $_EQUI_DANGER_COLOR;
 }
 
 .equi-edit{
@@ -167,6 +179,10 @@ body,ion-content {
 
 .equi-icon-unselected {
     color: $_EQUI_TEXT_EDITION_COLOR !important;
+}
+
+.equi-icon-delete {
+    color: $_EQUI_DANGER_COLOR !important;
 }
 
 .equi-icon-input {

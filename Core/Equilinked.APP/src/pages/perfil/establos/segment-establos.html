@@ -1,0 +1,34 @@
+<ion-grid>
+    <ion-row>
+        <ion-col col-12>
+            <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar establos'"></ion-searchbar>
+        </ion-col>
+    </ion-row>
+</ion-grid> 
+
+<ion-list no-lines *ngIf="establos">
+    <ion-item *ngIf="parametrosEstablos.modoEdicion" (click)="selectAll()">
+        <h2 class="equi-title-form">Seleccionar todos los caballos</h2>
+        <ion-icon class="equi-principal-color" name="{{getCountSelected() != establosRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
+            item-right></ion-icon>
+    </ion-item>
+
+    <ion-item *ngIf="!parametrosEstablos.modoEdicion" (click)="newEstablo()">
+        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
+        <span class="equi-title-form-primary">Agregar nuevo</span>
+    </ion-item>
+
+    <ion-item *ngFor="let e of establos" (click)="selectEstablo(e)">
+        <ion-avatar item-left>
+            <img src="assets/img/caballo.jpg">
+        </ion-avatar>
+        <h2 class="equi-title-form">{{e.establo.Nombre}}</h2>
+        <p *ngIf="e.establo.Direccion != ''">
+            <ion-icon class="equi-principal-color" name="pin"></ion-icon>
+            <span>{{e.establo.Direccion}}</span>
+        </p>
+
+        <ion-icon class="equi-icon-input" name="{{e.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="parametrosEstablos.modoEdicion"
+            item-right></ion-icon>
+    </ion-item>
+</ion-list>

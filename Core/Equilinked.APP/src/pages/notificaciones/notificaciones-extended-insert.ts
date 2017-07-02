@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, Events} from 'ionic-angular';
-import {Utils, ConstantsConfig} from '../../app/utils'
+import { NavController, NavParams, Events } from 'ionic-angular';
+import { Utils, ConstantsConfig } from '../../app/utils'
 import { CommonService } from '../../services/common.service';
 import { AlertaService } from '../../services/alerta.service';
-import { SecurityService} from '../../services/security.service';
+import { SecurityService } from '../../services/security.service';
 import { Alerta } from '../../model/alerta';
 import { UserSessionEntity } from '../../model/userSession';
 
@@ -13,7 +13,7 @@ import { UserSessionEntity } from '../../model/userSession';
     providers: [CommonService, AlertaService, SecurityService]
 })
 
-export class NotificacionesExtendedInsertPage { 
+export class NotificacionesExtendedInsertPage {
     alertaEntity: Alerta;
     showId: boolean = false;
     form: any;
@@ -76,7 +76,8 @@ export class NotificacionesExtendedInsertPage {
             Activa: [this.alertaEntity.Activa],
             Descripcion: [this.alertaEntity.Descripcion, Validators.required],
             CaballosList: [(this.alertaEntity.CaballosList)],
-            NombreProfesional: [this.alertaEntity.NombreProfesional, Validators.required]
+            NombreProfesional: [this.alertaEntity.NombreProfesional, Validators.required],
+            AlertaGrupal: [false]
         });
     }
 
@@ -108,6 +109,6 @@ export class NotificacionesExtendedInsertPage {
 
     goBack() {
         this.navCtrl.pop();
-    }   
+    }
 }
 

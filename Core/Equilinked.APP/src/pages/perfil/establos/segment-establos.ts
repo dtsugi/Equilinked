@@ -1,16 +1,15 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { CommonService } from "../../../services/common.service";
 import { Events, NavController, AlertController } from "ionic-angular";
 import { UserSessionEntity } from "../../../model/userSession";
 import { SecurityService } from "../../../services/security.service";
 import { EstablosService } from "../../../services/establos.service";
-import { PerfilDatosPage } from "../datos/perfil-datos";
 import { AdminEstablosPage } from "./admin-establo/admin-establo";
 import { InfoEstabloPage } from "./admin-establo/info-establo";
 
 @Component({
-    selector: "listado-establos",
-    templateUrl: "./establos.html",
+    selector: "segment-establos",
+    templateUrl: "./segment-establos.html",
     providers: [CommonService, EstablosService, SecurityService],
     styles: [`
     .color-checks {
@@ -18,13 +17,14 @@ import { InfoEstabloPage } from "./admin-establo/info-establo";
     }
     `]
 })
-export class ListadoEstablosPage implements OnDestroy, OnInit {
+export class SegmentEstablos implements OnDestroy, OnInit {
+
+    @Input("parametros")
+    parametrosEstablos: any;
 
     session: UserSessionEntity;
-    selectedTab: string;
     establos: any[];
     establosRespaldo: any[];
-    modoEdicion: boolean;
 
     constructor(
         private events: Events,
@@ -34,14 +34,13 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
         private navCtrl: NavController,
         private securityService: SecurityService
     ) {
-        this.modoEdicion = false;
-        this.selectedTab = "establos";
     }
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.listEstablosByPropietarioId(true); //Listar establos del propietario
         this.registredEvents();
+        this.parametrosEstablos.getCountSelected = () => this.getCountSelected();
     }
 
     ngOnDestroy(): void {
@@ -50,18 +49,6 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
 
     goBack(): void {
         this.navCtrl.pop();
-    }
-
-    changeTab(): void {
-        if (this.selectedTab === "datos") {
-            if (this.navCtrl.getViews().length > 1) {
-                this.navCtrl.pop({ animate: false, duration: 0 }).then(() => {
-                    this.navCtrl.push(PerfilDatosPage, {}, { animate: false, duration: 0 });
-                });
-            } else {
-                this.navCtrl.push(PerfilDatosPage, {}, { animate: false, duration: 0 });
-            }
-        }
     }
 
     listEstablosByPropietarioId(showLoading: boolean): void {
@@ -90,17 +77,6 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
             .filterEstablosByNombreOrDireccion(evt.target.value, this.establosRespaldo);
     }
 
-    edit(): void {
-        this.modoEdicion = true;
-    }
-
-    cancelEdit(): void {
-        this.establosRespaldo.forEach(e => {
-            e.seleccion = false;
-        });
-        this.modoEdicion = false;
-    }
-
     selectAll(): void {
         let selectAll: boolean = this.getCountSelected() !== this.establosRespaldo.length;
         this.establosRespaldo.forEach(e => {
@@ -112,7 +88,25 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
         return this.establosRespaldo.filter(e => e.seleccion).length;
     }
 
-    delete(): void {
+    newEstablo(): void {
+        this.navCtrl.push(AdminEstablosPage);
+    }
+
+    selectEstablo(establo): void {
+        if (this.parametrosEstablos.modoEdicion) {
+            establo.seleccion = !establo.seleccion;
+        } else {
+            this.viewEstablo(establo.establo);
+        }
+    }
+
+    private enabledDelete(): void {
+        this.establosRespaldo.forEach(c => {
+            c.seleccion = false;
+        });
+    }
+
+    private confirmDeleteEstablos(): void {
         this.alertController.create({
             title: "Alerta!",
             message: "Se eliminarán los establos seleccionados",
@@ -130,7 +124,7 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
                         ).then(() => {
                             this.listEstablosByPropietarioId(false);//Refrescar los establos!
                             this.commonService.hideLoading();
-                            this.modoEdicion = false;
+                            this.parametrosEstablos.modoEdicion = false;
                         }).catch(err => {
                             this.commonService.ShowErrorHttp(err, "Error al eliminar los establos");
                         });
@@ -138,22 +132,6 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
                 }
             ]
         }).present();
-    }
-
-    countEstablosForDelete(): number {
-        return this.establosRespaldo.filter(e => e.seleccion).length;
-    }
-
-    newEstablo(): void {
-        this.navCtrl.push(AdminEstablosPage);
-    }
-
-    selectEstablo(establo): void {
-        if (this.modoEdicion) {
-            establo.seleccion = !establo.seleccion;
-        } else {
-            this.viewEstablo(establo.establo);
-        }
     }
 
     private viewEstablo(establo: any): void {
@@ -167,9 +145,19 @@ export class ListadoEstablosPage implements OnDestroy, OnInit {
         this.events.subscribe("establos:refresh", () => {
             this.listEstablosByPropietarioId(false);
         });
+        this.events.subscribe("establos:eliminacion:enabled", () => {
+            this.enabledDelete();
+        });
+        this.events.subscribe("establos:eliminacion:confirmed", () => {
+            this.confirmDeleteEstablos();
+        });
     }
 
     private unregistredEvents(): void {
         this.events.unsubscribe("establos:refresh");
+        this.events.unsubscribe("establos:eliminacion:enabled");
+        this.events.unsubscribe("establos:eliminacion:confirmed");
     }
+
+
 }

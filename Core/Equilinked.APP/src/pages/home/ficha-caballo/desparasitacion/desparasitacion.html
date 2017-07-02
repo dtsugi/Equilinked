@@ -39,7 +39,7 @@
                         </ion-col>
                     </ion-row>
                 </ion-item>
-                <ion-item-options>
+                <ion-item-options *ngIf="!notificacion.AlertaGrupal">
                     <button ion-button color="danger" icon-left (click)="delete(notificacion)">
           <ion-icon name="trash"></ion-icon>       
           Eliminar
@@ -77,7 +77,7 @@
                         </ion-col>
                     </ion-row>
                 </ion-item>
-                <ion-item-options>
+                <ion-item-options *ngIf="!notificacion.AlertaGrupal">
                     <button ion-button color="danger" icon-left (click)="delete(notificacion)">
           <ion-icon name="trash"></ion-icon>       
           Eliminar

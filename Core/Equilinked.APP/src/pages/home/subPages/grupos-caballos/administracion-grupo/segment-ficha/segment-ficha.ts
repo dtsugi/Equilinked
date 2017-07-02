@@ -4,6 +4,7 @@ import { SecurityService } from "../../../../../../services/security.service";
 import { UserSessionEntity } from "../../../../../../model/userSession";
 import { AlertasFicha } from "../alertas-ficha/alertas-ficha";
 import { NotasFichaPage } from "../notas-ficha/notas-ficha";
+import { UbicacionesGrupoPage } from "../ubicaciones/ubicaciones";
 import { ConstantsConfig } from "../../../../../../app/utils"
 
 @Component({
@@ -38,6 +39,7 @@ export class SegmentFichaGrupo implements OnInit {
             {
                 label: "Ubicación",
                 icon: "pin",
+                //page: UbicacionesGrupoPage,
                 params: {}
             }, {
                 label: "Dentista",

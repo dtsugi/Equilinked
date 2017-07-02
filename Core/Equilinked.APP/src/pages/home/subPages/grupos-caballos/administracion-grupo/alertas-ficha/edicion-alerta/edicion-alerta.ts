@@ -63,10 +63,7 @@ export class EdicionAlertaPage implements OnInit {
         alerta.HoraNotificacion = this.alertaForm.value.HoraNotificacion;
         alerta.NombreProfesional = this.alertaForm.value.NombreProfesional;
         alerta.Descripcion = this.alertaForm.value.Descripcion;
-
-        console.info("Alerta grupo que se enviará a guardar!");
-        console.info(this.alertaGrupo);
-
+        alerta.AlertaGrupal = true;
 
         this.commonService.showLoading("Procesando...");
         let res: any;

@@ -35,8 +35,7 @@
                 <ion-avatar item-left>
                     <img src="assets/img/caballo.jpg">
                 </ion-avatar>
-                <h2>{{ec.Caballo.Nombre}}</h2>
-                <p>{{ec.Caballo.Grupo ? c.caballo.Grupo.Descripcion : ''}}</p>
+                <h2 class="equi-title-form">{{ec.Caballo.Nombre}}</h2>
             </ion-item>
         </ion-list>
     </div>
@@ -58,10 +57,10 @@
                 <ion-avatar item-left>
                     <img src="assets/img/caballo.jpg">
                 </ion-avatar>
-                <h2>{{ec.caballo.Nombre}}</h2>
-                <p>{{ec.caballo.Grupo ? ec.caballo.Grupo.Descripcion : ''}}</p>
-                <ion-icon *ngIf="ec.seleccion" name="remove-circle" item-right></ion-icon>
-                <ion-icon *ngIf="!ec.seleccion" name="add-circle" item-right></ion-icon>
+                <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': ec.seleccion}">{{ec.caballo.Nombre}}</h2>
+
+                <ion-icon *ngIf="ec.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
+                <ion-icon *ngIf="!ec.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
             </ion-item>
         </ion-list>
     </div>

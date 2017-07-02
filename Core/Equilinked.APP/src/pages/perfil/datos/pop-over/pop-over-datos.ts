@@ -3,7 +3,7 @@ import { AlertController, NavParams, NavController, ViewController } from 'ionic
 import { CommonService } from '../../../../services/common.service';
 import { SecurityService } from '../../../../services/security.service';
 import { LoginPage } from '../../../login/login';
-import { PerfilDatosPage } from "../perfil-datos";
+import { PerfilPage } from "../../perfil";
 import { OpcionesCuentaPage } from "../opciones-cuenta/opciones-cuenta";
 import { EdicionPerfilPage } from "../edicion-perfil/edicion-perfil";
 
@@ -15,7 +15,7 @@ import { EdicionPerfilPage } from "../edicion-perfil/edicion-perfil";
 export class PopoverDatosPage {
 
     private navCtrlDatos: NavController;
-    private perfilDatosPage: PerfilDatosPage;
+    private perfilPage: PerfilPage;
 
     constructor(
         private alertController: AlertController,
@@ -29,12 +29,12 @@ export class PopoverDatosPage {
 
     ngOnInit() {
         this.navCtrlDatos = this.navParams.get("navController");
-        this.perfilDatosPage = this.navParams.get("perfilDatosPage");
+        this.perfilPage = this.navParams.get("perfilPage");
     }
 
     editAccount(): void {
         this.viewController.dismiss();
-        this.navCtrlDatos.push(EdicionPerfilPage, { perfilDatosPage: this.perfilDatosPage });
+        this.navCtrlDatos.push(EdicionPerfilPage, { perfilDatosPage: this.perfilPage });
     }
 
     showOptionsAccount(): void {

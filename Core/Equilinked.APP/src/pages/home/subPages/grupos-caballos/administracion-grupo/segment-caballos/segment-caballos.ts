@@ -43,7 +43,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         this.parametrosCaballos.getCountSelected = () => this.getCountSelected();
     }
 
-    filter(evt: any): void {
+    filter(evt: any): void { 
         this.caballosGrupo = this.gruposCaballosService.filterCaballosByNombreOrGrupo(evt.target.value, this.caballosGrupoRespaldo);
     }
 
@@ -140,7 +140,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     }
 
     private unregistredEvents(): void {
-        this.events.unsubscribe("caballos-grupo:updated");
+        this.events.unsubscribe("caballos-grupo:refresh");
         this.events.unsubscribe("caballos-grupo:eliminacion:enabled");
         this.events.unsubscribe("caballos-grupo:eliminacion:confirmed");
     }
