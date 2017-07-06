@@ -19,6 +19,8 @@ import { InfoEstabloPage } from "./admin-establo/info-establo";
 })
 export class SegmentEstablos implements OnDestroy, OnInit {
 
+    private REFRESH_LIST_EVENT_NAME: string = "establos:refresh";
+
     @Input("parametros")
     parametrosEstablos: any;
 
@@ -39,12 +41,12 @@ export class SegmentEstablos implements OnDestroy, OnInit {
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.listEstablosByPropietarioId(true); //Listar establos del propietario
-        this.registredEvents();
+        this.addEvents();
         this.parametrosEstablos.getCountSelected = () => this.getCountSelected();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     goBack(): void {
@@ -89,7 +91,11 @@ export class SegmentEstablos implements OnDestroy, OnInit {
     }
 
     newEstablo(): void {
-        this.navCtrl.push(AdminEstablosPage);
+        let params: any = {
+            showConfirmSave: false,
+            eventRefreshList: this.REFRESH_LIST_EVENT_NAME
+        };
+        this.navCtrl.push(AdminEstablosPage, params);
     }
 
     selectEstablo(establo): void {
@@ -141,7 +147,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
         this.navCtrl.push(InfoEstabloPage, params);
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("establos:refresh", () => {
             this.listEstablosByPropietarioId(false);
         });
@@ -153,7 +159,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("establos:refresh");
         this.events.unsubscribe("establos:eliminacion:enabled");
         this.events.unsubscribe("establos:eliminacion:confirmed");

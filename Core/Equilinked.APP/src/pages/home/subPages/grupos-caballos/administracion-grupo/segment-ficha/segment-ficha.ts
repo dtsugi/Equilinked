@@ -39,7 +39,7 @@ export class SegmentFichaGrupo implements OnInit {
             {
                 label: "Ubicación",
                 icon: "pin",
-                //page: UbicacionesGrupoPage,
+                page: UbicacionesGrupoPage,
                 params: {}
             }, {
                 label: "Dentista",

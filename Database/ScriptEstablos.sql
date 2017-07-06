@@ -84,3 +84,12 @@ GO
 
 ALTER TABLE Establo DROP COLUMN Telefono;
 ALTER TABLE Establo DROP COLUMN CorreoElectronico
+
+-- Nueva columna a caballo para referenciarlo a un solo estbalo
+ALTER TABLE Caballo ADD Establo_ID INT
+GO
+
+ALTER TABLE Caballo 
+ADD CONSTRAINT FK_Caballo_Establo_ID 
+FOREIGN KEY(Establo_ID) REFERENCES Establo(ID)
+GO

@@ -1,22 +1,24 @@
-<ion-item>
-    <ion-icon name="person" class="equi-principal-color" item-left></ion-icon>
-    {{propietarioEntity.Nombre}}
-</ion-item>
+<ion-list no-lines>
+    <ion-item>
+        <ion-icon name="person" class="equi-principal-color" item-left></ion-icon>
+        {{propietarioEntity.Nombre}}
+    </ion-item>
 
-<ion-item>
-    <ion-icon name="mail" class="equi-principal-color" item-left></ion-icon>
-    {{propietarioEntity.Mail}}
-</ion-item>
+    <ion-item>
+        <ion-icon name="mail" class="equi-principal-color" item-left></ion-icon>
+        {{propietarioEntity.Mail}}
+    </ion-item>
 
-<ion-item *ngFor="let telefono of propietarioEntity.PropietarioTelefono; let i = index">
-    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-principal-color" item-left></ion-icon>
-    {{telefono.Numero}}
-    <ion-note class="equi-principal-color equi-italic-text" item-right>
-        {{telefono.Tipo_Numero.Descripcion}}
-    </ion-note>
-</ion-item>
+    <ion-item *ngFor="let telefono of propietarioEntity.PropietarioTelefono; let i = index">
+        <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-principal-color" item-left></ion-icon>
+        {{telefono.Numero}}
+        <ion-note class="equi-principal-color equi-italic-text" item-right>
+            {{telefono.Tipo_Numero.Descripcion}}
+        </ion-note>
+    </ion-item>
 
-<ion-item>
-    <ion-icon name="flag" class="equi-principal-color" item-left></ion-icon>
-    {{propietarioEntity.EstadoProvincia_Nombre}}, {{propietarioEntity.PaisNombre}}
-</ion-item>
+    <ion-item>
+        <ion-icon name="flag" class="equi-principal-color" item-left></ion-icon>
+        {{propietarioEntity.EstadoProvincia_Nombre}}, {{propietarioEntity.PaisNombre}}
+    </ion-item>
+</ion-list>

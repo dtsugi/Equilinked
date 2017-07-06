@@ -13,9 +13,7 @@ import { UserSessionEntity } from "../../../../../model/userSession";
 export class CaballosEstabloModal implements OnInit {
 
     private session: UserSessionEntity;
-
-    //Lista de caballos que se pasaron por parametro (los que ya se habian seleccionado)
-    private caballosSeleccionados: any[];
+    private establo: any;
 
     //Caballos que se listan en esta pantalla...
     private caballosRespaldo: any[];
@@ -36,16 +34,17 @@ export class CaballosEstabloModal implements OnInit {
 
     ngOnInit(): void {
         this.session = this.navParams.get("session");
-        this.caballosSeleccionados = this.navParams.get("caballos");
-        this.listCaballosByPropietarioId();//Listar caballos del propietario!
+        this.establo = this.navParams.get("establo");
+        if (this.establo.ID) {
+            this.listCaballosWithWithoutEstabloById();//Libres con seleccionados
+        } else {
+            this.listFreeCaballosByPropietarioId();//Los libres del establo
+        }
     }
 
     close(): void {
-        this.viewController.dismiss(
-            {
-                caballos: this.caballos.filter(c => c.seleccion).map(c => c.establoCaballo)
-            }
-        );
+        this.establo.Caballo = this.caballosRespaldo.filter(c => c.seleccion).map(c => c.caballo);
+        this.viewController.dismiss();
     }
 
     filter(evt: any) {
@@ -53,40 +52,54 @@ export class CaballosEstabloModal implements OnInit {
     }
 
     selectAll(): void {
-        let countSeleted = this.caballos.filter(c => c.seleccion).length;
+        let countSeleted = this.caballosRespaldo.filter(c => c.seleccion).length;
         let selectAll: boolean = countSeleted !== this.caballosRespaldo.length;
         this.caballosRespaldo.forEach(c => {
             c.seleccion = selectAll;
         });
     }
 
-    private listCaballosByPropietarioId(): void {
-        this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
-            .toPromise()
+    private listFreeCaballosByPropietarioId(): void {
+        this.establosService.getCaballosSinEstabloByPropietario(this.session.PropietarioId)
             .then(caballos => {
-                let mapCaballosSeleccionados: Map<number, any> = new Map<number, any>();
-                this.caballosSeleccionados.forEach(cs => {
-                    mapCaballosSeleccionados.set(cs.Caballo_ID, cs);
+                let mapCaballos: Map<number, any> = new Map<number, any>();
+                this.establo.Caballo.forEach(ec => {
+                    mapCaballos.set(ec.ID, ec);
+                });
+                this.caballosRespaldo = caballos.map(c => {
+                    return {
+                        seleccion: mapCaballos.has(c.ID),
+                        caballo: mapCaballos.has(c.ID) ? mapCaballos.get(c.ID) : c
+                    }
+                });
+                this.caballos = this.caballosRespaldo;
+                this.showSpinner = false;
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error al listar los caballos");
+                this.showSpinner = false;
+            });
+    }
+
+    private listCaballosWithWithoutEstabloById(): void {
+        this.establosService.getCaballosByEstablo(this.establo.ID, 1)
+            .then(caballos => {
+                let mapCaballos: Map<number, any> = new Map<number, any>();
+                this.establo.Caballo.forEach(c => {
+                    mapCaballos.set(c.ID, c);
                 });
 
-                this.caballos = caballos.map(c => {
-                    let cs: any = {};
-                    cs.seleccion = mapCaballosSeleccionados.has(c.ID);
-                    cs.caballo = c;
-                    cs.establoCaballo = mapCaballosSeleccionados.has(c.ID) ?
-                        mapCaballosSeleccionados.get(c.ID) :
-                        {
-                            ID: null,
-                            Establo_ID: null,
-                            Caballo_ID: c.ID
-                        }
-                    return cs;
+                this.caballosRespaldo = caballos.map(c => {
+                    return {
+                        seleccion: mapCaballos.has(c.ID),
+                        caballo: mapCaballos.has(c.ID) ? mapCaballos.get(c.ID) : c
+                    }
                 });
-                this.caballosRespaldo = this.caballos;
+                this.caballos = this.caballosRespaldo;
 
                 this.showSpinner = false;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al guardar el establo");
+                this.commonService.ShowErrorHttp(err, "Error al listar los caballos");
+                this.showSpinner = false;
             });
     }
 }

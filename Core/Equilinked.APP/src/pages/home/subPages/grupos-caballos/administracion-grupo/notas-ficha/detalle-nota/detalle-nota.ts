@@ -38,11 +38,11 @@ export class DetalleNotaPage implements OnInit, OnDestroy {
         this.alertaGrupoId = this.navParams.get("alertaGrupoId");
 
         this.getNota(true); //consulta la informacion de la alerta
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     getNota(showLoading: boolean): void {
@@ -75,13 +75,13 @@ export class DetalleNotaPage implements OnInit, OnDestroy {
         this.navController.push(EdicionNotaPage, params);
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("nota:refresh", () => {
             this.getNota(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("nota:refresh");
     }
 }

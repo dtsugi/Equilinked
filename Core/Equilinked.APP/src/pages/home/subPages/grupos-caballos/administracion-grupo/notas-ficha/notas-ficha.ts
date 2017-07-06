@@ -44,11 +44,11 @@ export class NotasFichaPage implements OnInit, OnDestroy {
         this.tipoAlerta = this.navParams.get("tipoAlerta");
 
         this.getNotasByGrupo(true); //listar las notas!
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     goBack(): void {
@@ -154,13 +154,13 @@ export class NotasFichaPage implements OnInit, OnDestroy {
             });
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("notas:refresh", () => {
             this.getNotasByGrupo(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("notas:refresh");
     }
 }

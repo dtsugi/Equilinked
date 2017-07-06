@@ -59,11 +59,11 @@ export class AlertasFicha implements OnInit, OnDestroy {
 
         this.applyLabels(); //Ajustar las leyendas según el tipo de alerta
         this.getAlertasByGrupo(true);
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     create(): void {
@@ -178,13 +178,13 @@ export class AlertasFicha implements OnInit, OnDestroy {
     }
 
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("alertas:refresh", () => {
             this.getAlertasByGrupo(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("alertas:refresh");
     }
 }

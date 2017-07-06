@@ -45,6 +45,7 @@ namespace Equilinked.DAL.Models
         public Nullable<int> PersonaACargo_ID { get; set; }
         public Nullable<int> Propietario_ID { get; set; }
         public string Observaciones { get; set; }
+        public Nullable<int> Establo_ID { get; set; }
     
         public virtual ICollection<Alimentacion> Alimentacion1 { get; set; }
         public virtual Criador Criador { get; set; }
@@ -59,5 +60,6 @@ namespace Equilinked.DAL.Models
         public virtual Propietario Propietario { get; set; }
         public virtual ICollection<GrupoCaballo> GrupoCaballo { get; set; }
         public virtual ICollection<EstabloCaballo> EstabloCaballo { get; set; }
+        public virtual Establo Establo { get; set; }
     }
 }

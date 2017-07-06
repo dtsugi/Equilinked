@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Events, NavController, NavParams } from "ionic-angular";
+import { Events, NavController, NavParams, PopoverController } from "ionic-angular";
 import { EstablosService } from "../../../../../../../services/establos.service";
 import { CommonService } from "../../../../../../../services/common.service";
+import { PopoverOpcionesEstablo } from "./popover-establo/popover-establo";
+import { EdicionEstabloCaballosPage } from "../../../../../../perfil/establos/admin-establo/edicion-caballos";
 
 @Component({
     templateUrl: "./detalle-establo.html",
@@ -14,8 +16,11 @@ import { CommonService } from "../../../../../../../services/common.service";
 })
 export class DetalleEstabloPage implements OnDestroy, OnInit {
 
+    private REFRESH_LIST_EVENT_NAME: string = "ubicaciones:refresh";
+    private REFRESH_ITEM_EVENT_NAME: string = "ubicacion:refresh";
     private establoId: number;
 
+    grupo: any;
     establo: any;
 
     constructor(
@@ -23,21 +28,44 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
         private commonService: CommonService,
         private establosService: EstablosService,
         private navController: NavController,
-        private navParams: NavParams
+        private navParams: NavParams,
+        private popoverController: PopoverController
     ) {
     }
 
     ngOnInit(): void {
         this.establoId = this.navParams.get("establoId");
+        this.grupo = this.navParams.get("grupo");
         this.getInfoEstablo(true);
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
-    getInfoEstablo(showLoading: boolean): void {
+    showOptions(ev: any): void {
+        let params: any = {
+            navCtrlEstablo: this.navController,
+            establo: this.establo
+        };
+        let popover = this.popoverController.create(PopoverOpcionesEstablo, params);
+        popover.present({
+            ev: ev
+        });
+    }
+
+    editCaballos(): void {
+        let params: any = {
+            establo: JSON.parse(JSON.stringify(this.establo)),
+            grupo: this.grupo,
+            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME,
+            eventRefreshList: this.REFRESH_LIST_EVENT_NAME
+        };
+        this.navController.push(EdicionEstabloCaballosPage, params);
+    }
+
+    private getInfoEstablo(showLoading: boolean): void {
         if (showLoading) {
             this.commonService.showLoading("Procesando..");
         }
@@ -54,13 +82,13 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
     }
 
 
-    private registredEvents(): void {
-        this.events.subscribe("establo:refresh", () => {
+    private addEvents(): void {
+        this.events.subscribe("ubicacion:refresh", () => {
             this.getInfoEstablo(false);
         });
     }
 
-    private unregistredEvents(): void {
-        this.events.unsubscribe("establo:refresh");
+    private removeEvents(): void {
+        this.events.unsubscribe("ubicacion:refresh");
     }
 }

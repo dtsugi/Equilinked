@@ -38,11 +38,11 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
         this.alertaGrupoId = this.navParams.get("alertaGrupoId");
 
         this.getAlerta(true); //consulta la informacion de la alerta
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     getAlerta(showLoading: boolean): void {
@@ -75,13 +75,13 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
         this.navController.push(EdicionAlertaPage, params);
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("alerta:refresh", () => {
             this.getAlerta(false); //Refrescamo la info de la alarta!
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("alerta:refresh");
     }
 }

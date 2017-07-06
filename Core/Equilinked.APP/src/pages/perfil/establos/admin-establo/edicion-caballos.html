@@ -9,7 +9,13 @@
             </button>
         </ion-buttons>
 
-        <ion-title class="equi-toolbar-title-content">
+        <ion-title *ngIf="grupo && !modoEdicion" class="equi-toolbar-title-content">
+            <span class="equi-toolbar-title">{{establo.Nombre}}</span>
+            <br />
+            <span class="equi-toolbar-subtitle">{{grupo.Descripcion}}</span>
+        </ion-title>
+
+        <ion-title *ngIf="!grupo" class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{establo.Nombre}}</span>
             <br />
             <span class="equi-toolbar-subtitle">Caballos</span>
@@ -35,7 +41,7 @@
                 <ion-avatar item-left>
                     <img src="assets/img/caballo.jpg">
                 </ion-avatar>
-                <h2 class="equi-title-form">{{ec.Caballo.Nombre}}</h2>
+                <h2 class="equi-title-form">{{ec.Nombre}}</h2>
             </ion-item>
         </ion-list>
     </div>

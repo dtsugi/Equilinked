@@ -31,11 +31,11 @@ export class SegmentDatos implements OnInit, OnDestroy {
         this.propietarioEntity = new Propietario();
         this.session = this.securityService.getInitialConfigSession();
         this.getPerfilPropietarioId(this.session.PropietarioId, true);
-        this.registerEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     getPerfilPropietarioId(idPropietario: number, showLoading: boolean) {
@@ -53,13 +53,13 @@ export class SegmentDatos implements OnInit, OnDestroy {
             });
     }
 
-    private registerEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("perfil:refresh", () => {
             this.getPerfilPropietarioId(this.session.PropietarioId, false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("perfil:refresh");
     }
 }

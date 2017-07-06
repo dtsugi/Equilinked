@@ -26,6 +26,7 @@ import { CreacionGrupoPage } from "../pages/home/subPages/grupos-caballos/creaci
 import { AdministracionGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/administracion-grupo";
 import { UbicacionesGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/ubicaciones";
 import { DetalleEstabloPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/detalle-establo/detalle-establo";
+import { PopoverOpcionesEstablo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/detalle-establo/popover-establo/popover-establo";
 import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-ficha/segment-ficha";
 import { AlertasFicha } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/alertas-ficha";
 import { EdicionAlertaPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/alertas-ficha/edicion-alerta/edicion-alerta";
@@ -93,6 +94,7 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     AdministracionGrupoPage,
     UbicacionesGrupoPage,
     DetalleEstabloPage,
+    PopoverOpcionesEstablo,
     SegmentFichaGrupo,
     AlertasFicha,
     EdicionAlertaPage,
@@ -139,7 +141,9 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     EdicionEstabloCaballosPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      mode: "md"
+    }),
     HttpModule,
     FormsModule,
     MomentModule
@@ -163,6 +167,7 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     AdministracionGrupoPage,
     UbicacionesGrupoPage,
     DetalleEstabloPage,
+    PopoverOpcionesEstablo,
     AlertasFicha,
     EdicionAlertaPage,
     SeleccionCaballosPage,

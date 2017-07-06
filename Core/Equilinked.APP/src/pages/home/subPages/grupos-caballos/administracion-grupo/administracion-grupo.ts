@@ -39,11 +39,11 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
         this.session = this.securityService.getInitialConfigSession();
         this.grupoId = this.navParams.get("grupoId");
         this.getInfoGrupo(true);
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     goBack(): void {
@@ -90,13 +90,13 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
             });
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("grupo:refresh", () => {
             this.getInfoGrupo(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("grupo:refresh");
     }
 }

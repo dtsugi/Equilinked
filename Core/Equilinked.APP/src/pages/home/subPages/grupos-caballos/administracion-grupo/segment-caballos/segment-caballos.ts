@@ -34,12 +34,12 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     ngOnInit(): void {
         this.getAllCaballosGrupo(true);
-        this.registredEvents();
+        this.addEvents();
         this.parametrosCaballos.getCountSelected = () => this.getCountSelected();
     }
 
@@ -127,7 +127,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         }).present();
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("caballos-grupo:refresh", () => {
             this.getAllCaballosGrupo(false);
         });
@@ -139,7 +139,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("caballos-grupo:refresh");
         this.events.unsubscribe("caballos-grupo:eliminacion:enabled");
         this.events.unsubscribe("caballos-grupo:eliminacion:confirmed");

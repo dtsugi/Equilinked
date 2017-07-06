@@ -21,13 +21,12 @@ import { CaballosEstabloModal } from "./caballos-establo/caballos-establo-modal"
 export class AdminEstablosPage implements OnInit {
 
     private session: UserSessionEntity;
-
+    private showConfirm: boolean;
     establoForm: FormGroup;
 
     //informacion del establo
     private establo: any;
-    //Lista de caballos (List<EstabloCaballo>)
-    private caballos: Array<any>;
+
     tiposTelefono: Array<any>; //Aqui esta el catalogo de tipos de telefono
 
     tipoTelefonoPorTelefono: Array<any>;
@@ -46,7 +45,6 @@ export class AdminEstablosPage implements OnInit {
         private tipoNumeroService: TipoNumeroService,
         public toastController: ToastController
     ) {
-        this.caballos = new Array<any>();
         this.tiposTelefono = new Array<any>();
     }
 
@@ -55,6 +53,8 @@ export class AdminEstablosPage implements OnInit {
 
         this.session = this.securityService.getInitialConfigSession();
         this.establo = this.navParams.get("establo");
+        this.showConfirm = this.navParams.get("showConfirmSave");
+        console.info(this.showConfirm);
 
         this.initEstabloForm();
         this.listAllTipoNumeros();
@@ -65,7 +65,7 @@ export class AdminEstablosPage implements OnInit {
                 Nombre: null,
                 Manager: null,
                 Direccion: null,
-                EstabloCaballo: null,
+                Caballo: [],
                 EstabloCorreo: [{ CorreoElectronico: null }],
                 EstabloTelefono: [{ Tipo_Numero_ID: null, Numero: null }]
             };
@@ -152,22 +152,38 @@ export class AdminEstablosPage implements OnInit {
     showSelectionModal(): void {
         let modal = this.modalController.create(CaballosEstabloModal, {
             session: this.session,
-            caballos: this.caballos
-        });
-        modal.onDidDismiss(data => {
-            if (data) {
-                this.caballos = data.caballos;
-            }
+            establo: this.establo
         });
         modal.present(); //Abrir!
     }
 
     save(): void {
+        if (this.showConfirm) {
+            this.alertController.create({
+                title: "Alerta!",
+                message: "Los datos del establo se modificaran en el perfil",
+                buttons: [
+                    { text: "Cancelar", role: "cancel" },
+                    {
+                        text: "Aceptar", handler: () => {
+                            this.confirmSave();
+                        }
+                    }
+                ]
+            }).present();
+        } else {
+            this.confirmSave();
+        }
+    }
+
+    private confirmSave(): void {
+
+
+
         let establo = this.establo;
         establo.Nombre = this.establoForm.get("Nombre").value;
         establo.Manager = this.establoForm.get("Manager").value;
         establo.Direccion = this.establoForm.get("Direccion").value;
-        establo.EstabloCaballo = this.caballos;
         (this.establoForm.get("Telefonos") as FormArray).controls
             .forEach((telefono, index) => {
                 establo.EstabloTelefono[index].Numero = telefono.value;
@@ -192,10 +208,13 @@ export class AdminEstablosPage implements OnInit {
         }
         prom.then(r => {
             this.commonService.hideLoading();
+            let eventItem = this.navParams.get("eventRefreshItem");
+            let eventList = this.navParams.get("eventRefreshList");
+
             if (establo.ID) {
-                this.events.publish("establo:refresh"); //Refrescamos el detalle del establo
+                this.events.publish(eventItem); //Refrescamos el detalle del establo
             }
-            this.events.publish("establos:refresh"); //Refrescamos la lista de establos!
+            this.events.publish(eventList); //Refrescamos la lista de establos!
             this.navController.pop()
         }).catch(err => {
             this.commonService.ShowErrorHttp(err, "Error al guardar el establo");
@@ -265,7 +284,5 @@ export class AdminEstablosPage implements OnInit {
         } else {
             this.establo.EstabloTelefono = [{ Tipo_Numero_ID: null, Numero: null }];
         }
-
-        this.caballos = this.establo.EstabloCaballo;
     }
 }

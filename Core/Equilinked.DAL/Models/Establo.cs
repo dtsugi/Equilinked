@@ -19,6 +19,7 @@ namespace Equilinked.DAL.Models
             this.EstabloCaballo = new HashSet<EstabloCaballo>();
             this.EstabloTelefono = new HashSet<EstabloTelefono>();
             this.EstabloCorreo = new HashSet<EstabloCorreo>();
+            this.Caballo = new HashSet<Caballo>();
         }
     
         public int ID { get; set; }
@@ -31,5 +32,6 @@ namespace Equilinked.DAL.Models
         public virtual ICollection<EstabloCaballo> EstabloCaballo { get; set; }
         public virtual ICollection<EstabloTelefono> EstabloTelefono { get; set; }
         public virtual ICollection<EstabloCorreo> EstabloCorreo { get; set; }
+        public ICollection<Caballo> Caballo { get; set; }
     }
 }

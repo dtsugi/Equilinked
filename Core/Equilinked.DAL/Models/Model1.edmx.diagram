@@ -79,6 +79,7 @@
         <EntityTypeShape EntityType="EquilinkedModel.AlertaGrupo" Width="1.5" PointX="9.25" PointY="16.875" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_AlertaGrupo_Grupo_ID" />
+        <AssociationConnector Association="EquilinkedModel.FK_Caballo_Establo_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

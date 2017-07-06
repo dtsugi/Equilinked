@@ -1,20 +1,20 @@
 import { Injectable } from "@angular/core";
-import { Http, Headers, RequestOptions, URLSearchParams } from "@angular/http";
+import { Http, RequestOptions, URLSearchParams } from "@angular/http";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/toPromise";
 import { AppConfig } from "../app/app.config";
-import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class EstablosService {
 
-    private urlEstablos: string = AppConfig.API_URL + "api/establo";
+    private urlPropietarios: string = AppConfig.API_URL + "api/propietarios";
+    private urlEstablos: string = AppConfig.API_URL + "api/establos";
 
     constructor(private http: Http) {
     }
 
     getEstablosByPropietarioId(propietarioId: number): Promise<any[]> {
-        let url = this.urlEstablos + "/GetAllByPropietarioId/" + propietarioId;
+        let url = this.urlPropietarios + "/" + propietarioId + "/establos";
         return this.http
             .get(url)
             .map(establos => establos.json() as any[])
@@ -22,13 +22,55 @@ export class EstablosService {
     }
 
     getEstabloById(establoId: number): Promise<any> {
-        let url = this.urlEstablos + "/GetById/" + establoId;
+        let url = this.urlEstablos + "/" + establoId;
         return this.http
             .get(url)
             .map(establo => establo.json())
             .toPromise();
     }
 
+    getCaballosByEstablo(establoId: number, filtro: number): Promise<any> {
+        let url = this.urlEstablos + "/" + establoId + "/caballos";
+        let params = new URLSearchParams();
+        params.set("filtro", filtro.toString());
+        return this.http.get(url, new RequestOptions({ search: params }))
+            .map(caballos => caballos.json() as Array<any>)
+            .toPromise();
+    }
+
+    getCaballosSinEstabloByPropietario(propietarioId): Promise<any> {
+        let url: string = this.urlPropietarios + "/" + propietarioId + "/caballos";
+        let params = new URLSearchParams();
+        params.set("establo", "false");
+        return this.http.get(url, new RequestOptions({ search: params }))
+            .map(caballos => caballos.json() as Array<any>)
+            .toPromise();
+    }
+
+    saveEstablo(establo: any): Promise<any> {
+        return this.http.post(this.urlEstablos, establo).toPromise();
+    }
+
+    updateEstablo(establo: any): Promise<any> {
+        let url = this.urlEstablos + "/" + establo.ID;
+        return this.http.put(url, establo).toPromise();
+    }
+
+    deleteEstablo(id: number): Promise<any> {
+        let url: string = this.urlEstablos + "/" + id;
+        return this.http.delete(url).toPromise();
+    }
+
+    deleteEstablosByIds(ids: number[]): Promise<any> {
+        let params = new URLSearchParams();
+        ids.forEach(id => {
+            params.append("establosIds", id.toString());
+        });
+        return this.http.delete(this.urlEstablos, new RequestOptions({ search: params }))
+            .toPromise();
+    }
+
+    /* Verificar cuales se quedan y cuales se van! */
     getAllEstabloCaballoByEstabloId(establoId: number): Promise<any> {
         let url = this.urlEstablos + "/GetAllEstabloCaballoByEstabloId/" + establoId;
         return this.http
@@ -59,7 +101,7 @@ export class EstablosService {
     filterEstabloCaballosByNombre(value: string, establoCaballos: any[]): any[] {
         if (value && value !== "") {
             return establoCaballos.filter(ec => {
-                return ec.Caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1;
+                return ec.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1;
             });
         }
         return establoCaballos;
@@ -72,25 +114,5 @@ export class EstablosService {
             });
         }
         return establoCaballos;
-    }
-
-    saveEstablo(establo: any): Promise<any> {
-        return this.http.post(this.urlEstablos, establo).toPromise();
-    }
-
-    updateEstablo(establo: any): Promise<any> {
-        let url = this.urlEstablos + "/" + establo.ID;
-        return this.http.put(url, establo).toPromise();
-    }
-
-    deleteEstablosByIds(ids: number[]): Promise<any> {
-        console.info("Para eliminar: %o", ids);
-        let url = this.urlEstablos + "/DeleteByIds";
-        let params = new URLSearchParams();
-        ids.forEach(id => {
-            params.append("EstablosIds", id.toString());
-        });
-        return this.http.delete(url, new RequestOptions({ search: params }))
-            .toPromise();
     }
 }

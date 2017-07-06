@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Events, NavController, NavParams, ToastController } from "ionic-angular";
-import { InfoEstabloPage } from "./info-establo";
 import { FichaCaballoPage } from "../../../home/ficha-caballo/ficha-caballo-home";
 import { CaballoService } from "../../../../services/caballo.service";
 import { CommonService } from "../../../../services/common.service";
@@ -12,15 +11,17 @@ import { EstablosService } from "../../../../services/establos.service";
 })
 export class EdicionEstabloCaballosPage implements OnInit {
 
-    private establo: any;
+    private establoCaballosRespaldo: Array<any>;
+    private establoCaballosEdicionResp: Array<any>;
+    private eventList: string;
+    private eventItem: string;
 
     establoCabllos: Array<any>;
-    private establoCaballosRespaldo: Array<any>;
-
     establoCaballosEdicion: Array<any>;
-    private establoCaballosEdicionResp: Array<any>;
 
-    modoEdicion: boolean;
+    establo: any;
+    grupo: any;
+    modoEdicion: boolean; 
 
     constructor(
         private caballoService: CaballoService,
@@ -36,6 +37,9 @@ export class EdicionEstabloCaballosPage implements OnInit {
 
     ngOnInit(): void {
         this.establo = this.navParams.get("establo");
+        this.grupo = this.navParams.get("grupo");
+        this.eventList = this.navParams.get("eventRefreshList");
+        this.eventItem = this.navParams.get("eventRefreshItem");
 
         this.listCaballosByEstabloId(true); //Listamos los caballos del establo
     }
@@ -76,14 +80,19 @@ export class EdicionEstabloCaballosPage implements OnInit {
     }
 
     save(): void {
-        this.establo.EstabloCaballo = this.establoCaballosEdicionResp
+        this.establo.Caballo = this.establoCaballosEdicionResp
             .filter(ec => ec.seleccion)
-            .map(ec => ec.establoCaballo);
+            .map(ec => ec.caballo);
 
         this.commonService.showLoading("Procesando...");
         this.establosService.updateEstablo(this.establo)
             .then(() => {
-                this.events.publish("establo:refresh"); //Refresco el detalle del establo seleccioadno
+                if (this.eventItem) {
+                    this.events.publish(this.eventItem); //Refresco el detalle o ubicacion 
+                }
+                if (this.eventList) {
+                    this.events.publish(this.eventList); //Refrescar la lista de ubicaciones
+                }
                 this.listCaballosByEstabloId(false); //Refresco la lista actual
                 this.modoEdicion = false;
                 this.commonService.hideLoading();
@@ -95,22 +104,19 @@ export class EdicionEstabloCaballosPage implements OnInit {
 
     private listCaballosByPropietario(): void {
         let mapEstabloCaballos: Map<number, any> = new Map<number, any>();
-        this.establo.EstabloCaballo.forEach(ec => {
-            mapEstabloCaballos.set(ec.Caballo_ID, ec);
+        this.establoCaballosRespaldo.forEach(ec => {
+            mapEstabloCaballos.set(ec.ID, ec);
         });
 
         this.commonService.showLoading("Procesando...");
-        this.caballoService //Me permite su Propietario_ID Sr. Establo? :D
-            .getAllSerializedByPropietarioId(this.establo.Propietario_ID)
-            .toPromise()
+        this.establosService.getCaballosByEstablo(this.establo.ID, 1)
             .then(caballos => {
                 this.commonService.hideLoading();
                 this.establoCaballosEdicion = caballos.map(c => {
                     return {
                         seleccion: mapEstabloCaballos.has(c.ID),
-                        establoCaballo: mapEstabloCaballos.has(c.ID) ?
-                            mapEstabloCaballos.get(c.ID) : { Caballo_ID: c.ID },
-                        caballo: c
+                        caballo: mapEstabloCaballos.has(c.ID) ?
+                            mapEstabloCaballos.get(c.ID) : c
                     };
                 });
                 this.establoCaballosEdicionResp = this.establoCaballosEdicion;
@@ -121,16 +127,15 @@ export class EdicionEstabloCaballosPage implements OnInit {
     }
 
     private listCaballosByEstabloId(showLoading: boolean): void {
-        if (showLoading) {
+        if (showLoading)
             this.commonService.showLoading("Procesando...");
-        }
-        this.establosService.getAllEstabloCaballoByEstabloId(this.establo.ID)
+        this.establosService.getCaballosByEstablo(this.establo.ID, 2)
             .then(establoCaballos => {
                 this.establoCabllos = establoCaballos;
                 this.establoCaballosRespaldo = establoCaballos;
-                if (showLoading) {
+
+                if (showLoading)
                     this.commonService.hideLoading();
-                }
             }).catch(err => {
                 console.error(err);
                 this.commonService.ShowErrorHttp(err, "Error obteniendo los caballos del establo");

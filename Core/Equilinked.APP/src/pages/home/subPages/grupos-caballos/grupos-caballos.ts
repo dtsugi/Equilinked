@@ -30,11 +30,11 @@ export class GruposCaballos implements OnDestroy, OnInit {
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.getGruposCaballos(true);
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     getGruposCaballos(showLoading: boolean): void {
@@ -63,13 +63,13 @@ export class GruposCaballos implements OnDestroy, OnInit {
         this.navController.push(CreacionGrupoPage);
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("grupos:refresh", () => {
             this.getGruposCaballos(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("grupos:refresh");
     }
 }

@@ -16,6 +16,8 @@ import { CommonService } from "../../../../services/common.service";
 })
 export class InfoEstabloPage implements OnDestroy, OnInit {
 
+    private REFRESH_LIST_EVENT_NAME: string = "establos:refresh";
+    private REFRESH_ITEM_EVENT_NAME: string = "establo:refresh";
     private establoId: number;
 
     establo: any;
@@ -32,11 +34,11 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
     ngOnInit(): void {
         this.establoId = this.navParams.get("establoId");
         this.getInfoEstablo(true);
-        this.registredEvents();
+        this.addEvents();
     }
 
     ngOnDestroy(): void {
-        this.unregistredEvents();
+        this.removeEvents();
     }
 
     getInfoEstablo(showLoading: boolean): void {
@@ -57,7 +59,10 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
 
     edit(): void {
         let params: any = {
-            establo: JSON.parse(JSON.stringify(this.establo))
+            establo: JSON.parse(JSON.stringify(this.establo)),
+            showConfirmSave: false,
+            eventRefreshList: this.REFRESH_LIST_EVENT_NAME,
+            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME
         };
         this.navController.push(AdminEstablosPage, params);
     }
@@ -65,18 +70,18 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
     viewCaballos(): void {
         let params: any = {
             establo: JSON.parse(JSON.stringify(this.establo)),
-            infoEstabloPage: this
+            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME
         };
         this.navController.push(EdicionEstabloCaballosPage, params);
     }
 
-    private registredEvents(): void {
+    private addEvents(): void {
         this.events.subscribe("establo:refresh", () => {
             this.getInfoEstablo(false);
         });
     }
 
-    private unregistredEvents(): void {
+    private removeEvents(): void {
         this.events.unsubscribe("establo:refresh");
     }
 }

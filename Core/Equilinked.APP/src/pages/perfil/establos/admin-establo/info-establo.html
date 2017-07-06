@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="establo">
+    <ion-list *ngIf="establo" no-lines>
         <ion-item *ngIf="establo.Manager != ''">
             <ion-icon name="person" class="equi-icon-input" item-left></ion-icon>
             {{establo.Manager}}
@@ -39,7 +39,7 @@
 
         <ion-item>
             <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
-            <a class="equi-principal-color" (click)="viewCaballos()">{{establo.EstabloCaballo.length}} caballo(s)</a>
+            <a class="equi-principal-color" (click)="viewCaballos()">{{establo.Caballo.length}} caballo(s)</a>
         </ion-item>
     </ion-list>
 </ion-content>
