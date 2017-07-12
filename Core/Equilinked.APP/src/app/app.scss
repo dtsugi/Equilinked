@@ -113,8 +113,16 @@ body,ion-content {
 
 .equi-title-form,
 .equi-title-form-primary{
+    font-family: NotoSans !important;
     font-size: 14px !important;
     font-weight: bold !important;  
+}
+
+.equi-subtitle-form {
+    font-family: NotoSans !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    font-style: italic !important;  
 }
 
 .equi-title-form-primary{
@@ -151,7 +159,7 @@ body,ion-content {
 
 .equi-icon-add{    
     color: $_EQUI_PRINCIPAL_COLOR;
-    font-size: 30pt;
+    font-size: 35pt;
     padding: 0 5px;
 }
 
@@ -169,6 +177,10 @@ body,ion-content {
 
 .equi-text-link, .equi-principal-color, .equi-icon-selected {
     color: $_EQUI_PRINCIPAL_COLOR !important;
+}
+
+.equi-text-edit {
+    color: $_EQUI_TEXT_EDITION_COLOR !important;
 }
 
 .equi-note-description {
@@ -191,4 +203,46 @@ body,ion-content {
     margin-top: 11px;
     margin-bottom: 10px;
     color: $_EQUI_PRINCIPAL_COLOR;
+}
+
+.equi-input-normal-text {
+    font-family: NotoSans !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+}
+
+.equi-input-italic-text {
+    font-family: NotoSans !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    font-style: italic !important;
+}
+
+.equi-select-text {
+    font-family: NotoSans !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    max-width: none !important;
+}
+
+.equi-col-center {
+    display: flex;
+    align-items: center;
+}
+
+.equi-select-width {
+    max-width: none;
+}
+
+.equi-col-note {
+    white-space: pre-line;
+    max-height: 50px;
+}
+
+.equi-title-note {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    position: relative !important;
+    color: #000 !important;
 }

@@ -1,54 +1,57 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title class="equi-toolbar-title-content">
-            <br />
-            <span *ngIf="!isUpdate" class="equi-toolbar-subtitle">Nueva notificacion</span>
-            <span *ngIf="isUpdate" class="equi-toolbar-subtitle">Editar notificacion</span>
-        </ion-title>
-        <ion-buttons right>
-            <button *ngIf="!isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Guardar</button>
-            <button *ngIf="isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Modificar</button>
+    <ion-toolbar class="equi-toolbar">
+        <ion-buttons left>
+            <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
         </ion-buttons>
-    </ion-navbar>
+
+        <ion-buttons right>
+            <button class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Guardar</button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
+
 <ion-content>
-    <form [formGroup]="formNotificaciones" (ngSubmit)="saveNotificacion()">
-        <ion-item *ngIf="showId">
-            <ion-label>ID</ion-label>
-            <ion-input type="text" formControlName="Id"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Titulo</ion-label>
-            <ion-input type="text" formControlName="Titulo"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Fecha</ion-label>
-            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion"
-                max="2050"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label>Hora</ion-label>
-            <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label>Tipo</ion-label>
-            <ion-select formControlName="Tipo">
-                <ion-option *ngFor="let item of tiposAlertaList" [disabled]="disableFromNotas" [value]="item.Key">{{item.Value}}</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item>
-            <ion-label>Activa</ion-label>
-            <ion-toggle checked="true" formControlName="Activa"></ion-toggle>
-        </ion-item>
-        <ion-item>
-            <ion-label>Descripcion</ion-label>
-            <ion-input type="text" formControlName="Descripcion"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Caballos</ion-label>
-            <ion-select formControlName="CaballosList" multiple="true">
-                <ion-option *ngFor="let item of selectCaballos" [disabled]="disableFromNotas" [value]="item.Key">{{item.Value}}</ion-option>
-            </ion-select>
-        </ion-item>
+    <form [formGroup]="formNotificaciones">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" style="font-size: 18px !important; font-weight: bold !important;" class="equi-input-normal-text" placeholder="Ingresar título" formControlName="Titulo"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="calendar" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime class="equi-input-normal-text" placeholder="Fecha" displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar"
+                            doneText="Aceptar" formControlName="FechaNotificacion" max="2050"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="time" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime class="equi-input-normal-text" placeholder="Hora" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"
+                            cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-textarea class="equi-input-normal-text" autoresize formControlName="Descripcion" [attr.rows]="3" placeholder="Ingresar nota"></ion-textarea>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </form>
 </ion-content>

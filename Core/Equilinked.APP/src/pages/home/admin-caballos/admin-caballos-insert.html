@@ -3,7 +3,7 @@
         <ion-buttons left>
             <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title">Datos Caballo</ion-title>
+
         <ion-buttons right>
             <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">{{btnPostTitle}}</button>
         </ion-buttons>
@@ -13,196 +13,204 @@
     <form [formGroup]="form">
         <ion-grid>
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Nombre</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="Nombre"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar nombre" formControlName="Nombre"></ion-input>
+                </ion-col>
+            </ion-row> 
+
+            <ion-row>
+                <ion-col col-3 class="equi-title-form equi-col-center">Propietario</ion-col>
+                <ion-col>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar propietario" formControlName="NombrePropietario"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Género</ion-col>
-                <ion-col>
-                    <ion-select formControlName="Genero_ID">
+                <ion-col col-3 class="equi-title-form equi-col-center">Género</ion-col>
+                <ion-col col-5>
+                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="Asignar" formControlName="Genero_ID">
                         <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Pelaje</ion-col>
-                <ion-col>
-                    <ion-select formControlName="Pelaje_ID">
+                <ion-col col-3 class="equi-title-form equi-col-center">Pelaje</ion-col>
+                <ion-col col-5>
+                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="Asignar" formControlName="Pelaje_ID">
                         <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
                     </ion-select>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Fecha de Nacimiento</ion-col>
-                <ion-col>
-                    <ion-item>
-                        <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNacimiento"
-                            max="2050"></ion-datetime>
-                    </ion-item>
+                <ion-col col-3 class="equi-title-form equi-col-center">Nacimiento</ion-col>
+                <ion-col col-5>
+                    <ion-datetime class="equi-input-normal-text" displayFormat="DD/MM/YYYY HH" pickerFormat="D MMMM YYYY HH" cancelText="Cancelar"
+                        doneText="Aceptar" formControlName="FechaNacimiento" max="2050" (ngModelChange)="calculateAge($event)"></ion-datetime>
+                </ion-col>
+                <ion-col col-4 class="equi-col-center">
+                    <span class="equi-input-normal-text equi-text-edit">{{age}}</span>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Genealog&iacute;a</ion-col>
-                <ion-col col-2>Padre</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Genealog&iacute;a</ion-col>
+                <ion-col col-2><span class="equi-input-normal-text equi-col-center">Padre</span></ion-col>
                 <ion-col>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Nombre del padre" formControlName="NombrePadre"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4></ion-col>
-                <ion-col col-2>Madre</ion-col>
+                <ion-col col-3></ion-col>
+                <ion-col col-2><span class="equi-input-normal-text equi-col-center">Madre</span></ion-col>
                 <ion-col>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Nombre de la madre" formControlName="NombreMadre"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Criador</ion-col>
-                <ion-col>
-                    <ion-select formControlName="Criador_ID">
-                        <ion-option *ngFor="let item of criadorList" [value]="item.Key">{{item.Value}}</ion-option>
+                <ion-col col-3 class="equi-title-form equi-col-center">Criador</ion-col>
+                <ion-col col-5>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Nombre criador" formControlName="NombreCriador"></ion-input>
+                </ion-col>
+                <ion-col col-4>
+                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="País" formControlName="PaisCriador">
+                        <ion-option *ngFor="let pais of paises" [value]="pais.ID">{{pais.Descripcion}}</ion-option>
                     </ion-select>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">ADN</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">ADN</ion-col>
                 <ion-col>
                     <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form"># Chip</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center"># Chip</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="NumeroChip"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar" formControlName="NumeroChip"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form"># ID</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center"># ID</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="Nombre"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar" formControlName="NumeroId"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Otras marcas</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Otras marcas</ion-col>
                 <ion-col>
-                    <ion-select formControlName="OtrasMarcas_ID">
-                        <ion-option *ngFor="let item of otrasMarcasList" [value]="item.Key">{{item.Value}}</ion-option>
-                    </ion-select>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar" formControlName="Marcas"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
                 <ion-col class="equi-title-form center-text">Registro Federación Nacional</ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
-                <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="NumeroFEN"></ion-input>
-                    </ion-item>
+                <ion-col col-3 class="equi-title-form equi-col-center"># Registro</ion-col>
+                <ion-col col-4>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar" formControlName="NumeroFEN"></ion-input>
                 </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
-                <ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Pagado</ion-col>
+                <ion-col col-2 class="equi-col-center">
                     <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
                 </ion-col>
             </ion-row>
+
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
                 <ion-col class="equi-title-form center-text">Registro Federación Internacional (FEI)</ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form"># Registro</ion-col>
-                <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="NumeroFEI"></ion-input>
-                    </ion-item>
+                <ion-col col-3 class="equi-title-form equi-col-center"># Registro</ion-col>
+                <ion-col col-4>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar" formControlName="NumeroFEI"></ion-input>
                 </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col col-4 class="equi-title-form">Pagado</ion-col>
-                <ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Pagado</ion-col>
+                <ion-col col-2 class="equi-col-center">
                     <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
                 </ion-col>
             </ion-row>
+
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
                 <ion-col class="equi-title-form center-text">Deporte y cuidados</ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Protectores</ion-col>
-                <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="Protector"></ion-input>
-                    </ion-item>
+                <ion-col col-3 class="equi-title-form equi-col-center">Protectores</ion-col>
+                <ion-col col-5>
+                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="Asignar" formControlName="Protector_ID">
+                        <ion-option *ngFor="let protector of protectores" [value]="protector.ID">{{protector.Descripcion}}</ion-option>
+                    </ion-select>
                 </ion-col>
             </ion-row>
+
             <ion-row>
                 <ion-col class="equi-title-form">Observaciones</ion-col>
             </ion-row>
             <ion-row>
                 <ion-col>
-                    <ion-item>
-                        <ion-textarea rows="2" formControlName="Observaciones"></ion-textarea>
-                    </ion-item>
+                    <ion-textarea class="equi-input-normal-text" rows="2" placeholder="Ingresar observaciones" autoresize formControlName="Observaciones"></ion-textarea>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Embocadura</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Embocadura</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="Embocadura"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Ingresar embocadura" formControlName="Embocadura"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Extras de cabezada</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Extras de cabezada</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" formControlName="ExtrasDeCabezada"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Ingresar extras de cabeza" formControlName="ExtrasDeCabezada"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
                 <ion-col class="equi-title-form center-text">Datos de la persona a cargo</ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Nombre</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Nombre</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar nombre" formControlName="NombreResponsable"></ion-input>
                 </ion-col>
             </ion-row>
+
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Teléfono</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Teléfono</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar número telefónico" formControlName="TelefonoResponsable"></ion-input>
                 </ion-col>
             </ion-row>
+            
             <ion-row>
-                <ion-col col-4 class="equi-title-form">Correo electronico</ion-col>
+                <ion-col col-3 class="equi-title-form equi-col-center">Correo electronico</ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" placeholder="Asignar correo electrónico" formControlName="CorreoResponsable"></ion-input>
                 </ion-col>
             </ion-row>
         </ion-grid>

@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons left>
+            <button ion-button class="equi-toolbar-btn" (click)="goBack()">
+                Cancelar
+            </button>
+        </ion-buttons>
+
+        <ion-buttons right>
+            <button ion-button class="equi-toolbar-btn" [disabled]="!grupoForm.valid" (click)="save()">
+                Guardar
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #grupoForm="ngForm">
+        <ion-item>
+            <ion-input type="text" name="descripcion" required="true" placeholder="Nombre del caballo" [(ngModel)]="caballo.Nombre"></ion-input>
+        </ion-item>
+    </form>
+</ion-content>

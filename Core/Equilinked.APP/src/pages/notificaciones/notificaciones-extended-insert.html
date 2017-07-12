@@ -3,37 +3,57 @@
         <ion-buttons left>
             <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
         </ion-buttons>
-        <ion-title class="equi-toolbar-title-content">
-            <br>
-            <span class="equi-toolbar-subtitle">{{title}}</span>
-        </ion-title>
+
         <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">{{btnSubmitText}}</button>
+            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">Guardar</button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content>
     <form [formGroup]="form">
-        <ion-item *ngIf="showId">
-            <ion-label>ID</ion-label>
-            <ion-input type="text" formControlName="Id"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Nombe del {{profesionalLabel}}</ion-label>
-            <ion-input type="text" formControlName="NombreProfesional"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label>Fecha</ion-label>
-            <ion-datetime displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNotificacion"
-                max="2050"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label>Hora</ion-label>
-            <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"></ion-datetime>
-        </ion-item>
-        <ion-item>
-            <ion-label>Descripcion</ion-label>
-            <ion-input type="text" formControlName="Descripcion"></ion-input>
-        </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="person" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-input type="text" class="equi-input-normal-text" placeholder="Nombe del {{profesionalLabel}}" formControlName="NombreProfesional"></ion-input>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="calendar" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime class="equi-input-normal-text" placeholder="Fecha" displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar"
+                            doneText="Aceptar" formControlName="FechaNotificacion" max="2050"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="time" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime class="equi-input-normal-text" placeholder="Hora" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion"
+                            cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <ion-item>
+                        <ion-textarea class="equi-input-normal-text" autoresize formControlName="Descripcion" [attr.rows]="3" placeholder="Ingresar nota"></ion-textarea>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </form>
 </ion-content>

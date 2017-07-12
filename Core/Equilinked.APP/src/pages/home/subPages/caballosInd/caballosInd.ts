@@ -1,15 +1,14 @@
-
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams} from 'ionic-angular';
-import {Utils} from '../../../../app/utils'
+import { Events, NavController, NavParams } from 'ionic-angular';
+import { Utils } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { CaballoService } from '../../../../services/caballo.service';
-import { SecurityService} from '../../../../services/security.service';
+import { SecurityService } from '../../../../services/security.service';
 import { Caballo } from '../../../../model/caballo';
 import { UserSessionEntity } from '../../../../model/userSession';
-import { FichaCaballoPage} from '../../ficha-caballo/ficha-caballo-home';
-import { AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
+import { FichaCaballoPage } from '../../ficha-caballo/ficha-caballo-home';
+import { AdminCaballosInsertPage } from '../../admin-caballos/admin-caballos-insert';
 
 
 @Component({
@@ -17,7 +16,10 @@ import { AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-inse
   templateUrl: 'caballosInd.html',
   providers: [CommonService, CaballoService, SecurityService]
 })
-export class CaballosInd {
+export class CaballosInd implements OnDestroy, OnInit {
+
+  private caballoIdSelected: number;
+
   caballos: Array<Caballo>;
   caballosList: Array<Caballo>;
   session: UserSessionEntity;
@@ -25,18 +27,25 @@ export class CaballosInd {
   tmpCaballoIdSelected: number = 0;
 
   constructor(
+    private events: Events,
     public navCtrl: NavController,
     public navParams: NavParams,
     private _commonService: CommonService,
     private _caballoService: CaballoService,
     private _securityService: SecurityService) {
+    this.caballoIdSelected = 0; //No hay
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log("CABALLOS IND");
     this.session = this._securityService.getInitialConfigSession();
     this.caballosList = new Array<Caballo>();
     this.loadcaballos();
+    this.addEvents(); //Registrar el listener para escuchar cuando se debe refrescar la pantalla
+  }
+
+  ngOnDestroy(): void {
+    this.removeEvents(); //Eliminar listener
   }
 
   // CARGA DE CABALLOS
@@ -71,6 +80,7 @@ export class CaballosInd {
   goToFicha(caballoSelected: Caballo): void {
     /* Flag para determinar que no se este eliminando al mismo tiempo */
     if (!this.isDeleting) {
+      this.caballoIdSelected = caballoSelected.ID; //guardo el ID
       this.navCtrl.push(FichaCaballoPage, {
         caballoSelected: caballoSelected
       });
@@ -94,7 +104,7 @@ export class CaballosInd {
       .subscribe(res => {
         this._commonService.hideLoading();
         console.log(res);
-        this.reloadController();
+        this.loadcaballos();
         this.isDeleting = false;
       }, error => {
         this._commonService.ShowErrorHttp(error, "Error al eliminar el caballo");
@@ -119,7 +129,32 @@ export class CaballosInd {
     }
   }
 
-  reloadController() {
-    this.loadcaballos();
+  private loadCaballosAndfindCaballoById(idCaballo: any) {
+    this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
+      .subscribe(res => {
+        this.caballosList = res;
+
+        //Buscamos el caballo para enviarlo a la pantalla de "ficha de caballo"
+        let caballoList = this.caballosList.filter(c => c.ID == idCaballo);
+        if (caballoList.length > 0) {
+          this.events.publish("caballo:change", caballoList[0]);
+        } else { //Eliminaron el caballo que queriamos enviar
+          this.caballoIdSelected = 0;
+        }
+      }, error => {
+        this._commonService.ShowErrorHttp(error, "Error consultando los caballos");
+      });
   }
+
+  private addEvents(): void {
+    this.events.subscribe("caballos:refresh", () => {
+      console.info("Intando refrescar lista de caballos!");
+      this.loadCaballosAndfindCaballoById(this.caballoIdSelected); //Refrescamos e intentamos enviar el nuevo caballo para refrescar el nombre de la tarjeta
+    });
+  }
+
+  private removeEvents(): void {
+    this.events.unsubscribe("caballos:refresh");
+  }
+
 }

@@ -13,18 +13,18 @@
     <form [formGroup]="invitacionForm">
         <ion-list>
             <ion-item class="item-without-padding">
-                <h2 class="equi-bold-text">Recomendar a un amigo</h2>
+                <h2 class="equi-title-form">Recomendar a un amigo</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-input formControlName="CorreoDestinatario" type="email" placeholder="Ingresar su correo electrónico">
+                <ion-input class="equi-input-normal-text" formControlName="CorreoDestinatario" type="email" placeholder="Ingresar su correo electrónico">
                 </ion-input>
             </ion-item>
 
             <ion-item class="item-without-padding">
-                <h2 class="equi-bold-text">Descripción</h2>
+                <h2 class="equi-title-form">Descripción</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-textarea formControlName="Mensaje" [attr.rows]="4" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos. https://equilinked.com/download"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" autoresize formControlName="Mensaje" [attr.rows]="4" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos. https://equilinked.com/download"></ion-textarea>
             </ion-item>
         </ion-list>
     </form>

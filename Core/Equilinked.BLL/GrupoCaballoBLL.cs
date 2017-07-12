@@ -67,10 +67,26 @@ namespace Equilinked.BLL
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                return db.GrupoCaballo
+                Grupo grupo = db.Grupo.Where(g => g.ID == GrupoID).FirstOrDefault();
+                Dictionary<int, Establo> mapEstablos = db.Establo.Where(e => e.Propietario_ID == grupo.Propietario_ID)
+                    .ToDictionary(e => e.ID);
+
+                List<GrupoCaballo> caballos = db.GrupoCaballo
                     .Include("Caballo")
                     .Where(gc => gc.Grupo_ID == GrupoID)
                     .ToList();
+
+                Establo est = null;
+                foreach(var gc in caballos)
+                {
+                    if(gc.Caballo.Establo_ID != null)
+                    {
+                        mapEstablos.TryGetValue(gc.Caballo.Establo_ID.Value, out est);
+                    }
+                    gc.Caballo.Establo = est;
+                }
+
+                return caballos;
             }
         }
 

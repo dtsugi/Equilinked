@@ -5,6 +5,13 @@ import { MyApp } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { MomentModule } from "angular2-moment";
 
+/*Utils */
+import { TextareaAutoresize } from "../utils/equi-autoresize/autoresize.directive";
+import { EquiButtonAdd } from "../utils/equi-button-add/equi-button-add";
+import { EquiItemList } from "../utils/equi-item-list/equi-item-list";
+import { EquiNextAlertHorse } from "../utils/equi-next-alert-horse/equi-next-alert-horse";
+import { EquiHistoryAlertHorse } from "../utils/equi-history-alert-horse/equi-history-alert-horse";
+
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
@@ -16,9 +23,14 @@ import { NotificacionesPage } from '../pages/notificaciones/notificaciones';
 import { NotificacionesViewPage } from '../pages/notificaciones/notificaciones-view';
 import { NotificacionesInsertPage } from '../pages/notificaciones/notificaciones-insert';
 import { NotificacionesExtendedInsertPage } from '../pages/notificaciones/notificaciones-extended-insert';
+import { NotificacionGeneralDetalle } from "../pages/notificaciones/notificacion-general-detalle/notificacion-general-detalle";
+import { NotificacionNotaDetalle } from "../pages/notificaciones/notificacion-nota-detalle/notificacion-nota-detalle";
+import { NotificacionesEditPage } from "../pages/notificaciones/notificaciones-edit/notificaciones-edit";
 
 /* Caballos */
 import { FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home";
+import { OpcionesCaballoPopover } from "../pages/home/ficha-caballo/opciones-caballo/opciones-caballo";
+import { CambioNombreCaballoPage } from "../pages/home/ficha-caballo/cambio-nombre/cambio-nombre";
 import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
 /* Caballos-Grupos */
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
@@ -80,13 +92,24 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     TabsPage,
     MenuSuperior,
     CaballosInd,
+    /*Utils */
+    TextareaAutoresize,
+    EquiButtonAdd,
+    EquiItemList,
+    EquiNextAlertHorse,
+    EquiHistoryAlertHorse,
     /* Notificaciones */
     NotificacionesPage,
     NotificacionesViewPage,
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
+    NotificacionGeneralDetalle,
+    NotificacionNotaDetalle,
+    NotificacionesEditPage,
     /* Caballos */
     FichaCaballoPage,
+    OpcionesCaballoPopover,
+    CambioNombreCaballoPage,
     AdminCaballosInsertPage,
     /* Caballos-Grupos */
     GruposCaballos,
@@ -159,8 +182,13 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     NotificacionesViewPage,
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
+    NotificacionGeneralDetalle,
+    NotificacionNotaDetalle,
+    NotificacionesEditPage,
     /* Caballos */
     FichaCaballoPage,
+    OpcionesCaballoPopover,
+    CambioNombreCaballoPage,
     AdminCaballosInsertPage,
     /* Caballos-Grupos */
     CreacionGrupoPage,

@@ -22,9 +22,7 @@
                     <ion-icon class="equi-icon-input" name="person"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" name="nombre" placeholder="Nombre" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" name="nombre" placeholder="Nombre" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
                 </ion-col>
             </ion-row>
 
@@ -33,9 +31,7 @@
                     <ion-icon class="equi-icon-input" name="mail"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input type="text" name="correo" placeholder="Correo" required="true" [(ngModel)]="perfil.Mail"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" name="correo" placeholder="Correo electrónico" required="true" [(ngModel)]="perfil.Mail"></ion-input>
                 </ion-col>
             </ion-row>
 
@@ -45,14 +41,12 @@
                     <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
-                    <ion-item>
-                        <ion-input type="tel" name="telefono-{{i}}" required="true" [(ngModel)]="telefono.Numero" placeholder="Núm. Telefónico"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="tel" name="telefono-{{i}}" required="true" [(ngModel)]="telefono.Numero"
+                        placeholder="Núm. Telefónico"></ion-input>
                 </ion-col>
                 <ion-col col-3>
-                    <ion-item>
-                        <ion-input type="text" name="tipo-num-{{i}}" required="true" [(ngModel)]="telefono.TipoTelefono" (focus)="selectTipoTelefono($event, telefono)"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" name="tipo-num-{{i}}" required="true" [(ngModel)]="telefono.TipoTelefono"
+                        (focus)="selectTipoTelefono($event, telefono)"></ion-input>
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)" name="remove-circle"
@@ -66,15 +60,12 @@
                     <ion-icon class="equi-icon-input" name="flag"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
-                    <ion-item>
-                        <ion-input type="text" name="pais" required="true" placeholder="País" [(ngModel)]="perfil.Pais" [readonly]="true" (focus)="selectPais()"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" name="pais" required="true" placeholder="País" [(ngModel)]="perfil.Pais"
+                        [readonly]="true" (focus)="selectPais()"></ion-input>
                 </ion-col>
                 <ion-col col-5>
-                    <ion-item>
-                        <ion-input type="text" name="estado" required="true" placeholder="Provincia" [(ngModel)]="perfil.Estado" [readonly]="true"
-                            (focus)="selectEstadoProvincia()"></ion-input>
-                    </ion-item>
+                    <ion-input class="equi-input-normal-text" type="text" name="estado" required="true" placeholder="Provincia" [(ngModel)]="perfil.Estado"
+                        [readonly]="true" (focus)="selectEstadoProvincia()"></ion-input>
                 </ion-col>
             </ion-row>
 

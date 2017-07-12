@@ -1,0 +1,20 @@
+<ion-item-sliding>
+    <ion-item (click)="executeActionClick()">
+        <ion-avatar *ngIf="image" item-left>
+            <img src="{{image}}">
+        </ion-avatar>
+        <h2 *ngIf="title" class="equi-title-form">{{title}}</h2>
+        <p *ngIf="subtitle" class="equi-subtitle-form">{{subtitle}}</p>
+        <p *ngIf="subtitleWithCount" class="equi-principal-color">{{subtitleWithCount}}</p>
+        <p *ngIf="location">
+            <ion-icon class="equi-principal-color" name="pin"></ion-icon>
+            <span class="equi-subtitle-form">{{location}}</span>
+        </p>
+    </ion-item>
+    <ion-item-options *ngIf="actionDelete.observers.length > 0">
+        <button ion-button color="danger" icon-left (click)="executeActionDelete()">                
+            <ion-icon name="trash"></ion-icon>       
+            {{labelDelete}}
+        </button>
+    </ion-item-options>
+</ion-item-sliding>

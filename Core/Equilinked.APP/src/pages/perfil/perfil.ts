@@ -1,11 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { Events, NavController, PopoverController } from "ionic-angular";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { Events, NavController, PopoverController, Slides } from "ionic-angular";
 import { PopoverDatosPage } from "./datos/pop-over/pop-over-datos";
 
 @Component({
     templateUrl: "perfil.html"
 })
 export class PerfilPage implements OnInit {
+
+    @ViewChild(Slides) slides: Slides;
 
     selectedTab: string; //el tab seleleccionado
     parametrosEstablos: any;
@@ -20,6 +22,11 @@ export class PerfilPage implements OnInit {
     }
 
     ngOnInit() {
+    }
+
+    slideChanged() {
+        let currentIndex = this.slides.getActiveIndex();
+        console.log('Current index is', currentIndex);
     }
 
     /*Se visualiza el popover de opciones en "DATOS" */

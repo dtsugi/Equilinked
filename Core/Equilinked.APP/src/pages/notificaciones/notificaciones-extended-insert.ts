@@ -22,9 +22,10 @@ export class NotificacionesExtendedInsertPage {
     isUpdate: boolean;
     profesionalLabel: string;
     btnSubmitText: string;
-    title: string;
 
-    constructor(public navCtrl: NavController,
+    constructor(
+        private events: Events,
+        public navCtrl: NavController,
         public navParams: NavParams,
         private formBuilder: FormBuilder,
         private _commonService: CommonService,
@@ -35,9 +36,9 @@ export class NotificacionesExtendedInsertPage {
     ngOnInit() {
         this.alertaEntity = new Alerta();
         this.session = this._securityService.getInitialConfigSession();
-        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate", "title", "callbackController"])) {
-            this.title = this.navParams.get("title");
+        if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isUpdate", "callbackController"])) {
             this.alertaEntity = this.navParams.get("alertaEntity");
+            console.log(this.alertaEntity);
             this.tipoAlerta = this.alertaEntity.Tipo;
             console.log("TIPO ALERTA:", this.tipoAlerta);
             this.isUpdate = this.navParams.get("isUpdate");
@@ -88,13 +89,16 @@ export class NotificacionesExtendedInsertPage {
             .subscribe(res => {
                 console.log(res);
                 this._commonService.hideLoading();
-                this._commonService.ShowInfo("El registro se modifico exitosamente");
-                this.updateCallbackController();
-                this.goBack();
+                this.events.publish("notificaciones:caballo:refresh"); //Refrescamos lista de notificaciones
+                if (this.alertaEntity.ID != null && this.alertaEntity.ID > 0) {
+                    this.events.publish("notificacion:caballo:refresh");//refrescamos solo la del detalle!
+                }
+                this.navCtrl.pop().then(() => {
+                    this._commonService.ShowInfo("El registro se modifico exitosamente");
+                });
             }, error => {
                 console.log(error);
-                this._commonService.hideLoading();
-                this._commonService.ShowInfo("Error al modificar el registro");
+                this._commonService.ShowErrorHttp(error, "Error al modificar el registro");
             });
     }
 

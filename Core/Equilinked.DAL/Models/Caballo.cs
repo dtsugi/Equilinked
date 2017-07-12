@@ -18,7 +18,6 @@ namespace Equilinked.DAL.Models
         {
             this.Alimentacion1 = new HashSet<Alimentacion>();
             this.GrupoCaballo = new HashSet<GrupoCaballo>();
-            this.EstabloCaballo = new HashSet<EstabloCaballo>();
         }
     
         public int ID { get; set; }
@@ -27,7 +26,6 @@ namespace Equilinked.DAL.Models
         public string NumeroChip { get; set; }
         public Nullable<int> NumeroFEI { get; set; }
         public Nullable<bool> EstadoFEI { get; set; }
-        public string Protector { get; set; }
         public string Embocadura { get; set; }
         public string ExtrasDeCabezada { get; set; }
         public Nullable<bool> ADN { get; set; }
@@ -46,20 +44,20 @@ namespace Equilinked.DAL.Models
         public Nullable<int> Propietario_ID { get; set; }
         public string Observaciones { get; set; }
         public Nullable<int> Establo_ID { get; set; }
+        public string NombrePropietario { get; set; }
+        public string Marcas { get; set; }
+        public Nullable<int> Protector_ID { get; set; }
     
         public virtual ICollection<Alimentacion> Alimentacion1 { get; set; }
-        public virtual Criador Criador { get; set; }
-        public virtual Establecimiento Establecimiento { get; set; }
-        public virtual EstadoProvincia EstadoProvincia { get; set; }
         public virtual Genero Genero { get; set; }
         public virtual Grupo Grupo { get; set; }
-        public virtual OtrasMarcas OtrasMarcas { get; set; }
-        public virtual Pedigree Pedigree { get; set; }
         public virtual Pelaje Pelaje { get; set; }
-        public virtual PersonaACargo PersonaACargo { get; set; }
         public virtual Propietario Propietario { get; set; }
         public virtual ICollection<GrupoCaballo> GrupoCaballo { get; set; }
-        public virtual ICollection<EstabloCaballo> EstabloCaballo { get; set; }
         public virtual Establo Establo { get; set; }
+        public virtual Protector Protector { get; set; }
+        public virtual GenealogiaCaballo GenealogiaCaballo { get; set; }
+        public virtual CriadorCaballo CriadorCaballo { get; set; }
+        public virtual ResponsableCaballo ResponsableCaballo { get; set; }
     }
 }

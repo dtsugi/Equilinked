@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, PopoverController} from 'ionic-angular';
-import {Utils, ConstantsConfig} from '../../../../app/utils'
+import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
-import {AlertaService} from '../../../../services/alerta.service';
-import {Alerta} from '../../../../model/alerta';
-import {NotificacionesInsertPage} from '../../../notificaciones/notificaciones-insert';
+import { AlertaService } from '../../../../services/alerta.service';
+import { Alerta } from '../../../../model/alerta';
+import { NotificacionNotaDetalle } from "../../../notificaciones/notificacion-nota-detalle/notificacion-nota-detalle";
+import { NotificacionesInsertPage } from '../../../notificaciones/notificaciones-insert';
 
 @Component({
     templateUrl: 'notas.html',
     providers: [CommonService, AlertaService]
 })
-export class NotasPage {
+export class NotasPage implements OnInit, OnDestroy {
+
     idCaballo: number;
     nombreCaballo: string = "";
     notificacionList = [];
@@ -19,6 +21,7 @@ export class NotasPage {
     isDeleting: boolean = false;
 
     constructor(
+        private events: Events,
         public navCtrl: NavController,
         public navParams: NavParams,
         public popoverCtrl: PopoverController,
@@ -29,19 +32,28 @@ export class NotasPage {
 
     ngOnInit() {
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
-            this.idCaballo = this.navParams.get("idCaballoSelected");            
+            this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-            this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getAllNotificacionesByCaballoId(true);
         }
+        this.addEvents();
     }
 
-    getAllNotificacionesByCaballoId(caballoId: number, tipoAlertasEnum: number) {
-        this._commonService.showLoading("Procesando..");
-        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_ALL, tipoAlertasEnum)
+    ngOnDestroy(): void {
+        this.removeEvents();
+    }
+
+    getAllNotificacionesByCaballoId(loading: boolean) {
+        if (loading)
+            this._commonService.showLoading("Procesando..");
+
+        this._alertaService.getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_ALL, this.tipoAlerta)
             .subscribe(res => {
                 console.log("RES:", res);
                 this.notificacionList = res;
-                this._commonService.hideLoading();
+
+                if (loading)
+                    this._commonService.hideLoading();
             }, error => {
                 this._commonService.ShowErrorHttp(error, "Error obteniendo las notificaciones");
             });
@@ -50,13 +62,9 @@ export class NotasPage {
     goViewNotificacion(notificacion) {
         /* Flag para determinar que no se este eliminando al mismo tiempo */
         if (!this.isDeleting) {
-            this.navCtrl.push(NotificacionesInsertPage,
+            this.navCtrl.push(NotificacionNotaDetalle,
                 {
-                    alertaEntity: notificacion,
-                    isFromNotas: true,
-                    isUpdate: true,
-                    callbackController: this,
-                    callbackMethodController: this.reloadController
+                    alertaId: notificacion.ID
                 });
         }
     }
@@ -82,7 +90,8 @@ export class NotasPage {
             .subscribe(res => {
                 this._commonService.hideLoading();
                 console.log(res);
-                this.reloadController();
+                this.getAllNotificacionesByCaballoId(true);
+
                 this.isDeleting = false;
             }, error => {
                 this._commonService.ShowErrorHttp(error, "Error al eliminar la nota");
@@ -90,11 +99,17 @@ export class NotasPage {
             });
     }
 
-    reloadController() {
-        this.getAllNotificacionesByCaballoId(this.idCaballo, this.tipoAlerta);
-    }
-
     goBack() {
         this.navCtrl.pop();
+    }
+
+    private addEvents(): void {
+        this.events.subscribe("notificaciones:notas:caballo:refresh", () => {
+            this.getAllNotificacionesByCaballoId(false);
+        });
+    }
+
+    private removeEvents(): void {
+        this.events.subscribe("notificaciones:notas:caballo:refresh");
     }
 }

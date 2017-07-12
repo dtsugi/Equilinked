@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar>
+        <ion-buttons end>
+            <button ion-button class="equi-toolbar-btn" (click)="edit()">
+                Editar
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <div *ngIf="alertaEntity">
+        <p class="equi-normal-text">
+            {{alertaEntity.Fecha}}
+        </p>
+        <p class="equi-normal-text">
+            <span style="font-size: 40px;font-weight: bold;">{{alertaEntity.Hora}}</span> &nbsp; {{alertaEntity.Meridiano}}
+        </p>
+        <p class="equi-normal-text">
+            <ion-icon name="person" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaEntity.NombreProfesional}}
+        </p>
+    </div>
+</ion-content>

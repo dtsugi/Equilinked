@@ -51,7 +51,6 @@ namespace Equilinked.DAL.Models
         public virtual DbSet<Tipo_Numero> Tipo_Numero { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<Establo> Establo { get; set; }
-        public virtual DbSet<EstabloCaballo> EstabloCaballo { get; set; }
         public virtual DbSet<EstabloTelefono> EstabloTelefono { get; set; }
         public virtual DbSet<EstabloCorreo> EstabloCorreo { get; set; }
         public virtual DbSet<MensajeContacto> MensajeContacto { get; set; }
@@ -62,6 +61,10 @@ namespace Equilinked.DAL.Models
         public virtual DbSet<PreguntaFrecuente> PreguntaFrecuente { get; set; }
         public virtual DbSet<PropietarioTelefono> PropietarioTelefono { get; set; }
         public virtual DbSet<AlertaGrupo> AlertaGrupo { get; set; }
+        public virtual DbSet<GenealogiaCaballo> GenealogiaCaballo { get; set; }
+        public virtual DbSet<Protector> Protector { get; set; }
+        public virtual DbSet<CriadorCaballo> CriadorCaballo { get; set; }
+        public virtual DbSet<ResponsableCaballo> ResponsableCaballo { get; set; }
     
         public virtual ObjectResult<sp_GetAlertasByPropietarioId_Result> sp_GetAlertasByPropietarioId(Nullable<int> pROPIETARIO_ID)
         {

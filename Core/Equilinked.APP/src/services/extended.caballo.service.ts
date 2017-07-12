@@ -13,6 +13,20 @@ export class ExtendedCaballoService {
 
     constructor(private _http: Http) { }
 
+    getAllPaises(): Promise<any> {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllPaises/", []);
+        return this._http.get(this.url)
+            .map(paises => paises.json())
+            .toPromise();
+    }
+
+    getAllProtector(): Promise<any> {
+        this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllProtector/", []);
+        return this._http.get(this.url)
+            .map(response => response.json())
+            .toPromise();
+    }
+
     getAllGeneroComboBox() {
         this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllGeneroComboBox/", []);
         console.log("URL" + this.url);

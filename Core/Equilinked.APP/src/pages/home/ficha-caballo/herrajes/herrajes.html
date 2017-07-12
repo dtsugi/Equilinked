@@ -12,6 +12,7 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
+
 <ion-content>
     <ion-grid>
         <ion-row>
@@ -23,31 +24,12 @@
             <hr>
         </ion-row>
     </ion-grid>
-    <ion-list>
-        <ion-grid>
-            <ion-item-sliding *ngFor="let notificacion of nextNotificacionList" (click)="view(notificacion)">
-                <ion-item>
-                    <ion-row>
-                        <ion-col col-8>
-                            {{notificacion.FechaNotificacionToCurrentCulture}}
-                        </ion-col>
-                        <ion-col>
-                            &nbsp;{{notificacion.HoraNotificacion}}
-                        </ion-col>
-                        <ion-col col-1>
-                            <ion-icon name="notifications"></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                </ion-item>
-                <ion-item-options *ngIf="!notificacion.AlertaGrupal">
-                    <button ion-button color="danger" icon-left (click)="delete(notificacion)">
-          <ion-icon name="trash"></ion-icon>       
-          Eliminar
-</button>
-                </ion-item-options>
-            </ion-item-sliding>
-        </ion-grid>
+
+    <ion-list no-lines>
+        <equi-next-alert-horse *ngFor="let notificacion of nextNotificacionList" [alert]="notificacion" (actionClickItem)="view(notificacion)"
+            [labelDelete]="'Eliminar'" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
     </ion-list>
+
     <ion-grid>
         <ion-row>
             <ion-col class="equi-title-form">
@@ -57,33 +39,12 @@
         <ion-row>
             <hr>
         </ion-row>
-        <ion-row (click)="insert()">
-            <ion-col>
-                <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-                <span class="equi-title-form-primary">Agregar nuevo</span>
-            </ion-col>
-        </ion-row>
+
+        <equi-button-add [label]="'Agregar nuevo'" (action)="insert()"></equi-button-add>
     </ion-grid>
-    <ion-list>
-        <ion-grid>
-            <ion-item-sliding *ngFor="let notificacion of historyNotificacionList" (click)="view(notificacion)">
-                <ion-item>
-                    <ion-row>
-                        <ion-col col-4>
-                            {{notificacion.FechaNotificacionToString}}
-                        </ion-col>
-                        <ion-col>
-                            {{notificacion.NombreProfesional}}
-                        </ion-col>
-                    </ion-row>
-                </ion-item>
-                <ion-item-options *ngIf="!notificacion.AlertaGrupal">
-                    <button ion-button color="danger" icon-left (click)="delete(notificacion)">
-          <ion-icon name="trash"></ion-icon>       
-          Eliminar
-</button>
-                </ion-item-options>
-            </ion-item-sliding>
-        </ion-grid>
+
+    <ion-list no-lines>
+        <equi-history-alert-horse *ngFor="let notificacion of historyNotificacionList" [alert]="notificacion" [labelDelete]="'Eliminar'"
+            [professionPerson]="'Herrero'" (actionDeleteItem)="delete(notificacion)" (actionEditItem)="edit(notificacion)"></equi-history-alert-horse>
     </ion-list>
 </ion-content>

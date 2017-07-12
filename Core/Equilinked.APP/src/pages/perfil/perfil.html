@@ -41,12 +41,12 @@
             </ion-segment-button>
         </ion-segment>
     </ion-toolbar>
-
+    
     <div *ngIf="selectedTab == 'datos'">
         <segment-datos></segment-datos>
     </div>
     <div *ngIf="selectedTab == 'establos'">
         <segment-establos [parametros]="parametrosEstablos"></segment-establos>
     </div>
-    
+
 </ion-content>

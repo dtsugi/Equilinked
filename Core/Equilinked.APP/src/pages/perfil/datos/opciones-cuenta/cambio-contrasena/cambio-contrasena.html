@@ -13,19 +13,19 @@
     <form [formGroup]="formCambioPass">
 
         <ion-item class="item-without-padding">
-            <h2 class="equi-bold-text">Contraseña actual</h2>
+            <h2 class="equi-title-form">Contraseña actual</h2>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input formControlName="ContrasenaActual" type="password" placeholder="Ingresar contraseña actual"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="ContrasenaActual" type="password" placeholder="Ingresar contraseña actual"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <h2 class="equi-bold-text">Contraseña nueva</h2>
+            <h2 class="equi-title-form">Contraseña nueva</h2>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input formControlName="NuevaContrasena" type="password" placeholder="Ingresar contraseña nueva"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="NuevaContrasena" type="password" placeholder="Ingresar contraseña nueva"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="Confirmar contraseña nueva"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="Confirmar contraseña nueva"></ion-input>
         </ion-item>
         <p *ngIf="formCambioPass.get('NuevaContrasena').hasError('nomatch')" class="equi-danger-color">Las nuevas contraseñas no coinciden</p>
         <p><a class="equi-principal-color">¿Olvidaste tu contraseña? restablécela</a></p>

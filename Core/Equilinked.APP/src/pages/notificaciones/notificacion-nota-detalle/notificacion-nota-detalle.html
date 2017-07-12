@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-navbar>
+        <ion-buttons end>
+            <button ion-button class="equi-toolbar-btn" (click)="edit()">
+                Editar
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="alertaEntity">
+        <div *ngIf="alertaEntity.AlertaGrupal" class="equi-table-row-title equi-bold-text">
+            Nota grupal
+        </div>
+
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <p class="equi-bold-text">
+                        {{alertaEntity.Titulo}}
+                    </p>
+                    <hr />
+                    <p class="equi-normal-text">
+                        {{alertaEntity.Fecha}}
+                    </p>
+                    <p class="equi-normal-text">
+                        <span style="font-size: 40px;font-weight: bold;">{{alertaEntity.Hora}}</span> &nbsp; {{alertaEntity.Meridiano}}
+                    </p>
+                    <hr />
+                    <pre class="equi-normal-text">{{alertaEntity.Descripcion}}</pre>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+    </div>
+</ion-content>

@@ -27,7 +27,10 @@
             <hr>
         </ion-row>
         <ion-row>
-            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.Solido}}" [disabled]="true"></ion-textarea>
+            <ion-col *ngIf="alimentacion.Solido" col-12 class="equi-input-normal-text col-input-text-area">
+                {{alimentacion.Solido}}
+            </ion-col>
+            <ion-textarea *ngIf="!alimentacion.Solido" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="true"></ion-textarea>
         </ion-row>
 
         <ion-row class="equi-title-form">
@@ -37,7 +40,10 @@
             <hr>
         </ion-row>
         <ion-row>
-            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.SuplementosDietarios}}" [disabled]="true"></ion-textarea>
+            <ion-col *ngIf="alimentacion.SuplementosDietarios" col-12 class="equi-input-normal-text col-input-text-area">
+                {{alimentacion.SuplementosDietarios}}
+            </ion-col>
+            <ion-textarea *ngIf="!alimentacion.SuplementosDietarios" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="edicion"></ion-textarea>
         </ion-row>
 
         <ion-row class="equi-title-form">
@@ -47,7 +53,10 @@
             <hr>
         </ion-row>
         <ion-row>
-            <ion-textarea rows="6" aria-placeholder="Descripcion" value="{{alimentacion.Pasto}}" [disabled]="true"></ion-textarea>
+            <ion-col *ngIf="alimentacion.Pasto" col-12 class="equi-input-normal-text col-input-text-area">
+                {{alimentacion.Pasto}}
+            </ion-col>
+            <ion-textarea *ngIf="!alimentacion.Pasto" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="edicion"></ion-textarea>
         </ion-row>
     </ion-grid>
 </ion-content>

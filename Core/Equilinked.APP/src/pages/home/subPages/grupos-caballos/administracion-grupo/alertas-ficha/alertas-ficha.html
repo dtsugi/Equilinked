@@ -58,14 +58,7 @@
             <hr />
         </ion-row>
 
-        <ion-row>
-            <ion-col>
-                <ion-item (click)="create()">
-                    <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-                    <span class="equi-title-form-primary">Nuevo registro</span>
-                </ion-item>
-            </ion-col>
-        </ion-row>
+        <equi-button-add [label]="'Nuevo registro'" (action)="create()"></equi-button-add>
     </ion-grid>
 
     <ion-list>
@@ -95,7 +88,7 @@
                 </ion-item-sliding>
             </div>
             <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
-                <ion-item no-lines>
+                <ion-item text-wrap no-lines>
                     <ion-row class="equi-table-row-title">
                         <ion-col col-8>
                             {{alerta.Alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}

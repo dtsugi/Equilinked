@@ -15,18 +15,18 @@
     <form>
         <ion-list>
             <ion-item class="item-without-padding">
-                <h2 class="equi-bold-text">Motivo del contato</h2>
+                <h2 class="equi-title-form">Motivo del contato</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-select name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
+                <ion-select class="equi-input-normal-text" placeholder="Motivo" name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
                     <ion-option *ngFor="let motivo of motivos" value="{{motivo.ID}}">{{motivo.Descripcion}}</ion-option>
                 </ion-select>
             </ion-item>
             <ion-item class="item-without-padding">
-                <h2 class="equi-bold-text">Descripción</h2>
+                <h2 class="equi-title-form">Descripción</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-textarea name="descripcion" [attr.rows]="5" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="Describa el problema y/o sugerencia"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" autoresize name="descripcion" [attr.rows]="5" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="Describa el problema y/o sugerencia"></ion-textarea>
             </ion-item>
         </ion-list>
     </form>

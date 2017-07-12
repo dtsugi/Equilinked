@@ -16,14 +16,21 @@
 
 <ion-content>
     <form [formGroup]="grupoCaballosForm">
-        <ion-item>
-            <ion-label>Nombre</ion-label>
-            <ion-input type="text" formControlName="Descripcion"></ion-input>
-        </ion-item>
+        <ion-grid>
+            <ion-row>
+                <ion-col col-3 class="equi-title-form equi-col-center">
+                    Nombre
+                </ion-col>
+                <ion-col>
+                    <ion-input type="text" class="equi-input-normal-text" placeholder="Nombre del grupo" formControlName="Descripcion"></ion-input>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </form>
 
     <ion-grid>
         <ion-row>
+            <ion-col col-12 class="equi-title-form">Agregar caballos</ion-col>
             <ion-col col-12>
                 <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
             </ion-col>
@@ -40,7 +47,7 @@
             </ion-avatar>
             <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': c.seleccion}">{{c.caballo.Nombre}}</h2>
             <ion-icon name="{{c.seleccion ? 'remove-circle' : 'add-circle'}}" [ngClass]="{'equi-icon-selected': c.seleccion, 'equi-icon-unselected': !c.seleccion}"
-                item-right></ion-icon> 
+                item-right></ion-icon>
         </ion-item>
     </ion-list>
 </ion-content>

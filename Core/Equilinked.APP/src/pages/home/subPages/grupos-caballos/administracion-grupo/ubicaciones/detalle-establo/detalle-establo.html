@@ -18,22 +18,22 @@
     <ion-list *ngIf="establo" no-lines>
         <ion-item>
             <ion-icon name="ios-home" class="equi-icon-input" item-left></ion-icon>
-            {{establo.Nombre}}
+            <span class="equi-normal-text">{{establo.Nombre}}</span>
         </ion-item>
 
         <ion-item *ngIf="establo.Manager != ''">
             <ion-icon name="person" class="equi-icon-input" item-left></ion-icon>
-            {{establo.Manager}}
+            <span class="equi-normal-text">{{establo.Manager}}</span>
         </ion-item>
 
         <ion-item *ngFor="let correo of establo.EstabloCorreo; let i = index">
             <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="mail" item-left></ion-icon>
-            {{correo.CorreoElectronico}}
+            <span class="equi-normal-text">{{correo.CorreoElectronico}}</span>
         </ion-item>
 
         <ion-item *ngFor="let telefono of establo.EstabloTelefono; let i = index">
             <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="call" item-left></ion-icon>
-            {{telefono.Numero}}
+            <span class="equi-normal-text">{{telefono.Numero}}</span>
             <ion-note class="equi-principal-color equi-italic-text" item-right>
                 {{telefono.Tipo_Numero.Descripcion}}
             </ion-note>
@@ -41,12 +41,14 @@
 
         <ion-item *ngIf="establo.Direccion != ''">
             <ion-icon name="flag" class="equi-icon-input" item-left></ion-icon>
-            {{establo.Direccion}}
+            <span class="equi-normal-text">{{establo.Direccion}}</span>
         </ion-item>
 
         <ion-item>
             <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
-            <a class="equi-principal-color" (click)="editCaballos()">{{establo.Caballo.length}} caballo(s)</a>
+            <a class="equi-principal-color" (click)="editCaballos()">
+                <span class="equi-normal-text">{{establo.Caballo.length}} caballo(s)</span>
+            </a>
         </ion-item>
     </ion-list>
 </ion-content>

@@ -56,7 +56,6 @@ export class Caballo {
   NumeroChip: string;
   NumeroFEI: number;
   EstadoFEI: boolean;
-  Protector: string;
   Embocadura: string;
   ExtrasDeCabezada: string;
   ADN: boolean;
@@ -74,4 +73,18 @@ export class Caballo {
   PersonaACargo_ID: number;
   Propietario_ID: number;
   Observaciones: string;
+  Establo_ID: number;
+  NombrePropietario: string;
+  Marcas: string;
+  Protector_ID: number;
+  Protector: any;
+  GenealogiaCaballo: any;
+  CriadorCaballo: any;
+  ResponsableCaballo: any;
+
+  constructor() {
+    this.GenealogiaCaballo = {};
+    this.CriadorCaballo = {};
+    this.ResponsableCaballo = {};
+  }
 }

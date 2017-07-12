@@ -19,6 +19,38 @@ namespace Equilinked.API.Controllers
         private PelajeBLL _pelajeBLL;
         private CriadorBLL _criadorBLL;
         private OtrasMarcasBLL _otrasMarcasBLL;
+        private ProtectorBLL protectorBll;
+        private PaisBLL paisBll;
+
+        [HttpGet, Route("api/ExtendedCaballo/GetAllPaises")]
+        public IHttpActionResult GetAllPaises()
+        {
+            try
+            {
+                paisBll = new PaisBLL();
+                return Ok(paisBll.GetAll());
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No se pudo obtener la lista de paises"));
+            }
+        }
+
+        [HttpGet, Route("api/ExtendedCaballo/GetAllProtector")]
+        public IHttpActionResult GetAllProtector()
+        {
+            try
+            {
+                protectorBll = new ProtectorBLL();
+                return Ok(protectorBll.GetAllProtector());
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No se pudo obtener la lista de protectores"));
+            }
+        }
 
         [HttpGet, Route("api/ExtendedCaballo/GetAllGeneroComboBox")]
         public IHttpActionResult GetAllGeneroComboBox()

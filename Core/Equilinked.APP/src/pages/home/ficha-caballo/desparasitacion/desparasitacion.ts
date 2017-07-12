@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, PopoverController} from 'ionic-angular';
-import {Utils, ConstantsConfig} from '../../../../app/utils'
+import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
-import {AlertaService} from '../../../../services/alerta.service';
-import {Alerta} from '../../../../model/alerta';
-import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
+import { AlertaService } from '../../../../services/alerta.service';
+import { Alerta } from '../../../../model/alerta';
+import { NotificacionesExtendedInsertPage } from '../../../notificaciones/notificaciones-extended-insert';
+import { NotificacionGeneralDetalle } from "../../../notificaciones/notificacion-general-detalle/notificacion-general-detalle";
+import moment from "moment";
+import "moment/locale/es";
 
 @Component({
     templateUrl: 'desparasitacion.html',
     providers: [CommonService, AlertaService]
 })
-export class DesparasitacionPage {
+export class DesparasitacionPage implements OnInit, OnDestroy {
     idCaballo: number;
     nombreCaballo: string = "";
     historyNotificacionList = [];
@@ -20,6 +23,7 @@ export class DesparasitacionPage {
     isDeleting: boolean = false;
 
     constructor(
+        private events: Events,
         public navCtrl: NavController,
         public navParams: NavParams,
         public popoverCtrl: PopoverController,
@@ -28,40 +32,49 @@ export class DesparasitacionPage {
         private _alertaService: AlertaService) {
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-            this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
-            this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+            this.getAlertasByCaballo(true);
         }
+        this.addEvents();
     }
 
-    getHistorySerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
-        this._commonService.showLoading("Procesando..");
-        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_HISTORY, tipoAlertasEnum)
-            .subscribe(res => {
-                console.log("RES:", res);
-                this.historyNotificacionList = res;
-                this._commonService.hideLoading();
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo el historial de desparasitaciones");
+    ngOnDestroy(): void {
+        this.removeEvents();
+    }
+
+    private getAlertasByCaballo(loading: boolean): void {
+        if (loading)
+            this._commonService.showLoading("Procesando..");
+
+        this._alertaService.getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_HISTORY, this.tipoAlerta)
+            .toPromise()
+            .then(res => {
+                this.historyNotificacionList = res.map(alerta => {
+                    alerta.Fecha = moment(alerta.FechaNotificacion).format("DD/MM/YY");
+                    return alerta;
+                });
+                return this._alertaService
+                    .getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_NEXT, this.tipoAlerta)
+                    .toPromise();
+            }).then(res => {
+                this.nextNotificacionList = res.map(alerta => {
+                    alerta.Fecha = moment(alerta.FechaNotificacion).format("D [de] MMMM [de] YYYY");
+                    alerta.Hora = moment(alerta.HoraNotificacion, "HH:mm").format("hh:mm a");
+                    return alerta;
+                });
+
+                if (loading)
+                    this._commonService.hideLoading();
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Error obteniendo la información");
             });
     }
 
-    getNextSerializedByCaballoId(caballoId: number, tipoAlertasEnum: number) {
-        this._commonService.showLoading("Procesando..");
-        this._alertaService.getAllSerializedByCaballoId(caballoId, ConstantsConfig.ALERTA_FILTER_NEXT, tipoAlertasEnum)
-            .subscribe(res => {
-                console.log("RES:", res);
-                this.nextNotificacionList = res;
-                this._commonService.hideLoading();
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo las proximas desparasitaciones");
-            });
-    }
 
-    view(notificacion) {
+    edit(notificacion) {
         /* Flag para determinar que no se este eliminando al mismo tiempo */
         if (!this.isDeleting) {
             notificacion.CaballosList = new Array();
@@ -74,6 +87,15 @@ export class DesparasitacionPage {
                     callbackController: this
                 });
         }
+    }
+
+    view(notificacion) {
+        let params: any = {
+            alertaId: notificacion.ID,
+            caballoId: this.idCaballo
+        };
+
+        this.navCtrl.push(NotificacionGeneralDetalle, params);
     }
 
     insert() {
@@ -106,11 +128,20 @@ export class DesparasitacionPage {
     }
 
     reloadController() {
-        this.getHistorySerializedByCaballoId(this.idCaballo, this.tipoAlerta);
-        this.getNextSerializedByCaballoId(this.idCaballo, this.tipoAlerta);
+        this.getAlertasByCaballo(true);
     }
 
     goBack() {
         this.navCtrl.pop();
+    }
+
+    private addEvents(): void {
+        this.events.subscribe("notificaciones:caballo:refresh", () => {
+            this.getAlertasByCaballo(false);
+        });
+    }
+
+    private removeEvents(): void {
+        this.events.unsubscribe("notificaciones:caballo:refresh");
     }
 }

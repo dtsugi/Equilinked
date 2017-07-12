@@ -14,7 +14,11 @@ namespace Equilinked.BLL
     {
         public Alerta GetById(int id)
         {
-            return this._dbContext.Alerta.Where(x => x.ID == id).FirstOrDefault();
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                return db.Alerta.Where(x => x.ID == id).FirstOrDefault();
+            }
         }
 
         public bool DeleteById(int id)

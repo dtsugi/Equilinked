@@ -1,24 +1,17 @@
 ﻿using Equilinked.DAL.Dto;
 using Equilinked.DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.DAL.Dto
-{
-
+{ 
     public class CaballoDto : EntidadBase
     {
-
         public int ID { get; set; }
         public string Nombre { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string NumeroChip { get; set; }
         public int NumeroFEI { get; set; }
         public bool EstadoFEI { get; set; }
-        public string Protector { get; set; }
         public string Embocadura { get; set; }
         public string ExtrasDeCabezada { get; set; }
         public bool ADN { get; set; }
@@ -38,6 +31,14 @@ namespace Equilinked.DAL.Dto
         public int Propietario_ID { get; set; }
         public string Observaciones { get; set; }
         public Nullable<int> Establo_ID { get; set; }
+        public string NombrePropietario { get; set; }
+        public string Marcas { get; set; }
+        public Nullable<int> Protector_ID { get; set; }
+        public Protector Protector { get; set; }
+        public GenealogiaCaballo GenealogiaCaballo { get; set; }
+        public CriadorCaballo CriadorCaballo { get; set; }
+        public ResponsableCaballo ResponsableCaballo { get; set; }
+        public Establo Establo { get; set; }
 
         public CaballoDto() { }
 
@@ -49,7 +50,6 @@ namespace Equilinked.DAL.Dto
             NumeroChip = caballo.NumeroChip;
             NumeroFEI = this.ValidateIntParam(caballo.NumeroFEI);
             EstadoFEI = this.ValidateBoolParam(caballo.EstadoFEI);
-            Protector = caballo.Protector;
             Embocadura = caballo.Embocadura;
             ExtrasDeCabezada = caballo.ExtrasDeCabezada;
             ADN = this.ValidateBoolParam(caballo.ADN);
@@ -68,8 +68,14 @@ namespace Equilinked.DAL.Dto
             Propietario_ID = this.ValidateIntParam(caballo.Propietario_ID);
             Observaciones = caballo.Observaciones;
             Establo_ID = caballo.Establo_ID;
+            Protector_ID = caballo.Protector_ID;
+            NombrePropietario = caballo.NombrePropietario;
+            Marcas = caballo.Marcas;
+            Protector = caballo.Protector;
+            GenealogiaCaballo = caballo.GenealogiaCaballo;
+            CriadorCaballo = caballo.CriadorCaballo;
+            ResponsableCaballo = caballo.ResponsableCaballo;
         }
-
     }
 }
 
@@ -85,7 +91,6 @@ namespace Equilinked.DAL.Models
             NumeroChip = caballoDto.NumeroChip;
             NumeroFEI = caballoDto.NumeroFEI;
             EstadoFEI = caballoDto.EstadoFEI;
-            Protector = caballoDto.Protector;
             Embocadura = caballoDto.Embocadura;
             ExtrasDeCabezada = caballoDto.ExtrasDeCabezada;
             ADN = caballoDto.ADN;
@@ -104,6 +109,13 @@ namespace Equilinked.DAL.Models
             Propietario_ID = this.ValidateIntParamToEF(caballoDto.Propietario_ID);
             Observaciones = caballoDto.Observaciones;
             Establo_ID = caballoDto.Establo_ID;
+            Protector_ID = caballoDto.Protector_ID;
+            NombrePropietario = caballoDto.NombrePropietario;
+            Marcas = caballoDto.Marcas;
+            Protector = caballoDto.Protector;
+            GenealogiaCaballo = caballoDto.GenealogiaCaballo;
+            CriadorCaballo = caballoDto.CriadorCaballo;
+            ResponsableCaballo = caballoDto.ResponsableCaballo;
         }
     }
 }

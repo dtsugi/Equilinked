@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, Events} from 'ionic-angular';
-import {Utils} from '../../app/utils'
+import { NavController, NavParams, Events } from 'ionic-angular';
+import { Utils } from '../../app/utils'
 import { CommonService } from '../../services/common.service';
 import { AlertaService } from '../../services/alerta.service';
 import { CaballoService } from '../../services/caballo.service';
-import { SecurityService} from '../../services/security.service';
+import { SecurityService } from '../../services/security.service';
 import { AlertaCaballoService } from '../../services/alerta.caballo.service';
 import { Alerta } from '../../model/alerta';
 import { UserSessionEntity } from '../../model/userSession';
@@ -28,7 +28,9 @@ export class NotificacionesInsertPage {
     formNotificaciones: any;
     session: UserSessionEntity;
 
-    constructor(public navCtrl: NavController,
+    constructor(
+        private events: Events,
+        public navCtrl: NavController,
         public navParams: NavParams,
         private formBuilder: FormBuilder,
         private _commonService: CommonService,
@@ -52,19 +54,16 @@ export class NotificacionesInsertPage {
             this.disableFromNotas = this.isFromNotas;
             if (!this.isUpdate) {
                 this.alertaEntity.FechaNotificacion = Utils.getDateNow().ToString();
-            }            
+            }
         }
-        // this.alertaEntity = this.navParams.data.alerta;
-        // if (this.alertaEntity != undefined) {
-        //     this.isUpdate = true;
-        // }
-        // else {
-        //     this.isUpdate = false;            
-        //     this.alertaEntity.FechaNotificacion = Utils.getDateNow().ToString();
-        // }
+
         this.getTiposAlerta();
         this.getAllCaballo();
         this.initForm();
+    }
+
+    goBack(): void {
+        this.navCtrl.pop();
     }
 
     initForm() {
@@ -117,20 +116,13 @@ export class NotificacionesInsertPage {
             .subscribe(res => {
                 console.log(res);
                 this._commonService.hideLoading();
-                this._commonService.ShowInfo("El registro se modifico exitosamente");
-                this.updateCallbackController();
-                if (this.isFromNotas) {
-                    this.navCtrl.pop();
-                    // this.navCtrl.popTo(NotificacionesViewPage, 
-                    // { notificacionSelected: this.formNotificaciones.value },
-                    // null,NotificacionesViewPage.apply(this,'myCallbackFunction'));                    
-                } else {
-                    if (this.isUpdate) {
-                        this.navCtrl.pop();
-                    } else {
-                        this.navCtrl.push(NotificacionesPage);
-                    }
+                this.events.publish("notificaciones:notas:caballo:refresh");
+                if (this.alertaEntity.ID != null && this.alertaEntity.ID > 0) {
+                    this.events.publish("notificacion:nota:caballo:refresh");
                 }
+                this.navCtrl.pop().then(() => {
+                    this._commonService.ShowInfo("El registro se modifico exitosamente");
+                });
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();

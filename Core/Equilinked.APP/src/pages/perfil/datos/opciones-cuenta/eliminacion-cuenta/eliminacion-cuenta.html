@@ -4,7 +4,7 @@
 </ion-header>
 
 <ion-content padding>
-    <h2 class="equi-bold-text">Eliminar cuenta</h2>
+    <h2 class="equi-title-form">Eliminar cuenta</h2>
     <hr />
     <p>
         Al eliminar tu cuenta de Equilinked:
@@ -21,10 +21,10 @@
 
     <form [formGroup]="cuentaForm" (submit)="deleteAcount()">
         <ion-item class="item-without-padding">
-            <ion-input formControlName="Correo" type="email" placeholder="Ingresar correo electrónico"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="Correo" type="email" placeholder="Ingresar correo electrónico"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input formControlName="Password" type="password" placeholder="Ingresar contraseña"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="Password" type="password" placeholder="Ingresar contraseña"></ion-input>
         </ion-item>
         <ion-grid>
             <ion-row>

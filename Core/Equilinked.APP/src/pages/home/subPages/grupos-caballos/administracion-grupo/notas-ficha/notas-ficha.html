@@ -29,10 +29,7 @@
 <ion-content>
     <ion-searchbar *ngIf="!modoEdicion" (ionInput)="filter($event)" [placeholder]="'Buscar'" [autocomplete]="true"></ion-searchbar>
 
-    <ion-item no-lines *ngIf="!modoEdicion" (click)="create()">
-        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-        <span class="equi-title-form-primary">Agregar nuevo</span>
-    </ion-item>
+    <equi-button-add [label]="'Agregar nuevo'" (action)="create()"></equi-button-add>
 
     <ion-item *ngIf="modoEdicion" (click)="selectAll()">
         <ion-icon class="equi-principal-color" name="{{getCountSelected() != notasRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"

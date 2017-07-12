@@ -13,10 +13,7 @@
             item-right></ion-icon>
     </ion-item>
 
-    <ion-item *ngIf="!parametrosEstablos.modoEdicion" (click)="newEstablo()">
-        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-        <span class="equi-title-form-primary">Agregar nuevo</span>
-    </ion-item>
+    <equi-button-add *ngIf="!parametrosEstablos.modoEdicion" [label]="'Agregar nuevo'" (action)="newEstablo()"></equi-button-add>
 
     <ion-item *ngFor="let e of establos" (click)="selectEstablo(e)">
         <ion-avatar item-left>
@@ -25,7 +22,7 @@
         <h2 class="equi-title-form">{{e.establo.Nombre}}</h2>
         <p *ngIf="e.establo.Direccion != ''">
             <ion-icon class="equi-principal-color" name="pin"></ion-icon>
-            <span>{{e.establo.Direccion}}</span>
+            <span class="equi-subtitle-form">{{e.establo.Direccion}}</span>
         </p>
 
         <ion-icon class="equi-icon-input" name="{{e.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="parametrosEstablos.modoEdicion"

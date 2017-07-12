@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams, PopoverController} from 'ionic-angular';
-import {Utils} from '../../../../app/utils'
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Utils } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
-import { AlimentacionService} from '../../../../services/alimentacion.service';
-import { Alimentacion} from '../../../../model/alimentacion';
-import {PopoverAlimentacionPage} from './pop-over/pop-over-alimentacion';
-import {FichaCaballoPage} from '../ficha-caballo-home';
-import {AlimentacionEditPage} from './alimentacion-edit';
+import { AlimentacionService } from '../../../../services/alimentacion.service';
+import { Alimentacion } from '../../../../model/alimentacion';
+import { PopoverAlimentacionPage } from './pop-over/pop-over-alimentacion';
+import { FichaCaballoPage } from '../ficha-caballo-home';
+import { AlimentacionEditPage } from './alimentacion-edit';
 
 
 @Component({
@@ -16,8 +16,9 @@ import {AlimentacionEditPage} from './alimentacion-edit';
 })
 export class AlimentacionPage {
     idCaballo: number;
-    nombreCaballo:string="";
+    nombreCaballo: string = "";
     alimentacion: Alimentacion;
+    edicion: boolean;
 
     constructor(
         public navCtrl: NavController,
@@ -26,11 +27,12 @@ export class AlimentacionPage {
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
         private _alimentacionService: AlimentacionService) {
+        this.edicion = true;
     }
 
     ngOnInit() {
         this.alimentacion = new Alimentacion();
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected","nombreCaballoSelected"])) {
+        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
             console.log(this.idCaballo);
@@ -39,6 +41,7 @@ export class AlimentacionPage {
     }
 
     getAlimentacionByIdCaballo(idCaballo) {
+        this.edicion = false;
         this._commonService.showLoading("Procesando..");
         this._alimentacionService.getByCaballoId(idCaballo)
             .subscribe(res => {
@@ -68,6 +71,7 @@ export class AlimentacionPage {
     edit() {
         this.navCtrl.push(AlimentacionEditPage, {
             alimentacionEntity: this.alimentacion,
+            nombreCaballo: this.nombreCaballo,
             callbackController: this
         });
 

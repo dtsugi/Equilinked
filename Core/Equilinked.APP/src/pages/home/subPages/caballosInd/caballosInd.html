@@ -1,25 +1,8 @@
 <ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"></ion-searchbar>
+
+<equi-button-add [label]="'Agregar nuevo'" (action)="goInsertCaballo()"></equi-button-add>
+
 <ion-list no-lines>
-    <ion-item (click)="goInsertCaballo()">
-        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-        <span class="equi-title-form-primary">Agregar nuevo</span> 
-    </ion-item>
-</ion-list>
-<ion-list no-lines>
-    <ion-item-sliding *ngFor="let caballo of caballosList" (click)="goToFicha(caballo)">
-        <ion-item>
-            <ion-avatar item-left>
-                <img src="assets/img/caballo.jpg">
-            </ion-avatar>
-            <h2>{{caballo.Nombre}}</h2>
-            <!--<p>{{getDescGrupoCaballo(caballo)}}</p>-->
-        </ion-item>
-        <ion-item-options>
-            <!--<button ion-button color="danger" icon-left (click)="deleteCaballo(caballo.ID)">-->
-            <button ion-button color="danger" icon-left (click)="confirmDeleteCaballo(caballo.ID)">                
-          <ion-icon name="trash"></ion-icon>       
-          Eliminar
-</button>
-        </ion-item-options>
-    </ion-item-sliding>
+    <equi-item-list *ngFor="let caballo of caballosList" [title]="caballo.Nombre" [image]="'assets/img/caballo.jpg'" [labelDelete]="'Eliminar'"
+        (actionItemClick)="goToFicha(caballo)" (actionItemDelete)="confirmDeleteCaballo(caballo.ID)"></equi-item-list>
 </ion-list>

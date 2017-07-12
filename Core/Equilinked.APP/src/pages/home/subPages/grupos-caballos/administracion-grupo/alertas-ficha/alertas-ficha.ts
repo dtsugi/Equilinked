@@ -9,7 +9,7 @@ import { DetalleAlertaPage } from "./detalle-alerta/detalle-alerta";
 import { ConstantsConfig } from "../../../../../../app/utils"
 import moment from "moment";
 import "moment/locale/es";
-
+ 
 @Component({
     templateUrl: "./alertas-ficha.html",
     providers: [AlertaGrupoService, CommonService, SecurityService],

@@ -51,9 +51,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Solido" Type="varchar" MaxLength="200" />
-          <Property Name="SuplementosDietarios" Type="varchar" MaxLength="200" />
-          <Property Name="Pasto" Type="varchar" MaxLength="200" />
+          <Property Name="Solido" Type="text" />
+          <Property Name="SuplementosDietarios" Type="text" />
+          <Property Name="Pasto" Type="text" />
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Caballo">
@@ -66,7 +66,6 @@
           <Property Name="NumeroChip" Type="nvarchar(max)" />
           <Property Name="NumeroFEI" Type="int" />
           <Property Name="EstadoFEI" Type="bit" />
-          <Property Name="Protector" Type="nvarchar(max)" />
           <Property Name="Embocadura" Type="nvarchar(max)" />
           <Property Name="ExtrasDeCabezada" Type="nvarchar(max)" />
           <Property Name="ADN" Type="bit" />
@@ -85,6 +84,9 @@
           <Property Name="Propietario_ID" Type="int" />
           <Property Name="Observaciones" Type="nvarchar(max)" />
           <Property Name="Establo_ID" Type="int" />
+          <Property Name="NombrePropietario" Type="varchar" MaxLength="255" />
+          <Property Name="Marcas" Type="varchar" MaxLength="255" />
+          <Property Name="Protector_ID" Type="int" />
         </EntityType>
         <EntityType Name="ConfiguracionCorreo">
           <Key>
@@ -106,6 +108,14 @@
           <Property Name="Nombre" Type="nvarchar(max)" />
           <Property Name="Pais_ID" Type="int" />
         </EntityType>
+        <EntityType Name="CriadorCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="255" />
+          <Property Name="Pais_ID" Type="int" />
+        </EntityType>
         <EntityType Name="Establecimiento">
           <Key>
             <PropertyRef Name="ID" />
@@ -125,14 +135,6 @@
           <Property Name="Manager" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Direccion" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Propietario_ID" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="EstabloCaballo">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Establo_ID" Type="int" Nullable="false" />
-          <Property Name="Caballo_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EstabloCorreo">
           <Key>
@@ -166,6 +168,14 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DiasPreviosaNotificar" Type="int" />
           <Property Name="Alerta_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="GenealogiaCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="int" Nullable="false" />
+          <Property Name="Madre" Type="varchar" MaxLength="255" />
+          <Property Name="Padre" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Genero">
           <Key>
@@ -316,6 +326,22 @@
           <Property Name="Numero" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="TipoNumero_ID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Protector">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ResponsableCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="255" />
+          <Property Name="Telefono" Type="varchar" MaxLength="255" />
+          <Property Name="CorreoElectronico" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
             <PropertyRef Name="ID" />
@@ -401,39 +427,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_Caballo_dbo_Criador_Criador_ID">
-          <End Role="Criador" Type="Self.Criador" Multiplicity="0..1" />
+        <Association Name="FK_Caballo_Protector_ID">
+          <End Role="Protector" Type="Self.Protector" Multiplicity="0..1" />
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Criador">
+            <Principal Role="Protector">
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Caballo">
-              <PropertyRef Name="Criador_ID" />
+              <PropertyRef Name="Protector_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID">
-          <End Role="Establecimiento" Type="Self.Establecimiento" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
+        <Association Name="FK_CriadorCaballo_Caballo_ID">
+          <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
+          <End Role="CriadorCaballo" Type="Self.CriadorCaballo" Multiplicity="0..1" />
           <ReferentialConstraint>
-            <Principal Role="Establecimiento">
+            <Principal Role="Caballo">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="Establecimiento_ID" />
+            <Dependent Role="CriadorCaballo">
+              <PropertyRef Name="Caballo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_Caballo_dbo_EstadoProvincia_EstadoProvincia_Id">
-          <End Role="EstadoProvincia" Type="Self.EstadoProvincia" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
+        <Association Name="FK_CriadorCaballo_Pais_ID">
+          <End Role="Pais" Type="Self.Pais" Multiplicity="0..1" />
+          <End Role="CriadorCaballo" Type="Self.CriadorCaballo" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="EstadoProvincia">
-              <PropertyRef Name="Id" />
+            <Principal Role="Pais">
+              <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="EstadoProvincia_Id" />
+            <Dependent Role="CriadorCaballo">
+              <PropertyRef Name="Pais_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -449,42 +475,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_dbo_Caballo_dbo_Grupo_Grupo_ID">
-          <End Role="Grupo" Type="Self.Grupo" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Grupo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="Grupo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Caballo_dbo_OtrasMarcas_OtrasMarcas_ID">
-          <End Role="OtrasMarcas" Type="Self.OtrasMarcas" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OtrasMarcas">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="OtrasMarcas_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Caballo_dbo_Pedigree_Pedigree_ID">
-          <End Role="Pedigree" Type="Self.Pedigree" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Pedigree">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="Pedigree_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID">
           <End Role="Pelaje" Type="Self.Pelaje" Multiplicity="1" />
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
@@ -494,18 +484,6 @@
             </Principal>
             <Dependent Role="Caballo">
               <PropertyRef Name="Pelaje_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID">
-          <End Role="PersonaACargo" Type="Self.PersonaACargo" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PersonaACargo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="PersonaACargo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -629,30 +607,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_EstabloCaballo_Caballo_ID">
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
-          <End Role="EstabloCaballo" Type="Self.EstabloCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Caballo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EstabloCaballo">
-              <PropertyRef Name="Caballo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EstabloCaballo_Establo_ID">
-          <End Role="Establo" Type="Self.Establo" Multiplicity="1" />
-          <End Role="EstabloCaballo" Type="Self.EstabloCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Establo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EstabloCaballo">
-              <PropertyRef Name="Establo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_EstabloCorreo_Establo_ID">
           <End Role="Establo" Type="Self.Establo" Multiplicity="1" />
           <End Role="EstabloCorreo" Type="Self.EstabloCorreo" Multiplicity="*" />
@@ -686,6 +640,18 @@
             </Principal>
             <Dependent Role="EstabloTelefono">
               <PropertyRef Name="Tipo_Numero_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GenealogiaCaballo_Caballo_ID">
+          <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
+          <End Role="GenealogiaCaballo" Type="Self.GenealogiaCaballo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GenealogiaCaballo">
+              <PropertyRef Name="Caballo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -809,6 +775,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ResponsableCaballo_Caballo_ID">
+          <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
+          <End Role="ResponsableCaballo" Type="Self.ResponsableCaballo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResponsableCaballo">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="PK_Alimentacion_Caballo">
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
           <End Role="Alimentacion" Type="Self.Alimentacion" Multiplicity="*" />
@@ -833,13 +811,14 @@
           <EntitySet Name="Caballo" EntityType="Self.Caballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConfiguracionCorreo" EntityType="Self.ConfiguracionCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Criador" EntityType="Self.Criador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CriadorCaballo" EntityType="Self.CriadorCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Establecimiento" EntityType="Self.Establecimiento" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Establo" EntityType="Self.Establo" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="EstabloCaballo" EntityType="Self.EstabloCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstabloCorreo" EntityType="Self.EstabloCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstabloTelefono" EntityType="Self.EstabloTelefono" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EstadoProvincia" EntityType="Self.EstadoProvincia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Evento" EntityType="Self.Evento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GenealogiaCaballo" EntityType="Self.GenealogiaCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genero" EntityType="Self.Genero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Grupo" EntityType="Self.Grupo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GrupoCaballo" EntityType="Self.GrupoCaballo" Schema="dbo" store:Type="Tables" />
@@ -857,6 +836,8 @@
           <EntitySet Name="PreguntaFrecuente" EntityType="Self.PreguntaFrecuente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Propietario" EntityType="Self.Propietario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropietarioTelefono" EntityType="Self.PropietarioTelefono" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Protector" EntityType="Self.Protector" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ResponsableCaballo" EntityType="Self.ResponsableCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Mail" EntityType="Self.Tipo_Mail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Numero" EntityType="Self.Tipo_Numero" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
@@ -880,40 +861,24 @@
             <End Role="Establo" EntitySet="Establo" />
             <End Role="Caballo" EntitySet="Caballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_Criador_Criador_ID" Association="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID">
-            <End Role="Criador" EntitySet="Criador" />
+          <AssociationSet Name="FK_Caballo_Protector_ID" Association="Self.FK_Caballo_Protector_ID">
+            <End Role="Protector" EntitySet="Protector" />
             <End Role="Caballo" EntitySet="Caballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID" Association="Self.FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID">
-            <End Role="Establecimiento" EntitySet="Establecimiento" />
+          <AssociationSet Name="FK_CriadorCaballo_Caballo_ID" Association="Self.FK_CriadorCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="CriadorCaballo" EntitySet="CriadorCaballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_EstadoProvincia_EstadoProvincia_Id" Association="Self.FK_dbo_Caballo_dbo_EstadoProvincia_EstadoProvincia_Id">
-            <End Role="EstadoProvincia" EntitySet="EstadoProvincia" />
-            <End Role="Caballo" EntitySet="Caballo" />
+          <AssociationSet Name="FK_CriadorCaballo_Pais_ID" Association="Self.FK_CriadorCaballo_Pais_ID">
+            <End Role="Pais" EntitySet="Pais" />
+            <End Role="CriadorCaballo" EntitySet="CriadorCaballo" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Genero_Genero_ID" Association="Self.FK_dbo_Caballo_dbo_Genero_Genero_ID">
             <End Role="Genero" EntitySet="Genero" />
             <End Role="Caballo" EntitySet="Caballo" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_Grupo_Grupo_ID" Association="Self.FK_dbo_Caballo_dbo_Grupo_Grupo_ID">
-            <End Role="Grupo" EntitySet="Grupo" />
-            <End Role="Caballo" EntitySet="Caballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_OtrasMarcas_OtrasMarcas_ID" Association="Self.FK_dbo_Caballo_dbo_OtrasMarcas_OtrasMarcas_ID">
-            <End Role="OtrasMarcas" EntitySet="OtrasMarcas" />
-            <End Role="Caballo" EntitySet="Caballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_Pedigree_Pedigree_ID" Association="Self.FK_dbo_Caballo_dbo_Pedigree_Pedigree_ID">
-            <End Role="Pedigree" EntitySet="Pedigree" />
-            <End Role="Caballo" EntitySet="Caballo" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID" Association="Self.FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID">
             <End Role="Pelaje" EntitySet="Pelaje" />
-            <End Role="Caballo" EntitySet="Caballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID" Association="Self.FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID">
-            <End Role="PersonaACargo" EntitySet="PersonaACargo" />
             <End Role="Caballo" EntitySet="Caballo" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Propietario_Propietario_ID" Association="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID">
@@ -956,14 +921,6 @@
             <End Role="Propietario" EntitySet="Propietario" />
             <End Role="Establo" EntitySet="Establo" />
           </AssociationSet>
-          <AssociationSet Name="FK_EstabloCaballo_Caballo_ID" Association="Self.FK_EstabloCaballo_Caballo_ID">
-            <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="EstabloCaballo" EntitySet="EstabloCaballo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EstabloCaballo_Establo_ID" Association="Self.FK_EstabloCaballo_Establo_ID">
-            <End Role="Establo" EntitySet="Establo" />
-            <End Role="EstabloCaballo" EntitySet="EstabloCaballo" />
-          </AssociationSet>
           <AssociationSet Name="FK_EstabloCorreo_Establo_ID" Association="Self.FK_EstabloCorreo_Establo_ID">
             <End Role="Establo" EntitySet="Establo" />
             <End Role="EstabloCorreo" EntitySet="EstabloCorreo" />
@@ -975,6 +932,10 @@
           <AssociationSet Name="FK_EstabloTelefono_Tipo_Numero_ID" Association="Self.FK_EstabloTelefono_Tipo_Numero_ID">
             <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
             <End Role="EstabloTelefono" EntitySet="EstabloTelefono" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GenealogiaCaballo_Caballo_ID" Association="Self.FK_GenealogiaCaballo_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="GenealogiaCaballo" EntitySet="GenealogiaCaballo" />
           </AssociationSet>
           <AssociationSet Name="FK_Grupo_Propietario_ID" Association="Self.FK_Grupo_Propietario_ID">
             <End Role="Propietario" EntitySet="Propietario" />
@@ -1015,6 +976,10 @@
           <AssociationSet Name="FK_PropietarioTelefono_TipoNumero_ID" Association="Self.FK_PropietarioTelefono_TipoNumero_ID">
             <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
             <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResponsableCaballo_Caballo_ID" Association="Self.FK_ResponsableCaballo_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="ResponsableCaballo" EntitySet="ResponsableCaballo" />
           </AssociationSet>
           <AssociationSet Name="PK_Alimentacion_Caballo" Association="Self.PK_Alimentacion_Caballo">
             <End Role="Caballo" EntitySet="Caballo" />
@@ -1065,9 +1030,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Solido" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SuplementosDietarios" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Pasto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Solido" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SuplementosDietarios" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Pasto" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Caballo">
@@ -1080,7 +1045,6 @@
           <Property Name="NumeroChip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="NumeroFEI" Type="Int32" />
           <Property Name="EstadoFEI" Type="Boolean" />
-          <Property Name="Protector" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Embocadura" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ExtrasDeCabezada" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ADN" Type="Boolean" />
@@ -1098,21 +1062,21 @@
           <Property Name="PersonaACargo_ID" Type="Int32" />
           <Property Name="Propietario_ID" Type="Int32" />
           <NavigationProperty Name="Alimentacion1" Relationship="Self.PK_Alimentacion_Caballo" FromRole="Caballo" ToRole="Alimentacion" />
-          <NavigationProperty Name="Criador" Relationship="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID" FromRole="Caballo" ToRole="Criador" />
-          <NavigationProperty Name="Establecimiento" Relationship="Self.FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID" FromRole="Caballo" ToRole="Establecimiento" />
-          <NavigationProperty Name="EstadoProvincia" Relationship="Self.FK_dbo_Caballo_dbo_EstadoProvincia_EstadoProvincia_Id" FromRole="Caballo" ToRole="EstadoProvincia" />
           <NavigationProperty Name="Genero" Relationship="Self.FK_dbo_Caballo_dbo_Genero_Genero_ID" FromRole="Caballo" ToRole="Genero" />
           <NavigationProperty Name="Grupo" Relationship="Self.FK_dbo_Caballo_dbo_Grupo_Grupo_ID" FromRole="Caballo" ToRole="Grupo" />
-          <NavigationProperty Name="OtrasMarcas" Relationship="Self.FK_dbo_Caballo_dbo_OtrasMarcas_OtrasMarcas_ID" FromRole="Caballo" ToRole="OtrasMarcas" />
-          <NavigationProperty Name="Pedigree" Relationship="Self.FK_dbo_Caballo_dbo_Pedigree_Pedigree_ID" FromRole="Caballo" ToRole="Pedigree" />
           <NavigationProperty Name="Pelaje" Relationship="Self.FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID" FromRole="Caballo" ToRole="Pelaje" />
-          <NavigationProperty Name="PersonaACargo" Relationship="Self.FK_dbo_Caballo_dbo_PersonaACargo_PersonaACargo_ID" FromRole="Caballo" ToRole="PersonaACargo" />
           <NavigationProperty Name="Propietario" Relationship="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID" FromRole="Caballo" ToRole="Propietario" />
           <NavigationProperty Name="GrupoCaballo" Relationship="Self.FK_GrupoCaballo_Caballo_ID" FromRole="Caballo" ToRole="GrupoCaballo" />
           <Property Name="Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="EstabloCaballo" Relationship="EquilinkedModel.FK_EstabloCaballo_Caballo_ID" FromRole="Caballo" ToRole="EstabloCaballo" />
           <Property Name="Establo_ID" Type="Int32" />
           <NavigationProperty Name="Establo" Relationship="EquilinkedModel.FK_Caballo_Establo_ID" FromRole="Caballo" ToRole="Establo" />
+          <Property Name="NombrePropietario" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Marcas" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Protector_ID" Type="Int32" />
+          <NavigationProperty Name="Protector" Relationship="EquilinkedModel.FK_Caballo_Protector_ID" FromRole="Caballo" ToRole="Protector" />
+          <NavigationProperty Name="GenealogiaCaballo" Relationship="EquilinkedModel.FK_GenealogiaCaballo_Caballo_ID" FromRole="Caballo" ToRole="GenealogiaCaballo" />
+          <NavigationProperty Name="CriadorCaballo" Relationship="EquilinkedModel.FK_CriadorCaballo_Caballo_ID" FromRole="Caballo" ToRole="CriadorCaballo" />
+          <NavigationProperty Name="ResponsableCaballo" Relationship="EquilinkedModel.FK_ResponsableCaballo_Caballo_ID" FromRole="Caballo" ToRole="ResponsableCaballo" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -1342,18 +1306,6 @@
             </Principal>
             <Dependent Role="Alimentacion">
               <PropertyRef Name="Caballo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_Caballo_dbo_Criador_Criador_ID">
-          <End Role="Criador" Type="Self.Criador" Multiplicity="0..1" />
-          <End Role="Caballo" Type="Self.Caballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Criador">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Caballo">
-              <PropertyRef Name="Criador_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1625,10 +1577,6 @@
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="Alimentacion" EntitySet="Alimentacion" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_Caballo_dbo_Criador_Criador_ID" Association="Self.FK_dbo_Caballo_dbo_Criador_Criador_ID">
-            <End Role="Criador" EntitySet="Criador" />
-            <End Role="Caballo" EntitySet="Caballo" />
-          </AssociationSet>
           <AssociationSet Name="FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID" Association="Self.FK_dbo_Caballo_dbo_Establecimiento_Establecimiento_ID">
             <End Role="Establecimiento" EntitySet="Establecimiento" />
             <End Role="Caballo" EntitySet="Caballo" />
@@ -1713,18 +1661,9 @@
             <End Role="Grupo" EntitySet="Grupo" />
           </AssociationSet>
           <EntitySet Name="Establo" EntityType="EquilinkedModel.Establo" />
-          <EntitySet Name="EstabloCaballo" EntityType="EquilinkedModel.EstabloCaballo" />
-          <AssociationSet Name="FK_EstabloCaballo_Caballo_ID" Association="EquilinkedModel.FK_EstabloCaballo_Caballo_ID">
-            <End Role="Caballo" EntitySet="Caballo" />
-            <End Role="EstabloCaballo" EntitySet="EstabloCaballo" />
-          </AssociationSet>
           <AssociationSet Name="FK_Establo_Propietario_ID" Association="EquilinkedModel.FK_Establo_Propietario_ID">
             <End Role="Propietario" EntitySet="Propietario" />
             <End Role="Establo" EntitySet="Establo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_EstabloCaballo_Establo_ID" Association="EquilinkedModel.FK_EstabloCaballo_Establo_ID">
-            <End Role="Establo" EntitySet="Establo" />
-            <End Role="EstabloCaballo" EntitySet="EstabloCaballo" />
           </AssociationSet>
           <EntitySet Name="EstabloTelefono" EntityType="EquilinkedModel.EstabloTelefono" />
           <AssociationSet Name="FK_EstabloTelefono_Establo_ID" Association="EquilinkedModel.FK_EstabloTelefono_Establo_ID">
@@ -1784,6 +1723,30 @@
             <End Role="Establo" EntitySet="Establo" />
             <End Role="Caballo" EntitySet="Caballo" />
           </AssociationSet>
+          <EntitySet Name="GenealogiaCaballo" EntityType="EquilinkedModel.GenealogiaCaballo" />
+          <EntitySet Name="Protector" EntityType="EquilinkedModel.Protector" />
+          <AssociationSet Name="FK_Caballo_Protector_ID" Association="EquilinkedModel.FK_Caballo_Protector_ID">
+            <End Role="Protector" EntitySet="Protector" />
+            <End Role="Caballo" EntitySet="Caballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GenealogiaCaballo_Caballo_ID" Association="EquilinkedModel.FK_GenealogiaCaballo_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="GenealogiaCaballo" EntitySet="GenealogiaCaballo" />
+          </AssociationSet>
+          <EntitySet Name="CriadorCaballo" EntityType="EquilinkedModel.CriadorCaballo" />
+          <EntitySet Name="ResponsableCaballo" EntityType="EquilinkedModel.ResponsableCaballo" />
+          <AssociationSet Name="FK_CriadorCaballo_Caballo_ID" Association="EquilinkedModel.FK_CriadorCaballo_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="CriadorCaballo" EntitySet="CriadorCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ResponsableCaballo_Caballo_ID" Association="EquilinkedModel.FK_ResponsableCaballo_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="ResponsableCaballo" EntitySet="ResponsableCaballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CriadorCaballo_Pais_ID" Association="EquilinkedModel.FK_CriadorCaballo_Pais_ID">
+            <End Role="Pais" EntitySet="Pais" />
+            <End Role="CriadorCaballo" EntitySet="CriadorCaballo" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1817,33 +1780,9 @@
           <Property Name="Direccion" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Establo_Propietario_ID" FromRole="Establo" ToRole="Propietario" />
-          <NavigationProperty Name="EstabloCaballo" Relationship="EquilinkedModel.FK_EstabloCaballo_Establo_ID" FromRole="Establo" ToRole="EstabloCaballo" />
           <NavigationProperty Name="EstabloTelefono" Relationship="EquilinkedModel.FK_EstabloTelefono_Establo_ID" FromRole="Establo" ToRole="EstabloTelefono" />
           <NavigationProperty Name="EstabloCorreo" Relationship="EquilinkedModel.FK_EstabloCorreo_Establo_ID" FromRole="Establo" ToRole="EstabloCorreo" />
-          <NavigationProperty Name="Caballo" Relationship="EquilinkedModel.FK_Caballo_Establo_ID" FromRole="Establo" ToRole="Caballo" />
         </EntityType>
-        <EntityType Name="EstabloCaballo">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Establo_ID" Type="Int32" Nullable="false" />
-          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Caballo" Relationship="EquilinkedModel.FK_EstabloCaballo_Caballo_ID" FromRole="EstabloCaballo" ToRole="Caballo" />
-          <NavigationProperty Name="Establo" Relationship="EquilinkedModel.FK_EstabloCaballo_Establo_ID" FromRole="EstabloCaballo" ToRole="Establo" />
-        </EntityType>
-        <Association Name="FK_EstabloCaballo_Caballo_ID">
-          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
-          <End Type="EquilinkedModel.EstabloCaballo" Role="EstabloCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Caballo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EstabloCaballo">
-              <PropertyRef Name="Caballo_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Establo_Propietario_ID">
           <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
           <End Type="EquilinkedModel.Establo" Role="Establo" Multiplicity="*" />
@@ -1853,18 +1792,6 @@
             </Principal>
             <Dependent Role="Establo">
               <PropertyRef Name="Propietario_ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_EstabloCaballo_Establo_ID">
-          <End Type="EquilinkedModel.Establo" Role="Establo" Multiplicity="1" />
-          <End Type="EquilinkedModel.EstabloCaballo" Role="EstabloCaballo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Establo">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="EstabloCaballo">
-              <PropertyRef Name="Establo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2116,6 +2043,99 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GenealogiaCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
+          <Property Name="Madre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Padre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Protector">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Caballo_Protector_ID">
+          <End Type="EquilinkedModel.Protector" Role="Protector" Multiplicity="0..1" />
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Protector">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Caballo">
+              <PropertyRef Name="Protector_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GenealogiaCaballo_Caballo_ID">
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
+          <End Type="EquilinkedModel.GenealogiaCaballo" Role="GenealogiaCaballo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GenealogiaCaballo">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CriadorCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Pais_ID" Type="Int32" />
+          <NavigationProperty Name="Pais" Relationship="EquilinkedModel.FK_CriadorCaballo_Pais_ID" FromRole="CriadorCaballo" ToRole="Pais" />
+        </EntityType>
+        <EntityType Name="ResponsableCaballo">
+          <Key>
+            <PropertyRef Name="Caballo_ID" />
+          </Key>
+          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CorreoElectronico" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_CriadorCaballo_Caballo_ID">
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
+          <End Type="EquilinkedModel.CriadorCaballo" Role="CriadorCaballo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CriadorCaballo">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ResponsableCaballo_Caballo_ID">
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
+          <End Type="EquilinkedModel.ResponsableCaballo" Role="ResponsableCaballo" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ResponsableCaballo">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CriadorCaballo_Pais_ID">
+          <End Type="EquilinkedModel.Pais" Role="Pais" Multiplicity="0..1" />
+          <End Type="EquilinkedModel.CriadorCaballo" Role="CriadorCaballo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pais">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CriadorCaballo">
+              <PropertyRef Name="Pais_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2171,6 +2191,9 @@
           <EntitySetMapping Name="Caballo">
             <EntityTypeMapping TypeName="EquilinkedModel.Caballo">
               <MappingFragment StoreEntitySet="Caballo">
+                <ScalarProperty Name="Protector_ID" ColumnName="Protector_ID" />
+                <ScalarProperty Name="Marcas" ColumnName="Marcas" />
+                <ScalarProperty Name="NombrePropietario" ColumnName="NombrePropietario" />
                 <ScalarProperty Name="Establo_ID" ColumnName="Establo_ID" />
                 <ScalarProperty Name="Observaciones" ColumnName="Observaciones" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -2179,7 +2202,6 @@
                 <ScalarProperty Name="NumeroChip" ColumnName="NumeroChip" />
                 <ScalarProperty Name="NumeroFEI" ColumnName="NumeroFEI" />
                 <ScalarProperty Name="EstadoFEI" ColumnName="EstadoFEI" />
-                <ScalarProperty Name="Protector" ColumnName="Protector" />
                 <ScalarProperty Name="Embocadura" ColumnName="Embocadura" />
                 <ScalarProperty Name="ExtrasDeCabezada" ColumnName="ExtrasDeCabezada" />
                 <ScalarProperty Name="ADN" ColumnName="ADN" />
@@ -2396,15 +2418,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EstabloCaballo">
-            <EntityTypeMapping TypeName="EquilinkedModel.EstabloCaballo">
-              <MappingFragment StoreEntitySet="EstabloCaballo">
-                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
-                <ScalarProperty Name="Establo_ID" ColumnName="Establo_ID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="EstabloTelefono">
             <EntityTypeMapping TypeName="EquilinkedModel.EstabloTelefono">
               <MappingFragment StoreEntitySet="EstabloTelefono">
@@ -2503,6 +2516,42 @@
                 <ScalarProperty Name="Grupo_ID" ColumnName="Grupo_ID" />
                 <ScalarProperty Name="Alerta_ID" ColumnName="Alerta_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GenealogiaCaballo">
+            <EntityTypeMapping TypeName="EquilinkedModel.GenealogiaCaballo">
+              <MappingFragment StoreEntitySet="GenealogiaCaballo">
+                <ScalarProperty Name="Padre" ColumnName="Padre" />
+                <ScalarProperty Name="Madre" ColumnName="Madre" />
+                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Protector">
+            <EntityTypeMapping TypeName="EquilinkedModel.Protector">
+              <MappingFragment StoreEntitySet="Protector">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CriadorCaballo">
+            <EntityTypeMapping TypeName="EquilinkedModel.CriadorCaballo">
+              <MappingFragment StoreEntitySet="CriadorCaballo">
+                <ScalarProperty Name="Pais_ID" ColumnName="Pais_ID" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResponsableCaballo">
+            <EntityTypeMapping TypeName="EquilinkedModel.ResponsableCaballo">
+              <MappingFragment StoreEntitySet="ResponsableCaballo">
+                <ScalarProperty Name="CorreoElectronico" ColumnName="CorreoElectronico" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

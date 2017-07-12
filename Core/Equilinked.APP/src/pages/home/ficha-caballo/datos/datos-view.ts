@@ -1,31 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams} from 'ionic-angular';
-import {Utils} from '../../../../app/utils'
+import { Events, NavController, NavParams } from 'ionic-angular';
+import { Utils } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
-import { SecurityService} from '../../../../services/security.service';
+import { SecurityService } from '../../../../services/security.service';
 import { CaballoService } from '../../../../services/caballo.service';
 import { ExtendedCaballoService } from '../../../../services/extended.caballo.service';
 import { Caballo } from '../../../../model/caballo';
 import { UserSessionEntity } from '../../../../model/userSession';
-import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
-
+import { AdminCaballosInsertPage } from '../../admin-caballos/admin-caballos-insert';
+import moment from "moment";
 
 @Component({
     templateUrl: 'datos-view.html',
     providers: [CommonService, SecurityService, CaballoService, ExtendedCaballoService]
 })
-export class DatosViewPage {
+export class DatosViewPage implements OnInit, OnDestroy {
     form: any;
     idCaballo: number;
     nombreCaballo: string = "";
     caballoEntity: Caballo;
     generoList = [];
     pelajeList = [];
-    criadorList = [];
-    otrasMarcasList = [];
+    protectores = [];
+    paises = [];
+    age: string;
 
     constructor(
+        private events: Events,
         public navCtrl: NavController,
         public navParams: NavParams,
         private _commonService: CommonService,
@@ -33,111 +35,131 @@ export class DatosViewPage {
         private _caballoService: CaballoService,
         private _extendedCaballoService: ExtendedCaballoService,
         private formBuilder: FormBuilder) {
+        this.age = "";
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
+        console.info("En el onInit");
         this.caballoEntity = new Caballo();
+        this.initForm();
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-            this.getCaballo(this.idCaballo);
             this.getPelajeList();
             this.getGeneroList();
-            this.getCriadorList();
-            this.getOtrasMarcasList();
+            this.getAllProtectores();
+            this.getAllPaises();
+            this.getCaballo(this.idCaballo);
         }
-        this.initForm();
+        this.addEvents(); //Registrsamos eventos
+    }
+
+    ngOnDestroy(): void {
+        this.removeEvents(); //Elimimos los eventos
     }
 
     initForm() {
         console.log("CABALLO:", this.caballoEntity);
         this.form = this.formBuilder.group({
-            ID: [this.caballoEntity.ID],
-            EstadoFEI: [this.caballoEntity.EstadoFEI],
-            ADN: [this.caballoEntity.ADN],
-            EstadoFEN: [this.caballoEntity.EstadoFEN],
-            Criador_ID: [this.caballoEntity.Criador_ID],
-            Establecimiento_ID: [this.caballoEntity.Establecimiento_ID],
-            EstadoProvincia_Id: [this.caballoEntity.EstadoProvincia_Id],
+            Nombre: [this.caballoEntity.Nombre],
+            NombrePropietario: [this.caballoEntity.NombrePropietario],
             Genero_ID: [this.caballoEntity.Genero_ID],
-            Grupo_ID: [this.caballoEntity.Grupo_ID],
-            OtrasMarcas_ID: [this.caballoEntity.OtrasMarcas_ID],
-            Pedigree_ID: [this.caballoEntity.Pedigree_ID],
             Pelaje_ID: [this.caballoEntity.Pelaje_ID],
-            PersonaACargo_ID: [this.caballoEntity.PersonaACargo_ID],
-            Propietario_ID: [this.caballoEntity.Propietario_ID]
+            FechaNacimiento: [this.caballoEntity.FechaNacimiento],
+            NombreMadre: [this.caballoEntity.GenealogiaCaballo.Madre],
+            NombrePadre: [this.caballoEntity.GenealogiaCaballo.Padre],
+            NombreCriador: [this.caballoEntity.CriadorCaballo.Nombre],
+            PaisCriador: [this.caballoEntity.CriadorCaballo.Pais_ID],
+            ADN: [this.caballoEntity.ADN],
+            NumeroChip: [this.caballoEntity.NumeroChip],
+            NumeroId: [this.caballoEntity.NumeroId],
+            Marcas: [this.caballoEntity.Marcas],
+            EstadoFEN: [this.caballoEntity.EstadoFEN],
+            NumeroFEN: [this.caballoEntity.NumeroFEN],
+            EstadoFEI: [this.caballoEntity.EstadoFEI],
+            NumeroFEI: [this.caballoEntity.NumeroFEI],
+            Protector_ID: [this.caballoEntity.Protector_ID],
+            Observaciones: [this.caballoEntity.Observaciones],
+            Embocadura: [this.caballoEntity.Embocadura],
+            ExtrasDeCabezada: [this.caballoEntity.ExtrasDeCabezada],
+            NombreResponsable: [this.caballoEntity.ResponsableCaballo.Nombre],
+            TelefonoResponsable: [this.caballoEntity.ResponsableCaballo.Telefono],
+            CorreoResponsable: [this.caballoEntity.ResponsableCaballo.CorreoElectronico]
         });
+
+        this.calculateAge(this.caballoEntity.FechaNacimiento);//Ajustar la edad!
     }
 
-    getCaballo(caballoId) {
+    private getCaballo(caballoId) {
         this._caballoService.getSerializedById(caballoId)
-            .subscribe(res => {
-                console.log(res);
-                this.caballoEntity = res;
-                this.reloadForm();
-            }, error => {
-                console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los datos del caballo");
+            .toPromise()
+            .then(caballo => {
+                console.log(caballo);
+                this.caballoEntity = caballo;
+                this.nombreCaballo = this.caballoEntity.Nombre;
+                this.initForm();
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Error cargando los datos del caballo");
             });
     }
 
-    getGeneroList() {
+    private calculateAge(dateSelected: string): void {
+        let date = moment(dateSelected);
+        this.age = "";
+        if (moment().isAfter(date)) {
+            let years: number = moment().diff(date, "years");
+            let months: number = moment().diff(date, "months");
+            months = months - (years * 12);
+            this.age = (years > 1 ? years + " años " : (years == 1 ? "1 año " : ""));
+            this.age = this.age + (months > 1 ? months + " meses" : (months == 1 ? "1 mes" : ""));
+        }
+        console.info(this.age);
+    }
+
+    private getGeneroList() {
         this._extendedCaballoService.getAllGeneroComboBox()
             .subscribe(res => {
                 console.log(res);
                 this.generoList = res;
-                this.reloadForm();
             }, error => {
                 console.log(error);
                 this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
             });
     }
 
-    getPelajeList() {
+    private getPelajeList() {
         this._extendedCaballoService.getAllPelajeComboBox()
             .subscribe(res => {
                 console.log(res);
                 this.pelajeList = res;
-                this.reloadForm();
             }, error => {
                 console.log(error);
                 this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
             });
     }
 
-    getCriadorList() {
-        this._extendedCaballoService.getAllCriadorComboBox()
-            .subscribe(res => {
-                console.log(res);
-                this.criadorList = res;
-                this.reloadForm();
-            }, error => {
-                console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los criadores del caballo");
+    private getAllProtectores(): void {
+        this._extendedCaballoService.getAllProtector()
+            .then(protectores => {
+                this.protectores = protectores;
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Error cargando los generos del caballo");
             });
     }
 
-    getOtrasMarcasList() {
-        this._extendedCaballoService.getAllOtrasMarcasComboBox()
-            .subscribe(res => {
-                console.log(res);
-                this.otrasMarcasList = res;
-                this.reloadForm();
-            }, error => {
-                console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando las otras marcas del caballo");
+    private getAllPaises(): void {
+        this._extendedCaballoService.getAllPaises()
+            .then(paises => {
+                this.paises = paises;
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Error cargando los paises");
             });
-    }
-
-    reloadForm() {
-        this.initForm();
     }
 
     edit() {
         this.navCtrl.push(AdminCaballosInsertPage, {
-            caballoEntity: this.caballoEntity,
-            isUpdate: true,
-            callbackController: this
+            caballoEntity: JSON.parse(JSON.stringify(this.caballoEntity)),
+            isUpdate: true
         });
 
     }
@@ -146,7 +168,14 @@ export class DatosViewPage {
         this.navCtrl.pop();
     }
 
-    reloadController() {
-        this.getCaballo(this.idCaballo);
+    private addEvents(): void { //Por este evento le haré llegar el nuevo nombre al caballo!
+        this.events.subscribe("caballo:refresh", () => {
+            console.info("Itentando refrescar caballo seleccionado ")
+            this.getCaballo(this.caballoEntity.ID);
+        });
+    }
+
+    private removeEvents(): void {
+        this.events.unsubscribe("caballo:refresh");
     }
 }

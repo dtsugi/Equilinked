@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { NavController, NavParams} from 'ionic-angular';
-import {Utils} from '../../../../app/utils'
+import { NavController, NavParams } from 'ionic-angular';
+import { Utils } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { AlimentacionService } from '../../../../services/alimentacion.service';
 import { Alimentacion } from '../../../../model/alimentacion';
-import {AlimentacionPage} from './alimentacion';
+import { AlimentacionPage } from './alimentacion';
 
 
 @Component({
@@ -15,6 +15,7 @@ import {AlimentacionPage} from './alimentacion';
 export class AlimentacionEditPage {
     form: any;
     alimentacion: Alimentacion;
+    nombreCaballo: string;
 
     constructor(
         public navCtrl: NavController,
@@ -22,12 +23,14 @@ export class AlimentacionEditPage {
         private _commonService: CommonService,
         private _alimentacionService: AlimentacionService,
         private formBuilder: FormBuilder) {
+        this.nombreCaballo = "";
     }
 
     ngOnInit() {
         this.alimentacion = new Alimentacion();
         if (this._commonService.IsValidParams(this.navParams, ["alimentacionEntity", "callbackController"])) {
             this.alimentacion = this.navParams.get("alimentacionEntity");
+            this.nombreCaballo = this.navParams.get("nombreCaballo");
         }
         this.initForm();
     }
@@ -63,5 +66,5 @@ export class AlimentacionEditPage {
         let callbackController = this.navParams.get("callbackController");
         callbackController.reloadController();
         this.navCtrl.pop();
-    }    
+    }
 }

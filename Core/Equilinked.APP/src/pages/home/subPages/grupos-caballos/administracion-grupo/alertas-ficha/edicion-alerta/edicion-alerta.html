@@ -23,7 +23,7 @@
                 </ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input type="text" formControlName="NombreProfesional" placeholder="¿Quién?"></ion-input>
+                        <ion-input class="equi-input-normal-text" type="text" formControlName="NombreProfesional" placeholder="¿Quién?"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -34,7 +34,7 @@
                 </ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-datetime placeholder="Fecha" displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar"
+                        <ion-datetime class="equi-input-normal-text" placeholder="Fecha" displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar"
                             formControlName="FechaNotificacion" max="2050"></ion-datetime>
                     </ion-item>
                 </ion-col>
@@ -46,7 +46,7 @@
                 </ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-datetime placeholder="Hora" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion" cancelText="Cancelar"
+                        <ion-datetime class="equi-input-normal-text" placeholder="Hora" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion" cancelText="Cancelar"
                             doneText="Aceptar"></ion-datetime>
                     </ion-item>
                 </ion-col>
@@ -55,7 +55,7 @@
             <ion-row>
                 <ion-col>
                     <ion-item>
-                        <ion-textarea formControlName="Descripcion" [attr.rows]="3" placeholder="Ingresar nota"></ion-textarea>
+                        <ion-textarea class="equi-input-normal-text" autoresize formControlName="Descripcion" [attr.rows]="3" placeholder="Ingresar nota"></ion-textarea>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -66,8 +66,8 @@
                 </ion-col>
                 <ion-col>
                     <ion-item>
-                        <h2>{{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}</h2>
-                        <p item-right (click)="selectCaballos()"><a class="equi-principal-color">Editar lista</a></p>
+                        <h2 class="equi-input-normal-text">{{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}</h2>
+                        <p class="equi-input-normal-text" item-right (click)="selectCaballos()"><a class="equi-principal-color">Editar lista</a></p>
                     </ion-item>
                 </ion-col>
             </ion-row>

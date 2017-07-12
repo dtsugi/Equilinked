@@ -1,0 +1,57 @@
+<div *ngIf="!alert.ShowDetail">
+    <ion-item-sliding>
+        <ion-item class="equi-normal-text" (click)="displayDetail()">
+            <ion-row>
+                <ion-col col-4>
+                    {{alert.Fecha}}
+                </ion-col>
+                <ion-col>
+                    {{alert.NombreProfesional}}
+                </ion-col>
+                <ion-col col-1>
+                    <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
+                </ion-col>
+            </ion-row>
+        </ion-item>
+
+        <ion-item-options *ngIf="!alert.AlertaGrupal && actionDelete.observers.length > 0">
+            <button ion-button color="danger" icon-left (click)="executeActionDelete()">
+                <ion-icon name="trash"></ion-icon>       
+                {{labelDelete}}
+            </button>
+        </ion-item-options>
+    </ion-item-sliding>
+</div>
+
+<div *ngIf="alert.ShowDetail">
+    <ion-item text-wrap class="equi-normal-text" (click)="hideDetail()">
+        <ion-row class="equi-table-row-title">
+            <ion-col col-8>
+                {{alert.Fecha}}
+            </ion-col>
+            <ion-col col-3>
+                <span (click)="executeActionEdit()">EDITAR</span>
+            </ion-col>
+            <ion-col col-1>
+                <ion-icon name="ios-arrow-down"></ion-icon>
+            </ion-col>
+        </ion-row>
+
+        <ion-row class="equi-table-row-content">
+            <ion-col col-4>
+                {{professionPerson}}
+            </ion-col>
+            <ion-col col-8>
+                {{alert.NombreProfesional}}
+            </ion-col>
+        </ion-row>
+        <ion-row class="equi-table-row-content equi-normal-text">
+            <ion-col col-4>
+                Nota
+            </ion-col>
+            <ion-col col-8>
+                {{alert.Descripcion}}
+            </ion-col>
+        </ion-row>
+    </ion-item>
+</div>

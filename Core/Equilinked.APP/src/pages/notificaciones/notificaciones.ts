@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { CommonService } from '../../services/common.service';
-import { NotificacionesInsertPage } from './notificaciones-insert';
+import { NotificacionesEditPage } from "./notificaciones-edit/notificaciones-edit"
 import { NotificacionesViewPage } from './notificaciones-view';
 import { AlertaService } from '../../services/alerta.service';
 import { SecurityService } from '../../services/security.service';
 import { Alerta, DateObject } from '../../model/alerta';
 import { UserSessionEntity } from '../../model/userSession';
-import { Utils} from '../../app/utils';
+import { Utils } from '../../app/utils';
 
 @Component({
     selector: 'page-notificaciones',
@@ -40,7 +40,7 @@ export class NotificacionesPage {
     }
 
     goInsertNotificacion() {
-        this.navCtrl.push(NotificacionesInsertPage,
+        this.navCtrl.push(NotificacionesEditPage,
             {
                 alertaEntity: new Alerta(),
                 isFromNotas: false,

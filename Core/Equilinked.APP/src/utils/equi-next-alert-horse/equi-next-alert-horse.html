@@ -1,0 +1,21 @@
+<ion-item-sliding>
+    <ion-item class="equi-principal-color equi-normal-text" (click)="executeClickAction()">
+        <ion-row>
+            <ion-col col-8>
+                {{alert.Fecha}}
+            </ion-col>
+            <ion-col col-3>
+                {{alert.Hora}}
+            </ion-col>
+            <ion-col col-1>
+                <ion-icon name="notifications"></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-item>
+    <ion-item-options *ngIf="actionDelete.observers.length > 0 && !alert.AlertaGrupal">
+        <button ion-button color="danger" icon-left (click)="executeDeleteAction(notificacion)">
+            <ion-icon name="trash"></ion-icon>       
+            {{labelDelete}}
+        </button>
+    </ion-item-options>
+</ion-item-sliding>

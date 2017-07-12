@@ -5,8 +5,11 @@
                 Cerrar
             </button>
         </ion-buttons>
- 
-        <ion-title>
+
+        <ion-title class="equi-toolbar-title-content">
+            <span *ngIf="establo.Nombre" class="equi-toolbar-title">{{establo.Nombre}}</span>
+            <br *ngIf="establo.Nombre" />
+            <span class="equi-toolbar-subtitle">Caballos</span>
         </ion-title>
     </ion-navbar>
 </ion-header>

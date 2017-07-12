@@ -21,7 +21,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input type="text" formControlName="Nombre" placeholder="Nombre"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Nombre" placeholder="Nombre"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -32,7 +32,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input type="text" formControlName="Manager" placeholder="Manager"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Manager" placeholder="Manager"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -44,7 +44,7 @@
                 </ion-col>
                 <ion-col col-8>
                     <ion-item>
-                        <ion-input type="email" [formControlName]="i" placeholder="Correo electrónico"></ion-input>
+                        <ion-input class="equi-input-normal-text" type="email" [formControlName]="i" placeholder="Correo electrónico"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-2 class="col-center">
@@ -62,12 +62,12 @@
                 </ion-col>
                 <ion-col col-5>
                     <ion-item>
-                        <ion-input type="tel" [formControlName]="i" placeholder="Núm. Telefónico"></ion-input>
+                        <ion-input class="equi-input-normal-text" type="tel" [formControlName]="i" placeholder="Núm. Telefónico"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-3>
                     <ion-item>
-                        <ion-input type="text" class="equi-principal-color equi-italic-text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)" [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
+                        <ion-input type="text" class="equi-principal-color equi-input-italic-text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)" [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-2 class="col-center">
@@ -85,7 +85,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input type="text" formControlName="Direccion" placeholder="Dirección"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Direccion" placeholder="Dirección"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -95,7 +95,7 @@
             </ion-col>
             <ion-col col-8>
                 <ion-item>
-                    {{establo.Caballo.length}} caballo(s)
+                    <span class="equi-input-normal-text">{{establo.Caballo.length}} caballo(s)</span>
                 </ion-item>
             </ion-col>
             <ion-col col-2 class="col-center">

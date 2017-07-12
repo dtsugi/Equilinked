@@ -1,11 +1,9 @@
 <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar grupos'"></ion-searchbar>
 
-<ion-list no-lines>
-    <ion-item (click)="newGrupo()">
-        <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-        <span class="equi-title-form-primary">Crear grupo</span>
-    </ion-item>
+<equi-button-add [label]="'Crear grupo'" (action)="newGrupo()"></equi-button-add>
 
+
+<ion-list no-lines>
     <ion-item *ngFor="let grupo of grupos" (click)="viewGrupo(grupo)">
         <ion-avatar item-left>
             <img src="assets/img/caballo.jpg">

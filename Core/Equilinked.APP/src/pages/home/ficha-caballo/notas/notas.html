@@ -15,46 +15,39 @@
 
 <ion-content>
     <ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"></ion-searchbar>
-    <ion-list no-lines>
-        <ion-item (click)="goInsertNotificacion()">
-            <ion-icon name="add-circle" class="equi-icon-add"></ion-icon>
-            <span class="equi-title-form-primary">Agregar nuevo</span>
-        </ion-item>
-    </ion-list>
+
+    <equi-button-add [label]="'Agregar nuevo'" (action)="goInsertNotificacion()"></equi-button-add>
+
     <ion-list>
         <ion-grid>
             <ion-item-sliding *ngFor="let notificacion of notificacionList" (click)="goViewNotificacion(notificacion)">
-                <ion-item>
+                <ion-item text-wrap>
                     <ion-row *ngIf="notificacion.AlertaGrupal">
                         <ion-col class="equi-table-row-title">
                             Nota grupal
                         </ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col col-8 class="equi-title-form">
-                            {{notificacion.Titulo}}
+                        <ion-col col-10>
+                            <p class="equi-title-form equi-title-note">{{notificacion.Titulo}}</p>
                         </ion-col>
-                        <ion-col col-4 class="text-align-right">
+                        <ion-col col-2 class="text-align-right equi-principal-color">
                             <ion-icon name="notifications"></ion-icon>
                         </ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col col-8>
-                            {{notificacion.Descripcion}}
-                        </ion-col>
-                        <ion-col col-4 class="text-align-right">
+                        <ion-col col-8 class="equi-col-note">{{notificacion.Descripcion}}</ion-col>
+                        <ion-col col-4 class="text-align-right equi-principal-color">
                             {{notificacion.FechaNotificacionToString}}
                         </ion-col>
                     </ion-row>
-                    <!--<b><p style="font-size:25pt" [innerHTML]="notificacion.Titulo"></p></b>
-                    <p [innerHTML]="notificacion.Descripcion"></p>
-                    <h3>{{notificacion.FechaNotificacion}}</h3>-->
                 </ion-item>
+
                 <ion-item-options *ngIf="!notificacion.AlertaGrupal">
                     <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
-          <ion-icon name="trash"></ion-icon>       
-          Eliminar
-</button>
+                        <ion-icon name="trash"></ion-icon>       
+                        Eliminar
+                    </button>
                 </ion-item-options>
             </ion-item-sliding>
         </ion-grid>
