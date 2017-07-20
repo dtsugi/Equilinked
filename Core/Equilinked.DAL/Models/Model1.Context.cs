@@ -65,6 +65,9 @@ namespace Equilinked.DAL.Models
         public virtual DbSet<Protector> Protector { get; set; }
         public virtual DbSet<CriadorCaballo> CriadorCaballo { get; set; }
         public virtual DbSet<ResponsableCaballo> ResponsableCaballo { get; set; }
+        public virtual DbSet<AlertaRecordatorio> AlertaRecordatorio { get; set; }
+        public virtual DbSet<Recordatorio> Recordatorio { get; set; }
+        public virtual DbSet<UnidadTiempo> UnidadTiempo { get; set; }
     
         public virtual ObjectResult<sp_GetAlertasByPropietarioId_Result> sp_GetAlertasByPropietarioId(Nullable<int> pROPIETARIO_ID)
         {

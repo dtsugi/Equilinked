@@ -2,9 +2,6 @@
 using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.DAL.Dto
 {
@@ -23,6 +20,9 @@ namespace Equilinked.DAL.Dto
         public string NombreProfesional { get; set; }
         public String Ubicacion { get; set; }
         public Nullable<bool> AlertaGrupal { get; set; }
+        public Nullable<DateTime> FechaFinal { get; set; }
+        public string Resultado { get; set; }
+        public Nullable<int> Propietario_ID { get; set; }
 
         public AlertaDto() { }
 
@@ -40,6 +40,9 @@ namespace Equilinked.DAL.Dto
             this.NombreProfesional = alerta.NombreProfesional;
             this.Ubicacion = alerta.Ubicacion;
             this.AlertaGrupal = alerta.AlertaGrupal;
+            this.FechaFinal = alerta.FechaFinal;
+            this.Resultado = alerta.Resultado;
+            this.Propietario_ID = alerta.Propietario_ID;
         }
 
         private string ToDateToCurrentCulture(DateTime date)
@@ -70,6 +73,9 @@ namespace Equilinked.DAL.Models
             this.NombreProfesional = alertaDto.NombreProfesional;
             this.Ubicacion = alertaDto.Ubicacion;
             this.AlertaGrupal = alertaDto.AlertaGrupal;
+            this.FechaFinal = alertaDto.FechaFinal;
+            this.Resultado = alertaDto.Resultado;
+            this.Propietario_ID = alertaDto.Propietario_ID;
         }
     }
 }

@@ -59,6 +59,7 @@ export class ConstantsConfig {
     static RES_NN = "Sin valor asignado";
     static RES_SIN_REGISTROS = "No se encontraron registros";
 
+    static ALERTA_TIPO_TODAS = 0;
     static ALERTA_TIPO_HERRAJE = 1;
     static ALERTA_TIPO_DESPARACITACION = 2;
     static ALERTA_TIPO_EVENTOS = 3;
@@ -68,5 +69,6 @@ export class ConstantsConfig {
     static ALERTA_FILTER_ALL = 1;
     static ALERTA_FILTER_HISTORY = 2;
     static ALERTA_FILTER_NEXT = 3;
-
+    static ALERTA_FILTER_TODAY = 4;
+    static ALERTA_FILTER_AFTER_TODAY = 5;
 }

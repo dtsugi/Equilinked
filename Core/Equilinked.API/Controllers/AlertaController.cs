@@ -17,6 +17,70 @@ namespace Equilinked.API.Controllers
     {
         private AlertaBLL _alertaBLL = new AlertaBLL();
 
+        [HttpPost, Route("api/propietarios/{propietarioId}/alertas")]
+        public IHttpActionResult SaveAlerta([FromBody] Alerta alerta)
+        {
+            try
+            {
+                _alertaBLL.SaveAlerta(alerta);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al guardar la alerta"));
+            }
+        }
+
+        [HttpPut, Route("api/propietarios/{propietarioId}/alertas/{alertaId}")]
+        public IHttpActionResult UpdateAlerta([FromBody] Alerta alerta)
+        {
+            try
+            {
+                _alertaBLL.UpdateAlerta(alerta);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al guardar la alerta"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/alertas")]
+        public IHttpActionResult GetAlertasByFilter(int propietarioId, [FromUri] int tipoAlerta = 0, [FromUri] int filtroAlerta = 1, [FromUri] string fecha = "")
+        {
+            try
+            {
+                DateTime fechaAjustada = DateTime.Parse(fecha);
+                return Ok(_alertaBLL.GetAlertasByFilter(propietarioId, tipoAlerta, filtroAlerta, fechaAjustada));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener las alertas"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/alertas/{alertaId}")]
+        public IHttpActionResult GetAlertaById(int propietarioId, int alertaId)
+        {
+            try
+            {
+                return Ok(_alertaBLL.GetAlertaById(propietarioId, alertaId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener la alerta"));
+            }
+        }
+
+        /*
+         * ********************************************************************************
+         * ************************ Remover despues de visto bueno ************************
+         * ********************************************************************************
+         */
         [HttpGet, Route("api/Alerta/GetById/{id}")]
         public IHttpActionResult GetById(int id)
         {
@@ -179,3 +243,11 @@ namespace Equilinked.API.Controllers
         }        
     }
 }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

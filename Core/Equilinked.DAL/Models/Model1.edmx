@@ -29,6 +29,9 @@
           <Property Name="NombreProfesional" Type="nvarchar(max)" />
           <Property Name="Ubicacion" Type="varchar" MaxLength="255" />
           <Property Name="AlertaGrupal" Type="bit" />
+          <Property Name="FechaFinal" Type="datetime" />
+          <Property Name="Resultado" Type="text" />
+          <Property Name="Propietario_ID" Type="int" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -45,6 +48,15 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Alerta_ID" Type="int" Nullable="false" />
           <Property Name="Grupo_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AlertaRecordatorio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Alerta_ID" Type="int" Nullable="false" />
+          <Property Name="ValorTiempo" Type="int" Nullable="false" />
+          <Property Name="UnidadTiempo_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Alimentacion">
           <Key>
@@ -333,6 +345,15 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="Recordatorio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ValorTiempo" Type="int" />
+          <Property Name="UnidadTiempo_ID" Type="int" />
+        </EntityType>
         <EntityType Name="ResponsableCaballo">
           <Key>
             <PropertyRef Name="Caballo_ID" />
@@ -356,6 +377,14 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Descripcion" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="UnidadTiempo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="255" />
+          <Property Name="EquivalenciaMinutos" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Usuario">
           <Key>
             <PropertyRef Name="ID" />
@@ -367,6 +396,18 @@
           <Property Name="ExpirationDate" Type="datetime" />
           <Property Name="Activo" Type="bit" />
         </EntityType>
+        <Association Name="FK_Alerta_Propietario_ID">
+          <End Role="Propietario" Type="Self.Propietario" Multiplicity="0..1" />
+          <End Role="Alerta" Type="Self.Alerta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Alerta">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_AlertaCaballo_Alerta">
           <End Role="Alerta" Type="Self.Alerta" Multiplicity="1" />
           <End Role="AlertaCaballo" Type="Self.AlertaCaballo" Multiplicity="*" />
@@ -412,6 +453,30 @@
             </Principal>
             <Dependent Role="AlertaGrupo">
               <PropertyRef Name="Grupo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaRecordatorio_Alerta_ID">
+          <End Role="Alerta" Type="Self.Alerta" Multiplicity="1" />
+          <End Role="AlertaRecordatorio" Type="Self.AlertaRecordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alerta">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaRecordatorio">
+              <PropertyRef Name="Alerta_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaRecordatorio_UnidadTiempo_ID">
+          <End Role="UnidadTiempo" Type="Self.UnidadTiempo" Multiplicity="1" />
+          <End Role="AlertaRecordatorio" Type="Self.AlertaRecordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnidadTiempo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaRecordatorio">
+              <PropertyRef Name="UnidadTiempo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -775,6 +840,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Recordatorio_UnidadTiempo_ID">
+          <End Role="UnidadTiempo" Type="Self.UnidadTiempo" Multiplicity="0..1" />
+          <End Role="Recordatorio" Type="Self.Recordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnidadTiempo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Recordatorio">
+              <PropertyRef Name="UnidadTiempo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ResponsableCaballo_Caballo_ID">
           <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
           <End Role="ResponsableCaballo" Type="Self.ResponsableCaballo" Multiplicity="0..1" />
@@ -807,6 +884,7 @@
           <EntitySet Name="Alerta" EntityType="Self.Alerta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AlertaCaballo" EntityType="Self.AlertaCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AlertaGrupo" EntityType="Self.AlertaGrupo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AlertaRecordatorio" EntityType="Self.AlertaRecordatorio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Alimentacion" EntityType="Self.Alimentacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caballo" EntityType="Self.Caballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConfiguracionCorreo" EntityType="Self.ConfiguracionCorreo" Schema="dbo" store:Type="Tables" />
@@ -837,10 +915,16 @@
           <EntitySet Name="Propietario" EntityType="Self.Propietario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropietarioTelefono" EntityType="Self.PropietarioTelefono" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Protector" EntityType="Self.Protector" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recordatorio" EntityType="Self.Recordatorio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ResponsableCaballo" EntityType="Self.ResponsableCaballo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Mail" EntityType="Self.Tipo_Mail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo_Numero" EntityType="Self.Tipo_Numero" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UnidadTiempo" EntityType="Self.UnidadTiempo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Alerta_Propietario_ID" Association="Self.FK_Alerta_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="Alerta" EntitySet="Alerta" />
+          </AssociationSet>
           <AssociationSet Name="FK_AlertaCaballo_Alerta" Association="Self.FK_AlertaCaballo_Alerta">
             <End Role="Alerta" EntitySet="Alerta" />
             <End Role="AlertaCaballo" EntitySet="AlertaCaballo" />
@@ -856,6 +940,14 @@
           <AssociationSet Name="FK_AlertaGrupo_Grupo_ID" Association="Self.FK_AlertaGrupo_Grupo_ID">
             <End Role="Grupo" EntitySet="Grupo" />
             <End Role="AlertaGrupo" EntitySet="AlertaGrupo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaRecordatorio_Alerta_ID" Association="Self.FK_AlertaRecordatorio_Alerta_ID">
+            <End Role="Alerta" EntitySet="Alerta" />
+            <End Role="AlertaRecordatorio" EntitySet="AlertaRecordatorio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaRecordatorio_UnidadTiempo_ID" Association="Self.FK_AlertaRecordatorio_UnidadTiempo_ID">
+            <End Role="UnidadTiempo" EntitySet="UnidadTiempo" />
+            <End Role="AlertaRecordatorio" EntitySet="AlertaRecordatorio" />
           </AssociationSet>
           <AssociationSet Name="FK_Caballo_Establo_ID" Association="Self.FK_Caballo_Establo_ID">
             <End Role="Establo" EntitySet="Establo" />
@@ -977,6 +1069,10 @@
             <End Role="Tipo_Numero" EntitySet="Tipo_Numero" />
             <End Role="PropietarioTelefono" EntitySet="PropietarioTelefono" />
           </AssociationSet>
+          <AssociationSet Name="FK_Recordatorio_UnidadTiempo_ID" Association="Self.FK_Recordatorio_UnidadTiempo_ID">
+            <End Role="UnidadTiempo" EntitySet="UnidadTiempo" />
+            <End Role="Recordatorio" EntitySet="Recordatorio" />
+          </AssociationSet>
           <AssociationSet Name="FK_ResponsableCaballo_Caballo_ID" Association="Self.FK_ResponsableCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
             <End Role="ResponsableCaballo" EntitySet="ResponsableCaballo" />
@@ -1011,11 +1107,14 @@
           <Property Name="Tipo" Type="Int32" Nullable="false" />
           <Property Name="Activa" Type="Boolean" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Evento" Relationship="Self.FK_dbo_Evento_dbo_Alerta_Alerta_ID" FromRole="Alerta" ToRole="Evento" />
           <Property Name="NombreProfesional" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AlertaGrupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Alerta_ID" FromRole="Alerta" ToRole="AlertaGrupo" />
           <Property Name="Ubicacion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="AlertaGrupal" Type="Boolean" />
+          <NavigationProperty Name="AlertaRecordatorio" Relationship="EquilinkedModel.FK_AlertaRecordatorio_Alerta_ID" FromRole="Alerta" ToRole="AlertaRecordatorio" />
+          <Property Name="FechaFinal" Type="DateTime" Precision="3" />
+          <Property Name="Resultado" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Propietario_ID" Type="Int32" />
         </EntityType>
         <EntityType Name="AlertaCaballo">
           <Key>
@@ -1066,7 +1165,6 @@
           <NavigationProperty Name="Grupo" Relationship="Self.FK_dbo_Caballo_dbo_Grupo_Grupo_ID" FromRole="Caballo" ToRole="Grupo" />
           <NavigationProperty Name="Pelaje" Relationship="Self.FK_dbo_Caballo_dbo_Pelaje_Pelaje_ID" FromRole="Caballo" ToRole="Pelaje" />
           <NavigationProperty Name="Propietario" Relationship="Self.FK_dbo_Caballo_dbo_Propietario_Propietario_ID" FromRole="Caballo" ToRole="Propietario" />
-          <NavigationProperty Name="GrupoCaballo" Relationship="Self.FK_GrupoCaballo_Caballo_ID" FromRole="Caballo" ToRole="GrupoCaballo" />
           <Property Name="Observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Establo_ID" Type="Int32" />
           <NavigationProperty Name="Establo" Relationship="EquilinkedModel.FK_Caballo_Establo_ID" FromRole="Caballo" ToRole="Establo" />
@@ -1747,6 +1845,25 @@
             <End Role="Pais" EntitySet="Pais" />
             <End Role="CriadorCaballo" EntitySet="CriadorCaballo" />
           </AssociationSet>
+          <EntitySet Name="AlertaRecordatorio" EntityType="EquilinkedModel.AlertaRecordatorio" />
+          <EntitySet Name="Recordatorio" EntityType="EquilinkedModel.Recordatorio" />
+          <EntitySet Name="UnidadTiempo" EntityType="EquilinkedModel.UnidadTiempo" />
+          <AssociationSet Name="FK_AlertaRecordatorio_Alerta_ID" Association="EquilinkedModel.FK_AlertaRecordatorio_Alerta_ID">
+            <End Role="Alerta" EntitySet="Alerta" />
+            <End Role="AlertaRecordatorio" EntitySet="AlertaRecordatorio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertaRecordatorio_UnidadTiempo_ID" Association="EquilinkedModel.FK_AlertaRecordatorio_UnidadTiempo_ID">
+            <End Role="UnidadTiempo" EntitySet="UnidadTiempo" />
+            <End Role="AlertaRecordatorio" EntitySet="AlertaRecordatorio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recordatorio_UnidadTiempo_ID" Association="EquilinkedModel.FK_Recordatorio_UnidadTiempo_ID">
+            <End Role="UnidadTiempo" EntitySet="UnidadTiempo" />
+            <End Role="Recordatorio" EntitySet="Recordatorio" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Alerta_Propietario_ID" Association="EquilinkedModel.FK_Alerta_Propietario_ID">
+            <End Role="Propietario" EntitySet="Propietario" />
+            <End Role="Alerta" EntitySet="Alerta" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -2136,6 +2253,82 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AlertaRecordatorio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Alerta_ID" Type="Int32" Nullable="false" />
+          <Property Name="ValorTiempo" Type="Int32" Nullable="false" />
+          <Property Name="UnidadTiempo_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UnidadTiempo" Relationship="EquilinkedModel.FK_AlertaRecordatorio_UnidadTiempo_ID" FromRole="AlertaRecordatorio" ToRole="UnidadTiempo" />
+        </EntityType>
+        <EntityType Name="Recordatorio">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ValorTiempo" Type="Int32" />
+          <Property Name="UnidadTiempo_ID" Type="Int32" />
+          <NavigationProperty Name="UnidadTiempo" Relationship="EquilinkedModel.FK_Recordatorio_UnidadTiempo_ID" FromRole="Recordatorio" ToRole="UnidadTiempo" />
+        </EntityType>
+        <EntityType Name="UnidadTiempo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="EquivalenciaMinutos" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AlertaRecordatorio_Alerta_ID">
+          <End Type="EquilinkedModel.Alerta" Role="Alerta" Multiplicity="1" />
+          <End Type="EquilinkedModel.AlertaRecordatorio" Role="AlertaRecordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alerta">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaRecordatorio">
+              <PropertyRef Name="Alerta_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertaRecordatorio_UnidadTiempo_ID">
+          <End Type="EquilinkedModel.UnidadTiempo" Role="UnidadTiempo" Multiplicity="1" />
+          <End Type="EquilinkedModel.AlertaRecordatorio" Role="AlertaRecordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnidadTiempo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AlertaRecordatorio">
+              <PropertyRef Name="UnidadTiempo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recordatorio_UnidadTiempo_ID">
+          <End Type="EquilinkedModel.UnidadTiempo" Role="UnidadTiempo" Multiplicity="0..1" />
+          <End Type="EquilinkedModel.Recordatorio" Role="Recordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UnidadTiempo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Recordatorio">
+              <PropertyRef Name="UnidadTiempo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Alerta_Propietario_ID">
+          <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="0..1" />
+          <End Type="EquilinkedModel.Alerta" Role="Alerta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Propietario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Alerta">
+              <PropertyRef Name="Propietario_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2155,6 +2348,9 @@
           <EntitySetMapping Name="Alerta">
             <EntityTypeMapping TypeName="EquilinkedModel.Alerta">
               <MappingFragment StoreEntitySet="Alerta">
+                <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
+                <ScalarProperty Name="Resultado" ColumnName="Resultado" />
+                <ScalarProperty Name="FechaFinal" ColumnName="FechaFinal" />
                 <ScalarProperty Name="AlertaGrupal" ColumnName="AlertaGrupal" />
                 <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
                 <ScalarProperty Name="NombreProfesional" ColumnName="NombreProfesional" />
@@ -2552,6 +2748,35 @@
                 <ScalarProperty Name="Telefono" ColumnName="Telefono" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AlertaRecordatorio">
+            <EntityTypeMapping TypeName="EquilinkedModel.AlertaRecordatorio">
+              <MappingFragment StoreEntitySet="AlertaRecordatorio">
+                <ScalarProperty Name="UnidadTiempo_ID" ColumnName="UnidadTiempo_ID" />
+                <ScalarProperty Name="ValorTiempo" ColumnName="ValorTiempo" />
+                <ScalarProperty Name="Alerta_ID" ColumnName="Alerta_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recordatorio">
+            <EntityTypeMapping TypeName="EquilinkedModel.Recordatorio">
+              <MappingFragment StoreEntitySet="Recordatorio">
+                <ScalarProperty Name="UnidadTiempo_ID" ColumnName="UnidadTiempo_ID" />
+                <ScalarProperty Name="ValorTiempo" ColumnName="ValorTiempo" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UnidadTiempo">
+            <EntityTypeMapping TypeName="EquilinkedModel.UnidadTiempo">
+              <MappingFragment StoreEntitySet="UnidadTiempo">
+                <ScalarProperty Name="EquivalenciaMinutos" ColumnName="EquivalenciaMinutos" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

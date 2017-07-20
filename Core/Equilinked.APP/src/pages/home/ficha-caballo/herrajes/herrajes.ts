@@ -5,6 +5,8 @@ import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { AlertaService } from '../../../../services/alerta.service';
 import { Alerta } from '../../../../model/alerta';
+import { UserSessionEntity } from '../../../../model/userSession';
+import { SecurityService } from '../../../../services/security.service';
 import { NotificacionesExtendedInsertPage } from '../../../notificaciones/notificaciones-extended-insert';
 import { NotificacionGeneralDetalle } from "../../../notificaciones/notificacion-general-detalle/notificacion-general-detalle";
 import moment from "moment";
@@ -12,9 +14,12 @@ import "moment/locale/es";
 
 @Component({
     templateUrl: 'herrajes.html',
-    providers: [CommonService, AlertaService]
+    providers: [CommonService, AlertaService, SecurityService]
 })
 export class HerrajesPage implements OnInit, OnDestroy {
+
+    private session: UserSessionEntity;
+
     idCaballo: number;
     nombreCaballo: string = "";
     historyNotificacionList = [];
@@ -29,10 +34,14 @@ export class HerrajesPage implements OnInit, OnDestroy {
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
-        private _alertaService: AlertaService) {
+        private _alertaService: AlertaService,
+        private securityService: SecurityService
+    ) {
     }
 
     ngOnInit(): void {
+        this.session = this.securityService.getInitialConfigSession();
+
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
@@ -100,6 +109,8 @@ export class HerrajesPage implements OnInit, OnDestroy {
     insert() {
         let notificacion: Alerta = new Alerta();
         notificacion.Tipo = this.tipoAlerta;
+        notificacion.Propietario_ID = this.session.PropietarioId;
+        notificacion.Titulo = "Visita con herrero";
         notificacion.CaballosList = new Array();
         notificacion.CaballosList.push(this.idCaballo);
         this.navCtrl.push(NotificacionesExtendedInsertPage,

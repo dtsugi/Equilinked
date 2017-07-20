@@ -3,7 +3,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Equilinked.BLL;
-using System.Web.Http.Description;
 using Equilinked.DAL.Models;
 
 namespace Equilinked.API.Controllers

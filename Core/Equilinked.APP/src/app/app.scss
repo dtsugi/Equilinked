@@ -17,7 +17,8 @@
 
 $_EQUI_PRINCIPAL_COLOR:#42A6AC;
 $_EQUI_CONTENT_TABLE_COLOR: #D9F1F1;
-$_EQUI_TEXT_EDITION_COLOR: #CCC6C8;
+//$_EQUI_TEXT_EDITION_COLOR: #CCC6C8;
+$_EQUI_TEXT_EDITION_COLOR: #999;
 $_EQUI_DANGER_COLOR: #f53d3d;
 
 @font-face {
@@ -218,6 +219,12 @@ body,ion-content {
     font-style: italic !important;
 }
 
+.equi-input-title-note {
+    font-size: 18px !important; 
+    font-weight: bold !important;
+    font-family: NotoSans !important;
+}
+
 .equi-select-text {
     font-family: NotoSans !important;
     font-size: 14px !important;
@@ -245,4 +252,54 @@ body,ion-content {
     white-space: nowrap !important;
     position: relative !important;
     color: #000 !important;
+}
+
+.tabs-md .tab-button[aria-selected=true] .tab-button-icon {
+    color: white !important;
+}
+
+.tabs-md .tab-button[aria-selected=true] {
+    color: white !important; 
+    background-color: #42A6AC !important;
+}
+
+.segment-md-primary .segment-button.activated, .segment-md-primary .segment-button.segment-activated {
+    color: white !important;
+    background-color: #42A6AC !important;
+}
+
+.segment-md .segment-button {
+    border-bottom-style: none !important;
+    font-family: NotoSans !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+    text-transform: capitalize !important; 
+}
+
+.border-bottom {
+    border-bottom-style: solid !important;
+    border-bottom-color: #CCC6C8 !important;
+    border-width: 1px !important;
+}
+
+.padding-bottom-row {
+    padding-bottom: 15px !important;
+}
+
+.equi-detail-note {
+    white-space: pre-line !important;
+}
+
+.equi-expired-alert-normal {
+    color:#CCC6C8 !important;
+    font-size: 16px !important;
+    font-family: NotoSans !important;
+    font-weight: normal !important;
+}
+
+.equi-expired-alert-bold {
+    color:#CCC6C8 !important;
+    font-family: NotoSans !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
 }

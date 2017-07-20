@@ -17,6 +17,7 @@ import { OpcionesCaballoPopover } from "./opciones-caballo/opciones-caballo";
     providers: [CommonService]
 })
 export class FichaCaballoPage implements OnDestroy, OnInit {
+    menu: string;
     showMenuInformation: boolean;
     showMenuFotos: boolean;
     caballo: Caballo;
@@ -27,7 +28,9 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
         public navParams: NavParams,
         public popoverController: PopoverController,
         private _commonService: CommonService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder
+    ) {
+        this.menu = "informacion";
     }
 
     ngOnInit(): void {

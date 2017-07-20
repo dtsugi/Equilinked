@@ -12,6 +12,37 @@ namespace Equilinked.API.Controllers
     {
         private GrupoCaballoBLL GrupoCaballoBLL = new GrupoCaballoBLL();
 
+        [HttpGet, Route("api/propietarios/{propietarioId}/grupos")]
+        public IHttpActionResult GetAllGruposByPropietarioId(int propietarioId)
+        {
+            try
+            {
+
+                return Ok(GrupoCaballoBLL.GetAllGruposByPropietarioId(propietarioId));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener los grupos del propietario"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/grupos/caballos")]
+        public IHttpActionResult GetAllCaballosFromGruposIds([FromUri] int[] gruposIds, int propietarioId)
+        {
+            try
+            {
+
+                return Ok(GrupoCaballoBLL.GetCaballosByGruposIds(propietarioId, gruposIds));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener los caballos de los grupos"));
+            }
+        }
+
+
         [HttpDelete, Route("api/Grupo/{grupoId}")]
         public IHttpActionResult DeleteGrupoById(int grupoId)
         {

@@ -17,7 +17,6 @@ namespace Equilinked.DAL.Models
         public Caballo()
         {
             this.Alimentacion1 = new HashSet<Alimentacion>();
-            this.GrupoCaballo = new HashSet<GrupoCaballo>();
         }
     
         public int ID { get; set; }
@@ -53,7 +52,6 @@ namespace Equilinked.DAL.Models
         public virtual Grupo Grupo { get; set; }
         public virtual Pelaje Pelaje { get; set; }
         public virtual Propietario Propietario { get; set; }
-        public virtual ICollection<GrupoCaballo> GrupoCaballo { get; set; }
         public virtual Establo Establo { get; set; }
         public virtual Protector Protector { get; set; }
         public virtual GenealogiaCaballo GenealogiaCaballo { get; set; }

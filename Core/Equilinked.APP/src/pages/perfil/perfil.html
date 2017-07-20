@@ -30,18 +30,15 @@
 </ion-header>
 
 <ion-content>
+    <ion-segment [(ngModel)]="selectedTab" color="primary">
+        <ion-segment-button value="datos">
+            DATOS
+        </ion-segment-button>
+        <ion-segment-button value="establos">
+            ESTABLO(S)
+        </ion-segment-button>
+    </ion-segment>
 
-    <ion-toolbar>
-        <ion-segment [(ngModel)]="selectedTab" color="primary">
-            <ion-segment-button value="datos">
-                DATOS
-            </ion-segment-button>
-            <ion-segment-button value="establos">
-                ESTABLO(S)
-            </ion-segment-button>
-        </ion-segment>
-    </ion-toolbar>
-    
     <div *ngIf="selectedTab == 'datos'">
         <segment-datos></segment-datos>
     </div>

@@ -1,0 +1,12 @@
+{
+    "LOGIN": {
+        "USER": "Nombre de usuario",
+        "PASSWORD": "Contraseña",
+        "BTN_LOGIN": "Iniciar sesión",
+        "OPTION_ACCESS": "o",
+        "OPTION_FACEBOOK": "con Facebook",
+        "OPTION_GOOGLE": "con Google",
+        "NO_ACCOUNT": "Si no tienes una cuenta de Equilinked",
+        "CREATE_ACCOUNT": "Registrarse"
+    }
+}

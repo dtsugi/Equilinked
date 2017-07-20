@@ -11,6 +11,7 @@ import { Alerta } from '../../model/alerta';
 import { UserSessionEntity } from '../../model/userSession';
 import { NotificacionesPage } from './notificaciones';
 import { NotificacionesViewPage } from './notificaciones-view';
+import moment from "moment";
 
 @Component({
     templateUrl: 'notificaciones-insert.html',
@@ -45,6 +46,7 @@ export class NotificacionesInsertPage {
         this.session = this._securityService.getInitialConfigSession();
         if (this._commonService.IsValidParams(this.navParams, ["alertaEntity", "isFromNotas", "isUpdate", "callbackController"])) {
             this.alertaEntity = this.navParams.get("alertaEntity");
+            this.alertaEntity.FechaNotificacion = moment(this.alertaEntity.FechaNotificacion).format("YYYY-MM-DD");
             this.isFromNotas = this.navParams.get("isFromNotas");
             this.isUpdate = this.navParams.get("isUpdate");
             if (this.alertaEntity.ID > 0) {
@@ -69,6 +71,7 @@ export class NotificacionesInsertPage {
     initForm() {
         console.log("ALERTA:", this.alertaEntity);
         this.formNotificaciones = this.formBuilder.group({
+            Propietario_ID: [this.alertaEntity.Propietario_ID],
             Id: [this.alertaEntity.ID],
             Titulo: [this.alertaEntity.Titulo, Validators.required],
             FechaNotificacion: [this.alertaEntity.FechaNotificacion, Validators.required],
@@ -111,6 +114,8 @@ export class NotificacionesInsertPage {
         } else {
             this._commonService.showLoading("Guardando..");
         }
+        let alerta: any = this.formNotificaciones.value;
+        alerta.FechaNotificacion = alerta.FechaNotificacion + " " + alerta.HoraNotificacion + ":00";
         console.log(this.formNotificaciones.value);
         this._alertaService.save(this.formNotificaciones.value)
             .subscribe(res => {

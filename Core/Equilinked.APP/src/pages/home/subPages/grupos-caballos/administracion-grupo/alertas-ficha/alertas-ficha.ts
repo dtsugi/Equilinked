@@ -9,7 +9,7 @@ import { DetalleAlertaPage } from "./detalle-alerta/detalle-alerta";
 import { ConstantsConfig } from "../../../../../../app/utils"
 import moment from "moment";
 import "moment/locale/es";
- 
+
 @Component({
     templateUrl: "./alertas-ficha.html",
     providers: [AlertaGrupoService, CommonService, SecurityService],
@@ -67,11 +67,25 @@ export class AlertasFicha implements OnInit, OnDestroy {
     }
 
     create(): void {
+        let titulo: string;
+        switch (this.tipoAlerta) {
+            case ConstantsConfig.ALERTA_TIPO_DENTISTA:
+                titulo = "Visita con dentista";
+                break;
+            case ConstantsConfig.ALERTA_TIPO_HERRAJE:
+                titulo = "Visita con herrero";
+                break;
+            case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
+                titulo = "Visita con aplicante";
+                break;
+        }
         let alertaGrupo: any = { //Ya cremos la alerta!
             Grupo_ID: this.grupo.ID,
             Alerta: {
+                Titulo: titulo,
                 Tipo: this.tipoAlerta,
-                AlertaCaballo: []
+                AlertaCaballo: [],
+                Propietario_ID: this.session.PropietarioId
             }
         };
 

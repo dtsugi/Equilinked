@@ -1,97 +1,85 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { CommonService } from '../../services/common.service';
 import { AlertaService } from '../../services/alerta.service';
-import { CaballoService } from '../../services/caballo.service';
+import { SecurityService } from '../../services/security.service';
 import { Alerta } from '../../model/alerta';
-import { Caballo } from '../../model/caballo';
-import { NotificacionesPage } from './notificaciones';
-// import { PopoverNotificacionesViewPage } from './pop-over/pop-over-view-notificacion';
+import { UserSessionEntity } from '../../model/userSession';
+import { EdicionNotificacionGeneralPage } from "./edicion-notificacion/edicion-notificacion";
+import moment from "moment";
+import "moment/locale/es";
 
 @Component({
     templateUrl: 'notificaciones-view.html',
-    providers: [CommonService, AlertaService, CaballoService]
+    providers: [CommonService, AlertaService, SecurityService]
 })
 
-export class NotificacionesViewPage {
-    alertaEntity: Alerta;
-    fecha: string;
-    caballoEntity: Caballo = new Caballo();
-    grupoDescripcion: string = "";
+export class NotificacionesViewPage implements OnDestroy, OnInit {
 
-    constructor(public navCtrl: NavController,
+    private alertaId: number;
+    private session: UserSessionEntity;
+
+    alertaEntity: any;
+
+    constructor(
+        private events: Events,
+        public navCtrl: NavController,
         public navParams: NavParams,
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private _alertaService: AlertaService,
-        private _caballoService: CaballoService) {
+        private securityService: SecurityService
+    ) {
     }
 
-    ionViewDidLoad() { console.log("ionViewDidLoad"); }
-    ionViewWillEnter() { console.log("ionViewWillEnter"); }
-    ionViewDidEnter() {
-        console.log("ionViewDidEnter");
-    }
-    ionViewWillLeave() { console.log("ionViewWillLeave"); }
-    ionViewWillUnload() { console.log("ionViewWillUnload"); }
-    ionViewCanEnter() { console.log("ionViewCanEnter"); }
-    ionViewCanLeave() { console.log("ionViewCanLeave"); }
-
-    ngOnInit() {
+    ngOnInit(): void {
         console.log("ngOnInit");
-        this.alertaEntity = this.navParams.get("notificacionSelected");
-        // let fechaNotificacion = this.navParams.get("fecha");
-        // this.getCaballoInfo(this.alertaEntity.CaballoId, this.alertaEntity.FechaNotificacion);
+        this.session = this.securityService.getInitialConfigSession();
+        this.alertaId = this.navParams.get("alertaId");
+
+        this.loadInfoAlerta(true);
+        this.addEvents();
     }
 
-    getCaballoInfo(caballoId: number, fechaNotificacion: string) {
-        // this._caballosService.getById(caballoId.toString())
-        //     .subscribe(res => {
-        //         this._commonService.showLoading("Procesando..");
-        //         console.log(res);
-        //         this.caballoEntity = res;
-        //         this.grupoDescripcion = this.getDescGrupoCaballo(this.caballoEntity);
-        //         this.getCurrentDate(fechaNotificacion);
-        //     }, error => {
-        //         this._commonService.ShowErrorHttp(error, "Error al obtener la informacion del caballo");
-        //     });
-
-        // this.caballoEntity = this.alertaEntity.Caballo;
-        // this._commonService.showLoading("Procesando..");
-        // this.grupoDescripcion = this.getDescGrupoCaballo(this.caballoEntity);
-        // this.getCurrentDate(fechaNotificacion);
+    ngOnDestroy(): void {
+        this.removeEvents();
     }
 
-    getCurrentDate(fecha: string) {
-        this._alertaService.getCurrentDateString(fecha, null)
-            .subscribe(res => {
-                console.log(res);
-                this.fecha = res;
-                this._commonService.hideLoading();
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al obtener la fecha de la notificacion");
+    edit(): void {
+        console.info(this.alertaEntity);
+        let params = {
+            alerta: JSON.parse(JSON.stringify(this.alertaEntity))
+        };
+        this.navCtrl.push(EdicionNotificacionGeneralPage, params);
+    }
+
+    private loadInfoAlerta(loading: boolean): void {
+        if (loading)
+            this._commonService.showLoading("Procesando...");
+
+        this._alertaService.getAlertaById(this.session.PropietarioId, this.alertaId)
+            .then(alerta => {
+                let d = new Date(alerta.FechaNotificacion);
+                alerta.Fecha = moment(d).format("dddd, D [de] MMMM [de] YYYY");
+                alerta.Fecha = alerta.Fecha.charAt(0).toUpperCase() + alerta.Fecha.slice(1);
+                alerta.Hora = moment(d).format("hh:mm");
+                alerta.Meridiano = moment(d).format("a").toUpperCase();
+                this.alertaEntity = alerta;
+                if (loading)
+                    this._commonService.hideLoading();
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Ocurrió un error al consultar");
             });
     }
 
-    // OBTENER NOMBRE DEL GRUPO DE CABALLO, SI LO POSEE
-    getDescGrupoCaballo(caballo: Caballo): string {
-        // if (caballo.Grupo != null)
-        //     return caballo.Grupo.Descripcion;
-        // else
-            return "";
-        // return "Grupo del caballo";
+    private addEvents(): void {
+        this.events.subscribe("notificacion:refresh", () => {
+            this.loadInfoAlerta(false);//carga de nuevo info de alerta
+        });
     }
 
-    presentPopover(ev) {
-        // let popover = this.popoverCtrl.create(PopoverNotificacionesViewPage, {
-        //     alertaEntity: this.alertaEntity
-        // });
-        // popover.present({
-        //     ev: ev
-        // });
+    private removeEvents(): void {
+        this.events.unsubscribe("notificacion:refresh");
     }
-
-
-
 }
 

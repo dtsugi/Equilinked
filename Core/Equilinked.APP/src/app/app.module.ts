@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { MomentModule } from "angular2-moment";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 /*Utils */
 import { TextareaAutoresize } from "../utils/equi-autoresize/autoresize.directive";
@@ -11,6 +13,9 @@ import { EquiButtonAdd } from "../utils/equi-button-add/equi-button-add";
 import { EquiItemList } from "../utils/equi-item-list/equi-item-list";
 import { EquiNextAlertHorse } from "../utils/equi-next-alert-horse/equi-next-alert-horse";
 import { EquiHistoryAlertHorse } from "../utils/equi-history-alert-horse/equi-history-alert-horse";
+import { EquiModalCaballos } from "../utils/equi-modal-caballos/equi-modal-caballos";
+import { EquiModalGrupos } from "../utils/equi-modal-grupos/equi-modal-grupos";
+import { EquiModalRecordatorio } from "../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -20,6 +25,7 @@ import { CaballosInd } from '../pages/home/subPages/caballosInd/caballosInd';
 
 /* Notificaciones */
 import { NotificacionesPage } from '../pages/notificaciones/notificaciones';
+import { EdicionNotificacionGeneralPage } from "../pages/notificaciones/edicion-notificacion/edicion-notificacion";
 import { NotificacionesViewPage } from '../pages/notificaciones/notificaciones-view';
 import { NotificacionesInsertPage } from '../pages/notificaciones/notificaciones-insert';
 import { NotificacionesExtendedInsertPage } from '../pages/notificaciones/notificaciones-extended-insert';
@@ -84,6 +90,10 @@ import { CaballosEstabloModal } from "../pages/perfil/establos/admin-establo/cab
 import { InfoEstabloPage } from "../pages/perfil/establos/admin-establo/info-establo";
 import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-establo/edicion-caballos";
 
+export function createTranslateLoader(http: Http) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+}
+
 @NgModule({
   declarations: [
     MyApp,
@@ -98,8 +108,12 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     EquiItemList,
     EquiNextAlertHorse,
     EquiHistoryAlertHorse,
+    EquiModalCaballos,
+    EquiModalGrupos,
+    EquiModalRecordatorio,
     /* Notificaciones */
     NotificacionesPage,
+    EdicionNotificacionGeneralPage,
     NotificacionesViewPage,
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
@@ -169,7 +183,14 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     }),
     HttpModule,
     FormsModule,
-    MomentModule
+    MomentModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [Http]
+      }
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -179,6 +200,7 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     LoginPage,
     /* Notificaciones */
     NotificacionesPage,
+    EdicionNotificacionGeneralPage,
     NotificacionesViewPage,
     NotificacionesInsertPage,
     NotificacionesExtendedInsertPage,
@@ -235,7 +257,11 @@ import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-estab
     AdminEstablosPage,
     CaballosEstabloModal,
     InfoEstabloPage,
-    EdicionEstabloCaballosPage
+    EdicionEstabloCaballosPage,
+    /*Utils */
+    EquiModalCaballos,
+    EquiModalGrupos,
+    EquiModalRecordatorio
   ],
   providers: []
 })

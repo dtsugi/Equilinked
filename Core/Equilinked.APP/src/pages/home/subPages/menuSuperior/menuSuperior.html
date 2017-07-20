@@ -1,40 +1,40 @@
-<ion-toolbar>
-    <ion-segment [(ngModel)]="menu" color="primary" (ionChange)="onSegmentChanged($event)">
-        <ion-segment-button value="caballos">
-            Caballos
-        </ion-segment-button>
-        <ion-segment-button value="veterinarios">
-            Veterinarios
-        </ion-segment-button>
-        <ion-segment-button value="fotos">
-            Fotos
-        </ion-segment-button>
-    </ion-segment>
-</ion-toolbar>
-<ion-toolbar *ngIf="menu == 'caballos'">
-    <ion-segment [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
-        <ion-segment-button value="caballos_ind">
-            Individuos
-        </ion-segment-button>
-        <ion-segment-button value="caballos_gru">
-            Grupos
-        </ion-segment-button>
-    </ion-segment>
-</ion-toolbar>
-<ion-toolbar *ngIf="menu == 'veterinarios'">
-    <ion-segment [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
-        <ion-segment-button value="veterinarios_ind">
-            Individuos
-        </ion-segment-button>
-    </ion-segment>
-</ion-toolbar>
-<ion-toolbar *ngIf="menu == 'fotos'">
-    <ion-segment [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
-        <ion-segment-button value="fotos_todas">
-            Todas
-        </ion-segment-button>
-        <ion-segment-button value="fotos_albums">
-            Albumes
-        </ion-segment-button>
-    </ion-segment>
-</ion-toolbar>
+<ion-segment [(ngModel)]="menu" color="primary" (ionChange)="onSegmentChanged($event)">
+    <ion-segment-button value="caballos">
+        Caballos
+    </ion-segment-button>
+    <ion-segment-button value="veterinarios">
+        Veterinarios
+    </ion-segment-button>
+    <ion-segment-button value="fotos">
+        Fotos
+    </ion-segment-button>
+</ion-segment>
+
+
+<!--<ion-toolbar *ngIf="menu == 'caballos'">-->
+<ion-segment *ngIf="menu == 'caballos'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
+    <ion-segment-button value="caballos_ind">
+        Individuos
+    </ion-segment-button>
+    <ion-segment-button value="caballos_gru">
+        Grupos
+    </ion-segment-button>
+</ion-segment>
+<!--</ion-toolbar>-->
+<!--<ion-toolbar *ngIf="menu == 'veterinarios'">-->
+<ion-segment *ngIf="menu == 'veterinarios'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
+    <ion-segment-button value="veterinarios_ind">
+        Individuos
+    </ion-segment-button>
+</ion-segment>
+<!--</ion-toolbar>-->
+<!--<ion-toolbar *ngIf="menu == 'fotos'">-->
+<ion-segment *ngIf="menu == 'fotos'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
+    <ion-segment-button value="fotos_todas">
+        Todas
+    </ion-segment-button>
+    <ion-segment-button value="fotos_albums">
+        Albumes
+    </ion-segment-button>
+</ion-segment>
+<!--</ion-toolbar>-->

@@ -5,13 +5,175 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
     public class AlertaBLL : BLLBase, IBase<Alerta>
     {
+
+        public void UpdateAlerta(Alerta alerta)
+        {
+            using(var db = this._dbContext)
+            {
+                //Actualizamos los recordatorios
+                List<int> recordatoriosIds = new List<int>();
+                List<int> caballosIds = new List<int>();
+                List<int> gruposIds = new List<int>();
+                List<AlertaRecordatorio> recordatoriosEliminar;
+                List<AlertaCaballo> caballosEliminar;
+                List<AlertaGrupo> gruposEliminar;
+
+                db.Configuration.LazyLoadingEnabled = false;
+
+                //Actualizamos la alerta
+                Alerta alertaMod = db.Alerta.Where(a => a.ID == alerta.ID).FirstOrDefault();
+                alertaMod.Titulo = alerta.Titulo;
+                alertaMod.FechaNotificacion = alerta.FechaNotificacion;
+                alertaMod.HoraNotificacion = alerta.HoraNotificacion;
+                alertaMod.Activa = alerta.Activa;
+                alertaMod.Descripcion = alerta.Descripcion;
+                alertaMod.NombreProfesional = alerta.NombreProfesional;
+                alertaMod.Ubicacion = alerta.Ubicacion;
+                alertaMod.FechaFinal = alerta.FechaFinal;
+                alertaMod.Resultado = alerta.Resultado;
+               
+                //Actualimos los recordatorios
+                foreach (var ar in alerta.AlertaRecordatorio)
+                {
+                    if(ar.ID == 0)
+                    {
+                        ar.Alerta_ID = alerta.ID;
+                        db.AlertaRecordatorio.Add(ar);
+                    } else
+                    {
+                        recordatoriosIds.Add(ar.ID);
+                    }
+                }
+
+                recordatoriosEliminar = db.AlertaRecordatorio
+                    .Where(ar => !recordatoriosIds.Contains(ar.ID) && ar.Alerta_ID == alerta.ID).ToList();
+                db.AlertaRecordatorio.RemoveRange(recordatoriosEliminar);
+
+                //Actualizamos los caballos
+                foreach(var ac in alerta.AlertaCaballo)
+                {
+                    if (ac.ID == 0)
+                    {
+                        ac.Alerta_ID = alerta.ID;
+                        db.AlertaCaballo.Add(ac);
+                    } 
+                    else
+                    {
+                        caballosIds.Add(ac.ID);
+                    }
+                }
+
+                caballosEliminar = db.AlertaCaballo
+                    .Where(ac => !caballosIds.Contains(ac.ID) && ac.Alerta_ID == alerta.ID).ToList();
+                db.AlertaCaballo.RemoveRange(caballosEliminar);
+
+                //Actualimos los grupos
+                foreach(var ag in alerta.AlertaGrupo)
+                {
+                    if(ag.ID == 0)
+                    {
+                        ag.Alerta_ID = alerta.ID;
+                        db.AlertaGrupo.Add(ag);
+                    }
+                    else
+                    {
+                        gruposIds.Add(ag.ID);
+                    }
+                }
+
+                gruposEliminar = db.AlertaGrupo
+                    .Where(ag => !gruposIds.Contains(ag.ID) && ag.Alerta_ID == alerta.ID).ToList();
+                db.AlertaGrupo.RemoveRange(gruposEliminar);
+
+                db.SaveChanges();
+            }
+        }
+
+        public void SaveAlerta(Alerta alerta)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Alerta.Add(alerta);
+                db.AlertaCaballo.AddRange(alerta.AlertaCaballo);
+                db.AlertaGrupo.AddRange(alerta.AlertaGrupo);
+                db.AlertaRecordatorio.AddRange(alerta.AlertaRecordatorio);
+                db.SaveChanges();
+            }
+        }
+
+        public Alerta GetAlertaById(int propietarioId, int alertaId)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<AlertaCaballo> caballos = db.AlertaCaballo.Where(ac => ac.Alerta_ID == alertaId).ToList();
+                Alerta alerta = db.Alerta
+                    .Include("AlertaRecordatorio")
+                    .Include("AlertaRecordatorio.UnidadTiempo")
+                    .Include("AlertaGrupo")
+                    .Where(a => a.ID == alertaId && a.Propietario_ID == propietarioId)
+                    .FirstOrDefault();
+                alerta.AlertaCaballo = caballos;
+
+                return alerta;
+            }
+        }
+
+        public List<Alerta> GetAlertasByFilter(int propietarioId, int tipoAlerta, int filtroAlerta, DateTime fecha)
+        {
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                var query = db.Alerta.Where(a => a.Propietario_ID == propietarioId);
+
+                if (tipoAlerta > 0) //de tipo x
+                {
+                    query = query.Where(a => a.Tipo == tipoAlerta);
+                }
+
+                if (filtroAlerta == 2)//history
+                {
+                    query = query.Where(a => a.FechaNotificacion < fecha)
+                        .OrderByDescending(a => a.FechaNotificacion);
+                }
+                else if (filtroAlerta == 3 || filtroAlerta == 5)//next
+                {
+                    if (filtroAlerta == 5) //Despues de la fecha (sin considerar la fecha)
+                    {
+                        fecha = fecha.AddDays(1);
+                    }
+                    query = query.Where(a => a.FechaNotificacion > fecha)
+                        .OrderBy(a => a.FechaNotificacion);
+                }
+                else if (filtroAlerta == 4) //Hoy
+                {
+                    query = query
+                        .Where(a => a.FechaNotificacion.Day == fecha.Day)
+                        .Where(a => a.FechaNotificacion.Month == fecha.Month)
+                        .Where(a => a.FechaNotificacion.Year == fecha.Year)
+                        .OrderBy(a => a.FechaNotificacion);
+                }
+                else
+                {
+                    query = query.OrderBy(a => a.FechaNotificacion);
+                }
+
+                return query.ToList();
+            }
+        }
+
+        /*
+         * ********************************************************************************
+         * ************************ Remover despues de visto bueno ************************
+         * ********************************************************************************
+         */
         public Alerta GetById(int id)
         {
             using(var db = this._dbContext)

@@ -64,7 +64,8 @@ export class NotasFichaPage implements OnInit, OnDestroy {
             Grupo_ID: this.grupo.ID,
             Alerta: {
                 Tipo: this.tipoAlerta,
-                AlertaCaballo: []
+                AlertaCaballo: [],
+                Propietario_ID: this.session.PropietarioId
             }
         };
 

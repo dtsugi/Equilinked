@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Events, NavController, AlertController } from 'ionic-angular';
 import { CommonService } from '../../services/common.service';
 import { NotificacionesEditPage } from "./notificaciones-edit/notificaciones-edit"
 import { NotificacionesViewPage } from './notificaciones-view';
@@ -8,129 +8,167 @@ import { SecurityService } from '../../services/security.service';
 import { Alerta, DateObject } from '../../model/alerta';
 import { UserSessionEntity } from '../../model/userSession';
 import { Utils } from '../../app/utils';
+import { ConstantsConfig } from "../../app/utils";
+import { EdicionNotificacionGeneralPage } from "./edicion-notificacion/edicion-notificacion";
+import moment from "moment";
+import "moment/locale/es";
 
 @Component({
     selector: 'page-notificaciones',
     templateUrl: 'notificaciones.html',
     providers: [CommonService, AlertaService, SecurityService]
 })
-export class NotificacionesPage {
+export class NotificacionesPage implements OnInit, OnDestroy {
 
-    notificacionList = [];
-    currentDate: String = "";
-    isTomorrowFilter = false;
-    isDeleting: boolean = false;
-    isFutureNotifications: boolean = false;
-    showFechaNotificacion: boolean = false;
-    culture = "es-AR";
-    session: UserSessionEntity;
+    private session: UserSessionEntity;
+    private notificacionesProximasResp: Array<any>;
 
-    constructor(public navCtrl: NavController,
+    dateMillis: number;
+    selectedTab: string;
+    today: string;
+    notificacionesHoy: Array<any>;
+    notificacionesProximas: Array<any>;
+
+    constructor(
+        private events: Events,
+        public navCtrl: NavController,
         public alertController: AlertController,
         private _commonService: CommonService,
         private _alertaService: AlertaService,
-        private _securityService: SecurityService) { }
+        private _securityService: SecurityService
+    ) {
+        this.notificacionesHoy = new Array<any>();
+        this.notificacionesProximas = new Array<any>();
+    }
 
-    ngOnInit() {
-        this.isFutureNotifications = false;
-        let dateTimeNow: DateObject = Utils.getDateNow();
+    ngOnInit(): void {
         this.session = this._securityService.getInitialConfigSession();
-        console.log(this.session);
-        this.updateNotificationList(dateTimeNow, false);
+        this.selectedTab = "hoy";
+        this.loadNotificaciones();
+        this.addEvents();
     }
 
-    goInsertNotificacion() {
-        this.navCtrl.push(NotificacionesEditPage,
-            {
-                alertaEntity: new Alerta(),
-                isFromNotas: false,
-                isUpdate: false,
-                callbackController: this
-            });
+    ngOnDestroy(): void {
+        this.removeEvents();
     }
 
-    goViewNotificacion(notificacion: Alerta) {
-        /* Flag para determinar que no se este eliminando al mismo tiempo */
-        if (!this.isDeleting) {
-            console.log(notificacion);
-            this.navCtrl.push(NotificacionesViewPage, { notificacionSelected: notificacion, fecha: this.currentDate });
+    loadNotificaciones(): void {
+        this.dateMillis = new Date().getTime();
+        if (this.selectedTab === "hoy") {
+            this.loadNotificacionesToday();
+        } else {
+            this.loadNextNotificaciones();
         }
     }
 
-    goTodayNotifications() {
-        this.setFutureNotification(false);
-        let dateTimeNow: DateObject = Utils.getDateNow();
-        this.updateNotificationList(dateTimeNow, false);
-    }
+    filter(evt: any): void {
+        let textFilter: string = evt.target.value;
+        if (textFilter) {
+            let value = textFilter.toUpperCase();
+            let mapDates: Map<string, any> = new Map<string, any>();
+            debugger;
+            this.notificacionesProximasResp.forEach(pn => {
+                if (pn.FechaCorta.toUpperCase().indexOf(value) > -1
+                    || pn.Dia.toUpperCase().indexOf(value) > -1) { //El dia corresponde al texto buscado?
+                    mapDates.set(pn.Fecha, pn);
+                } else {
+                    pn.Notificaciones.forEach(n => {
+                        if (n.Hora.toUpperCase().indexOf(value) > -1
+                            || (n.Ubicacion != null && n.Ubicacion.toUpperCase().indexOf(value) > -1)
+                            || (n.Titulo != null && n.Titulo.toUpperCase().indexOf(value) > -1)) { //Alguna parte dela notificacion corresponde al texto buscado?
 
-    goFutureNotifications() {
-        this.setFutureNotification(true);
-        let dateTimeNow: DateObject = Utils.getDateNow();
-        dateTimeNow.DAY += 1;
-        this.updateNotificationList(dateTimeNow, true);
-    }
-
-    updateNotificationList(dateObject: DateObject, filterByFuture: boolean) {
-        this.clearNotificationList();
-        this.getCurrentFecha(dateObject, this.session.PropietarioId, filterByFuture);
-    }
-
-    getCurrentFecha(dateObject: DateObject, idPropietario: number, filterByFuture: boolean) {
-        console.log(dateObject);
-        this._commonService.showLoading("Procesando..");
-        this._alertaService.getCurrentDate(dateObject.YEAR.toString(), dateObject.addZeroDate(dateObject.MONTH), dateObject.addZeroDate(dateObject.DAY), this.culture)
-            .subscribe(res => {
-                console.log(res);
-                /* Indicar que se van a mostrar todas las notificaciones futuras */
-                if (this.isFutureNotifications) {
-                    this.currentDate = "Desde '" + res + "' en adelante";
+                            if (!mapDates.has(pn.Fecha)) {
+                                let notificacionDia = {
+                                    Fecha: pn.Fecha,
+                                    Dia: pn.Dia,
+                                    FechaCorta: pn.FechaCorta,
+                                    Notificaciones: []
+                                };
+                                mapDates.set(pn.Fecha, notificacionDia);
+                            }
+                            mapDates.get(pn.Fecha).Notificaciones.push(n);
+                        }
+                    });
                 }
-                else { this.currentDate = res; }
-                this.getAllNotificacionesByPropietarioId(idPropietario, filterByFuture);
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo la fecha actual");
             });
+            this.notificacionesProximas = Array.from(mapDates.values());
+        } else {
+            this.notificacionesProximas = this.notificacionesProximasResp;
+        }
+
     }
 
-    getAllNotificacionesByPropietarioId(idPropietario: number, filterByFuture: boolean) {
-        this._alertaService.getAllByPropietario(idPropietario, filterByFuture)
-            .subscribe(res => {
-                console.log(res);
-                this.notificacionList = res;
+    newNotification(): void {
+        this.navCtrl.push(EdicionNotificacionGeneralPage);
+    }
+
+    viewNotification(notificacion: any): void {
+        console.log(notificacion);
+        this.navCtrl.push(NotificacionesViewPage, { alertaId: notificacion.ID });
+    }
+
+    private loadNotificacionesToday(): void {
+        let today = moment();
+        this.today = today.format("dddd, D [de] MMMM [de] YYYY");
+        this.today = this.today.charAt(0).toUpperCase() + this.today.slice(1);
+
+        this._commonService.showLoading("Procesando...");
+        this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
+            ConstantsConfig.ALERTA_TIPO_TODAS, ConstantsConfig.ALERTA_FILTER_TODAY)
+            .then(alertas => {
+                this.notificacionesHoy = alertas.map(a => {
+                    let d = new Date(a.FechaNotificacion);
+                    a.Expired = d.getTime() <= this.dateMillis;
+                    a.Hora = moment(d).format("hh:mm A").toUpperCase();
+                    return a;
+                });
                 this._commonService.hideLoading();
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo las notificaciones");
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Ocurrió un error al consultar");
             });
     }
 
-    deleteNotification(notificacion: Alerta) {
-        this.isDeleting = true;
-        this._commonService.showLoading("Eliminando..");
-        let listId = new Array<number>();
-        listId.push(notificacion.ID);
-        this._alertaService.delete(notificacion.ID)
-            .subscribe(res => {
+    private loadNextNotificaciones(): void {
+        let today = moment();
+        this._commonService.showLoading("Procesando...");
+        this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
+            ConstantsConfig.ALERTA_TIPO_TODAS, ConstantsConfig.ALERTA_FILTER_AFTER_TODAY)
+            .then(alertas => {
+                let mapDates: Map<string, any> = new Map<string, any>();
+                let day: any;
+                alertas.forEach(nn => {
+                    let d = new Date(nn.FechaNotificacion);
+                    nn.Hora = moment(d).format("hh:mm A").toUpperCase();
+                    let date: string = moment(d).format("dddd-DD MMMM");
+                    if (!mapDates.has(date)) {
+                        let partsDate: any = date.split("-");
+                        day = {
+                            Fecha: date,
+                            Dia: partsDate[0].charAt(0).toUpperCase() + partsDate[0].slice(1),
+                            FechaCorta: partsDate[1].toUpperCase().substring(0, 6),
+                            Notificaciones: []
+                        };
+                        mapDates.set(date, day);
+                    }
+                    day = mapDates.get(date);
+                    day.Notificaciones.push(nn);
+                });
+
+                this.notificacionesProximas = Array.from<any>(mapDates.values());
+                this.notificacionesProximasResp = this.notificacionesProximas;
                 this._commonService.hideLoading();
-                console.log(res);
-                let dateTimeNow: DateObject = Utils.getDateNow();
-                this.updateNotificationList(dateTimeNow, false);
-                this.isDeleting = false;
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al eliminar la notificacion");
-                this.isDeleting = false;
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Ocurrió un error al consultar");
             });
     }
 
-    setFutureNotification(isFutureNotification) {
-        this.isFutureNotifications = isFutureNotification;
-        this.showFechaNotificacion = isFutureNotification;
+    private addEvents(): void {
+        this.events.subscribe("notificaciones:refresh", () => {
+            this.loadNotificaciones();
+        });
     }
 
-    clearNotificationList() {
-        this.notificacionList = [];
-    }
-
-    reloadController() {
-        this.ngOnInit();
+    private removeEvents(): void {
+        this.events.unsubscribe("notificaciones:refresh");
     }
 }

@@ -12,17 +12,15 @@
 </ion-header>
 
 <ion-content>
-    <img src="assetss/img/caballo2.jpg" />    
-    <ion-toolbar>
-        <ion-segment [(ngModel)]="menu" color="primary">
-            <ion-segment-button (click)="SetVisibleMenu(true)">
-                INFORMACIÓN
-            </ion-segment-button>
-            <ion-segment-button (click)="SetVisibleMenu(false)">
-                FOTOS
-            </ion-segment-button>
-        </ion-segment>
-    </ion-toolbar>
+    <ion-segment [(ngModel)]="menu" color="primary">
+        <ion-segment-button value="informacion" (click)="SetVisibleMenu(true)">
+            INFORMACIÓN
+        </ion-segment-button>
+        <ion-segment-button value="fotos" (click)="SetVisibleMenu(false)">
+            FOTOS
+        </ion-segment-button>
+    </ion-segment>
+
     <div *ngIf="showMenuInformation">
         <ion-grid>
             <ion-row>

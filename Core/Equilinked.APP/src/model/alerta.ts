@@ -3,15 +3,27 @@ export class Alerta {
     public Titulo: string;
     public FechaNotificacion: string;
     public FechaNotificacionToString: string;
-    public FechaNotificacionToCurrentCulture:string;
+    public FechaNotificacionToCurrentCulture: string;
     public HoraNotificacion: string;
+    public FechaFinal: string;
+    public HoraFinal: string;
     public Tipo: number;
     public Activa: boolean;
     public Descripcion: string;
     public CaballosList;
     public NombreProfesional: string;
-
-    constructor() { }
+    public Ubicacion: string;
+    public AlertaCaballo: Array<any>;
+    public AlertaGrupo: Array<any>;
+    public AlertaRecordatorio: Array<any>;
+    public Resultado: string;
+    public Propietario_ID: number;
+    
+    constructor() {
+        this.AlertaCaballo = new Array<any>();
+        this.AlertaGrupo = new Array<any>();
+        this.AlertaRecordatorio = new Array<any>();
+    }
 }
 
 export class DateObject {

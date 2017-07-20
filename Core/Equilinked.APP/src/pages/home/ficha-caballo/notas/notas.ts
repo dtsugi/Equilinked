@@ -5,14 +5,18 @@ import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { AlertaService } from '../../../../services/alerta.service';
 import { Alerta } from '../../../../model/alerta';
+import { UserSessionEntity } from '../../../../model/userSession';
+import { SecurityService } from '../../../../services/security.service';
 import { NotificacionNotaDetalle } from "../../../notificaciones/notificacion-nota-detalle/notificacion-nota-detalle";
 import { NotificacionesInsertPage } from '../../../notificaciones/notificaciones-insert';
 
 @Component({
     templateUrl: 'notas.html',
-    providers: [CommonService, AlertaService]
+    providers: [CommonService, AlertaService, SecurityService]
 })
 export class NotasPage implements OnInit, OnDestroy {
+
+    private session: UserSessionEntity;
 
     idCaballo: number;
     nombreCaballo: string = "";
@@ -27,10 +31,14 @@ export class NotasPage implements OnInit, OnDestroy {
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
-        private _alertaService: AlertaService) {
+        private _alertaService: AlertaService,
+        private securityService: SecurityService
+    ) {
     }
 
     ngOnInit() {
+        this.session = this.securityService.getInitialConfigSession();
+
         if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
             this.idCaballo = this.navParams.get("idCaballoSelected");
             this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
@@ -72,6 +80,7 @@ export class NotasPage implements OnInit, OnDestroy {
     goInsertNotificacion() {
         let notificacion: Alerta = new Alerta();
         notificacion.Tipo = this.tipoAlerta;
+        notificacion.Propietario_ID = this.session.PropietarioId;
         notificacion.CaballosList = new Array();
         notificacion.CaballosList.push(this.idCaballo);
         this.navCtrl.push(NotificacionesInsertPage,

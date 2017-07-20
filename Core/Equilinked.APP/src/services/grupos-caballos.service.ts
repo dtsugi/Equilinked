@@ -8,8 +8,25 @@ import { AppConfig } from "../app/app.config";
 export class GruposCaballosService {
 
     private endPointGruposCaballos: string = AppConfig.API_URL + "api/grupo";
+    private urlGrupos: string = AppConfig.API_URL + "api/propietarios/";
 
     constructor(private http: Http) {
+    }
+
+    getCaballosByGruposIds(propietarioId: number, gruposIds: number[]): Promise<any> {
+        let url: string = this.urlGrupos + propietarioId + "/grupos/caballos";
+        let params = new URLSearchParams();
+        gruposIds.forEach(id => {
+            params.append("gruposIds", id.toString());
+        });
+        return this.http.get(url, new RequestOptions({ search: params }))
+            .map(caballos => caballos.json() as Array<any>)
+            .toPromise();
+    }
+
+    getAllGruposByPropietarioId(propietarioId: number): Promise<any> {
+        let url: string = this.urlGrupos + propietarioId + "/grupos";
+        return this.http.get(url).map(grupos => grupos.json()).toPromise();
     }
 
     deleteAlertasByIds(grupoId: number, ids: number[]): Promise<any> {

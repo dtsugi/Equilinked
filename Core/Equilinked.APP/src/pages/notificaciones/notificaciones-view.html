@@ -1,31 +1,39 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>Ver notificacion</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="presentPopover($event)">
-                <ion-icon name="more"></ion-icon>
+            <button ion-button class="equi-toolbar-btn" (click)="edit()">
+                Editar
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
-<ion-content>
-    <ion-card>
-        <ion-card-header>
-            <p style="font-size:15pt">{{fecha}}</p>
-            <br>
-            <p style="font-size:35pt">{{alertaEntity.HoraNotificacion}}</p>
-        </ion-card-header>
-        <ion-card-content>
-            <p style="font-size:20pt">{{alertaEntity.Titulo}}</p>
-            <ion-item>
-                <ion-avatar item-left>
-                    <img src="assets/img/caballo.jpg">
-                </ion-avatar>
-                <h2>{{caballoEntity.Nombre}}</h2>
-                <p>{{grupoDescripcion}}</p>
-            </ion-item>
-            <br>
-            <p>{{alertaEntity.Descripcion}}</p>
-        </ion-card-content>
-    </ion-card>
+
+<ion-content padding>
+    <div *ngIf="alertaEntity">
+        <span *ngIf="alertaEntity.Titulo" class="equi-bold-text">{{alertaEntity.Titulo}}</span>
+        <p *ngIf="alertaEntity.Descripcion" class="equi-normal-text equi-detail-note">{{alertaEntity.Descripcion}}</p>
+        <hr />
+
+        <p class="equi-normal-text">
+            {{alertaEntity.Fecha}}
+        </p>
+        <p class="equi-normal-text">
+            <span style="font-size: 40px;font-weight: bold;">{{alertaEntity.Hora}}</span> &nbsp; {{alertaEntity.Meridiano}}
+        </p>
+        <div *ngIf="alertaEntity.AlertaRecordatorio && alertaEntity.AlertaRecordatorio.length > 0">
+            <span *ngFor="let recordatorio of alertaEntity.AlertaRecordatorio" class="equi-normal-text">
+                <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
+                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;antes
+            </span>
+        </div>
+        <hr />
+
+        <p class="equi-normal-text" *ngIf="alertaEntity.AlertaCaballo && alertaEntity.AlertaCaballo.length > 0">
+            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaEntity.AlertaCaballo.length + ' caballo(s)'}}
+        </p>
+
+        <p *ngIf="alertaEntity.Ubicacion" class="equi-normal-text">
+            <ion-icon name="ios-home" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaEntity.Ubicacion}}
+        </p>
+    </div>
 </ion-content>

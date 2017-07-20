@@ -1,17 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { AppConfig } from '../app/app.config';
 import { Utils } from '../app/utils';
-import {Alerta } from '../model/alerta';
+import { Alerta } from '../model/alerta';
 
 @Injectable()
 export class AlertaService {
     private actionUrl: string = AppConfig.API_URL + "api/Alerta/";
+    private alertaUrl: string = AppConfig.API_URL + "api/propietarios/";
     private url = "";
 
     constructor(private _http: Http) { }
+
+    saveAlerta(propietarioId: number, alerta: Alerta): Promise<any> {
+        let url: string = this.alertaUrl + propietarioId + "/alertas"
+        return this._http.post(url, alerta)
+            .toPromise();
+    }
+
+    updateAlerta(propietarioId: number, alerta: Alerta): Promise<any> {
+        let url: string = this.alertaUrl + propietarioId + "/alertas/" + alerta.ID;
+        return this._http.put(url, alerta)
+            .toPromise();
+    }
+
+    getAlertaById(propietarioId: number, alertaId: number): Promise<any> {
+        let url: string = this.alertaUrl + propietarioId + "/alertas/" + alertaId;
+        return this._http.get(url).map(alerta => alerta.json()).toPromise();
+    }
+
+    getAlertasByPropietario(propietarioId: number, fecha: string, tipoAlerta: number, filtroAlerta: number): Promise<Array<any>> {
+        let url: string = this.alertaUrl + propietarioId + "/alertas";
+
+        let params = new URLSearchParams();
+        params.set("fecha", fecha);
+        if (tipoAlerta != null) {
+            params.set("tipoAlerta", tipoAlerta.toString());
+        }
+        if (filtroAlerta != null) {
+            params.set("filtroAlerta", filtroAlerta.toString());
+        }
+
+        return this._http.get(url, new RequestOptions({ search: params }))
+            .map(alertas => alertas.json())
+            .toPromise();
+    }
 
     getById(id: number) {
         this.url = Utils.SetUrlApiGet(this.actionUrl + "GetById/", [id]);

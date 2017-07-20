@@ -68,6 +68,9 @@
     <Compile Include="Models\AlertaGrupo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlertaRecordatorio.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Alimentacion.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -176,6 +179,9 @@
     <Compile Include="Models\Protector.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Recordatorio.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ResponsableCaballo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -186,6 +192,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tipo_Numero.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnidadTiempo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuario.cs">

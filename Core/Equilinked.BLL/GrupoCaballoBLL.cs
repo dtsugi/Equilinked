@@ -1,4 +1,5 @@
-﻿using Equilinked.DAL.Models;
+﻿using Equilinked.DAL.Dto;
+using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,6 +11,61 @@ namespace Equilinked.BLL
 {
     public class GrupoCaballoBLL : BLLBase, IBase<Grupo>
     {
+
+        public List<Grupo> GetAllGruposByPropietarioId(int propietarioId)
+        {
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                db.Database.ExecuteSqlCommand("EXECUTE ValidarGrupoDefaultPropietario @PropietarioId",
+                    new SqlParameter("PropietarioId", propietarioId));
+
+                return db.Grupo
+                    .Where(g => g.Propietario_ID == propietarioId)
+                    .OrderBy(g => g.Descripcion)
+                    .ToList();
+            }
+        }
+
+        public List<CaballoDto> GetCaballosByGruposIds(int propietarioId, int[] gruposIds)
+        {
+            List<CaballoDto> caballos = new List<CaballoDto>();
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<int> idsCaballos = new List<int>();
+                Dictionary<int, Establo> mapEstablos = db.Establo
+                    .Where(e => e.Propietario_ID == propietarioId)
+                    .ToDictionary(e => e.ID);
+
+                List<GrupoCaballo> gruposCaballos = db.GrupoCaballo
+                    .Include("Caballo")
+                    .Where(g => gruposIds.Contains(g.Grupo_ID))
+                    .OrderBy(g => g.Caballo.Nombre)
+                    .ToList();
+
+                Caballo caballo;
+                Establo establo;
+                foreach (GrupoCaballo grupoCaballo in gruposCaballos)
+                {
+                    caballo = grupoCaballo.Caballo;
+                    if (!idsCaballos.Contains(caballo.ID))
+                    {
+                        if (caballo.Establo_ID != null)
+                        {
+                            if (mapEstablos.TryGetValue(caballo.Establo_ID.Value, out establo))
+                            {
+                                caballo.Establo = establo;
+                            }
+                        }
+                        caballos.Add(new CaballoDto(caballo));
+                    } 
+                }
+            }
+
+            return caballos;
+        }
 
         public Grupo GetGrupoById(int grupoId)
         {

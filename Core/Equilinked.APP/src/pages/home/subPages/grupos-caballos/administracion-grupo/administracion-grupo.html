@@ -38,18 +38,16 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-toolbar>
-        <ion-segment [(ngModel)]="segmentSelection" color="primary">
-            <ion-segment-button value="ficha">
-                FICHA
-            </ion-segment-button>
-            <ion-segment-button value="caballos">
-                CABALLOS
-            </ion-segment-button>
-        </ion-segment>
-    </ion-toolbar>
+    <ion-segment [(ngModel)]="segmentSelection" color="primary">
+        <ion-segment-button value="ficha">
+            FICHA
+        </ion-segment-button>
+        <ion-segment-button value="caballos">
+            CABALLOS
+        </ion-segment-button>
+    </ion-segment>
 
-    <div *ngIf="segmentSelection == 'ficha'"> 
+    <div *ngIf="segmentSelection == 'ficha'">
         <segment-ficha-grupo [grupo]="grupo"></segment-ficha-grupo>
     </div>
 
