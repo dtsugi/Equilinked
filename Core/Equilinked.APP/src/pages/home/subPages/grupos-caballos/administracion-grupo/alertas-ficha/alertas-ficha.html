@@ -16,52 +16,29 @@
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col>
-                <hr />
-            </ion-col>
+            <hr>
         </ion-row>
     </ion-grid>
 
-    <ion-list *ngIf="proximasAlertas">
-
-        <ion-item-sliding *ngFor="let alerta of proximasAlertas">
-            <ion-item (click)="viewNextAlert(alerta)" class="equi-principal-color">
-                <ion-row>
-                    <ion-col col-8>
-                        {{alerta.Fecha}}
-                    </ion-col>
-                    <ion-col col-3>
-                        {{alerta.Hora}}
-                    </ion-col>
-                    <ion-col col-1>
-                        <ion-icon name="notifications"></ion-icon>
-                    </ion-col>
-                </ion-row>
-            </ion-item>
-
-            <ion-item-options>
-                <button ion-button color="danger" icon-left (click)="delete(alerta)">
-                    <ion-icon name="trash"></ion-icon>       
-                    Eliminar
-                </button>
-            </ion-item-options>
-        </ion-item-sliding>
+    <ion-list no-lines *ngIf="proximasAlertas">
+        <equi-next-alert-horse *ngFor="let notificacion of proximasAlertas" [alert]="notificacion" (actionClickItem)="viewNextAlert(notificacion)"
+            [labelDelete]="labelsX['PANT018_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
     </ion-list>
 
     <ion-grid>
         <ion-row>
             <ion-col class="equi-title-form">
-                HISTORIAL
+                {{ 'PANT018_LBL_HIST' | translate }}
             </ion-col>
         </ion-row>
         <ion-row>
             <hr />
         </ion-row>
 
-        <equi-button-add [label]="'Nuevo registro'" (action)="create()"></equi-button-add>
+        <equi-button-add [label]="labelsX['PANT018_BTN_AGNU']" (action)="create()"></equi-button-add>
     </ion-grid>
 
-    <ion-list>
+    <ion-list *ngIf="historicoAlertas">
         <div *ngFor="let alerta of historicoAlertas">
             <div *ngIf="!alerta.ShowDetail">
                 <ion-item-sliding>
@@ -71,7 +48,7 @@
                                 {{alerta.Fecha}}
                             </ion-col>
                             <ion-col col-7>
-                                {{alerta.Alerta.NombreProfesional}}
+                                {{alerta.NombreProfesional}}
                             </ion-col>
                             <ion-col col-1>
                                 <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
@@ -81,20 +58,21 @@
 
                     <ion-item-options>
                         <button ion-button color="danger" icon-left (click)="delete(alerta)">
-                        <ion-icon name="trash"></ion-icon>       
-                        Eliminar
-                    </button>
+                            <ion-icon name="trash"></ion-icon>       
+                            {{ 'PANT018_BTN_ELI' | translate }}
+                        </button>
                     </ion-item-options>
                 </ion-item-sliding>
             </div>
+
             <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
                 <ion-item text-wrap no-lines>
                     <ion-row class="equi-table-row-title">
                         <ion-col col-8>
-                            {{alerta.Alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
+                            {{alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
                         </ion-col>
                         <ion-col col-3>
-                            <span (click)="editAlert(alerta)">EDITAR</span>
+                            <span (click)="editAlert(alerta)">{{ 'PANT018_BTN_EDI' | translate }}</span>
                         </ion-col>
                         <ion-col col-1>
                             <ion-icon name="ios-arrow-down"></ion-icon>
@@ -105,7 +83,7 @@
                             {{labels.tablePerson}}
                         </ion-col>
                         <ion-col col-8>
-                            {{alerta.Alerta.NombreProfesional}}
+                            {{alerta.NombreProfesional}}
                         </ion-col>
                     </ion-row>
                     <ion-row class="equi-table-row-content">
@@ -113,15 +91,15 @@
                             {{labels.tableDescription}}
                         </ion-col>
                         <ion-col col-8>
-                            {{alerta.Alerta.Descripcion}}
+                            {{alerta.Descripcion}}
                         </ion-col>
                     </ion-row>
                     <ion-row class="equi-table-row-content">
                         <ion-col col-4>
-                            Caballos
+                            {{ 'PANT018_LBL_CABA' | translate }}
                         </ion-col>
                         <ion-col col-8>
-                            {{alerta.AllCaballos ? 'Todos' : alerta.Alerta.AlertaCaballo.length + ' caballo(s)'}}
+                            {{alerta.AllCaballos ? 'Todos' : alerta.AlertaCaballo.length + labelsX['PANT018_LBL_CA']}}
                         </ion-col>
                     </ion-row>
                 </ion-item>

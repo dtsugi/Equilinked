@@ -17,6 +17,20 @@ namespace Equilinked.API.Controllers
     {
         private CaballoBLL _caballoBLL = new CaballoBLL();
 
+        [HttpGet, Route("api/propietario/{propietarioId}/caballos")]
+        public IHttpActionResult GetCaballosPorAsociacionEstablo(int propietarioId, [FromUri] bool establo)
+        {
+            try
+            {
+                return Ok(_caballoBLL.GetCaballosPorEstadoAsociacionEstablo(propietarioId, establo));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No se pudieron obtener los caballos sin establo"));
+            }
+        }
+
         [HttpGet, Route("api/Caballo/GetAllSerializedByPropietarioId/{propietarioId}")]
         public IHttpActionResult GetAllSerializedByPropietarioId(int propietarioId)
         {

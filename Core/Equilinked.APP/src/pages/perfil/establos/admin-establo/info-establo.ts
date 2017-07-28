@@ -4,10 +4,11 @@ import { AdminEstablosPage } from "./admin-establo";
 import { EdicionEstabloCaballosPage } from "./edicion-caballos";
 import { EstablosService } from "../../../../services/establos.service";
 import { CommonService } from "../../../../services/common.service";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: "./info-establo.html",
-    providers: [CommonService, EstablosService],
+    providers: [LanguageService, CommonService, EstablosService],
     styles: [`
         .icon-hidden {
             visibility: hidden;
@@ -21,14 +22,17 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
     private establoId: number;
 
     establo: any;
+    labels: any = {};
 
     constructor(
         private events: Events,
         private commonService: CommonService,
         private establosService: EstablosService,
         private navController: NavController,
-        private navParams: NavParams
+        private navParams: NavParams,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -43,7 +47,7 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
 
     getInfoEstablo(showLoading: boolean): void {
         if (showLoading) {
-            this.commonService.showLoading("Procesando..");
+            this.commonService.showLoading(this.labels["PANT033_ALT_PRO"]);
         }
         this.establosService.getEstabloById(this.establoId)
             .then(establo => {
@@ -53,7 +57,7 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
                 }
             }).catch(err => {
                 console.error(err);
-                this.commonService.ShowErrorHttp(err, "Error obteniendo los establos del propietario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT033_MSG_ERR"]);
             });
     }
 

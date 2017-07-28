@@ -6,7 +6,7 @@
 
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" (click)="edit()">
-                Editar
+                {{ 'PANT033_BTN_EDI' | translate }}
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -40,7 +40,7 @@
         <ion-item>
             <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
             <a class="equi-principal-color" (click)="viewCaballos()">
-                <span class="equi-normal-text">{{establo.Caballo.length}} caballo(s)</span>
+                <span class="equi-normal-text">{{establo.Caballo.length}} {{ 'PANT033_LBL_CA' | translate }}</span>
             </a>
         </ion-item>
     </ion-list>

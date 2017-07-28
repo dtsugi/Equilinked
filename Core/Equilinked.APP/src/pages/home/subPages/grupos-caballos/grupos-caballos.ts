@@ -6,17 +6,19 @@ import { SecurityService } from "../../../../services/security.service";
 import { CreacionGrupoPage } from "./creacion-grupo/creacion-grupo";
 import { UserSessionEntity } from "../../../../model/userSession";
 import { AdministracionGrupoPage } from "./administracion-grupo/administracion-grupo";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     selector: "grupos-caballos",
     templateUrl: "./grupos-caballos.html",
-    providers: [CommonService, GruposCaballosService, SecurityService]
+    providers: [CommonService, LanguageService, GruposCaballosService, SecurityService]
 })
 export class GruposCaballos implements OnDestroy, OnInit {
 
     grupos: Array<any> = [];
     gruposRespaldo: Array<any> = [];
     session: UserSessionEntity;
+    labels: any = {};
 
     constructor(
         private events: Events,
@@ -24,7 +26,10 @@ export class GruposCaballos implements OnDestroy, OnInit {
         private navController: NavController,
         private toastController: ToastController,
         private gruposCaballosService: GruposCaballosService,
-        private securityService: SecurityService) {
+        private securityService: SecurityService,
+        private languageService: LanguageService
+    ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -39,7 +44,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
 
     getGruposCaballos(showLoading: boolean): void {
         if (showLoading)
-            this.commonService.showLoading("Procesando..");
+            this.commonService.showLoading(this.labels['PANT002_ALT_PRO']);
         this.gruposCaballosService.getGruposCaballosByPropietarioId(this.session.PropietarioId)
             .then(grupos => {
                 this.gruposRespaldo = grupos;
@@ -47,7 +52,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
                 if (showLoading)
                     this.commonService.hideLoading();
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al cargar los grupos");
+                this.commonService.ShowErrorHttp(err, this.labels['PANT002_MSG_ERRCG']);
             });
     }
 

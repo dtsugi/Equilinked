@@ -13,18 +13,20 @@ import { EquiModalCaballos } from "../../../utils/equi-modal-caballos/equi-modal
 import { EquiModalGrupos } from "../../../utils/equi-modal-grupos/equi-modal-grupos";
 import { EquiModalRecordatorio } from "../../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import moment from "moment";
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
     templateUrl: "edicion-notificacion.html",
-    providers: [AlertaService, CaballoService, CommonService, GruposCaballosService, RecordatorioService, SecurityService]
+    providers: [LanguageService, AlertaService, CaballoService, CommonService, GruposCaballosService, RecordatorioService, SecurityService]
 })
 export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
 
     private session: UserSessionEntity;
-    
+
     alerta: Alerta;
     tiposAlerta: Array<any>;
     recordatorios: Array<any>;
+    labels: any = {};
 
     constructor(
         private alertController: AlertController,
@@ -37,33 +39,37 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         public navController: NavController,
         public navParams: NavParams,
         private recordatorioService: RecordatorioService,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
         this.alerta = new Alerta();
         this.tiposAlerta = new Array<any>();
     }
 
     ngOnInit(): void {
-        this.session = this.securityService.getInitialConfigSession();
-        this.alerta = this.navParams.get("alerta");
-        if (!this.alerta) {
-            this.alerta = new Alerta();
-        } else {
-            let di = new Date(this.alerta.FechaNotificacion);
-            this.alerta.FechaNotificacion = moment(di).format("YYYY-MM-DD");
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels
+            this.session = this.securityService.getInitialConfigSession();
+            this.alerta = this.navParams.get("alerta");
+            if (!this.alerta) {
+                this.alerta = new Alerta();
+            } else {
+                let di = new Date(this.alerta.FechaNotificacion);
+                this.alerta.FechaNotificacion = moment(di).format("YYYY-MM-DD");
 
-            if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
-                let df = new Date(this.alerta.FechaFinal);
-                this.alerta.FechaFinal = moment(df).format("YYYY-MM-DD");
-                this.alerta.HoraFinal = moment(df).format("HH:mm:ss");
+                if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+                    let df = new Date(this.alerta.FechaFinal);
+                    this.alerta.FechaFinal = moment(df).format("YYYY-MM-DD");
+                    this.alerta.HoraFinal = moment(df).format("HH:mm:ss");
+                }
+                if (this.alerta.AlertaRecordatorio) {
+                    this.alerta.AlertaRecordatorio.forEach(a => {
+                        this.buildLabelRecordatorio(a);
+                    });
+                }
             }
-            if (this.alerta.AlertaRecordatorio) {
-                this.alerta.AlertaRecordatorio.forEach(a => {
-                    this.buildLabelRecordatorio(a);
-                });
-            }
-        }
-        this.loadPage();//Cargar todo lo que necesita la pantalla
+            this.loadPage();//Cargar todo lo que necesita la pantalla
+        });
     }
 
     ngOnDestroy(): void {
@@ -88,8 +94,8 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         this.alertController.create({
             inputs: inputs,
             buttons: [
-                { text: "Cancelar", role: "cancel" },
-                { text: "Aceptar", handler: this.callbackViewRecordatorios() }
+                { text: this.labels["PANT023_BTN_CAN"], role: "cancel" },
+                { text: this.labels["PANT023_BTN_ACE"], handler: this.callbackViewRecordatorios() }
             ]
         }).present(); //abrete ZeZaMoOo!!
     }
@@ -129,7 +135,6 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
 
     /*Se requiere un ajuste posterior para menejar correctamente la hora */
     save(): void {
-        console.info("Save!!!");
         console.log(this.alerta);
         this.alerta.FechaNotificacion = this.alerta.FechaNotificacion + " " + this.alerta.HoraNotificacion;
         if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
@@ -138,13 +143,13 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
 
         switch (this.alerta.Tipo) { //El titulo por el momento fijo
             case ConstantsConfig.ALERTA_TIPO_DENTISTA:
-                this.alerta.Titulo = "Visita con dentista";
+                this.alerta.Titulo = this.labels["PANT023_LBL_VIDEN"];
                 break;
             case ConstantsConfig.ALERTA_TIPO_HERRAJE:
-                this.alerta.Titulo = "Visita con herrero";
+                this.alerta.Titulo = this.labels["PANT023_LBL_VIHE"];
                 break;
             case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
-                this.alerta.Titulo = "Visita con aplicante";
+                this.alerta.Titulo = this.labels["PANT023_LBL_VIDESP"];
                 break;
         }
 
@@ -155,7 +160,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
             promise = this.alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
         }
 
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT023_ALT_PRO"]);
         promise.then(() => {
             this.commonService.hideLoading();
             this.navController.pop().then(() => {
@@ -165,14 +170,12 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
                 this.events.publish("notificaciones:refresh");
             });
         }).catch(err => {
-            this.commonService.ShowErrorHttp(err, "Ocurrió un error al guardar");
+            this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERRGU"]);
         });
     }
 
     private callbackViewRecordatorios(): Function {
         return (data) => {
-            console.info("Aceptaron el dialogo de recordatorios");
-            console.info(data);
             let recordatorio: any;
             if (data.UnidadTiempo) {
                 recordatorio = {
@@ -187,7 +190,9 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
                 };
                 let modal = this.modalController.create(EquiModalRecordatorio, params);
                 modal.onDidDismiss(recordatorioPersonalizado => {
-                    this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
+                    if (recordatorioPersonalizado) {
+                        this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
+                    }
                 });
                 modal.present(); //Abrir!
             }
@@ -253,7 +258,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
                                 this.alerta.AlertaCaballo.push.apply(this.alerta.AlertaCaballo, nuevosCaballos);//Agrega a la lista existen los nuevos caballos
                             }
                         }).catch(err => {
-                            this.commonService.ShowErrorHttp(err, "Error obteniendo los caballos de los grupos seleccionados");
+                            this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERR"]);
                         });
                 }
             }
@@ -261,7 +266,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
     }
 
     private loadPage(): void {
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT023_ALT_PRO"]);
         this.loadTiposAlerta().then(tiposAlerta => {
             this.tiposAlerta = tiposAlerta;
             return this.recordatorioService.getAllRecordatorios();
@@ -270,18 +275,18 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
 
             this.commonService.hideLoading();
         }).catch(err => {
-            this.commonService.ShowErrorHttp(err, "Ocurrió un error al cargar la pantalla");
+            this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERR"]);
         });
     }
 
     private loadTiposAlerta(): Promise<Array<any>> {
         return new Promise((resolve, reject) => {
             let tiposAlerta: Array<any> = [
-                { tipo: ConstantsConfig.ALERTA_TIPO_EVENTOS, descripcion: "Eventos" },
-                { tipo: ConstantsConfig.ALERTA_TIPO_HERRAJE, descripcion: "Herraje" },
-                { tipo: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, descripcion: "Desparasitaciones" },
-                { tipo: ConstantsConfig.ALERTA_TIPO_DENTISTA, descripcion: "Dentista" },
-                { tipo: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, descripcion: "Nota" }
+                { tipo: ConstantsConfig.ALERTA_TIPO_EVENTOS, descripcion: this.labels["PANT023_LBL_TEV"] },
+                { tipo: ConstantsConfig.ALERTA_TIPO_HERRAJE, descripcion: this.labels["PANT023_LBL_THE"] },
+                { tipo: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, descripcion: this.labels["PANT023_LBL_TDES"] },
+                { tipo: ConstantsConfig.ALERTA_TIPO_DENTISTA, descripcion: this.labels["PANT023_LBL_TDEN"] },
+                { tipo: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, descripcion: this.labels["PANT023_LBL_TNO"] }
             ]
             resolve(tiposAlerta);
         });

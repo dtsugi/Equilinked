@@ -1,25 +1,28 @@
 import { Component, OnInit } from "@angular/core";
 import { NavParams, ToastController, ViewController } from "ionic-angular";
 import { CommonService } from "../../services/common.service";
+import { LanguageService } from '../../services/language.service';
 
 @Component({
     templateUrl: "./equi-modal-caballos.html",
-    providers: [CommonService]
+    providers: [LanguageService, CommonService]
 })
 export class EquiModalCaballos implements OnInit {
 
+    labels: any = {};
     caballos: Array<any>;
     caballosRespaldo: Array<any>;
 
     private caballosInput: any;
     private funcionCaballos: Promise<any>; //Esta la ejecutamos 
-
+    private caballosRestantes: Array<any>;
     showSpinner: boolean;
 
     constructor(
         private commonService: CommonService,
         public navParams: NavParams,
-        public viewController: ViewController
+        public viewController: ViewController,
+        private languageService: LanguageService
     ) {
         this.caballos = [];
         this.showSpinner = true;
@@ -28,8 +31,10 @@ export class EquiModalCaballos implements OnInit {
     ngOnInit(): void {
         this.caballosInput = this.navParams.get("caballosInput");
         this.funcionCaballos = this.navParams.get("funcionCaballos");
-
-        this.loadCaballos(); //Sacar los caballos
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.loadCaballos(); //Sacar los caballos
+        });
     }
 
     cancel(): void {
@@ -37,9 +42,19 @@ export class EquiModalCaballos implements OnInit {
     }
 
     accept(): void {
+        //con esto salvo a los caballos que se hayan seleccionado de la lista visualizada
         let caballosOutput: Array<any> = this.caballosRespaldo
             .filter(c => c.seleccion)
             .map(c => c.caballo);
+
+        //Ahora tengo recuperar caballos que estaban seleccionados pero ni siquiera estaban visualizando (esto sucede cuando hay caballos de otros grupos)
+        let caballosVisualizadosIds: Array<number> = this.caballosRespaldo.map(c => c.caballo.ID);
+        this.caballosInput.forEach(ci => {
+            if (caballosVisualizadosIds.indexOf(ci.ID) == -1) {
+                caballosOutput.push(ci);
+            }
+        });
+
         this.viewController.dismiss(caballosOutput);
     }
 
@@ -79,7 +94,7 @@ export class EquiModalCaballos implements OnInit {
                 this.showSpinner = false;
             }).catch(err => {
                 this.showSpinner = false;
-                this.commonService.ShowInfo("Error al cargar los caballos");
+                this.commonService.ShowInfo(this.labels["PANT024_MSG_ERR"]);
             });
     }
 }

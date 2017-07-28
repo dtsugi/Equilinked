@@ -243,21 +243,21 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
 
                 Establo establo = db.Establo
-                    .Include("Caballo")
-                    .Include("EstabloCaballo")
                     .Include("EstabloCorreo")
                     .Include("EstabloTelefono")
                     .Where(e => e.ID == establoId)
                     .SingleOrDefault();
 
-                db.EstabloCorreo.RemoveRange(establo.EstabloCorreo);
-                db.EstabloTelefono.RemoveRange(establo.EstabloTelefono);
+                List<Caballo> caballos = db.Caballo
+                    .Where(c => c.Establo_ID == establo.ID).ToList();
 
-                foreach (var caballo in establo.Caballo)
+                foreach (var caballo in caballos)
                 {
                     caballo.Establo_ID = null; //Eliminamos la asociacion
                 }
 
+                db.EstabloCorreo.RemoveRange(establo.EstabloCorreo);
+                db.EstabloTelefono.RemoveRange(establo.EstabloTelefono);
                 db.Establo.Remove(establo);
                 _dbContext.SaveChanges();
             }
@@ -273,21 +273,22 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
 
                 List<Establo> Establos = db.Establo
-                    .Include("Caballo")
-                    .Include("EstabloCaballo")
                     .Include("EstabloCorreo")
                     .Include("EstabloTelefono")
                     .Where(e => EstablosIds.Contains(e.ID)).ToList();
 
+                List<Caballo> caballitos = db.Caballo.Where(c => c.Establo_ID != null && EstablosIds.Contains(c.Establo_ID.Value)).ToList();
+                if(caballitos != null)
+                {
+                    foreach(var caballo in caballitos)
+                    {
+                        caballo.Establo_ID = null; //Adios establo!
+                    }
+                }
                 foreach(var establo in Establos)
                 {
                     db.EstabloCorreo.RemoveRange(establo.EstabloCorreo);
                     db.EstabloTelefono.RemoveRange(establo.EstabloTelefono);
-
-                    foreach(var caballo in establo.Caballo)
-                    {
-                        caballo.Establo_ID = null; //Eliminamos la asociacion
-                    }
                 }
 
                 db.Establo.RemoveRange(Establos);

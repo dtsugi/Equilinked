@@ -2,14 +2,14 @@
     <ion-navbar>
         <ion-buttons start>
             <button ion-button class="equi-toolbar-btn" (click)="close()">
-                Cerrar
+                {{ 'PANT034_BTN_CE' | translate }}
             </button>
         </ion-buttons>
 
         <ion-title class="equi-toolbar-title-content">
             <span *ngIf="establo.Nombre" class="equi-toolbar-title">{{establo.Nombre}}</span>
             <br *ngIf="establo.Nombre" />
-            <span class="equi-toolbar-subtitle">Caballos</span>
+            <span class="equi-toolbar-subtitle">{{ 'PANT034_LBL_SUBTCA' | translate }}</span>
         </ion-title>
     </ion-navbar>
 </ion-header>
@@ -18,10 +18,10 @@
     <ion-grid>
         <ion-row>
             <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT034_TXT_FICAB']"></ion-searchbar>
             </ion-col>
             <ion-col col-12>
-                <button (click)="selectAll()" ion-button full>Seleccionar todos</button>
+                <button (click)="selectAll()" ion-button full>{{ 'PANT034_BTN_SELTO' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

@@ -11,12 +11,43 @@ namespace Equilinked.API.Controllers
     {
         private AlertaGrupoBLL alertaGrupoBll = new AlertaGrupoBLL();
 
-        [HttpGet, Route("api/grupos/{grupoId}/alertas/{alertaGrupoId}")]
-        public IHttpActionResult GetAlertaGrupoById(int grupoId, int alertaGrupoId)
+        [HttpDelete, Route("api/propietario/{propietarioId}/grupos/{grupoId}/alertas")]
+        public IHttpActionResult DeleteAlertasByIds(int propietarioId, int grupoId, [FromUri] int[] alertasIds)
         {
             try
             {
-                return Ok(alertaGrupoBll.GetAlertaGrupo(grupoId, alertaGrupoId));
+                alertaGrupoBll.DeleteAlertasGrupoByIds(grupoId, alertasIds);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al eliminar las alertas"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/alertas")]
+        public IHttpActionResult GetAlertasByCaballo(int propietarioId, int grupoId, [FromUri] int tipoAlerta = 0, [FromUri] int filtroAlerta = 1, [FromUri] string fecha = "", [FromUri] int limite = 0, [FromUri] int orden = 0)
+        {
+            try
+            {
+                DateTime fechaAjustada = DateTime.Parse(fecha);
+                return Ok(alertaGrupoBll.GetAlertasByGrupo(propietarioId, grupoId, tipoAlerta, filtroAlerta, fechaAjustada, orden, limite));
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible obtener las alertas del grupo"));
+            }
+        }
+
+
+        [HttpGet, Route("api/grupos/{grupoId}/alertas/{alertaId}")]
+        public IHttpActionResult GetAlertaGrupoById(int grupoId, int alertaId)
+        {
+            try
+            {
+                return Ok(alertaGrupoBll.GetAlertaGrupo(grupoId, alertaId));
             }
             catch (Exception ex)
             {

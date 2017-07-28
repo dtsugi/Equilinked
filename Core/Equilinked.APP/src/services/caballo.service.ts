@@ -4,14 +4,21 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { AppConfig } from '../app/app.config';
 import { Utils } from '../app/utils';
-import { Caballo} from '../model/caballo';
+import { Caballo } from '../model/caballo';
 
 @Injectable()
 export class CaballoService {
+    private urlCaballos: string = AppConfig.API_URL + "api/propietarios/";
     private actionUrl: string = AppConfig.API_URL + "api/Caballo/";
     private url = "";
 
     constructor(private _http: Http) { }
+
+    getCaballosPorEstadoAsociacionEstablo(propietarioId: number, establo: boolean): Promise<Array<any>> {
+        let url: string = this.urlCaballos + propietarioId + "/caballos?establo=" + establo;
+        return this._http.get(url)
+            .map(response => response.json() as Array<any>).toPromise();
+    }
 
     getAllSerializedByPropietarioId(propietarioId: number) {
         this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllSerializedByPropietarioId/", [propietarioId]);

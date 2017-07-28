@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar>
+    <ion-navbar> 
         <ion-title *ngIf="establo" class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{establo.Nombre}}</span>
             <br />
@@ -47,7 +47,7 @@
         <ion-item>
             <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
             <a class="equi-principal-color" (click)="editCaballos()">
-                <span class="equi-normal-text">{{establo.Caballo.length}} caballo(s)</span>
+                <span class="equi-normal-text">{{establo.Caballo.length}} {{ 'PANT016_LBL_CAB' | translate }}</span>
             </a>
         </ion-item>
     </ion-list>

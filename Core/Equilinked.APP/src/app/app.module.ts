@@ -38,11 +38,16 @@ import { FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home
 import { OpcionesCaballoPopover } from "../pages/home/ficha-caballo/opciones-caballo/opciones-caballo";
 import { CambioNombreCaballoPage } from "../pages/home/ficha-caballo/cambio-nombre/cambio-nombre";
 import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
+import { UbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/ubicacion";
+import { AsignacionUbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/asignacion-ubicacion/asignacion-ubicacion";
+import { OpcionesUbicacionModal } from "../pages/home/ficha-caballo/ubicacion/opciones-ubicacion/opciones-ubicacion";
+
 /* Caballos-Grupos */
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
 import { CreacionGrupoPage } from "../pages/home/subPages/grupos-caballos/creacion-grupo/creacion-grupo";
 import { AdministracionGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/administracion-grupo";
 import { UbicacionesGrupoPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/ubicaciones";
+import { CaballosSinUbicacionPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/caballos-sin-ubicacion/caballos-sin-ubicacion";
 import { DetalleEstabloPage } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/detalle-establo/detalle-establo";
 import { PopoverOpcionesEstablo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/ubicaciones/detalle-establo/popover-establo/popover-establo";
 import { SegmentFichaGrupo } from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-ficha/segment-ficha";
@@ -125,11 +130,15 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
+    UbicacionCaballoPage,
+    AsignacionUbicacionCaballoPage,
+    OpcionesUbicacionModal,
     /* Caballos-Grupos */
     GruposCaballos,
     CreacionGrupoPage,
     AdministracionGrupoPage,
     UbicacionesGrupoPage,
+    CaballosSinUbicacionPage,
     DetalleEstabloPage,
     PopoverOpcionesEstablo,
     SegmentFichaGrupo,
@@ -212,10 +221,14 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
+    UbicacionCaballoPage,
+    AsignacionUbicacionCaballoPage,
+    OpcionesUbicacionModal,
     /* Caballos-Grupos */
     CreacionGrupoPage,
     AdministracionGrupoPage,
     UbicacionesGrupoPage,
+    CaballosSinUbicacionPage,
     DetalleEstabloPage,
     PopoverOpcionesEstablo,
     AlertasFicha,

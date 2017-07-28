@@ -1,18 +1,19 @@
-<ion-item-sliding>
-    <ion-item class="equi-principal-color equi-normal-text" (click)="executeClickAction()">
+<ion-item-sliding> 
+    <ion-item class="equi-normal-text" (click)="executeClickAction()">
         <ion-row>
-            <ion-col col-8>
+            <ion-col col-8 class="equi-principal-color">
                 {{alert.Fecha}}
             </ion-col>
-            <ion-col col-3>
+            <ion-col col-3 class="equi-principal-color">
                 {{alert.Hora}}
             </ion-col>
             <ion-col col-1>
-                <ion-icon name="notifications"></ion-icon>
+                <ion-icon class="equi-principal-color" *ngIf="alert.Activa" name="notifications"></ion-icon>
+                <ion-icon class="equi-edit" *ngIf="!alert.Activa" name="ios-notifications-off"></ion-icon>
             </ion-col>
         </ion-row>
     </ion-item>
-    <ion-item-options *ngIf="actionDelete.observers.length > 0 && !alert.AlertaGrupal">
+    <ion-item-options *ngIf="labelDelete">
         <button ion-button color="danger" icon-left (click)="executeDeleteAction(notificacion)">
             <ion-icon name="trash"></ion-icon>       
             {{labelDelete}}

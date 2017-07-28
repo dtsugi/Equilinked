@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { AlertController, Events, NavController, NavParams } from "ionic-angular";
+import { AlertaService } from "../../../../../../services/alerta.service";
 import { AlertaGrupoService } from "../../../../../../services/alerta-grupo.service";
 import { CommonService } from "../../../../../../services/common.service";
 import { SecurityService } from "../../../../../../services/security.service";
@@ -8,10 +9,11 @@ import { DetalleNotaPage } from "./detalle-nota/detalle-nota";
 import { UserSessionEntity } from "../../../../../../model/userSession";
 import { ConstantsConfig } from "../../../../../../app/utils"
 import moment from "moment";
+import { LanguageService } from '../../../../../../services/language.service';
 
 @Component({
     templateUrl: "./notas-ficha.html",
-    providers: [AlertaGrupoService, CommonService, SecurityService]
+    providers: [LanguageService, AlertaService, AlertaGrupoService, CommonService, SecurityService]
 })
 export class NotasFichaPage implements OnInit, OnDestroy {
 
@@ -19,21 +21,23 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     private tipoAlerta: number;
     private session: UserSessionEntity;
     private notasRespaldo: Array<any>;
-
+    labels: any = {};
     notas: Array<any>;
     modoEdicion: boolean;
 
     constructor(
         private alertController: AlertController,
+        private alertaService: AlertaService,
         private alertaGrupoService: AlertaGrupoService,
         private commonService: CommonService,
         private events: Events,
         private navController: NavController,
         private navParams: NavParams,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
         this.grupo = {};
-        this.notas = new Array<any>();
+        this.notas;
         this.notasRespaldo = new Array<any>();
         this.modoEdicion = false; //para activar la eliminacion
     }
@@ -42,8 +46,10 @@ export class NotasFichaPage implements OnInit, OnDestroy {
         this.session = this.securityService.getInitialConfigSession();
         this.grupo = this.navParams.get("grupo");
         this.tipoAlerta = this.navParams.get("tipoAlerta");
-
-        this.getNotasByGrupo(true); //listar las notas!
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.getNotasByGrupo(true); //listar las notas!
+        });
         this.addEvents();
     }
 
@@ -56,23 +62,29 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     }
 
     filter(evt: any): void {
-        this.notas = this.alertaGrupoService.filterNota(evt.target.value, this.notasRespaldo);
+        let value: string = evt.target.value;
+        if (value && value !== null) {
+            this.notas = this.notasRespaldo.filter(n => {
+                return n.nota.Titulo.toUpperCase().indexOf(value.toUpperCase()) > -1
+                    || n.nota.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1
+            });
+        } else {
+            this.notas = this.notasRespaldo;
+        }
     }
 
     create(): void {
-        let alertaGrupo: any = { //Ya cremos la alerta!
-            Grupo_ID: this.grupo.ID,
-            Alerta: {
-                Tipo: this.tipoAlerta,
-                AlertaCaballo: [],
-                Propietario_ID: this.session.PropietarioId
-            }
+        let alerta: any = { //Ya cremos la alerta!
+            AlertaGrupo: [{ Grupo_ID: this.grupo.ID }],
+            Tipo: this.tipoAlerta,
+            AlertaCaballo: [],
+            AlertaRecordatorio: [],
+            Propietario_ID: this.session.PropietarioId
         };
 
         let params: any = {
             grupoId: this.grupo.ID,
-            tipoAlerta: this.tipoAlerta,
-            alertaGrupo: alertaGrupo
+            alerta: alerta
         };
         this.navController.push(EdicionNotaPage, params);
     }
@@ -105,25 +117,25 @@ export class NotasFichaPage implements OnInit, OnDestroy {
 
     confirmDelete(): void {
         this.alertController.create({
-            title: "Alerta!",
-            message: "Se eliminarán las notas seleccionadas",
+            message: this.labels['PANT018_ALT_MSGEL'],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels['PANT018_BTN_CAN'],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels['PANT018_BTN_ACE'],
                     handler: () => {
-                        this.commonService.showLoading("Procesando..");
-                        this.alertaGrupoService.deleteAlertasByIds(
+                        this.commonService.showLoading(this.labels['PANT018_ALT_PRO']);
+                        this.alertaGrupoService.deleteAlertasGrupoByIds(this.session.PropietarioId,
                             this.grupo.ID, this.notasRespaldo.filter(e => e.seleccion).map(e => e.nota.ID)
                         ).then(() => {
-                            this.getNotasByGrupo(false);//Refrescar los establos!
+                            this.getNotasByGrupo(false);//
+                            this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
                             this.commonService.hideLoading();
                             this.modoEdicion = false;
                         }).catch(err => {
-                            this.commonService.ShowErrorHttp(err, "Error al eliminar los establos");
+                            this.commonService.ShowErrorHttp(err, this.labels["PANT018_MSG_ERRELI"]);
                         });
                     }
                 }
@@ -132,26 +144,29 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     }
 
     private view(nota: any): void {
-        let params: any = { grupoId: this.grupo.ID, alertaGrupoId: nota.ID };
+        let params: any = { grupoId: this.grupo.ID, alertaId: nota.ID };
         this.navController.push(DetalleNotaPage, params);
     }
 
     private getNotasByGrupo(showLoading: boolean): void {
-        if (showLoading)
-            this.commonService.showLoading("Procesando...");
+        let fecha: string = moment().format("YYYY-MM-DD");
 
-        this.alertaGrupoService.getAlertasByGrupo(this.grupo.ID, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_ALL)
+        if (showLoading)
+            this.commonService.showLoading(this.labels['PANT018_ALT_PRO']);
+
+        this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
+            ConstantsConfig.ALERTA_FILTER_NEXT, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE)
             .then(notas => {
                 if (showLoading)
                     this.commonService.hideLoading();
 
                 this.notasRespaldo = notas.map(nota => {
-                    nota.Fecha = moment(nota.Alerta.FechaNotificacion).format("DD/MM/YYYY");
+                    nota.Fecha = moment(new Date(nota.FechaNotificacion)).format("DD/MM/YYYY");
                     return { seleccion: false, nota: nota };
                 });
                 this.notas = this.notasRespaldo;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al consultar el grupo");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT018_MSG_ERRCAR"]);
             });
     }
 

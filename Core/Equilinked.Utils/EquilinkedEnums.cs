@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Equilinked.Utils
+﻿namespace Equilinked.Utils
 {
     public class EquilinkedEnums
     {
+        public enum OrdenamientoEnum
+        {
+            ASCENDENTE = 1,
+            DESCENDENTE = 2
+        }
+
         public enum TipoAlertasEnum
         {
             HERRAJE = 1,
@@ -21,7 +21,9 @@ namespace Equilinked.Utils
         {
             ALL = 1,
             HISTORY = 2,
-            NEXT = 3
+            NEXT = 3,
+            TODAY = 4, //solo las de hoy
+            AFTER_TODAY = 5 //Despues de hoy
         }
     }
 }

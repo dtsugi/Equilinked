@@ -6,16 +6,18 @@ import { LoginPage } from '../../../login/login';
 import { PerfilPage } from "../../perfil";
 import { OpcionesCuentaPage } from "../opciones-cuenta/opciones-cuenta";
 import { EdicionPerfilPage } from "../edicion-perfil/edicion-perfil";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     selector: 'pop-over-datos',
     templateUrl: 'pop-over-datos.html',
-    providers: [CommonService, SecurityService]
+    providers: [LanguageService, CommonService, SecurityService]
 })
 export class PopoverDatosPage {
 
     private navCtrlDatos: NavController;
     private perfilPage: PerfilPage;
+    labels: any = {};
 
     constructor(
         private alertController: AlertController,
@@ -23,8 +25,10 @@ export class PopoverDatosPage {
         public navParams: NavParams,
         private _commonService: CommonService,
         private _securityService: SecurityService,
-        public viewController: ViewController
+        public viewController: ViewController,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -45,14 +49,14 @@ export class PopoverDatosPage {
     logout() {
         this.viewController.dismiss();
         let alert = this.alertController.create({
-            subTitle: "Cerrar sesión",
+            subTitle: this.labels["PANT026_ALT_MSGCESA"],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels["PANT026_BTN_CAN"],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels["PANT026_BTN_ACE"],
                     handler: () => {
                         this._securityService.logout();
                         this.navCtrl.setRoot(LoginPage);

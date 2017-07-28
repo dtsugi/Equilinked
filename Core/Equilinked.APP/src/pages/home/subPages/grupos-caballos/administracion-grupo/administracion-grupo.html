@@ -9,7 +9,7 @@
 
             <!-- Se visualiza en la ficha "CABALLOS" cuando esta activa la edicion -->
             <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion" (click)="disabledDeleteCaballos()">
-                Cancelar
+                {{ 'PANT013_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
@@ -24,14 +24,14 @@
             </button>
 
             <!-- Se visualizan cuando está la pestana "CABALLOS" -->
-            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion" (click)="enabledDeleteCaballos()">
-                Editar
+            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion && !parametrosCaballos.grupoDefault" (click)="enabledDeleteCaballos()">
+                {{ 'PANT013_BTN_EDI' | translate }}
             </button>
             <button ion-button icon-only *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion" [disabled]="parametrosCaballos.getCountSelected() == 0"
                 (click)="delete()">
                 <div>
                     <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
-                    <div class="equi-principal-color" style="font-size: 9px;">Eliminar</div>
+                    <div class="equi-principal-color" style="font-size: 9px;">{{ 'PANT013_BTN_ELIM' | translate }}</div>
                 </div>
             </button>
         </ion-buttons>
@@ -40,10 +40,10 @@
 <ion-content>
     <ion-segment [(ngModel)]="segmentSelection" color="primary">
         <ion-segment-button value="ficha">
-            FICHA
+            {{ 'PANT013_LBL_FIC' | translate }}
         </ion-segment-button>
         <ion-segment-button value="caballos">
-            CABALLOS
+            {{ 'PANT013_LBL_CABA' | translate }}
         </ion-segment-button>
     </ion-segment>
 

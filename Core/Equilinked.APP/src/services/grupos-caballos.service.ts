@@ -30,11 +30,10 @@ export class GruposCaballosService {
     }
 
     deleteAlertasByIds(grupoId: number, ids: number[]): Promise<any> {
-        console.info("Para eliminar: %o", ids);
         let url: string = this.endPointGruposCaballos + "/" + grupoId + "/caballos";
         let params = new URLSearchParams();
         ids.forEach(id => {
-            params.append("grupoCaballoIds", id.toString());
+            params.append("caballosIds", id.toString());
         });
         return this.http.delete(url, new RequestOptions({ search: params }))
             .toPromise();

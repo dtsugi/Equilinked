@@ -1,13 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { NavParams, ToastController, ViewController } from "ionic-angular";
 import { CommonService } from "../../services/common.service";
+import { LanguageService } from '../../services/language.service';
 
 @Component({
     templateUrl: "./equi-modal-grupos.html",
-    providers: [CommonService]
+    providers: [LanguageService, CommonService]
 })
 export class EquiModalGrupos implements OnInit {
 
+    labels: any = {};
     grupos: Array<any>;
     gruposRespaldo: Array<any>;
 
@@ -19,7 +21,8 @@ export class EquiModalGrupos implements OnInit {
     constructor(
         private commonService: CommonService,
         public navParams: NavParams,
-        public viewController: ViewController
+        public viewController: ViewController,
+        private languageService: LanguageService
     ) {
         this.grupos = [];
         this.showSpinner = true;
@@ -28,8 +31,9 @@ export class EquiModalGrupos implements OnInit {
     ngOnInit(): void {
         this.gruposInput = this.navParams.get("gruposInput");
         this.funcionGrupos = this.navParams.get("funcionGrupos");
-
-        this.loadGrupos(); //Sacar los caballos
+        this.languageService.loadLabels().then(labels => {
+            this.loadGrupos(); //Sacar los caballos
+        });
     }
 
     cancel(): void {
@@ -43,7 +47,6 @@ export class EquiModalGrupos implements OnInit {
         this.viewController.dismiss(gruposOutput);
     }
 
-
     filter(evt: any) {
         let value: string = evt.target.value;
         if (value) {
@@ -53,7 +56,6 @@ export class EquiModalGrupos implements OnInit {
         } else {
             this.grupos = this.gruposRespaldo;
         }
-
     }
 
     selectAll(): void {
@@ -83,7 +85,7 @@ export class EquiModalGrupos implements OnInit {
                 this.showSpinner = false;
             }).catch(err => {
                 this.showSpinner = false;
-                this.commonService.ShowInfo("Error al cargar los grupos");
+                this.commonService.ShowInfo(this.labels["PANT025_MSG_ERR"]);
             });
     }
 }

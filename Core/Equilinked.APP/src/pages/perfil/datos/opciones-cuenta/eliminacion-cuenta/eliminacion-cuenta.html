@@ -4,32 +4,32 @@
 </ion-header>
 
 <ion-content padding>
-    <h2 class="equi-title-form">Eliminar cuenta</h2>
+    <h2 class="equi-title-form">{{ 'PANT032_LBL_TI' | translate }}</h2>
     <hr />
     <p>
-        Al eliminar tu cuenta de Equilinked:
+        {{ 'PANT032_LBL_DES1' | translate }}
     </p>
     <ul>
-        <li>Se eliminará tu perfil y datos cargados a la cuenta</li>
-        <li>Se eliminará tu historial de mensajes</li>
-        <li>Perderás contacto con tus veterinarios</li>
+        <li>{{ 'PANT032_LBL_DES2' | translate }}</li>
+        <li>{{ 'PANT032_LBL_DES3' | translate }}</li>
+        <li>{{ 'PANT032_LBL_DES4' | translate }}</li>
     </ul>
     <hr />
 
-    <p class="equi-normal-text">Para eliminar tu cuenta, deberás confirmar tu correo electrónico y contraseña</p>
+    <p class="equi-normal-text">{{ 'PANT032_LBL_CONF' | translate }}</p>
     <hr />
 
     <form [formGroup]="cuentaForm" (submit)="deleteAcount()">
         <ion-item class="item-without-padding">
-            <ion-input class="equi-input-normal-text" formControlName="Correo" type="email" placeholder="Ingresar correo electrónico"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="Correo" type="email" placeholder="{{ 'PANT032_TXT_INCORR' | translate }}"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input class="equi-input-normal-text" formControlName="Password" type="password" placeholder="Ingresar contraseña"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="Password" type="password" placeholder="{{ 'PANT032_TXT_INCON' | translate }}"></ion-input>
         </ion-item>
         <ion-grid>
             <ion-row>
                 <ion-col col-8 offset-2>
-                    <button type="submit" ion-button block outline color="danger" [disabled]="!cuentaForm.valid">ELIMINAR CUENTA</button>
+                    <button type="submit" ion-button block outline color="danger" [disabled]="!cuentaForm.valid">{{ 'PANT032_BTN_ELI' | translate }}</button>
                 </ion-col>
             </ion-row>
         </ion-grid>

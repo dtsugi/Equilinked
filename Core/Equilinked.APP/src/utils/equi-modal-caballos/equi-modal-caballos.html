@@ -1,7 +1,9 @@
 <ion-header>
     <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="cancel()">Cancelar</button>
+            <button class="equi-toolbar-btn" (click)="cancel()">
+                {{ 'PANT024_BTN_CAN' | translate }}
+            </button>
         </ion-buttons>
 
         <!--<ion-title class="equi-toolbar-title-content">
@@ -11,7 +13,9 @@
         </ion-title>-->
 
         <ion-buttons right>
-            <button class="equi-toolbar-btn" (click)="accept()">Guardar</button>
+            <button class="equi-toolbar-btn" (click)="accept()">
+                {{ 'PANT024_BTN_ACE' | translate }}
+            </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -20,10 +24,10 @@
     <ion-grid>
         <ion-row>
             <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT024_TXT_FICA']"></ion-searchbar>
             </ion-col>
             <ion-col col-12>
-                <button (click)="selectAll()" ion-button full>Seleccionar todos</button>
+                <button (click)="selectAll()" ion-button full>{{ 'PANT024_BTN_SETO' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

@@ -4,6 +4,7 @@ import { Events, NavController, NavParams, PopoverController } from 'ionic-angul
 import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { AlertaService } from '../../../../services/alerta.service';
+import { AlertaCaballoService } from '../../../../services/alerta.caballo.service';
 import { Alerta } from '../../../../model/alerta';
 import { UserSessionEntity } from '../../../../model/userSession';
 import { SecurityService } from '../../../../services/security.service';
@@ -11,19 +12,21 @@ import { NotificacionesExtendedInsertPage } from '../../../notificaciones/notifi
 import { NotificacionGeneralDetalle } from "../../../notificaciones/notificacion-general-detalle/notificacion-general-detalle";
 import moment from "moment";
 import "moment/locale/es";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: 'dentista.html',
-    providers: [CommonService, AlertaService, SecurityService]
+    providers: [LanguageService, CommonService, AlertaCaballoService, AlertaService, SecurityService]
 })
 export class DentistaPage implements OnDestroy, OnInit {
 
     private session: UserSessionEntity;
 
+    labels: any = {};
     idCaballo: number;
     nombreCaballo: string = "";
-    historyNotificacionList = [];
-    nextNotificacionList = [];
+    historyNotificacionList;
+    nextNotificacionList;
     tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DENTISTA;
     isDeleting: boolean = false;
 
@@ -35,18 +38,23 @@ export class DentistaPage implements OnDestroy, OnInit {
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
         private _alertaService: AlertaService,
-        private securityService: SecurityService
+        private alertaCaballoService: AlertaCaballoService,
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
     }
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
-        if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
-            this.idCaballo = this.navParams.get("idCaballoSelected");
-            this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-            this.getAlertasByCaballo(true);
-        }
-        this.addEvents();
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
+                this.idCaballo = this.navParams.get("idCaballoSelected");
+                this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
+                this.getAlertasByCaballo(true);
+            }
+            this.addEvents();
+        });
     }
 
     ngOnDestroy(): void {
@@ -54,46 +62,47 @@ export class DentistaPage implements OnDestroy, OnInit {
     }
 
     private getAlertasByCaballo(loading: boolean): void {
+        let fecha: string = moment().format("YYYY-MM-DD");
+
         if (loading)
-            this._commonService.showLoading("Procesando..");
+            this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
 
-        this._alertaService.getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_HISTORY, this.tipoAlerta)
-            .toPromise()
-            .then(res => {
-                this.historyNotificacionList = res.map(alerta => {
-                    alerta.Fecha = moment(alerta.FechaNotificacion).format("DD/MM/YY");
-                    return alerta;
-                });
-                return this._alertaService
-                    .getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_NEXT, this.tipoAlerta)
-                    .toPromise();
-            }).then(res => {
-                this.nextNotificacionList = res.map(alerta => {
-                    alerta.Fecha = moment(alerta.FechaNotificacion).format("D [de] MMMM [de] YYYY");
-                    alerta.Hora = moment(alerta.HoraNotificacion, "HH:mm").format("hh:mm a");
-                    return alerta;
-                });
-
-                if (loading)
-                    this._commonService.hideLoading();
-            }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error obteniendo la información");
+        this.alertaCaballoService.getAlertasByCaballoId(
+            this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
+            ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_TIPO_DESPARACITACION
+        ).then(res => {
+            this.historyNotificacionList = res.map(alerta => {
+                let d = new Date(alerta.FechaNotificacion);
+                alerta.Fecha = moment(d).format("DD/MM/YY");
+                return alerta;
             });
+            return this.alertaCaballoService
+                .getAlertasByCaballoId(this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
+                ConstantsConfig.ALERTA_FILTER_NEXT, 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE);
+        }).then(res => {
+            this.nextNotificacionList = res.map(alerta => {
+                let d = new Date(alerta.FechaNotificacion);
+                alerta.Fecha = moment(d).format("D [de] MMMM [de] YYYY");
+                alerta.Hora = moment(d).format("hh:mm a");
+                return alerta;
+            });
+
+            if (loading)
+                this._commonService.hideLoading();
+        }).catch(err => {
+            this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRALT"]);
+        });
     }
 
     edit(notificacion) {
-        /* Flag para determinar que no se este eliminando al mismo tiempo */
-        if (!this.isDeleting) {
-            notificacion.CaballosList = new Array();
-            notificacion.CaballosList.push(this.idCaballo);
-            this.navCtrl.push(NotificacionesExtendedInsertPage,
-                {
-                    alertaEntity: notificacion,
-                    isUpdate: true,
-                    title: "Editar cita dentista",
-                    callbackController: this
-                });
-        }
+        this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+        this._alertaService.getAlertaById(this.session.PropietarioId, notificacion.ID)
+            .then(alerta => {
+                this._commonService.hideLoading();
+                this.navCtrl.push(NotificacionesExtendedInsertPage, { alertaEntity: alerta });
+            }).catch(err => {
+                console.error(err);
+            });
     }
 
     view(notificacion) {
@@ -109,9 +118,8 @@ export class DentistaPage implements OnDestroy, OnInit {
         let notificacion: Alerta = new Alerta();
         notificacion.Tipo = this.tipoAlerta;
         notificacion.Propietario_ID = this.session.PropietarioId;
-        notificacion.Titulo = "Visita con dentista";
-        notificacion.CaballosList = new Array();
-        notificacion.CaballosList.push(this.idCaballo);
+        notificacion.Titulo = this.labels["PANT007_LBL_VIDEN"];
+        notificacion.AlertaCaballo = [{ Caballo_ID: this.idCaballo }];
         this.navCtrl.push(NotificacionesExtendedInsertPage,
             {
                 alertaEntity: notificacion,
@@ -122,17 +130,14 @@ export class DentistaPage implements OnDestroy, OnInit {
     }
 
     delete(notificacion: Alerta) {
-        this.isDeleting = true;
-        this._commonService.showLoading("Eliminando..");
-        this._alertaService.delete(notificacion.ID)
-            .subscribe(res => {
+        this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+        this.alertaCaballoService.deleteAlertasCaballosByIds(this.session.PropietarioId, this.idCaballo, [notificacion.ID])
+            .then(() => {
                 this._commonService.hideLoading();
-                console.log(res);
+                this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
                 this.getAlertasByCaballo(true);
-                this.isDeleting = false;
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al eliminar la cita con el dentista");
-                this.isDeleting = false;
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
             });
     }
 

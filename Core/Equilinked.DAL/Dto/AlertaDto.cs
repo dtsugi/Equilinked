@@ -59,6 +59,7 @@ namespace Equilinked.DAL.Models
 {
     public partial class Alerta
     {
+        public bool AllCaballos { get; set; }
         public ICollection<AlertaCaballo> AlertaCaballo { get; set; } = new HashSet<AlertaCaballo>();
 
         public Alerta(AlertaDto alertaDto)

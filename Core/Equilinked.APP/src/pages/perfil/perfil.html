@@ -3,12 +3,12 @@
         <ion-buttons left>
             <!-- Se visualizada en seleccion de  "ESTABLOS" -->
             <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && parametrosEstablos.modoEdicion" (click)="disabledDeleteCaballos()">
-                Cancelar
+                {{ 'PANT026_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
         <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">Mi perfil</span>
+            <span class="equi-toolbar-title">{{ 'PANT026_LBL_TIPE' | translate }}</span>
         </ion-title>
 
         <ion-buttons right>
@@ -19,11 +19,11 @@
 
             <!-- Se visualizadan en seleccion de  "ESTABLOS"... -->
             <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && !parametrosEstablos.modoEdicion" (click)="enabledDeleteEstablos()">
-                Editar            
+                {{ 'PANT026_BTN_EDI' | translate }}            
             </button>
             <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && parametrosEstablos.modoEdicion" [disabled]="parametrosEstablos.getCountSelected() == 0"
                 (click)="deleteEstablos()">
-                Eliminar
+                {{ 'PANT026_BTN_ELI' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -32,10 +32,10 @@
 <ion-content>
     <ion-segment [(ngModel)]="selectedTab" color="primary">
         <ion-segment-button value="datos">
-            DATOS
+            {{ 'PANT026_LBL_DAT' | translate }}
         </ion-segment-button>
         <ion-segment-button value="establos">
-            ESTABLO(S)
+            {{ 'PANT026_LBL_EST' | translate }}
         </ion-segment-button>
     </ion-segment>
 

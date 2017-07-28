@@ -34,7 +34,8 @@ export class EdicionCaballosGrupoPage implements OnInit {
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.grupo = this.navParams.get("grupo");
-
+        console.info("El grupo:");
+        console.info(this.grupo);
         this.getCaballosForGrupo();
     }
 
@@ -77,13 +78,11 @@ export class EdicionCaballosGrupoPage implements OnInit {
         let mapCaballosGrupo: Map<number, any> = new Map<number, any>();
 
         this.commonService.showLoading("Procesando...");
-        this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
-            .then(caballosGrupo => {
-                caballosGrupo.forEach(cg => {
+        this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
+            .then(caballos => {
+                this.grupo.GrupoCaballo.forEach(cg => {
                     mapCaballosGrupo.set(cg.Caballo_ID, cg);
                 });
-                return this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise();
-            }).then(caballos => {
                 this.caballosGrupoRespaldo = caballos.map(c => {
                     return {
                         caballo: c,

@@ -14,6 +14,16 @@ export class AlertaService {
 
     constructor(private _http: Http) { }
 
+    deleteAlertasByIds(propietarioId: number, alertasIds: number[]): Promise<any> {
+        let url: string = this.alertaUrl + propietarioId + "/alertas";
+        let params = new URLSearchParams();
+        alertasIds.forEach(id => {
+            params.append("alertasIds", id.toString());
+        });
+        return this._http.delete(url, new RequestOptions({ search: params }))
+            .toPromise();
+    }
+
     saveAlerta(propietarioId: number, alerta: Alerta): Promise<any> {
         let url: string = this.alertaUrl + propietarioId + "/alertas"
         return this._http.post(url, alerta)
@@ -31,11 +41,17 @@ export class AlertaService {
         return this._http.get(url).map(alerta => alerta.json()).toPromise();
     }
 
-    getAlertasByPropietario(propietarioId: number, fecha: string, tipoAlerta: number, filtroAlerta: number): Promise<Array<any>> {
+    getAlertasByPropietario(propietarioId: number, fecha: string, tipoAlerta: number, filtroAlerta: number, limite: number, orden: number): Promise<Array<any>> {
         let url: string = this.alertaUrl + propietarioId + "/alertas";
 
         let params = new URLSearchParams();
         params.set("fecha", fecha);
+        if (limite != null) {
+            params.set("limite", limite.toString());
+        }
+        if (orden != null) {
+            params.set("orden", orden.toString());
+        }
         if (tipoAlerta != null) {
             params.set("tipoAlerta", tipoAlerta.toString());
         }

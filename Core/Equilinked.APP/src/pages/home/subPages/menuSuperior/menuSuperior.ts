@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'menu-superior',
@@ -9,13 +10,13 @@ export class MenuSuperior {
   menu: string;
   subMenu: string;
 
-  constructor() {
+  constructor(private translate: TranslateService) {
     this.menu = 'caballos';
     this.subMenu = 'caballos_ind';
   }
 
-  onSegmentChanged (selectedItem): void {
-    if(this.subMenu.indexOf(this.menu) >= 0){
+  onSegmentChanged(selectedItem): void {
+    if (this.subMenu.indexOf(this.menu) >= 0) {
       this.menuChange.emit({ value: this.subMenu })
       return;
     }
@@ -30,7 +31,7 @@ export class MenuSuperior {
       case 'fotos':
         this.subMenu = 'fotos_todas';
         break;
-      default: 
+      default:
         break;
     };
     this.menuChange.emit({ value: this.subMenu })

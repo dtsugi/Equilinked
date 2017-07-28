@@ -7,13 +7,45 @@ import { AppConfig } from "../app/app.config";
 @Injectable()
 export class AlertaGrupoService {
 
+    private urlAlertas: string = AppConfig.API_URL + "api/propietarios/"
     private urlAlertasGrupo: string = AppConfig.API_URL + "api/grupos/";
 
     constructor(private http: Http) {
     }
 
-    getAlertaById(grupoId: number, alertaGrupoId: number): Promise<any> {
-        let url: string = this.urlAlertasGrupo + grupoId + "/alertas/" + alertaGrupoId;
+    deleteAlertasGrupoByIds(propietarioId: number, grupoId: number, alertasIds: number[]): Promise<any> {
+        let url: string = AppConfig.API_URL + "api/propietario/" + propietarioId + "/grupos/" + grupoId + "/alertas";
+        let params = new URLSearchParams();
+        alertasIds.forEach(id => {
+            params.append("alertasIds", id.toString());
+        });
+        return this.http.delete(url, new RequestOptions({ search: params }))
+            .toPromise();
+    }
+
+    getAlertasByGrupoId(propietarioId: number, grupoId: number, fecha: string, tipoAlerta: number, filtroAlerta: number, limite: number, orden: number): Promise<Array<any>> {
+        let url: string = this.urlAlertas + propietarioId + "/grupos/" + grupoId + "/alertas";
+
+        let params = new URLSearchParams();
+        params.set("fecha", fecha);
+        if (limite != null) {
+            params.set("limite", limite.toString());
+        }
+        if (orden != null) {
+            params.set("orden", orden.toString());
+        }
+        if (tipoAlerta != null) {
+            params.set("tipoAlerta", tipoAlerta.toString());
+        }
+        if (filtroAlerta != null) {
+            params.set("filtroAlerta", filtroAlerta.toString());
+        }
+        return this.http.get(url, new RequestOptions({ search: params }))
+            .map(alertas => alertas.json() as Array<any>).toPromise();
+    }
+
+    getAlertaById(grupoId: number, alertaId: number): Promise<any> {
+        let url: string = this.urlAlertasGrupo + grupoId + "/alertas/" + alertaId;
         return this.http.get(url)
             .map(alerta => alerta.json())
             .toPromise();

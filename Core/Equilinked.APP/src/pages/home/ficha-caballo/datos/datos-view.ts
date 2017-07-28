@@ -10,12 +10,15 @@ import { Caballo } from '../../../../model/caballo';
 import { UserSessionEntity } from '../../../../model/userSession';
 import { AdminCaballosInsertPage } from '../../admin-caballos/admin-caballos-insert';
 import moment from "moment";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: 'datos-view.html',
-    providers: [CommonService, SecurityService, CaballoService, ExtendedCaballoService]
+    providers: [LanguageService, CommonService, SecurityService, CaballoService, ExtendedCaballoService]
 })
 export class DatosViewPage implements OnInit, OnDestroy {
+    labels: any = {};
+
     form: any;
     idCaballo: number;
     nombreCaballo: string = "";
@@ -34,8 +37,11 @@ export class DatosViewPage implements OnInit, OnDestroy {
         private _securityService: SecurityService,
         private _caballoService: CaballoService,
         private _extendedCaballoService: ExtendedCaballoService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder,
+        private languageService: LanguageService
+    ) {
         this.age = "";
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -99,7 +105,7 @@ export class DatosViewPage implements OnInit, OnDestroy {
                 this.nombreCaballo = this.caballoEntity.Nombre;
                 this.initForm();
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error cargando los datos del caballo");
+                this._commonService.ShowErrorHttp(err, this.labels["PANT004_MSG_CACAERR"]);
             });
     }
 
@@ -110,8 +116,8 @@ export class DatosViewPage implements OnInit, OnDestroy {
             let years: number = moment().diff(date, "years");
             let months: number = moment().diff(date, "months");
             months = months - (years * 12);
-            this.age = (years > 1 ? years + " años " : (years == 1 ? "1 año " : ""));
-            this.age = this.age + (months > 1 ? months + " meses" : (months == 1 ? "1 mes" : ""));
+            this.age = (years > 1 ? years + " " + this.labels["PANT004_LBL_NAAN"] : (years == 1 ? "1 " + this.labels["PANT004_LBL_NAAN"] : ""));
+            this.age = this.age + (months > 1 ? months + " " + this.labels["PANT004_LBL_NAME"] : (months == 1 ? "1 " + this.labels["PANT004_LBL_NAME"] : ""));
         }
         console.info(this.age);
     }
@@ -122,8 +128,7 @@ export class DatosViewPage implements OnInit, OnDestroy {
                 console.log(res);
                 this.generoList = res;
             }, error => {
-                console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
+                console.error(error);
             });
     }
 
@@ -133,8 +138,7 @@ export class DatosViewPage implements OnInit, OnDestroy {
                 console.log(res);
                 this.pelajeList = res;
             }, error => {
-                console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
+
             });
     }
 
@@ -143,7 +147,7 @@ export class DatosViewPage implements OnInit, OnDestroy {
             .then(protectores => {
                 this.protectores = protectores;
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error cargando los generos del caballo");
+                console.error(err);
             });
     }
 
@@ -152,7 +156,7 @@ export class DatosViewPage implements OnInit, OnDestroy {
             .then(paises => {
                 this.paises = paises;
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error cargando los paises");
+                console.error(err);
             });
     }
 
@@ -170,7 +174,6 @@ export class DatosViewPage implements OnInit, OnDestroy {
 
     private addEvents(): void { //Por este evento le haré llegar el nuevo nombre al caballo!
         this.events.subscribe("caballo:refresh", () => {
-            console.info("Itentando refrescar caballo seleccionado ")
             this.getCaballo(this.caballoEntity.ID);
         });
     }

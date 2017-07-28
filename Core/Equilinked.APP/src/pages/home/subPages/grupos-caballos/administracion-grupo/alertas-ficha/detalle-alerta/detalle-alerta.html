@@ -2,7 +2,7 @@
     <ion-navbar>
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" (click)="edit(alertaGrupo)">
-                Editar
+                {{ 'PANT019_BTN_EDI' | translate }}
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -16,11 +16,17 @@
         <p class="equi-normal-text">
             <span style="font-size: 40px;font-weight: bold;">{{alertaGrupo.Hora}}</span> &nbsp; {{alertaGrupo.Meridiano}}
         </p>
+        <div *ngIf="alertaGrupo.AlertaRecordatorio && alertaGrupo.AlertaRecordatorio.length > 0">
+            <span *ngFor="let recordatorio of alertaGrupo.AlertaRecordatorio" class="equi-normal-text">
+                <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
+                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;{{ 'PANT019_LBL_ANTS' | translate }}
+            </span>
+        </div>
         <p class="equi-normal-text">
-            <ion-icon name="person" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.Alerta.NombreProfesional}}
+            <ion-icon name="person" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.NombreProfesional}}
         </p>
         <p class="equi-normal-text">
-            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}
+            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaGrupo.AllCaballos ? labels['PANT019_LBL_TOD'] : alertaGrupo.AlertaCaballo.length + labels['PANT019_LBL_CAB']}}
         </p>
     </div>
 </ion-content>

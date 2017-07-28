@@ -8,10 +8,11 @@ import { UserSessionEntity } from '../../model/userSession';
 import { EdicionNotificacionGeneralPage } from "./edicion-notificacion/edicion-notificacion";
 import moment from "moment";
 import "moment/locale/es";
+import { LanguageService } from '../../services/language.service';
 
 @Component({
     templateUrl: 'notificaciones-view.html',
-    providers: [CommonService, AlertaService, SecurityService]
+    providers: [LanguageService, CommonService, AlertaService, SecurityService]
 })
 
 export class NotificacionesViewPage implements OnDestroy, OnInit {
@@ -20,6 +21,7 @@ export class NotificacionesViewPage implements OnDestroy, OnInit {
     private session: UserSessionEntity;
 
     alertaEntity: any;
+    labels: any = {};
 
     constructor(
         private events: Events,
@@ -28,8 +30,10 @@ export class NotificacionesViewPage implements OnDestroy, OnInit {
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private _alertaService: AlertaService,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -55,7 +59,7 @@ export class NotificacionesViewPage implements OnDestroy, OnInit {
 
     private loadInfoAlerta(loading: boolean): void {
         if (loading)
-            this._commonService.showLoading("Procesando...");
+            this._commonService.showLoading(this.labels["PANT022_ALT_PRO"]);
 
         this._alertaService.getAlertaById(this.session.PropietarioId, this.alertaId)
             .then(alerta => {
@@ -68,7 +72,7 @@ export class NotificacionesViewPage implements OnDestroy, OnInit {
                 if (loading)
                     this._commonService.hideLoading();
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Ocurrió un error al consultar");
+                this._commonService.ShowErrorHttp(err, this.labels["PANT022_MGS_ERRCO"]);
             });
     }
 

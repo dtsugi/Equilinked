@@ -9,7 +9,7 @@
         <ion-title class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
             <br />
-            <span class="equi-toolbar-subtitle">Ubicación</span>
+            <span class="equi-toolbar-subtitle">{{ 'PANT015_LBL_SUBTUG' | translate }}</span>
         </ion-title>
 
     </ion-toolbar>
@@ -18,9 +18,9 @@
 <ion-content>
     <ion-list>
         <ion-item *ngFor="let ubicacion of ubicaciones">
-            <ion-icon name="add-circle" *ngIf="!ubicacion.establo.ID" class="equi-principal-color" item-left></ion-icon>
             <h2 class="equi-bold-text" [ngClass]="{'equi-principal-color': !ubicacion.establo.ID}" (click)="selectUbicacion(ubicacion)">{{ubicacion.establo.Nombre}}</h2>
-            <p class="equi-normal-text equi-principal-color" item-right (click)="selectCaballos(ubicacion)">{{ubicacion.caballos}} caballos</p>
+            <p class="equi-normal-text equi-principal-color" item-right (click)="selectCaballos(ubicacion)">{{ubicacion.caballos}} {{ 'PANT015_LBL_CAB' | translate }}
+            </p>
         </ion-item>
     </ion-list>
 </ion-content>

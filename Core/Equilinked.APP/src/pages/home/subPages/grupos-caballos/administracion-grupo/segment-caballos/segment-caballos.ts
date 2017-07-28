@@ -4,11 +4,12 @@ import { CommonService } from "../../../../../../services/common.service";
 import { GruposCaballosService } from "../../../../../../services/grupos-caballos.service";
 import { FichaCaballoPage } from "../../../../ficha-caballo/ficha-caballo-home";
 import { EdicionCaballosGrupoPage } from "./edicion-caballos/edicion-caballos";
+import { LanguageService } from '../../../../../../services/language.service';
 
 @Component({
     selector: "segment-caballos-grupo",
     templateUrl: "./segment-caballos.html",
-    providers: [CommonService, GruposCaballosService]
+    providers: [LanguageService, CommonService, GruposCaballosService]
 })
 export class SegmentCaballosGrupo implements OnDestroy, OnInit {
 
@@ -19,6 +20,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     @Input("parametros")
     parametrosCaballos: any;
 
+    labels: any = {};
     caballosGrupoRespaldo: Array<any>;
 
     constructor(
@@ -28,9 +30,11 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         private gruposCaballosService: GruposCaballosService,
         private navController: NavController,
         private navParams: NavParams,
+        private languageService: LanguageService
     ) {
         this.caballosGrupo = new Array<any>();
         this.caballosGrupoRespaldo = new Array<any>();
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnDestroy(): void {
@@ -43,18 +47,18 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         this.parametrosCaballos.getCountSelected = () => this.getCountSelected();
     }
 
-    filter(evt: any): void { 
+    filter(evt: any): void {
         this.caballosGrupo = this.gruposCaballosService.filterCaballosByNombreOrGrupo(evt.target.value, this.caballosGrupoRespaldo);
     }
 
     addCaballos(): void {
-        this.navController.push(EdicionCaballosGrupoPage, { grupo: this.grupo });
+        this.navController.push(EdicionCaballosGrupoPage, { grupo: JSON.parse(JSON.stringify(this.grupo)) });
     }
 
     select(cg: any): void {
         if (!this.parametrosCaballos.modoEdicion) {
             this.navController.push(FichaCaballoPage, {
-                caballoSelected: cg.caballoGrupo.Caballo
+                caballoSelected: cg.caballo
             });
         } else {
             cg.seleccion = !cg.seleccion;
@@ -74,21 +78,21 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
 
     private getAllCaballosGrupo(loading: boolean): void {
         if (loading)
-            this.commonService.showLoading("Procesando...");
+            this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
         this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
-            .then(caballosGrupo => {
+            .then(caballos => {
                 if (loading)
                     this.commonService.hideLoading();
 
-                this.caballosGrupoRespaldo = caballosGrupo.map(cg => {
+                this.caballosGrupoRespaldo = caballos.map(caballo => {
                     return {
                         seleccion: false,
-                        caballoGrupo: cg
+                        caballo: caballo
                     };
                 });
                 this.caballosGrupo = this.caballosGrupoRespaldo;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al consultar los caballos");
+                console.error(err);
             });
     }
 
@@ -100,26 +104,26 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
 
     private confirmDeleteCaballos(): void {
         this.alertController.create({
-            title: "Alerta!",
-            message: "Se eliminarán los caballos del grupo",
+            title: this.labels["PANT013_ALT_TIELI"],
+            message: this.labels["PANT013_ALT_MSGEL"],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels["PANT013_BTN_CAN"],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels["PANT013_BTN_ACEP"],
                     handler: () => {
-                        this.commonService.showLoading("Procesando..");
+                        this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
                         this.gruposCaballosService.deleteAlertasByIds(
-                            this.grupo.ID, this.caballosGrupoRespaldo.filter(c => c.seleccion).map(c => c.caballoGrupo.ID)
+                            this.grupo.ID, this.caballosGrupoRespaldo.filter(c => c.seleccion).map(c => c.caballo.ID)
                         ).then(() => {
                             this.getAllCaballosGrupo(false);
                             this.events.publish("grupos:refresh");
                             this.commonService.hideLoading();
                             this.parametrosCaballos.modoEdicion = false;
                         }).catch(err => {
-                            this.commonService.ShowErrorHttp(err, "Error al eliminar los caballos del grupo");
+                            this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERREL"]);
                         });
                     }
                 }

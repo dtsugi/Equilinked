@@ -26,7 +26,6 @@ export class PerfilPage implements OnInit {
 
     slideChanged() {
         let currentIndex = this.slides.getActiveIndex();
-        console.log('Current index is', currentIndex);
     }
 
     /*Se visualiza el popover de opciones en "DATOS" */

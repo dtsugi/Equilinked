@@ -8,7 +8,7 @@
         <ion-title class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{nombreCaballo}}</span>
             <br />
-            <span class="equi-toolbar-subtitle">Desparasitación</span>
+            <span class="equi-toolbar-subtitle">{{ "PANT007_LBL_SUBTDES" | translate }}</span>
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -17,34 +17,34 @@
     <ion-grid>
         <ion-row>
             <ion-col class="equi-title-form">
-                PRÓXIMA DESPARASITACIÓN
+                {{ "PANT007_LBL_PRODESP" | translate }}
             </ion-col>
         </ion-row>
         <ion-row>
             <hr>
         </ion-row>
-    </ion-grid> 
+    </ion-grid>
 
-    <ion-list no-lines>
-        <equi-next-alert-horse *ngFor="let notificacion of nextNotificacionList" [alert]="notificacion"
-            (actionClickItem)="view(notificacion)" [labelDelete]="'Eliminar'" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
+    <ion-list no-lines *ngIf="nextNotificacionList">
+        <equi-next-alert-horse *ngFor="let notificacion of nextNotificacionList" [alert]="notificacion" (actionClickItem)="view(notificacion)"
+            [labelDelete]="labels['PANT007_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
     </ion-list>
 
     <ion-grid>
         <ion-row>
             <ion-col class="equi-title-form">
-                HISTORIAL
+                {{ "PANT007_LBL_HIS" | translate }}
             </ion-col>
         </ion-row>
         <ion-row>
             <hr>
         </ion-row>
 
-        <equi-button-add [label]="'Agregar nuevo'" (action)="insert()"></equi-button-add>
+        <equi-button-add [label]="labels['PANT007_BTN_AGEN']" (action)="insert()"></equi-button-add>
     </ion-grid>
 
-    <ion-list no-lines>
-        <equi-history-alert-horse *ngFor="let notificacion of historyNotificacionList" [alert]="notificacion" [labelDelete]="'Eliminar'"
-            [professionPerson]="'Aplicante'" (actionDeleteItem)="delete(notificacion)" (actionEditItem)="edit(notificacion)"></equi-history-alert-horse>
+    <ion-list no-lines *ngIf="historyNotificacionList">
+        <equi-history-alert-horse *ngFor="let notificacion of historyNotificacionList" [alert]="notificacion" [professionPerson]="labels['PANT007_LBL_APLI']"
+            (actionEditItem)="edit(notificacion)" [labelDelete]="labels['PANT007_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-history-alert-horse>
     </ion-list>
 </ion-content>

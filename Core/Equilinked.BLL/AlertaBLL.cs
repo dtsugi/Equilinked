@@ -11,6 +11,25 @@ namespace Equilinked.BLL
     public class AlertaBLL : BLLBase, IBase<Alerta>
     {
 
+        public void DeleteAlertasByIds(int[] alertasIds)
+        {
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<AlertaGrupo> alertasGrupo = db.AlertaGrupo.Where(ag => alertasIds.Contains(ag.Alerta_ID)).ToList();
+                List<AlertaCaballo> alertasCaballo = db.AlertaCaballo.Where(ac => alertasIds.Contains(ac.Alerta_ID)).ToList();
+                List<AlertaRecordatorio> alertasRecordatorios = db.AlertaRecordatorio.Where(ar => alertasIds.Contains(ar.Alerta_ID)).ToList();
+                List<Alerta> alertas = db.Alerta.Where(a => alertasIds.Contains(a.ID)).ToList();
+
+                db.AlertaRecordatorio.RemoveRange(alertasRecordatorios);
+                db.AlertaGrupo.RemoveRange(alertasGrupo);
+                db.AlertaCaballo.RemoveRange(alertasCaballo);
+                db.Alerta.RemoveRange(alertas);
+                db.SaveChanges();
+            }
+        }
+
         public void UpdateAlerta(Alerta alerta)
         {
             using(var db = this._dbContext)
@@ -121,11 +140,24 @@ namespace Equilinked.BLL
                     .FirstOrDefault();
                 alerta.AlertaCaballo = caballos;
 
+                if(alerta.AlertaGrupo.Count() == 1)
+                {
+                    AlertaGrupo alertaGrupo = alerta.AlertaGrupo.First();
+                    Dictionary<int, GrupoCaballo> caballosGrupo = db.GrupoCaballo.Where(gc => gc.Grupo_ID == alertaGrupo.Grupo_ID).ToDictionary(gc => gc.Caballo_ID);
+                    List<int> keysCaballos = new List<int>(caballosGrupo.Keys); //Caballos del grupo
+
+                    List<AlertaCaballo> caballosX = db.AlertaCaballo
+                        .Where(ac => ac.Alerta_ID == alertaId)
+                        .Where(ac => keysCaballos.Contains(ac.Caballo_ID))
+                        .ToList();
+                    alerta.AllCaballos = caballosX.Count() == keysCaballos.Count(); //Estan todos los caballos?
+                }
+
                 return alerta;
             }
         }
 
-        public List<Alerta> GetAlertasByFilter(int propietarioId, int tipoAlerta, int filtroAlerta, DateTime fecha)
+        public List<Alerta> GetAlertasByFilter(int propietarioId, int tipoAlerta, int filtroAlerta, DateTime fecha, int orden, int limite)
         {
             using (var db = this._dbContext)
             {
@@ -138,33 +170,36 @@ namespace Equilinked.BLL
                     query = query.Where(a => a.Tipo == tipoAlerta);
                 }
 
-                if (filtroAlerta == 2)//history
+                if (filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.HISTORY)//history
                 {
-                    query = query.Where(a => a.FechaNotificacion < fecha)
-                        .OrderByDescending(a => a.FechaNotificacion);
+                    query = query.Where(a => a.FechaNotificacion < fecha);
                 }
-                else if (filtroAlerta == 3 || filtroAlerta == 5)//next
+                else if (filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.NEXT || filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY)//next
                 {
-                    if (filtroAlerta == 5) //Despues de la fecha (sin considerar la fecha)
+                    if (filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY) //Despues de la fecha (sin considerar la fecha)
                     {
                         fecha = fecha.AddDays(1);
                     }
-                    query = query.Where(a => a.FechaNotificacion > fecha)
-                        .OrderBy(a => a.FechaNotificacion);
+                    query = query.Where(a => a.FechaNotificacion > fecha);
                 }
-                else if (filtroAlerta == 4) //Hoy
+                else if (filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.TODAY) //Hoy
                 {
                     query = query
                         .Where(a => a.FechaNotificacion.Day == fecha.Day)
                         .Where(a => a.FechaNotificacion.Month == fecha.Month)
-                        .Where(a => a.FechaNotificacion.Year == fecha.Year)
-                        .OrderBy(a => a.FechaNotificacion);
+                        .Where(a => a.FechaNotificacion.Year == fecha.Year);
                 }
-                else
+                if(limite > 0)
+                {
+                    query = query.Take(limite);
+                }
+                if(orden == (int)EquilinkedEnums.OrdenamientoEnum.ASCENDENTE)
                 {
                     query = query.OrderBy(a => a.FechaNotificacion);
+                } else if(orden == (int) EquilinkedEnums.OrdenamientoEnum.DESCENDENTE)
+                {
+                    query = query.OrderByDescending(a => a.FechaNotificacion);
                 }
-
                 return query.ToList();
             }
         }
@@ -286,13 +321,13 @@ namespace Equilinked.BLL
             List<Alerta> listAlerta = this.GetAllByCaballoId(caballoId, tipoAlertasEnum).OrderBy(x => x.FechaNotificacion).ToList();
             switch (filterAlertaEnum)
             {
-                case (int)Equilinked.Utils.EquilinkedEnums.FilterAlertaEnum.HISTORY:
+                case (int)EquilinkedEnums.FilterAlertaEnum.HISTORY:
                     listAlerta = listAlerta
                     .Where(x => (x.FechaNotificacion - dateToCompare).Days < 0)
                     .OrderByDescending(x => x.FechaNotificacion)
                     .ToList();
                     break;
-                case (int)Equilinked.Utils.EquilinkedEnums.FilterAlertaEnum.NEXT:
+                case (int)EquilinkedEnums.FilterAlertaEnum.NEXT:
                     // Se listan las alertas proximas a la fecha actual
                     listAlerta = listAlerta
                         .Where(x => (x.FechaNotificacion - dateToCompare).Days >= 0)

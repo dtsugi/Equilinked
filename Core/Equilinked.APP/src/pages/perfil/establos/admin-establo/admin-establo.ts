@@ -8,10 +8,11 @@ import { EstablosService } from "../../../../services/establos.service";
 import { TipoNumeroService } from "../../../../services/tipo-numero.service";
 import { UserSessionEntity } from "../../../../model/userSession";
 import { CaballosEstabloModal } from "./caballos-establo/caballos-establo-modal";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: "./admin-establo.html",
-    providers: [CaballoService, CommonService, EstablosService, SecurityService, TipoNumeroService],
+    providers: [LanguageService, CaballoService, CommonService, EstablosService, SecurityService, TipoNumeroService],
     styles: [`
     .item-md {
         padding-left: 0px;
@@ -30,6 +31,7 @@ export class AdminEstablosPage implements OnInit {
     tiposTelefono: Array<any>; //Aqui esta el catalogo de tipos de telefono
 
     tipoTelefonoPorTelefono: Array<any>;
+    labels: any = {};
 
     constructor(
         private alertController: AlertController,
@@ -43,9 +45,11 @@ export class AdminEstablosPage implements OnInit {
         private navParams: NavParams,
         private securityService: SecurityService,
         private tipoNumeroService: TipoNumeroService,
-        public toastController: ToastController
+        public toastController: ToastController,
+        private languageService: LanguageService
     ) {
         this.tiposTelefono = new Array<any>();
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -102,9 +106,9 @@ export class AdminEstablosPage implements OnInit {
         let alert = this.alertController.create({
             inputs: inputs,
             buttons: [
-                { text: "Cancelar", role: "cancel" },
+                { text: this.labels["PANT034_BTN_CAN"], role: "cancel" },
                 {
-                    text: "Aceptar", handler: data => {
+                    text: this.labels["PANT034_BTN_ACEP"], handler: data => {
                         tipoTelefono.tipoTelefono = data.toString();
                     }
                 }
@@ -160,12 +164,11 @@ export class AdminEstablosPage implements OnInit {
     save(): void {
         if (this.showConfirm) {
             this.alertController.create({
-                title: "Alerta!",
-                message: "Los datos del establo se modificaran en el perfil",
+                message: this.labels["PANT034_ALT_MOD"],
                 buttons: [
-                    { text: "Cancelar", role: "cancel" },
+                    { text: this.labels["PANT034_BTN_CAN"], role: "cancel" },
                     {
-                        text: "Aceptar", handler: () => {
+                        text: this.labels["PANT034_BTN_ACEP"], handler: () => {
                             this.confirmSave();
                         }
                     }
@@ -177,9 +180,6 @@ export class AdminEstablosPage implements OnInit {
     }
 
     private confirmSave(): void {
-
-
-
         let establo = this.establo;
         establo.Nombre = this.establoForm.get("Nombre").value;
         establo.Manager = this.establoForm.get("Manager").value;
@@ -199,7 +199,7 @@ export class AdminEstablosPage implements OnInit {
         establo.EstabloTelefono = establo.EstabloTelefono.filter(et => et.Numero != "");
         establo.EstabloCorreo = establo.EstabloCorreo.filter(ec => ec.CorreoElectronico != "");
 
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT034_ALT_PRO"]);
         let prom: Promise<any>;
         if (establo.ID) {
             prom = this.establosService.updateEstablo(establo);
@@ -208,16 +208,23 @@ export class AdminEstablosPage implements OnInit {
         }
         prom.then(r => {
             this.commonService.hideLoading();
-            let eventItem = this.navParams.get("eventRefreshItem");
-            let eventList = this.navParams.get("eventRefreshList");
+            //caballos
+            this.events.publish("caballo-ubicacion:refresh");//Detalle establo de ubicacion de caballo
+            this.events.publish("caballo-ficha:refresh");//Ficha de opciones de caballo
+            this.events.publish("caballos:refresh");//Lista de caballos
 
-            if (establo.ID) {
-                this.events.publish(eventItem); //Refrescamos el detalle del establo
-            }
-            this.events.publish(eventList); //Refrescamos la lista de establos!
+            //establos
+            this.events.publish("establo-caballos:refresh");//Lista d caballos del estbalo!
+            this.events.publish("establos:refresh"); //Pantalla de establos
+            this.events.publish("establo:refresh");//Detalle de establo
+
+            //grupos
+            this.events.publish("grupo-ubicacion:refresh");//pantalla de detalle de establo en ubicaciones grupo
+            this.events.publish("grupo-ubicaciones:refresh");//Lista de establos en ubicaciones de grupo
+
             this.navController.pop()
         }).catch(err => {
-            this.commonService.ShowErrorHttp(err, "Error al guardar el establo");
+            this.commonService.ShowErrorHttp(err, this.labels["PANT034_MSG_ERRGU"]);
         });
     }
 

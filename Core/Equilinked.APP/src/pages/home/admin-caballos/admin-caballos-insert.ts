@@ -10,12 +10,14 @@ import { PropietarioService } from '../../../services/propietario.service';
 import { Caballo } from '../../../model/caballo';
 import { UserSessionEntity } from '../../../model/userSession';
 import moment from "moment";
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
     templateUrl: 'admin-caballos-insert.html',
-    providers: [CommonService, SecurityService, CaballoService, PropietarioService, ExtendedCaballoService]
+    providers: [LanguageService, CommonService, SecurityService, CaballoService, PropietarioService, ExtendedCaballoService]
 })
 export class AdminCaballosInsertPage {
+    labels: any = {};
     form: any;
     caballoEntity: Caballo;
     generoList = [];
@@ -24,7 +26,6 @@ export class AdminCaballosInsertPage {
     paises = [];
     session: UserSessionEntity;
     isUpdate: boolean = false;
-    btnPostTitle: string = "Guardar";
     age: string;
 
     constructor(
@@ -36,8 +37,11 @@ export class AdminCaballosInsertPage {
         private _securityService: SecurityService,
         private _caballoService: CaballoService,
         private _extendedCaballoService: ExtendedCaballoService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder,
+        private languageService: LanguageService
+    ) {
         this.age = "";
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -46,9 +50,7 @@ export class AdminCaballosInsertPage {
         if (this._commonService.IsValidParams(this.navParams, ["caballoEntity", "isUpdate"])) {
             this.caballoEntity = this.navParams.get("caballoEntity");
             this.isUpdate = this.navParams.get("isUpdate");
-            if (this.isUpdate) {
-                this.btnPostTitle = "Modificar";
-            } else {
+            if (!this.isUpdate) {
                 this.caballoEntity.FechaNacimiento = moment().toISOString();
                 this.caballoEntity.Propietario_ID = this.session.PropietarioId;
             }
@@ -90,7 +92,7 @@ export class AdminCaballosInsertPage {
         });
 
         this.calculateAge(this.caballoEntity.FechaNacimiento);//Ajustar la edad!
-        if (!this.caballoEntity.ID ) {
+        if (!this.caballoEntity.ID) {
             this.getInfoPropietario(); //Obtener info del propietario para autocompletar "nombre propietario"
         }
     }
@@ -102,8 +104,8 @@ export class AdminCaballosInsertPage {
             let years: number = moment().diff(date, "years");
             let months: number = moment().diff(date, "months");
             months = months - (years * 12);
-            this.age = (years > 1 ? years + " años " : (years == 1 ? "1 año " : ""));
-            this.age = this.age + (months > 1 ? months + " meses" : (months == 1 ? "1 mes" : ""));
+            this.age = (years > 1 ? years + " " + this.labels["PANT004_LBL_NAAN"] : (years == 1 ? "1 " + this.labels["PANT004_LBL_NAAN"] : ""));
+            this.age = this.age + (months > 1 ? months + " " + this.labels["PANT004_LBL_NAME"] : (months == 1 ? "1 " + this.labels["PANT004_LBL_NAME"] : ""));
         }
         console.info(this.age);
     }
@@ -116,7 +118,6 @@ export class AdminCaballosInsertPage {
                 //this.reloadForm();
             }, error => {
                 console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
             });
     }
 
@@ -128,7 +129,6 @@ export class AdminCaballosInsertPage {
                 //this.reloadForm();
             }, error => {
                 console.log(error);
-                this._commonService.ShowErrorHttp(error, "Error cargando los generos del caballo");
             });
     }
 
@@ -137,7 +137,7 @@ export class AdminCaballosInsertPage {
             .then(protectores => {
                 this.protectores = protectores;
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error cargando los generos del caballo");
+                console.log(err);
             });
     }
 
@@ -146,36 +146,35 @@ export class AdminCaballosInsertPage {
             .then(paises => {
                 this.paises = paises;
             }).catch(err => {
-                this._commonService.ShowErrorHttp(err, "Error cargando los paises");
+                console.log(err);
             });
     }
 
     save() {
-        this._commonService.showLoading("Guardando..");
-        console.info("Los values del form!");
-        console.log(this.form.value);
-
+        this._commonService.showLoading(this.labels["PANT004_ALT_PRO"]);
         this.buildEntity(this.caballoEntity, this.form.value); //se pasan por referencia!
-
-        console.info("el entity a enviar");
-        console.log(this.caballoEntity);
-
 
         this._caballoService.save(this.caballoEntity)
             .subscribe(res => {
                 console.log(res);
+                this.events.publish("caballo:refresh");
+                this.events.publish("caballo-ficha:refresh");
                 this.events.publish("caballos:refresh");
-                if (this.caballoEntity.ID && this.caballoEntity.ID > 0) { //si es un update!
-                    this.events.publish("caballo:refresh");
-                }
+                this.events.publish("grupo-ubicaciones:refresh");//Cuando se llega desde esta pantalla
+
+                this.events.publish("caballos-grupo:refresh");//Lista de caballos del grupo
+                this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
+
+                this.events.publish("establo-caballos:refresh");//Lista de caballos del establo
+
                 this._commonService.hideLoading();
                 this.navCtrl.pop().then(() => {
-                    this._commonService.ShowInfo("El caballo se guardo exitosamente");
+                    this._commonService.ShowInfo(this.labels["PANT004_MSG_GUOK"]);
                 })
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();
-                this._commonService.ShowInfo("Error al guardar el caballo");
+                this._commonService.ShowInfo(this.labels["PANT004_MSG_GUERR"]);
             });
     }
 

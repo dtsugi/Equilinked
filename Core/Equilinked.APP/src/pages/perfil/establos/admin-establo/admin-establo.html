@@ -2,12 +2,12 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                Cancelar
+                {{ 'PANT034_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!establoForm.valid" (click)="save()">
-                Guardar
+                {{ 'PANT034_BTN_GUA' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -21,7 +21,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input class="equi-input-normal-text" type="text" formControlName="Nombre" placeholder="Nombre"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Nombre" placeholder="{{ 'PANT034_TXT_NO' | translate }}"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -32,7 +32,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input class="equi-input-normal-text" type="text" formControlName="Manager" placeholder="Manager"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Manager" placeholder="{{ 'PANT034_TXT_MAN' | translate }}"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -44,7 +44,7 @@
                 </ion-col>
                 <ion-col col-8>
                     <ion-item>
-                        <ion-input class="equi-input-normal-text" type="email" [formControlName]="i" placeholder="Correo electrónico"></ion-input>
+                        <ion-input class="equi-input-normal-text" type="email" [formControlName]="i" placeholder="{{ 'PANT034_TXT_CORR' | translate }}"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-2 class="col-center">
@@ -62,7 +62,7 @@
                 </ion-col>
                 <ion-col col-5>
                     <ion-item>
-                        <ion-input class="equi-input-normal-text" type="tel" [formControlName]="i" placeholder="Núm. Telefónico"></ion-input>
+                        <ion-input class="equi-input-normal-text" type="tel" [formControlName]="i" placeholder="{{ 'PANT034_TXT_NUM' | translate }}"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-3>
@@ -85,7 +85,7 @@
             </ion-col>
             <ion-col>
                 <ion-item>
-                    <ion-input class="equi-input-normal-text" type="text" formControlName="Direccion" placeholder="Dirección"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" formControlName="Direccion" placeholder="{{ 'PANT034_TXT_DIR' | translate }}"></ion-input>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -95,7 +95,7 @@
             </ion-col>
             <ion-col col-8>
                 <ion-item>
-                    <span class="equi-input-normal-text">{{establo.Caballo.length}} caballo(s)</span>
+                    <span class="equi-input-normal-text">{{establo.Caballo.length}} {{ 'PANT034_LBL_CAB' | translate }}</span>
                 </ion-item>
             </ion-col>
             <ion-col col-2 class="col-center">

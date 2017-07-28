@@ -2,13 +2,13 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="navController.pop()">
-                Cancelar
+                {{ 'PANT012_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!grupoCaballosForm.valid" (click)="save()">
-                Guardar
+                {{ 'PANT012_BTN_GU' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -19,10 +19,10 @@
         <ion-grid>
             <ion-row>
                 <ion-col col-3 class="equi-title-form equi-col-center">
-                    Nombre
+                    {{ 'PANT012_LBL_NOM' | translate }}
                 </ion-col>
                 <ion-col>
-                    <ion-input type="text" class="equi-input-normal-text" placeholder="Nombre del grupo" formControlName="Descripcion"></ion-input>
+                    <ion-input type="text" class="equi-input-normal-text" placeholder="{{ 'PANT012_TXT_NOMGR' | translate }}" formControlName="Descripcion"></ion-input>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -30,12 +30,12 @@
 
     <ion-grid>
         <ion-row>
-            <ion-col col-12 class="equi-title-form">Agregar caballos</ion-col>
+            <ion-col col-12 class="equi-title-form">{{ 'PANT012_LBL_AGCA' | translate }}</ion-col>
             <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar caballos'"></ion-searchbar>
+                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT012_TXT_FICA']"></ion-searchbar>
             </ion-col>
             <ion-col col-12>
-                <button ion-button full (click)="selectAll()">Seleccionar todos</button>
+                <button ion-button full (click)="selectAll()">{{ 'PANT012_BTN_SELT' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

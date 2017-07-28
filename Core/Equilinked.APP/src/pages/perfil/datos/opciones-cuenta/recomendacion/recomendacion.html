@@ -2,31 +2,32 @@
     <ion-navbar>
         <ion-title></ion-title>
         <ion-buttons end>
-            <button ion-button class="equi-toolbar-btn" [disabled]="!invitacionForm.valid" (click)="sendInvitation()">
-                Aceptar
+            <button ion-button class="equi-toolbar-btn" [disabled]="invitacionForm != null && !invitacionForm.valid" (click)="sendInvitation()">
+                {{ 'PANT030_BTN_ACE' | translate }}
             </button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <form [formGroup]="invitacionForm">
-        <ion-list>
-            <ion-item class="item-without-padding">
-                <h2 class="equi-title-form">Recomendar a un amigo</h2>
-            </ion-item>
-            <ion-item class="item-without-padding">
-                <ion-input class="equi-input-normal-text" formControlName="CorreoDestinatario" type="email" placeholder="Ingresar su correo electrónico">
-                </ion-input>
-            </ion-item>
+    <div *ngIf="invitacionForm">
+        <form [formGroup]="invitacionForm">
+            <ion-list>
+                <ion-item class="item-without-padding">
+                    <h2 class="equi-title-form">{{ 'PANT030_LBL_REAM' | translate }}</h2>
+                </ion-item>
+                <ion-item class="item-without-padding">
+                    <ion-input class="equi-input-normal-text" formControlName="CorreoDestinatario" type="email" placeholder="{{ 'PANT030_TXT_INCO' | translate }}">
+                    </ion-input>
+                </ion-item>
 
-            <ion-item class="item-without-padding">
-                <h2 class="equi-title-form">Descripción</h2>
-            </ion-item>
-            <ion-item class="item-without-padding">
-                <ion-textarea class="equi-input-normal-text" autoresize formControlName="Mensaje" [attr.rows]="4" placeholder="¡Hola! Crea una cuenta de Equilinked para poder compartir información de nuestros caballos. https://equilinked.com/download"></ion-textarea>
-            </ion-item>
-        </ion-list>
-    </form>
-
+                <ion-item class="item-without-padding">
+                    <h2 class="equi-title-form">{{ 'PANT030_LBL_DES' | translate }}</h2>
+                </ion-item>
+                <ion-item class="item-without-padding">
+                    <ion-textarea class="equi-input-normal-text" autoresize formControlName="Mensaje" [attr.rows]="4" placeholder="{{ 'PANT030_TXT_DES' | translate }}"></ion-textarea>
+                </ion-item>
+            </ion-list>
+        </form>
+    </div>
 </ion-content>

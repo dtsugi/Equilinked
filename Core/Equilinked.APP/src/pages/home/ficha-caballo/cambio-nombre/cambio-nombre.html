@@ -2,13 +2,13 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                Cancelar
+                {{ "PANT005_BTN_CAN" | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!grupoForm.valid" (click)="save()">
-                Guardar
+                {{ "PANT005_BTN_GUA" | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -17,7 +17,7 @@
 <ion-content>
     <form #grupoForm="ngForm">
         <ion-item>
-            <ion-input type="text" name="descripcion" required="true" placeholder="Nombre del caballo" [(ngModel)]="caballo.Nombre"></ion-input>
+            <ion-input type="text" name="descripcion" required="true" placeholder="{{ 'PANT005_TXT_NOCA' | translate }}" [(ngModel)]="caballo.Nombre"></ion-input>
         </ion-item>
     </form>
 </ion-content>

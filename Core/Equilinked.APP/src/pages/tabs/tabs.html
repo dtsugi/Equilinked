@@ -1,4 +1,4 @@
-<ion-tabs>
+<ion-tabs (ionChange)="refreshTab($event)">
   <ion-tab [root]="homeRoot" tabIcon="home"></ion-tab>
   <!--<ion-tab [root]="calendarRoot" tabIcon="calendar"></ion-tab>-->
   <!--<ion-tab [root]="cameraRoot" tabIcon="camera"></ion-tab>-->

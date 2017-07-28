@@ -3,10 +3,11 @@ import { AlertController, Events, NavParams, NavController, ViewController } fro
 import { CommonService } from "../../../../../../../../services/common.service";
 import { EstablosService } from "../../../../../../../../services/establos.service";
 import { AdminEstablosPage } from "../../../../../../../perfil/establos/admin-establo/admin-establo";
+import { LanguageService } from '../../../../../../../../services/language.service';
 
 @Component({
     templateUrl: "popover-establo.html",
-    providers: [CommonService, EstablosService]
+    providers: [LanguageService, CommonService, EstablosService]
 })
 export class PopoverOpcionesEstablo {
 
@@ -15,6 +16,8 @@ export class PopoverOpcionesEstablo {
 
     private navCtrlEstablo: any;
     private establo: any;
+    labels: any = {};
+
 
     constructor(
         private alertController: AlertController,
@@ -23,8 +26,10 @@ export class PopoverOpcionesEstablo {
         public navController: NavController,
         public navParams: NavParams,
         private commonService: CommonService,
-        public viewController: ViewController
+        public viewController: ViewController,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -36,22 +41,23 @@ export class PopoverOpcionesEstablo {
         this.viewController.dismiss();
 
         this.alertController.create({
-            title: "Alerta!",
-            message: "Se eliminará el establo",
+            message: this.labels["PANT016_ALT_MSELI"],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels["PANT016_BTN_CAN"],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels["PANT016_BTN_ACEP"],
                     handler: () => {
                         this.establosService.deleteEstablo(this.establo.ID)
                             .then(() => {
-                                this.events.publish("ubicaciones:refresh"); //Refrescamos las ubicaciones
+                                this.events.publish("establos:refresh");//Lista de establos perfil usuario
+                                this.events.publish("grupo-ubicaciones:refresh"); //Refrescamos las ubicaciones
+
                                 this.navCtrlEstablo.pop(); //hacia atras!
                             }).catch(err => {
-                                this.commonService.ShowErrorHttp(err, "Error al eliminar el establo");
+                                this.commonService.ShowErrorHttp(err, this.labels["PANT016_MSG_ERRELI"]);
                             });
                     }
                 }
@@ -70,12 +76,4 @@ export class PopoverOpcionesEstablo {
         };
         this.navCtrlEstablo.push(AdminEstablosPage, params);
     }
-
-    /*
-    editAccount(): void {
-        this.viewController.dismiss();
-        this.navCtrlDatos.push(EdicionPerfilPage, { perfilDatosPage: this.perfilPage });
-    }*/
-
-
 }

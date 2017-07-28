@@ -1,21 +1,24 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, NavParams } from 'ionic-angular';
-import {Utils} from '../../app/utils'
+import { Utils } from '../../app/utils'
 import { CommonService } from '../../services/common.service';
 import { TabsPage } from '../tabs/tabs';
-import {UserSessionEntity} from '../../model/UserSessionEntity';
-import { UsuarioService} from '../../services/usuario.service';
-import { SecurityService} from '../../services/security.service';
+import { UserSessionEntity } from '../../model/UserSessionEntity';
+import { UsuarioService } from '../../services/usuario.service';
+import { SecurityService } from '../../services/security.service';
+import { LanguageService } from '../../services/language.service';
 import { NotificacionesPage } from '../notificaciones/notificaciones';
 import { HomePage } from '../home/home';
-
+import { MainCtrl } from "../../app/main-ctrl";
 
 @Component({
     templateUrl: 'login.html',
-    providers: [CommonService, UsuarioService, SecurityService]
+    providers: [CommonService, LanguageService, UsuarioService, SecurityService]
 })
 export class LoginPage {
+
+    labels: any = {};
     form: any;
     userSession: UserSessionEntity;
 
@@ -25,7 +28,10 @@ export class LoginPage {
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
         private _usuarioService: UsuarioService,
-        private _securityService: SecurityService) {
+        private _securityService: SecurityService,
+        private languageService: LanguageService
+    ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -41,12 +47,12 @@ export class LoginPage {
     }
 
     Login() {
-        this._commonService.showLoading("Cargando..");
+        this._commonService.showLoading(this.labels["PANT001_ALE_LOA"]);
         console.log(this.form.value);
         this._usuarioService.login(this.form.value)
             .subscribe(res => {
                 console.log(res);
-                this._securityService.setInitialConfigSession(res);                
+                this._securityService.setInitialConfigSession(res);
                 this._commonService.hideLoading();
                 this.navCtrl.setRoot(TabsPage);
                 // this.navCtrl.setRoot(NotificacionesPage);
@@ -54,7 +60,7 @@ export class LoginPage {
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();
-                this._commonService.ShowErrorHttp(error, "Nombre de usuario o contraseña incorrectas ");
+                this._commonService.ShowErrorHttp(error, this.labels["PANT001_MSG_ERR_SES"]);
             });
         // () => console.log("FINISHED LOGIN"));
     }

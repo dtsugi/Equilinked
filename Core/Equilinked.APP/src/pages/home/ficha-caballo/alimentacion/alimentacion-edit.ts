@@ -6,13 +6,14 @@ import { CommonService } from '../../../../services/common.service';
 import { AlimentacionService } from '../../../../services/alimentacion.service';
 import { Alimentacion } from '../../../../model/alimentacion';
 import { AlimentacionPage } from './alimentacion';
-
+import { LanguageService } from '../../../../services//language.service';
 
 @Component({
     templateUrl: 'alimentacion-edit.html',
-    providers: [CommonService, AlimentacionService]
+    providers: [LanguageService, CommonService, AlimentacionService]
 })
 export class AlimentacionEditPage {
+    labels: any = {};
     form: any;
     alimentacion: Alimentacion;
     nombreCaballo: string;
@@ -22,8 +23,11 @@ export class AlimentacionEditPage {
         public navParams: NavParams,
         private _commonService: CommonService,
         private _alimentacionService: AlimentacionService,
-        private formBuilder: FormBuilder) {
+        private formBuilder: FormBuilder,
+        private languageService: LanguageService
+    ) {
         this.nombreCaballo = "";
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -47,18 +51,18 @@ export class AlimentacionEditPage {
     }
 
     save() {
-        this._commonService.showLoading("Guardando..");
+        this._commonService.showLoading(this.labels["PANT008_ALT_CARG"]);
         console.log("SAVE:", this.form.value);
         this._alimentacionService.save(this.form.value)
             .subscribe(res => {
                 console.log(res);
                 this._commonService.hideLoading();
-                this._commonService.ShowInfo("El registro se modifico exitosamente");
+                this._commonService.ShowInfo(this.labels["PANT008_MSG_REGOK"]);
                 this.goBack();
             }, error => {
                 console.log(error);
                 this._commonService.hideLoading();
-                this._commonService.ShowInfo("Error al modificar el registro");
+                this._commonService.ShowInfo(this.labels["PANT008_MSG_ERRMOD"]);
             });
     }
 

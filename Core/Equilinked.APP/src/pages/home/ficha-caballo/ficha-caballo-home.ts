@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { Utils } from '../../../app/utils'
+import { CaballoService } from '../../../services/caballo.service';
 import { CommonService } from '../../../services/common.service';
 import { Caballo } from '../../../model/caballo';
 import { DatosViewPage } from './datos/datos-view';
@@ -11,36 +12,37 @@ import { HerrajesPage } from './herrajes/herrajes';
 import { DentistaPage } from './dentista/dentista';
 import { DesparasitacionPage } from './desparasitacion/desparasitacion';
 import { OpcionesCaballoPopover } from "./opciones-caballo/opciones-caballo";
+import { UbicacionCaballoPage } from "./ubicacion/ubicacion";
+import { AsignacionUbicacionCaballoPage } from "./ubicacion/asignacion-ubicacion/asignacion-ubicacion";
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
     templateUrl: 'ficha-caballo-home.html',
-    providers: [CommonService]
+    providers: [CaballoService, CommonService, LanguageService]
 })
 export class FichaCaballoPage implements OnDestroy, OnInit {
+
+    labels: any = {};
     menu: string;
-    showMenuInformation: boolean;
-    showMenuFotos: boolean;
     caballo: Caballo;
 
     constructor(
+        private caballoService: CaballoService,
         private events: Events,
         public navCtrl: NavController,
         public navParams: NavParams,
         public popoverController: PopoverController,
         private _commonService: CommonService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.menu = "informacion";
     }
 
     ngOnInit(): void {
         this.caballo = this.navParams.get("caballoSelected");
-        console.log(this.caballo);
-        if (this.caballo != undefined) {
-            this.SetVisibleMenu(true);
-        } else {
-            this._commonService.ShowInfo("Error obteniendo el Identificador del caballo");
-        }
+        this.getInfoCaballo(true);
         this.addEvents();
     }
 
@@ -58,11 +60,6 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
         });
     }
 
-    SetVisibleMenu(showInformation) {
-        this.showMenuInformation = showInformation;
-        this.showMenuFotos = !showInformation;
-    }
-
     GoTo(idOption) {
         console.log(idOption);
         switch (idOption) {
@@ -72,6 +69,16 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
                     idCaballoSelected: this.caballo.ID,
                     nombreCaballoSelected: this.caballo.Nombre
                 });
+                break;
+            //UBICACION
+            case 2:
+                let page;
+                if (this.caballo.Establo_ID) {
+                    page = UbicacionCaballoPage;
+                } else {
+                    page = AsignacionUbicacionCaballoPage;
+                }
+                this.navCtrl.push(page, { caballo: this.caballo });
                 break;
             // HERRAJES
             case 5:
@@ -111,13 +118,27 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
         }
     }
 
+    private getInfoCaballo(loading: boolean): void {
+        if (loading)
+            this._commonService.showLoading("Procesando...");
+        this.caballoService.getSerializedById(this.caballo.ID).toPromise()
+            .then(caballo => {
+                this.caballo = caballo;
+
+                if (loading)
+                    this._commonService.hideLoading();
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, "Error al cargar la información del caballo");
+            });
+    }
+
     private addEvents(): void { //Por este evento le haré llegar el nuevo nombre al caballo!
-        this.events.subscribe("caballo:change", caballo => {
-            this.caballo = caballo;
+        this.events.subscribe("caballo-ficha:refresh", () => {
+            this.getInfoCaballo(false);
         });
     }
 
     private removeEvents(): void {
-        this.events.unsubscribe("caballo:change");
+        this.events.unsubscribe("caballo-ficha:refresh");
     }
 }

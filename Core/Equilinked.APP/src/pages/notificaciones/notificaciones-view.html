@@ -2,7 +2,7 @@
     <ion-navbar>
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" (click)="edit()">
-                Editar
+                {{ 'PANT022_BTN_ED' | translate }} 
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -23,13 +23,13 @@
         <div *ngIf="alertaEntity.AlertaRecordatorio && alertaEntity.AlertaRecordatorio.length > 0">
             <span *ngFor="let recordatorio of alertaEntity.AlertaRecordatorio" class="equi-normal-text">
                 <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
-                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;antes
+                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;{{ 'PANT022_LBL_ANT' | translate }}
             </span>
         </div>
         <hr />
 
         <p class="equi-normal-text" *ngIf="alertaEntity.AlertaCaballo && alertaEntity.AlertaCaballo.length > 0">
-            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaEntity.AlertaCaballo.length + ' caballo(s)'}}
+            <ion-icon name="list-box" class="equi-principal-color"></ion-icon>&nbsp;&nbsp; {{alertaEntity.AlertaCaballo.length + ' ' + labels['PANT022_BTN_CA']}}
         </p>
 
         <p *ngIf="alertaEntity.Ubicacion" class="equi-normal-text">

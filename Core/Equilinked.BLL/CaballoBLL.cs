@@ -17,9 +17,55 @@ namespace Equilinked.BLL
             throw new NotImplementedException();
         }
 
+        public List<CaballoDto> GetCaballosPorEstadoAsociacionEstablo(int propietarioId, bool establo)
+        {
+            List<CaballoDto> listSerialized = new List<CaballoDto>();
+            using (var db = this._dbContext)
+            {
+
+                List<Caballo> caballos = db.Caballo
+                    .Include("Protector")
+                    .Include("GenealogiaCaballo")
+                    .Include("CriadorCaballo")
+                    .Include("ResponsableCaballo")
+                    .Where(c => c.Propietario_ID == propietarioId)
+                    .Where(c => establo ? c.Establo_ID != null : c.Establo_ID == null)
+                    .OrderBy(c => c.Nombre)
+                    .ToList();
+
+                CaballoDto caballo;
+                foreach (Caballo item in caballos)
+                {
+                    caballo = new CaballoDto(item);
+                    listSerialized.Add(caballo);
+                }
+            }
+
+            return listSerialized;
+        }
+
         public Caballo GetById(int id)
         {
-            return this._dbContext.Caballo.Where(x => x.ID == id).FirstOrDefault();
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                Caballo caballo = db.Caballo
+                    .Include("GenealogiaCaballo")
+                    .Include("CriadorCaballo")
+                    .Include("ResponsableCaballo")
+                    .Include("Genero")
+                    .Include("Pelaje")
+                    .Include("Protector")
+                    .Where(x => x.ID == id).FirstOrDefault();
+
+                if (caballo.Establo_ID != null)
+                {
+                    caballo.Establo = db.Establo.Where(e => e.ID == caballo.Establo_ID).FirstOrDefault();
+                }
+
+                return caballo;
+            }
         }
 
         public bool DeleteById(int id)

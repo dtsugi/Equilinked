@@ -1,12 +1,12 @@
 <ion-segment [(ngModel)]="menu" color="primary" (ionChange)="onSegmentChanged($event)">
     <ion-segment-button value="caballos">
-        Caballos
+        {{ "PANT002_BTN_CAB" | translate }}
     </ion-segment-button>
     <ion-segment-button value="veterinarios">
-        Veterinarios
+       {{ "PANT002_BTN_VET" | translate }}
     </ion-segment-button>
     <ion-segment-button value="fotos">
-        Fotos
+        {{ "PANT002_BTN_FOT" | translate }}
     </ion-segment-button>
 </ion-segment>
 
@@ -14,27 +14,27 @@
 <!--<ion-toolbar *ngIf="menu == 'caballos'">-->
 <ion-segment *ngIf="menu == 'caballos'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
     <ion-segment-button value="caballos_ind">
-        Individuos
+        {{ "PANT002_BTN_IND" | translate }}
     </ion-segment-button>
     <ion-segment-button value="caballos_gru">
-        Grupos
+        {{ "PANT002_BTN_GRU" | translate }}
     </ion-segment-button>
 </ion-segment>
 <!--</ion-toolbar>-->
 <!--<ion-toolbar *ngIf="menu == 'veterinarios'">-->
 <ion-segment *ngIf="menu == 'veterinarios'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
     <ion-segment-button value="veterinarios_ind">
-        Individuos
+        {{ "PANT002_BTN_IND" | translate }}
     </ion-segment-button>
 </ion-segment>
 <!--</ion-toolbar>-->
 <!--<ion-toolbar *ngIf="menu == 'fotos'">-->
 <ion-segment *ngIf="menu == 'fotos'" [(ngModel)]="subMenu" color="primary" (ionChange)="onSegmentChanged($event)">
     <ion-segment-button value="fotos_todas">
-        Todas
+        {{ "PANT002_BTN_FOT" | translate }}
     </ion-segment-button>
     <ion-segment-button value="fotos_albums">
-        Albumes
+        {{ "PANT002_BTN_FOAL" | translate }}
     </ion-segment-button>
 </ion-segment>
 <!--</ion-toolbar>-->

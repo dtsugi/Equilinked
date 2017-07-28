@@ -5,10 +5,11 @@ import { CommonService } from "../../../../../services/common.service";
 import { CaballoService } from '../../../../../services/caballo.service';
 import { EstablosService } from "../../../../../services/establos.service";
 import { UserSessionEntity } from "../../../../../model/userSession";
+import { LanguageService } from '../../../../../services/language.service';
 
 @Component({
     templateUrl: "./caballos-establo-modal.html",
-    providers: [CaballoService, CommonService, EstablosService]
+    providers: [LanguageService, CaballoService, CommonService, EstablosService]
 })
 export class CaballosEstabloModal implements OnInit {
 
@@ -18,7 +19,7 @@ export class CaballosEstabloModal implements OnInit {
     //Caballos que se listan en esta pantalla...
     private caballosRespaldo: any[];
     caballos: any[];
-
+    labels: any = {};
     showSpinner: boolean;
 
     constructor(
@@ -26,8 +27,10 @@ export class CaballosEstabloModal implements OnInit {
         private commonService: CommonService,
         private establosService: EstablosService,
         public navParams: NavParams,
-        public viewController: ViewController
+        public viewController: ViewController,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.caballos = [];
         this.showSpinner = true;
     }
@@ -75,7 +78,7 @@ export class CaballosEstabloModal implements OnInit {
                 this.caballos = this.caballosRespaldo;
                 this.showSpinner = false;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al listar los caballos");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT034_MSG_ERRCAB"]);
                 this.showSpinner = false;
             });
     }
@@ -98,7 +101,7 @@ export class CaballosEstabloModal implements OnInit {
 
                 this.showSpinner = false;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al listar los caballos");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT034_MSG_ERRCAB"]);
                 this.showSpinner = false;
             });
     }

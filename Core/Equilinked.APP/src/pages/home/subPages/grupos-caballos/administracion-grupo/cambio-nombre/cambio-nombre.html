@@ -2,13 +2,13 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                Cancelar
+                {{ 'PANT014_BTN_CAN' | translate }}
             </button>
-        </ion-buttons>
+        </ion-buttons> 
 
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!grupoForm.valid" (click)="save()">
-                Guardar
+                {{ 'PANT014_BTN_GU' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -17,7 +17,7 @@
 <ion-content>
     <form #grupoForm="ngForm">
         <ion-item>
-            <ion-input type="text" name="descripcion" required="true" placeholder="Nombre del grupo" [(ngModel)]="grupo.Descripcion"></ion-input>
+            <ion-input type="text" name="descripcion" required="true" placeholder="{{ 'PANT014_TXT_NOMG' | translate }}" [(ngModel)]="grupo.Descripcion"></ion-input>
         </ion-item>
     </form>
 </ion-content>

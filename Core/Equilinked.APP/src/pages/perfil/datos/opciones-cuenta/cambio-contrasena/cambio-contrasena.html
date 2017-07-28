@@ -3,7 +3,7 @@
         <ion-title></ion-title>
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" [disabled]="!formCambioPass.valid" (click)="changePassword()">
-                Aceptar
+                {{ 'PANT029_BTN_ACE' | translate }}
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -13,22 +13,22 @@
     <form [formGroup]="formCambioPass">
 
         <ion-item class="item-without-padding">
-            <h2 class="equi-title-form">Contraseña actual</h2>
+            <h2 class="equi-title-form">{{ 'PANT029_LBL_PAAC' | translate }}</h2>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input class="equi-input-normal-text" formControlName="ContrasenaActual" type="password" placeholder="Ingresar contraseña actual"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="ContrasenaActual" type="password" placeholder="{{ 'PANT029_TXT_COAC' | translate }}"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <h2 class="equi-title-form">Contraseña nueva</h2>
+            <h2 class="equi-title-form">{{ 'PANT029_LBL_PANU' | translate }}</h2>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input class="equi-input-normal-text" formControlName="NuevaContrasena" type="password" placeholder="Ingresar contraseña nueva"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="NuevaContrasena" type="password" placeholder="{{ 'PANT029_TXT_INNUC' | translate }}"></ion-input>
         </ion-item>
         <ion-item class="item-without-padding">
-            <ion-input class="equi-input-normal-text" formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="Confirmar contraseña nueva"></ion-input>
+            <ion-input class="equi-input-normal-text" formControlName="ConfirmacionNuevaContrasena" type="password" placeholder="{{ 'PANT029_TXT_COCN' | translate }}"></ion-input>
         </ion-item>
-        <p *ngIf="formCambioPass.get('NuevaContrasena').hasError('nomatch')" class="equi-danger-color">Las nuevas contraseñas no coinciden</p>
-        <p><a class="equi-principal-color">¿Olvidaste tu contraseña? restablécela</a></p>
+        <p *ngIf="formCambioPass.get('NuevaContrasena').hasError('nomatch')" class="equi-danger-color">{{ 'PANT029_LBL_ERRCO' | translate }}</p>
+        <p><a class="equi-principal-color">{{ 'PANT029_BTN_RES' | translate }}</a></p>
     </form>
 
 </ion-content>

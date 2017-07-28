@@ -1,15 +1,19 @@
 <ion-header>
     <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
+            <button class="equi-toolbar-btn" (click)="goBack()">
+                {{ "PANT008_BTN_CAN" | translate }}
+            </button>
         </ion-buttons>
         <ion-title class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{nombreCaballo}}</span>
             <br />
-            <span class="equi-toolbar-subtitle">Alimentación</span>
+            <span class="equi-toolbar-subtitle">{{ "PANT008_LBL_SUBALI" | translate }}</span>
         </ion-title>
         <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">Guardar</button>
+            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">
+                {{ "PANT008_BTN_GUA" | translate }}
+            </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -17,33 +21,33 @@
     <form [formGroup]="form">
         <ion-grid>
             <ion-row class="equi-title-form">
-                Sólido
+                {{ "PANT008_LBL_SOL" | translate }}
             </ion-row>
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="Descripción" autoresize formControlName="Solido"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}Descripción" autoresize formControlName="Solido"></ion-textarea>
             </ion-row>
 
             <ion-row class="equi-title-form">
-                Suplementos dietarios
+                {{ "PANT008_LBL_SUDI" | translate }}
             </ion-row>
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="Descripción" autoresize formControlName="SuplementosDietarios"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}Descripción" autoresize formControlName="SuplementosDietarios"></ion-textarea>
             </ion-row>
 
             <ion-row class="equi-title-form">
-                Pasto
+                {{ 'PANT008_LBL_PAS' | translate }}
             </ion-row>
             <ion-row>
                 <hr>
             </ion-row>
             <ion-row>
-                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="Descripción" autoresize formControlName="Pasto"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}" autoresize formControlName="Pasto"></ion-textarea>
             </ion-row>
         </ion-grid>
     </form>

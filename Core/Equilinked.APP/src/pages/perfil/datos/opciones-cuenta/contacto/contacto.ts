@@ -4,10 +4,11 @@ import { UserSessionEntity } from "../../../../../model/userSession";
 import { CommonService } from "../../../../../services/common.service";
 import { ContactoService } from "../../../../../services/contacto.service";
 import { SecurityService } from "../../../../../services/security.service";
+import { LanguageService } from '../../../../../services/language.service';
 
 @Component({
     templateUrl: "./contacto.html",
-    providers: [CommonService, ContactoService, SecurityService]
+    providers: [LanguageService, CommonService, ContactoService, SecurityService]
 })
 export class ContactoPage implements OnInit {
 
@@ -15,13 +16,15 @@ export class ContactoPage implements OnInit {
 
     motivos: Array<any>;
     mensaje: any;
-
+    labels: any = {};
     constructor(
         private commonService: CommonService,
         private contactoService: ContactoService,
         private navController: NavController,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.motivos = new Array<any>();
         this.mensaje = {};
     }
@@ -32,14 +35,14 @@ export class ContactoPage implements OnInit {
     }
 
     private listAllMotivoContactos(): void {
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT031_ALT_PRO"]);
         this.contactoService.getAllMotivoContacto()
             .then(motivos => {
                 this.commonService.hideLoading();
                 this.motivos = motivos;
                 this.mensaje.MotivoContacto = motivos[0].ID;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al consultar los motivos");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT031_MSG_ERRMO"]);
             });
     }
 
@@ -50,15 +53,15 @@ export class ContactoPage implements OnInit {
             MotivoContacto_ID: this.mensaje.MotivoContacto
         };
 
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT031_ALT_PRO"]);
         this.contactoService.saveMensajeContacto(mensajeContacto)
             .then(() => {
                 this.commonService.hideLoading();
                 this.navController.pop().then(() => {
-                    this.commonService.ShowInfo("El mensaje fue enviado de forma exitosa");
+                    this.commonService.ShowInfo(this.labels["PANT031_MSG_ENOK"]);
                 });
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al enviar el mensaje");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT031_MSG_ERENV"]);
             });
     }
 }

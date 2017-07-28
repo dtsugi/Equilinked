@@ -4,23 +4,29 @@ import { Events, NavController, NavParams, PopoverController } from 'ionic-angul
 import { Utils, ConstantsConfig } from '../../../../app/utils'
 import { CommonService } from '../../../../services/common.service';
 import { AlertaService } from '../../../../services/alerta.service';
+import { AlertaCaballoService } from '../../../../services/alerta.caballo.service';
 import { Alerta } from '../../../../model/alerta';
 import { UserSessionEntity } from '../../../../model/userSession';
 import { SecurityService } from '../../../../services/security.service';
 import { NotificacionNotaDetalle } from "../../../notificaciones/notificacion-nota-detalle/notificacion-nota-detalle";
 import { NotificacionesInsertPage } from '../../../notificaciones/notificaciones-insert';
+import moment from "moment";
+import "moment/locale/es";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: 'notas.html',
-    providers: [CommonService, AlertaService, SecurityService]
+    providers: [LanguageService, CommonService, AlertaService, AlertaCaballoService, SecurityService]
 })
 export class NotasPage implements OnInit, OnDestroy {
 
     private session: UserSessionEntity;
+    private notificacionesResp: Array<any>;
 
+    labels: any = {};
     idCaballo: number;
     nombreCaballo: string = "";
-    notificacionList = [];
+    notificacionList;
     tipoAlerta: number = 5;
     isDeleting: boolean = false;
 
@@ -32,7 +38,9 @@ export class NotasPage implements OnInit, OnDestroy {
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
         private _alertaService: AlertaService,
-        private securityService: SecurityService
+        private alertaCaballoService: AlertaCaballoService,
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
     }
 
@@ -51,29 +59,43 @@ export class NotasPage implements OnInit, OnDestroy {
         this.removeEvents();
     }
 
-    getAllNotificacionesByCaballoId(loading: boolean) {
-        if (loading)
-            this._commonService.showLoading("Procesando..");
-
-        this._alertaService.getAllSerializedByCaballoId(this.idCaballo, ConstantsConfig.ALERTA_FILTER_ALL, this.tipoAlerta)
-            .subscribe(res => {
-                console.log("RES:", res);
-                this.notificacionList = res;
-
-                if (loading)
-                    this._commonService.hideLoading();
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo las notificaciones");
+    filter(evt: any): void {
+        let value: string = evt.target.value;
+        if (value && value !== null) {
+            this.notificacionList = this.notificacionesResp.filter(nota => {
+                return nota.Titulo.toUpperCase().indexOf(value.toUpperCase()) > -1
+                    || nota.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1
             });
+        } else {
+            this.notificacionList = this.notificacionesResp;
+        }
+    }
+
+    getAllNotificacionesByCaballoId(loading: boolean) {
+        let fecha: string = moment().format("YYYY-MM-DD");
+        if (loading)
+            this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+
+        this.alertaCaballoService.getAlertasByCaballoId(
+            this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
+            ConstantsConfig.ALERTA_FILTER_ALL, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
+        ).then(res => {
+            this.notificacionList = res.map(alerta => {
+                alerta.Fecha = moment(new Date(alerta.FechaNotificacion)).format("DD/MM/YY");
+                return alerta;
+            });
+            this.notificacionesResp = this.notificacionList;
+            if (loading)
+                this._commonService.hideLoading();
+        }).catch(error => {
+            this._commonService.ShowErrorHttp(error, this.labels["PANT007_MSG_ERRALT"]);
+        });
     }
 
     goViewNotificacion(notificacion) {
         /* Flag para determinar que no se este eliminando al mismo tiempo */
         if (!this.isDeleting) {
-            this.navCtrl.push(NotificacionNotaDetalle,
-                {
-                    alertaId: notificacion.ID
-                });
+            this.navCtrl.push(NotificacionNotaDetalle, { alertaId: notificacion.ID });
         }
     }
 
@@ -81,30 +103,20 @@ export class NotasPage implements OnInit, OnDestroy {
         let notificacion: Alerta = new Alerta();
         notificacion.Tipo = this.tipoAlerta;
         notificacion.Propietario_ID = this.session.PropietarioId;
-        notificacion.CaballosList = new Array();
-        notificacion.CaballosList.push(this.idCaballo);
-        this.navCtrl.push(NotificacionesInsertPage,
-            {
-                alertaEntity: notificacion,
-                isFromNotas: true,
-                isUpdate: false,
-                callbackController: this
-            });
+        notificacion.AlertaCaballo = [{ Caballo_ID: this.idCaballo }];
+
+        this.navCtrl.push(NotificacionesInsertPage, { alertaEntity: notificacion });
     }
 
     deleteNotification(notificacion: Alerta) {
-        this.isDeleting = true;
-        this._commonService.showLoading("Eliminando..");
-        this._alertaService.delete(notificacion.ID)
-            .subscribe(res => {
+        this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+        this.alertaCaballoService.deleteAlertasCaballosByIds(this.session.PropietarioId, this.idCaballo, [notificacion.ID])
+            .then(() => {
                 this._commonService.hideLoading();
-                console.log(res);
+                this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
                 this.getAllNotificacionesByCaballoId(true);
-
-                this.isDeleting = false;
-            }, error => {
-                this._commonService.ShowErrorHttp(error, "Error al eliminar la nota");
-                this.isDeleting = false;
+            }).catch(err => {
+                this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
             });
     }
 

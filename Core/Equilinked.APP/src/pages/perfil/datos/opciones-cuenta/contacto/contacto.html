@@ -1,11 +1,8 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>
-        </ion-title>
-
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" [disabled]="!mensaje.Descripcion" (click)="sendMessage()">
-                Enviar
+                {{ 'PANT031_BTN_EV' | translate }}
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -15,18 +12,18 @@
     <form>
         <ion-list>
             <ion-item class="item-without-padding">
-                <h2 class="equi-title-form">Motivo del contato</h2>
+                <h2 class="equi-title-form">{{ 'PANT031_LBL_MO' | translate }}</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-select class="equi-input-normal-text" placeholder="Motivo" name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
+                <ion-select class="equi-input-normal-text" placeholder="{{ 'PANT031_TXT_MOT' | translate }}Motivo" name="tipo-contacto" [(ngModel)]="mensaje.MotivoContacto" required="true">
                     <ion-option *ngFor="let motivo of motivos" value="{{motivo.ID}}">{{motivo.Descripcion}}</ion-option>
                 </ion-select>
             </ion-item>
             <ion-item class="item-without-padding">
-                <h2 class="equi-title-form">Descripción</h2>
+                <h2 class="equi-title-form">{{ 'PANT031_LBL_DES' | translate }}</h2>
             </ion-item>
             <ion-item class="item-without-padding">
-                <ion-textarea class="equi-input-normal-text" autoresize name="descripcion" [attr.rows]="5" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="Describa el problema y/o sugerencia"></ion-textarea>
+                <ion-textarea class="equi-input-normal-text" autoresize name="descripcion" [attr.rows]="5" [(ngModel)]="mensaje.Descripcion" required="true" placeholder="{{ 'PANT031_TXT_DES' | translate }}"></ion-textarea>
             </ion-item>
         </ion-list>
     </form>

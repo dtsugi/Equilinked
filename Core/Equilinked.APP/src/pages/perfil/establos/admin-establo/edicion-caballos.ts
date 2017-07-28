@@ -1,15 +1,16 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Events, NavController, NavParams, ToastController } from "ionic-angular";
 import { FichaCaballoPage } from "../../../home/ficha-caballo/ficha-caballo-home";
 import { CaballoService } from "../../../../services/caballo.service";
 import { CommonService } from "../../../../services/common.service";
 import { EstablosService } from "../../../../services/establos.service";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: "./edicion-caballos.html",
-    providers: [CaballoService, CommonService, EstablosService]
+    providers: [LanguageService, CaballoService, CommonService, EstablosService]
 })
-export class EdicionEstabloCaballosPage implements OnInit {
+export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
 
     private establoCaballosRespaldo: Array<any>;
     private establoCaballosEdicionResp: Array<any>;
@@ -18,10 +19,10 @@ export class EdicionEstabloCaballosPage implements OnInit {
 
     establoCabllos: Array<any>;
     establoCaballosEdicion: Array<any>;
-
+    labels: any = {};
     establo: any;
     grupo: any;
-    modoEdicion: boolean; 
+    modoEdicion: boolean;
 
     constructor(
         private caballoService: CaballoService,
@@ -29,8 +30,10 @@ export class EdicionEstabloCaballosPage implements OnInit {
         private establosService: EstablosService,
         private events: Events,
         private navController: NavController,
-        private navParams: NavParams
+        private navParams: NavParams,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.modoEdicion = false;
         this.establoCabllos = new Array<any>();
     }
@@ -42,6 +45,11 @@ export class EdicionEstabloCaballosPage implements OnInit {
         this.eventItem = this.navParams.get("eventRefreshItem");
 
         this.listCaballosByEstabloId(true); //Listamos los caballos del establo
+        this.addEvents();
+    }
+
+    ngOnDestroy(): void {
+        this.removeEvents();
     }
 
     goBack(): void {
@@ -84,21 +92,27 @@ export class EdicionEstabloCaballosPage implements OnInit {
             .filter(ec => ec.seleccion)
             .map(ec => ec.caballo);
 
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
         this.establosService.updateEstablo(this.establo)
             .then(() => {
-                if (this.eventItem) {
-                    this.events.publish(this.eventItem); //Refresco el detalle o ubicacion 
-                }
-                if (this.eventList) {
-                    this.events.publish(this.eventList); //Refrescar la lista de ubicaciones
-                }
+                this.events.publish("caballo-ubicacion:refresh");//Detalle establo de ubicacion de caballo
+                this.events.publish("caballo-ficha:refresh");//Ficha de opciones de caballo
+                this.events.publish("caballos:refresh");//Lista de caballos
+
+                //establos
+                this.events.publish("establos:refresh"); //Pantalla de establos
+                this.events.publish("establo:refresh");//Detalle de establo
+
+                //grupos
+                this.events.publish("grupo-ubicacion:refresh");//pantalla de detalle de establo en ubicaciones grupo
+                this.events.publish("grupo-ubicaciones:refresh");//Lista de establos en ubicaciones de grupo
+
                 this.listCaballosByEstabloId(false); //Refresco la lista actual
                 this.modoEdicion = false;
                 this.commonService.hideLoading();
             }).catch(err => {
                 console.error(err);
-                this.commonService.ShowErrorHttp(err, "Error al actualizar los caballos seleccionados para el establo");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRACT"]);
             });
     }
 
@@ -108,7 +122,7 @@ export class EdicionEstabloCaballosPage implements OnInit {
             mapEstabloCaballos.set(ec.ID, ec);
         });
 
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
         this.establosService.getCaballosByEstablo(this.establo.ID, 1)
             .then(caballos => {
                 this.commonService.hideLoading();
@@ -121,14 +135,14 @@ export class EdicionEstabloCaballosPage implements OnInit {
                 });
                 this.establoCaballosEdicionResp = this.establoCaballosEdicion;
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error obteniendo los caballos del propietario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
                 console.error(err);
             });
     }
 
     private listCaballosByEstabloId(showLoading: boolean): void {
         if (showLoading)
-            this.commonService.showLoading("Procesando...");
+            this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
         this.establosService.getCaballosByEstablo(this.establo.ID, 2)
             .then(establoCaballos => {
                 this.establoCabllos = establoCaballos;
@@ -138,7 +152,17 @@ export class EdicionEstabloCaballosPage implements OnInit {
                     this.commonService.hideLoading();
             }).catch(err => {
                 console.error(err);
-                this.commonService.ShowErrorHttp(err, "Error obteniendo los caballos del establo");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
             });
+    }
+
+    private addEvents(): void {
+        this.events.subscribe("establo-caballos:refresh", () => {
+            this.listCaballosByEstabloId(false);
+        });
+    }
+
+    private removeEvents(): void {
+        this.events.unsubscribe("establo-caballos:refresh")
     }
 }

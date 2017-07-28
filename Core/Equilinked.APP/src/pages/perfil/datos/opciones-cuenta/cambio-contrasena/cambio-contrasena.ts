@@ -6,23 +6,26 @@ import { passwordMatcher } from "./password-validator";
 import { CommonService } from "../../../../../services/common.service";
 import { SecurityService } from "../../../../../services/security.service";
 import { UsuarioService } from "../../../../../services/usuario.service";
+import { LanguageService } from '../../../../../services/language.service';
 
 @Component({
     templateUrl: "./cambio-contrasena.html",
-    providers: [CommonService, SecurityService, UsuarioService]
+    providers: [LanguageService, CommonService, SecurityService, UsuarioService]
 })
 export class CambioContrasenaPage implements OnInit {
 
     private session: UserSessionEntity;
-
+    labels: any = {};
     formCambioPass: FormGroup;
 
     constructor(
         private commonService: CommonService,
         private navController: NavController,
         private securityService: SecurityService,
-        private usuarioService: UsuarioService
+        private usuarioService: UsuarioService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -32,7 +35,7 @@ export class CambioContrasenaPage implements OnInit {
 
     changePassword(): void {
         let valuesForm: any = this.formCambioPass.value;
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT029_ALT_PRO"]);
         this.usuarioService.changePassword(
             this.session.IdUser,
             valuesForm["ContrasenaActual"],
@@ -41,13 +44,13 @@ export class CambioContrasenaPage implements OnInit {
             this.commonService.hideLoading();
             if (resp.StatusCambio) {
                 this.navController.pop().then(() => {
-                    this.commonService.ShowInfo("El cambio de contraseña fue exitoso");
+                    this.commonService.ShowInfo(this.labels["PANT029_MSG_CAOK"]);
                 });
             } else {
-                this.commonService.ShowInfo("La contraseña actual ingresa es incorrecta");
+                this.commonService.ShowInfo(this.labels["PANT029_MSG_COERR"]);
             }
         }).catch(err => {
-            this.commonService.ShowErrorHttp(err, "Error al actualizar la contraseña");
+            this.commonService.ShowErrorHttp(err, this.labels["PANT029_MSG_ERRCA"]);
         });
     }
 

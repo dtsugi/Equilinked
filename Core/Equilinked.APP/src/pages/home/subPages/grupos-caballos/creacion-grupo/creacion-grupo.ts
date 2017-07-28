@@ -7,13 +7,14 @@ import { GruposCaballosService } from "../../../../../services/grupos-caballos.s
 import { CaballoService } from "../../../../../services/caballo.service";
 import { Grupo } from "../../../../../model/grupo";
 import { UserSessionEntity } from "../../../../../model/userSession";
+import { LanguageService } from '../../../../../services/language.service';
 
 @Component({
     templateUrl: "./creacion-grupo.html",
-    providers: [CaballoService, CommonService, GruposCaballosService, SecurityService]
+    providers: [LanguageService, CaballoService, CommonService, GruposCaballosService, SecurityService]
 })
 export class CreacionGrupoPage implements OnInit {
-
+    labels: any = {};
     caballos: Array<any>;
     caballosRespaldo: Array<any>;
     grupo: Grupo;
@@ -29,9 +30,11 @@ export class CreacionGrupoPage implements OnInit {
         public navController: NavController,
         private navParams: NavParams,
         private securityService: SecurityService,
-        public toastController: ToastController
+        public toastController: ToastController,
+        private languageService: LanguageService
     ) {
         this.grupo = new Grupo();
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -63,13 +66,13 @@ export class CreacionGrupoPage implements OnInit {
             GrupoDefault: false
         };
 
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT012_ALT_PRO"]);
         this.gruposCaballosService.saveGrupo(grupo).then(resp => {
             this.events.publish("grupos:refresh");
             this.commonService.hideLoading();
             this.navController.pop();
         }).catch(err => {
-            this.commonService.ShowErrorHttp(err, "Error al guardar el grupo");
+            this.commonService.ShowErrorHttp(err, this.labels["PANT012_MSG_ERRGU"]);
         });
     }
 
@@ -78,7 +81,7 @@ export class CreacionGrupoPage implements OnInit {
     }
 
     private getAllCaballosByPropietario(): void {
-        this.commonService.showLoading("Procesando..");
+        this.commonService.showLoading(this.labels["PANT012_ALT_PRO"]);
         this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
             .subscribe(caballos => {
                 this.commonService.hideLoading();
@@ -87,7 +90,7 @@ export class CreacionGrupoPage implements OnInit {
                 });
                 this.caballos = this.caballosRespaldo;
             }, error => {
-                this.commonService.ShowErrorHttp(error, "Error consultando los caballos");
+                console.error(error);
             });
     }
 }

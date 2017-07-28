@@ -13,32 +13,168 @@ namespace Equilinked.BLL
     public class AlertaGrupoBLL : BLLBase
     {
 
-        public AlertaGrupo GetAlertaGrupo(int grupoId, int alertaGrupoId)
+        public void DeleteAlertasGrupoByIds(int grupoId, int[] alertasIds)
+        {
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                Dictionary<int, AlertaRecordatorio> mapRecordatoriosAlerta = db.AlertaRecordatorio
+                    .Where(ar => alertasIds.Contains(ar.Alerta_ID)).ToDictionary(ar => ar.Alerta_ID);
+
+                List<int> caballosGrupoIds = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId)
+                    .Select(cg => cg.Caballo_ID).ToList();
+
+                //se obtienen las alertas
+                Dictionary<int, Alerta> mapAlertas = db.Alerta.Where(a => alertasIds.Contains(a.ID)).ToDictionary(a => a.ID);
+                //se obtienen las alertas de todos los caballos y solo las de caballos del grupo
+                List<AlertaCaballo> alertasCaballos = db.AlertaCaballo.Where(ac => alertasIds.Contains(ac.Alerta_ID)).ToList();
+                List<AlertaCaballo> alertasCaballosGrupo = db.AlertaCaballo
+                    .Where(ac => alertasIds.Contains(ac.Alerta_ID) && caballosGrupoIds.Contains(ac.Caballo_ID)).ToList();
+                Dictionary<int, List<AlertaCaballo>> mapAlertasCaballos = new Dictionary<int, List<AlertaCaballo>>();
+                foreach(var ac in alertasCaballosGrupo)
+                {
+                    List<AlertaCaballo> acss;
+                    if(!mapAlertasCaballos.ContainsKey(ac.Alerta_ID))
+                    {
+                        mapAlertasCaballos.Add(ac.Alerta_ID, new List<AlertaCaballo>());
+                    }
+                    if (mapAlertasCaballos.TryGetValue(ac.Alerta_ID, out acss)){
+                        acss.Add(ac);
+                    }
+                }
+
+                List<AlertaGrupo> alertasGrupos = db.AlertaGrupo.Where(ag => alertasIds.Contains(ag.Alerta_ID)).ToList();
+                Dictionary<int, AlertaGrupo> mapAlertasGrupo = db.AlertaGrupo
+                    .Where(ag => ag.Grupo_ID == grupoId && alertasIds.Contains(ag.Alerta_ID)).ToDictionary(ag => ag.Alerta_ID);
+
+                Alerta alerta;
+                foreach (var ag in alertasGrupos)
+                {
+                    if (mapAlertas.TryGetValue(ag.Alerta_ID, out alerta))
+                    {
+                        alerta.AlertaGrupo.Add(ag);
+                    }
+                }
+
+                foreach (var ac in alertasCaballos)
+                {
+                    if (mapAlertas.TryGetValue(ac.Alerta_ID, out alerta))
+                    {
+                        alerta.AlertaCaballo.Add(ac);
+                    }
+                }
+                List<Alerta> alertas = new List<Alerta>(mapAlertas.Values);
+                foreach (var a in alertas)
+                {
+                    AlertaGrupo ag;
+                    if(mapAlertasGrupo.TryGetValue(a.ID, out ag))
+                    {
+                        db.AlertaGrupo.Remove(ag);//Elimine la asociacion de alerta con el grupo
+                    }
+                    List<AlertaCaballo> acs;
+                    if (mapAlertasCaballos.TryGetValue(a.ID, out acs)) {
+                        db.AlertaCaballo.RemoveRange(acs); //Elimine todas las asociaciones de caballos del grupo
+                    }
+                    if(acs == null)
+                    {
+                        acs = new List<AlertaCaballo>();
+                    }
+                    if(a.AlertaCaballo.Count() == acs.Count() && a.AlertaGrupo.Count() == 0)//Si elimine todas las asociaiones entones elimino la alerta
+                    {
+                        a.AlertaGrupo = null;
+                        a.AlertaCaballo = null;
+                        AlertaRecordatorio recordatorio;
+                        if (mapRecordatoriosAlerta.TryGetValue(a.ID, out recordatorio)) {
+                            db.AlertaRecordatorio.Remove(recordatorio);
+                        }
+                        db.Alerta.Remove(a);
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public List<Alerta> GetAlertasByGrupo(int propietarioId, int grupoId, int tipoAlerta, int filtroAlerta, DateTime fecha, int orden, int limite)
+        {
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                Dictionary<int, int> mapAlertasGrupo = db.AlertaGrupo
+                    .Where(ag => ag.Grupo_ID == grupoId).ToDictionary(ag => ag.Alerta_ID, ag => ag.Grupo_ID);
+                List<int> alertasGruposIds = new List<int>(mapAlertasGrupo.Keys);
+
+                var query = db.Alerta
+                    .Where(a => a.Propietario_ID == propietarioId && alertasGruposIds.Contains(a.ID));
+
+                if (tipoAlerta > 0) //de tipo x
+                {
+                    query = query.Where(a => a.Tipo == tipoAlerta);
+                }
+
+                if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.HISTORY)//history
+                {
+                    query = query.Where(a => a.FechaNotificacion < fecha);
+                }
+                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.NEXT || filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY)//next
+                {
+                    if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY) //Despues de la fecha (sin considerar la fecha)
+                    {
+                        fecha = fecha.AddDays(1);
+                    }
+                    query = query.Where(a => a.FechaNotificacion > fecha);
+                }
+                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.TODAY) //Hoy
+                {
+                    query = query
+                        .Where(a => a.FechaNotificacion.Day == fecha.Day)
+                        .Where(a => a.FechaNotificacion.Month == fecha.Month)
+                        .Where(a => a.FechaNotificacion.Year == fecha.Year);
+                }
+                if (limite > 0)
+                {
+                    query = query.Take(limite);
+                }
+                if (orden == (int)EquilinkedEnums.OrdenamientoEnum.ASCENDENTE)
+                {
+                    query = query.OrderBy(a => a.FechaNotificacion);
+                }
+                else if (orden == (int)EquilinkedEnums.OrdenamientoEnum.DESCENDENTE)
+                {
+                    query = query.OrderByDescending(a => a.FechaNotificacion);
+                }
+
+                return query.ToList();
+            }
+        }
+
+
+        public Alerta GetAlertaGrupo(int grupoId, int alertaId)
         {
             using(var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
-                AlertaGrupo alertaGrupo = db.AlertaGrupo
-                    .Include("Alerta")
-                    .Where(ag => ag.ID == alertaGrupoId)
+                Alerta alerta = db.Alerta
+                    .Where(a => a.ID == alertaId)
                     .FirstOrDefault();//Traemos la alerta
-
-                if (alertaGrupo != null)
-                {                    //Obtemos los caballos del grupo
+                List<AlertaCaballo> alertasCaballos = db.AlertaCaballo.Where(ac => ac.Alerta_ID == alertaId).ToList();
+                alerta.AlertaCaballo = alertasCaballos;
+                
+                if (alerta != null)
+                {                   
                     Dictionary<int, GrupoCaballo> caballosGrupo = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId).ToDictionary(gc => gc.Caballo_ID);
-                    List<int> keysCaballos = new List<int>(caballosGrupo.Keys);
+                    List<int> keysCaballos = new List<int>(caballosGrupo.Keys); //Caballos del grupo
 
                     List<AlertaCaballo> caballos = db.AlertaCaballo
-                        .Where(ac => ac.Alerta_ID == alertaGrupo.Alerta_ID)
+                        .Where(ac => ac.Alerta_ID == alertaId)
                         .Where(ac => keysCaballos.Contains(ac.Caballo_ID))
                         .ToList();
-                    alertaGrupo.AllCaballos = caballos.Count() == keysCaballos.Count(); //Estan todos los caballos?
-
-                    alertaGrupo.Alerta.AlertaCaballo = caballos;
+                    alerta.AllCaballos = caballos.Count() == keysCaballos.Count(); //Estan todos los caballos?
                 }
 
-                return alertaGrupo;
+                return alerta;
             }
         }
 

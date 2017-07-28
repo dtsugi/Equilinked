@@ -3,15 +3,17 @@ import { AlertController, Events, NavParams, NavController, ViewController } fro
 import { CommonService } from "../../../../../../services/common.service";
 import { GruposCaballosService } from "../../../../../../services/grupos-caballos.service";
 import { CambioNombrePage } from "../cambio-nombre/cambio-nombre";
+import { LanguageService } from '../../../../../../services/language.service';
 
 @Component({
     templateUrl: "opciones-ficha.html",
-    providers: [CommonService, GruposCaballosService]
+    providers: [LanguageService, CommonService, GruposCaballosService]
 })
 export class OpcionesFichaGrupo {
 
     private navCtrlGrupo: NavController;
     private grupo: any;
+    labels: any = {};
 
     constructor(
         private alertController: AlertController,
@@ -20,8 +22,10 @@ export class OpcionesFichaGrupo {
         private navController: NavController,
         private navParams: NavParams,
         private commonService: CommonService,
-        private viewController: ViewController
+        private viewController: ViewController,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.grupo = {};
     }
 
@@ -37,14 +41,14 @@ export class OpcionesFichaGrupo {
 
     private deleteGrupoHandler(): Function {
         return () => {
-            this.commonService.showLoading("Procesando...");
+            this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
             this.gruposCaballosService.deleteGrupoById(this.grupo.ID)
                 .then(res => {
                     this.events.publish("grupos:refresh");
                     this.commonService.hideLoading();
                     this.navCtrlGrupo.pop();
                 }).catch(err => {
-                    this.commonService.ShowErrorHttp(err, "Error al eliminar el grupo");
+                    this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERRELG"]);
                 });
         };
     }
@@ -52,14 +56,14 @@ export class OpcionesFichaGrupo {
     delete() {
         this.viewController.dismiss();
         let alert = this.alertController.create({
-            subTitle: "Se eliminará este grupo",
+            subTitle: this.labels["PANT013_ALT_MSGELG"],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels["PANT013_BTN_CAN"],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels["PANT013_BTN_ACEP"],
                     handler: this.deleteGrupoHandler()
                 }
             ]

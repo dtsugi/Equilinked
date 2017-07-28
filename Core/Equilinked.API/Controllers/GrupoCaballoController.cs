@@ -145,11 +145,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpDelete, Route("api/grupo/{grupoId}/caballos")]
-        public IHttpActionResult DeleteGruposCaballosByIds(int grupoId, [FromUri] int[] grupoCaballoIds)
+        public IHttpActionResult DeleteGruposCaballosByIds(int grupoId, [FromUri] int[] caballosIds)
         {
             try
             {
-                GrupoCaballoBLL.DeleteGrupoCaballoByIds(grupoCaballoIds);
+                GrupoCaballoBLL.DeleteGrupoCaballoByIds(grupoId, caballosIds);
                 return Ok();
             }
             catch (Exception ex)

@@ -8,13 +8,15 @@ import { Alimentacion } from '../../../../model/alimentacion';
 import { PopoverAlimentacionPage } from './pop-over/pop-over-alimentacion';
 import { FichaCaballoPage } from '../ficha-caballo-home';
 import { AlimentacionEditPage } from './alimentacion-edit';
-
+import { LanguageService } from '../../../../services//language.service';
 
 @Component({
     templateUrl: 'alimentacion.html',
-    providers: [CommonService, AlimentacionService]
+    providers: [LanguageService, CommonService, AlimentacionService]
 })
 export class AlimentacionPage {
+
+    labels: any = {};
     idCaballo: number;
     nombreCaballo: string = "";
     alimentacion: Alimentacion;
@@ -26,8 +28,11 @@ export class AlimentacionPage {
         public popoverCtrl: PopoverController,
         private _commonService: CommonService,
         private formBuilder: FormBuilder,
-        private _alimentacionService: AlimentacionService) {
+        private _alimentacionService: AlimentacionService,
+        private languageService: LanguageService
+    ) {
         this.edicion = true;
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit() {
@@ -42,19 +47,18 @@ export class AlimentacionPage {
 
     getAlimentacionByIdCaballo(idCaballo) {
         this.edicion = false;
-        this._commonService.showLoading("Procesando..");
+        this._commonService.showLoading(this.labels["PANT008_ALT_CARG"]);
         this._alimentacionService.getByCaballoId(idCaballo)
             .subscribe(res => {
                 this._commonService.hideLoading();
-                console.log("RES:", res);
                 if (res) {
                     this.alimentacion = res;
                 } else {
-                    this._commonService.ShowInfo("Sin datos de alimentacion");
+                    this._commonService.ShowInfo(this.labels["PANT008_MSG_NOALI"]);
                 }
                 this.alimentacion.Caballo_ID = this.idCaballo;
             }, error => {
-                this._commonService.ShowErrorHttp(error, "Error obteniendo la alimentacion");
+                this._commonService.ShowErrorHttp(error, this.labels["PANT008_MSG_ERRAL"]);
             });
     }
 

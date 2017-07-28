@@ -8,11 +8,11 @@
         <ion-title class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{nombreCaballo}}</span>
             <br />
-            <span class="equi-toolbar-subtitle">Alimentación</span>
+            <span class="equi-toolbar-subtitle">{{ "PANT008_LBL_SUBALI" | translate }}</span>
         </ion-title>
         <ion-buttons right>
             <button class="equi-toolbar-btn" (click)="edit()">
-                Editar
+                {{ "PANT008_BTN_EDI" | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -21,7 +21,7 @@
 <ion-content>
     <ion-grid>
         <ion-row class="equi-title-form">
-            Sólido
+            {{ "PANT008_LBL_SOL" | translate }}
         </ion-row>
         <ion-row>
             <hr>
@@ -30,11 +30,12 @@
             <ion-col *ngIf="alimentacion.Solido" col-12 class="equi-input-normal-text col-input-text-area">
                 {{alimentacion.Solido}}
             </ion-col>
-            <ion-textarea *ngIf="!alimentacion.Solido" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="true"></ion-textarea>
+            <ion-textarea *ngIf="!alimentacion.Solido" class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}"
+                [disabled]="true"></ion-textarea>
         </ion-row>
 
         <ion-row class="equi-title-form">
-            Suplementos dietarios
+            {{ "PANT008_LBL_SUDI" | translate }}
         </ion-row>
         <ion-row>
             <hr>
@@ -43,11 +44,12 @@
             <ion-col *ngIf="alimentacion.SuplementosDietarios" col-12 class="equi-input-normal-text col-input-text-area">
                 {{alimentacion.SuplementosDietarios}}
             </ion-col>
-            <ion-textarea *ngIf="!alimentacion.SuplementosDietarios" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="edicion"></ion-textarea>
+            <ion-textarea *ngIf="!alimentacion.SuplementosDietarios" class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}"
+                [disabled]="edicion"></ion-textarea>
         </ion-row>
 
         <ion-row class="equi-title-form">
-            Pasto
+            {{ "PANT008_LBL_PAS" | translate }}Pasto
         </ion-row>
         <ion-row>
             <hr>
@@ -56,7 +58,8 @@
             <ion-col *ngIf="alimentacion.Pasto" col-12 class="equi-input-normal-text col-input-text-area">
                 {{alimentacion.Pasto}}
             </ion-col>
-            <ion-textarea *ngIf="!alimentacion.Pasto" class="equi-input-normal-text" rows="6" placeholder="Descripción" [disabled]="edicion"></ion-textarea>
+            <ion-textarea *ngIf="!alimentacion.Pasto" class="equi-input-normal-text" rows="6" placeholder="{{ 'PANT008_TXT_DESC' | translate }}"
+                [disabled]="edicion"></ion-textarea>
         </ion-row>
     </ion-grid>
 </ion-content>

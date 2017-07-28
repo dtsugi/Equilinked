@@ -6,11 +6,12 @@ import { SecurityService } from "../../../services/security.service";
 import { EstablosService } from "../../../services/establos.service";
 import { AdminEstablosPage } from "./admin-establo/admin-establo";
 import { InfoEstabloPage } from "./admin-establo/info-establo";
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
     selector: "segment-establos",
     templateUrl: "./segment-establos.html",
-    providers: [CommonService, EstablosService, SecurityService],
+    providers: [LanguageService, CommonService, EstablosService, SecurityService],
     styles: [`
     .color-checks {
         color: #00A7A5 !important;
@@ -27,6 +28,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
     session: UserSessionEntity;
     establos: any[];
     establosRespaldo: any[];
+    labels: any = {};
 
     constructor(
         private events: Events,
@@ -34,8 +36,10 @@ export class SegmentEstablos implements OnDestroy, OnInit {
         private commonService: CommonService,
         private establosService: EstablosService,
         private navCtrl: NavController,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -55,7 +59,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
 
     listEstablosByPropietarioId(showLoading: boolean): void {
         if (showLoading) {
-            this.commonService.showLoading("Procesando..");
+            this.commonService.showLoading(this.labels["PANT026_ALT_PRO"]);
         }
         this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
             .then(establos => {
@@ -70,7 +74,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
                     this.commonService.hideLoading();
                 }
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error obteniendo los establos del propietario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT026_MSG_ERRES"]);
             });
     }
 
@@ -114,17 +118,17 @@ export class SegmentEstablos implements OnDestroy, OnInit {
 
     private confirmDeleteEstablos(): void {
         this.alertController.create({
-            title: "Alerta!",
-            message: "Se eliminarán los establos seleccionados",
+            title: this.labels["PANT026_ALT_TIELI"],
+            message: this.labels["PANT026_ALT_MSGEL"],
             buttons: [
                 {
-                    text: "Cancelar",
+                    text: this.labels["PANT026_BTN_CAN"],
                     role: "cancel"
                 },
                 {
-                    text: "Aceptar",
+                    text: this.labels["PANT026_BTN_ACE"],
                     handler: () => {
-                        this.commonService.showLoading("Procesando..");
+                        this.commonService.showLoading(this.labels["PANT026_ALT_PRO"]);
                         this.establosService.deleteEstablosByIds(
                             this.establosRespaldo.filter(e => e.seleccion).map(e => e.establo.ID)
                         ).then(() => {
@@ -132,7 +136,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
                             this.commonService.hideLoading();
                             this.parametrosEstablos.modoEdicion = false;
                         }).catch(err => {
-                            this.commonService.ShowErrorHttp(err, "Error al eliminar los establos");
+                            this.commonService.ShowErrorHttp(err, this.labels["PANT026_MSG_ERRELI"]);
                         });
                     }
                 }

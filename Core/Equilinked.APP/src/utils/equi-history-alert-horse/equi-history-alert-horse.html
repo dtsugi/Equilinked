@@ -14,7 +14,7 @@
             </ion-row>
         </ion-item>
 
-        <ion-item-options *ngIf="!alert.AlertaGrupal && actionDelete.observers.length > 0">
+        <ion-item-options *ngIf="labelDelete">
             <button ion-button color="danger" icon-left (click)="executeActionDelete()">
                 <ion-icon name="trash"></ion-icon>       
                 {{labelDelete}}

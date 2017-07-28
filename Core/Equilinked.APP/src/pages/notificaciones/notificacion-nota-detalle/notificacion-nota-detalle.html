@@ -2,7 +2,7 @@
     <ion-navbar>
         <ion-buttons end>
             <button ion-button class="equi-toolbar-btn" (click)="edit()">
-                Editar
+                {{ 'PANT009_BTN_EDI' | translate }}Editar
             </button>
         </ion-buttons>
     </ion-navbar>
@@ -11,7 +11,7 @@
 <ion-content>
     <div *ngIf="alertaEntity">
         <div *ngIf="alertaEntity.AlertaGrupal" class="equi-table-row-title equi-bold-text">
-            Nota grupal
+            {{ 'PANT009_LBL_NOGR' | translate }}
         </div>
 
         <ion-grid>
@@ -27,6 +27,12 @@
                     <p class="equi-normal-text">
                         <span style="font-size: 40px;font-weight: bold;">{{alertaEntity.Hora}}</span> &nbsp; {{alertaEntity.Meridiano}}
                     </p>
+                    <div *ngIf="alertaEntity.AlertaRecordatorio && alertaEntity.AlertaRecordatorio.length > 0">
+                        <span *ngFor="let recordatorio of alertaEntity.AlertaRecordatorio" class="equi-normal-text">
+                            <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
+                            &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;{{ 'PANT009_LBL_ANT' | translate }}
+                        </span>
+                    </div>
                     <hr />
                     <p class="equi-normal-text equi-detail-note">{{alertaEntity.Descripcion}}</p>
                 </ion-col>

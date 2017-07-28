@@ -6,16 +6,18 @@ import { SecurityService } from "../../../../../services/security.service";
 import { UserSessionEntity } from "../../../../../model/userSession";
 import { GruposCaballos } from "../grupos-caballos";
 import { OpcionesFichaGrupo } from "./opciones-ficha/opciones-ficha";
+import { LanguageService } from '../../../../../services/language.service';
 
 @Component({
     templateUrl: "./administracion-grupo.html",
-    providers: [CommonService, GruposCaballosService, SecurityService]
+    providers: [LanguageService, CommonService, GruposCaballosService, SecurityService]
 })
 export class AdministracionGrupoPage implements OnInit, OnDestroy {
 
     private grupoId: number;
     private session: UserSessionEntity;
 
+    labels: any = {};
     grupo: any;
     segmentSelection: string;
     parametrosCaballos: any;
@@ -28,14 +30,16 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
         private popoverController: PopoverController,
         private toastController: ToastController,
         private gruposCaballosService: GruposCaballosService,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.grupo = {};
         this.segmentSelection = "ficha";
-        this.parametrosCaballos = { modoEdicion: false, getCountSelected: null };
+        this.parametrosCaballos = { modoEdicion: false, getCountSelected: null, grupoDefault: false };
     }
 
-    ngOnInit(): void { 
+    ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.grupoId = this.navParams.get("grupoId");
         this.getInfoGrupo(true);
@@ -79,14 +83,15 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
 
     private getInfoGrupo(showLoading: boolean): void {
         if (showLoading)
-            this.commonService.showLoading("Procesando...");
+            this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
         this.gruposCaballosService.getGrupoById(this.grupoId)
             .then(grupo => {
                 this.grupo = grupo;
+                this.parametrosCaballos.grupoDefault = grupo.GrupoDefault;
                 if (showLoading)
                     this.commonService.hideLoading();
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al cargar el grupo");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERRCG"]);
             });
     }
 

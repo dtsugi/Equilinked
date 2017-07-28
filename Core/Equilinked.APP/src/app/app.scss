@@ -154,11 +154,11 @@ body,ion-content {
     color: $_EQUI_DANGER_COLOR;
 }
 
-.equi-edit{
+.equi-edit {
     color:#CCC6C8;
 }
 
-.equi-icon-add{    
+.equi-icon-add {    
     color: $_EQUI_PRINCIPAL_COLOR;
     font-size: 35pt;
     padding: 0 5px;
@@ -173,7 +173,9 @@ body,ion-content {
 .equi-table-row-content {
     background-color: $_EQUI_CONTENT_TABLE_COLOR;
     font-size: 16px !important;
-    border-bottom-color: $_EQUI_CONTENT_TABLE_COLOR;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: $_EQUI_PRINCIPAL_COLOR !important;
 }
 
 .equi-text-link, .equi-principal-color, .equi-icon-selected {
@@ -239,9 +241,10 @@ body,ion-content {
 
 .equi-select-width {
     max-width: none;
-}
+} 
 
 .equi-col-note {
+    overflow: hidden !important;
     white-space: pre-line;
     max-height: 50px;
 }

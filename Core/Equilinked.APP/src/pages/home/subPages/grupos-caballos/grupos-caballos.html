@@ -1,6 +1,6 @@
-<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="'Filtrar grupos'"></ion-searchbar>
+<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT002_TXT_FIGU']"></ion-searchbar>
 
-<equi-button-add [label]="'Crear grupo'" (action)="newGrupo()"></equi-button-add>
+<equi-button-add [label]="labels['PANT002_BTN_NUGU']" (action)="newGrupo()"></equi-button-add>
 
 
 <ion-list no-lines>
@@ -9,6 +9,6 @@
             <img src="assets/img/caballo.jpg">
         </ion-avatar>
         <h2 class="equi-title-form">{{grupo.Descripcion}}</h2>
-        <p class="equi-principal-color">{{grupo.GrupoCaballo.length}} caballos</p>
+        <p class="equi-principal-color">{{grupo.GrupoCaballo.length + ' ' + labels['PANT002_LBL_GUCA']}}</p>
     </ion-item>
 </ion-list>

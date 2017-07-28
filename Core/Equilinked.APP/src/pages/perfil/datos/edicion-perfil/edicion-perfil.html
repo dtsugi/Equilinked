@@ -2,13 +2,13 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                Cancelar
+                {{ 'PANT027_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!perfilForm.valid" (click)="save(perfilForm)">
-                Guardar
+                {{ 'PANT027_BTN_GUA' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -22,7 +22,7 @@
                     <ion-icon class="equi-icon-input" name="person"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" name="nombre" placeholder="Nombre" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" name="nombre" placeholder="{{ 'PANT027_TXT_NOM' | translate }}" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
                 </ion-col> 
             </ion-row>
 
@@ -31,7 +31,7 @@
                     <ion-icon class="equi-icon-input" name="mail"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" name="correo" placeholder="Correo electrónico" required="true" [(ngModel)]="perfil.Mail"></ion-input>
+                    <ion-input class="equi-input-normal-text" type="text" name="correo" placeholder="{{ 'PANT027_TXT_CORR' | translate }}" required="true" [(ngModel)]="perfil.Mail"></ion-input>
                 </ion-col>
             </ion-row>
 
@@ -42,7 +42,7 @@
                 </ion-col>
                 <ion-col col-5>
                     <ion-input class="equi-input-normal-text" type="tel" name="telefono-{{i}}" required="true" [(ngModel)]="telefono.Numero"
-                        placeholder="Núm. Telefónico"></ion-input>
+                        placeholder="{{ 'PANT027_TXT_TE' | translate }}"></ion-input>
                 </ion-col>
                 <ion-col col-3>
                     <ion-input class="equi-input-normal-text" type="text" name="tipo-num-{{i}}" required="true" [(ngModel)]="telefono.TipoTelefono"
@@ -60,11 +60,11 @@
                     <ion-icon class="equi-icon-input" name="flag"></ion-icon>
                 </ion-col>
                 <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="text" name="pais" required="true" placeholder="País" [(ngModel)]="perfil.Pais"
+                    <ion-input class="equi-input-normal-text" type="text" name="pais" required="true" placeholder="{{ 'PANT027_TXT_PA' | translate }}" [(ngModel)]="perfil.Pais"
                         [readonly]="true" (focus)="selectPais()"></ion-input>
                 </ion-col>
                 <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="text" name="estado" required="true" placeholder="Provincia" [(ngModel)]="perfil.Estado"
+                    <ion-input class="equi-input-normal-text" type="text" name="estado" required="true" placeholder="{{ 'PANT027_TXT_ESPR' | translate }}" [(ngModel)]="perfil.Estado"
                         [readonly]="true" (focus)="selectEstadoProvincia()"></ion-input>
                 </ion-col>
             </ion-row>

@@ -71,4 +71,7 @@ export class ConstantsConfig {
     static ALERTA_FILTER_NEXT = 3;
     static ALERTA_FILTER_TODAY = 4;
     static ALERTA_FILTER_AFTER_TODAY = 5;
+
+    static ALERTA_ORDEN_ASCENDENTE = 1;
+    static ALERTA_ORDEN_DESCENDENTE = 2;
 }

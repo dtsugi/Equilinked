@@ -55,7 +55,13 @@ export class OpcionesCaballoPopover {
                 .toPromise()
                 .then(res => {
                     this.commonService.hideLoading();
-                    this.events.publish("caballos:refresh");
+                    this.events.publish("caballos:refresh");//Lista de caballos
+                    this.events.publish("caballos-grupo:refresh");//Lista de caballos de un grupo
+                    this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
+                    this.events.publish("grupo-ubicaciones:refresh");//Lista de ubicaciones del grupo (debe disminuir la cantidad de caballos)
+                    this.events.publish("establo:refresh");//detale de establo (se ve afectada la candad de caballos)
+                    this.events.publish("establo-caballos:refresh");//Lista de caballos del establo (se ve afectada)
+
                     this.navCtrlCaballo.pop().then(() => {
                         this.commonService.ShowInfo("El caballo fue eliminado");
                     })

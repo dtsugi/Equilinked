@@ -6,10 +6,11 @@ import { SecurityService } from "../../../../services/security.service";
 import { PaisService } from "../../../../services/pais.service";
 import { PropietarioService } from "../../../../services/propietario.service";
 import { TipoNumeroService } from "../../../../services/tipo-numero.service";
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
     templateUrl: "./edicion-perfil.html",
-    providers: [CommonService, PaisService, PropietarioService, SecurityService, TipoNumeroService],
+    providers: [LanguageService, CommonService, PaisService, PropietarioService, SecurityService, TipoNumeroService],
     styles: [`
     .item-md {
         padding-left: 0px;
@@ -25,6 +26,7 @@ export class EdicionPerfilPage implements OnInit {
     private estados: Array<any>;
 
     perfil: any;
+    labels: any = {};
 
     constructor(
         private alertController: AlertController,
@@ -35,8 +37,10 @@ export class EdicionPerfilPage implements OnInit {
         private paisService: PaisService,
         private propietarioService: PropietarioService,
         private securityService: SecurityService,
-        private tipoNumeroService: TipoNumeroService
+        private tipoNumeroService: TipoNumeroService,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
         this.tiposTelefonos = new Array<any>();
         this.paises = new Array<any>();
         this.estados = new Array<any>();
@@ -65,9 +69,9 @@ export class EdicionPerfilPage implements OnInit {
                 };
             }),
             buttons: [
-                { text: "Cancelar", role: "cancel" },
+                { text: this.labels["PANT027_BTN_CAN"], role: "cancel" },
                 {
-                    text: "Aceptar", handler: data => {
+                    text: this.labels["PANT027_BTN_ACE"], handler: data => {
                         telefono.TipoNumero_ID = data;
                         telefono.TipoTelefono = this.getTipoNumeroById(data)
                     }
@@ -100,9 +104,9 @@ export class EdicionPerfilPage implements OnInit {
                 };
             }),
             buttons: [
-                { text: "Cancelar", role: "cancel" },
+                { text: this.labels["PANT027_BTN_CAN"], role: "cancel" },
                 {
-                    text: "Aceptar", handler: data => {
+                    text: this.labels["PANT027_BTN_ACE"], handler: data => {
                         this.estados = new Array<any>();
                         this.perfil.Pais_ID = data;
                         this.perfil.Pais = this.getPaisById(this.perfil.Pais_ID);
@@ -126,9 +130,9 @@ export class EdicionPerfilPage implements OnInit {
                 };
             }),
             buttons: [
-                { text: "Cancelar", role: "cancel" },
+                { text: this.labels["PANT027_BTN_CAN"], role: "cancel" },
                 {
-                    text: "Aceptar", handler: data => {
+                    text: this.labels["PANT027_BTN_ACE"], handler: data => {
                         this.perfil.EstadoProvincia_Id = data;
                         this.perfil.Estado = this.getEstadoProvinciaById(this.perfil.EstadoProvincia_Id);
                     }
@@ -139,7 +143,7 @@ export class EdicionPerfilPage implements OnInit {
     }
 
     save(): void {
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT027_ALT_PRO"]);
         this.propietarioService.updatePropietario(this.perfil)
             .then(res => {
                 this.events.publish("perfil:refresh");
@@ -147,17 +151,15 @@ export class EdicionPerfilPage implements OnInit {
                 this.navController.pop();
                 console.info(res);
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al actualizar el perfil del usuario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT027_MSG_ERRGU"]);
             });
     }
 
     private getInfoPerfil(): void {
-        this.commonService.showLoading("Procesando...");
+        this.commonService.showLoading(this.labels["PANT027_ALT_PRO"]);
         this.propietarioService.getSerializedById(this.session.PropietarioId)
             .toPromise()
             .then(propietario => {
-                console.info("El propietario:");
-                console.info(propietario);
                 this.perfil = propietario;
                 return this.tipoNumeroService.getAll();
             }).then(tiposNumeros => {
@@ -170,19 +172,15 @@ export class EdicionPerfilPage implements OnInit {
                 });
                 return this.paisService.getAllPaises();
             }).then(paises => {
-                console.info("Paises disponibles:");
-                console.info(paises);
                 this.paises = paises;
                 this.perfil.Pais = this.getPaisById(this.perfil.Pais_ID);
                 return this.paisService.getAllEstadoProvinciaByPaisId(this.perfil.Pais_ID);
             }).then(estados => {
-                console.info("Estados disponibles:");
-                console.info(estados);
                 this.estados = estados;
                 this.perfil.Estado = this.getEstadoProvinciaById(this.perfil.EstadoProvincia_Id);
                 this.commonService.hideLoading();
             }).catch(err => {
-                this.commonService.ShowErrorHttp(err, "Error al cargar la información del propietario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT027_MSG_ERRCA"]);
             });
     }
 

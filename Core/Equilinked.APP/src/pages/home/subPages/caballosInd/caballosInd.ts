@@ -9,12 +9,12 @@ import { Caballo } from '../../../../model/caballo';
 import { UserSessionEntity } from '../../../../model/userSession';
 import { FichaCaballoPage } from '../../ficha-caballo/ficha-caballo-home';
 import { AdminCaballosInsertPage } from '../../admin-caballos/admin-caballos-insert';
-
+import { LanguageService } from '../../../../services/language.service';
 
 @Component({
   selector: 'caballos-ind',
   templateUrl: 'caballosInd.html',
-  providers: [CommonService, CaballoService, SecurityService]
+  providers: [CommonService, LanguageService, CaballoService, SecurityService]
 })
 export class CaballosInd implements OnDestroy, OnInit {
 
@@ -26,21 +26,27 @@ export class CaballosInd implements OnDestroy, OnInit {
   isDeleting: boolean = false;
   tmpCaballoIdSelected: number = 0;
 
+  labels: any = {};
+
   constructor(
     private events: Events,
     public navCtrl: NavController,
     public navParams: NavParams,
     private _commonService: CommonService,
     private _caballoService: CaballoService,
-    private _securityService: SecurityService) {
+    private _securityService: SecurityService,
+    private languageService: LanguageService
+  ) {
+    languageService.loadLabels().then(labels => this.labels = labels);
     this.caballoIdSelected = 0; //No hay
   }
+
 
   ngOnInit(): void {
     console.log("CABALLOS IND");
     this.session = this._securityService.getInitialConfigSession();
     this.caballosList = new Array<Caballo>();
-    this.loadcaballos();
+    this.loadcaballos(true);
     this.addEvents(); //Registrar el listener para escuchar cuando se debe refrescar la pantalla
   }
 
@@ -49,32 +55,34 @@ export class CaballosInd implements OnDestroy, OnInit {
   }
 
   // CARGA DE CABALLOS
-  loadcaballos(): void {
-    this._commonService.showLoading("Procesando..");
+  loadcaballos(loading: boolean): void {
+    if (loading)
+      this._commonService.showLoading(this.labels["PANT002_ALT_PRO"]);
+
     this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
       .subscribe(res => {
-        console.log(res);
-        this._commonService.hideLoading();
+        if (loading)
+          this._commonService.hideLoading();
+
         this.caballosList = res;
+        this.caballos = res;
       }, error => {
         console.log(error);
-        this._commonService.hideLoading();
-        this._commonService.ShowErrorHttp(error, "Error consultando los caballos");
+        this._commonService.ShowErrorHttp(error, this.labels["PANT002_MSG_ERRCA"]);
       });
   }
 
   // BÚSQUEDA EN LISTADO
   findCaballos(ev: any) {
-    // this.caballosList = this._caballosService.findCaballos(ev.target.value, this.caballos);
+    let value: string = ev.target.value;
+    if (value && value !== null) {
+      this.caballosList = this.caballos.filter(caballo => {
+        return caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1;
+      });
+    } else {
+      this.caballosList = this.caballos;
+    }
   }
-
-  // OBTENER NOMBRE DEL GRUPO DE CABALLO, SI LO POSEE
-  // getDescGrupoCaballo(caballo: Caballo): string {
-  //   if (caballo.Grupo != null)
-  //     return caballo.Grupo.Descripcion;
-  //   else
-  //     return null;
-  // }
 
   // NAVEGACIÓN A FICHA DE CABALLO
   goToFicha(caballoSelected: Caballo): void {
@@ -99,15 +107,14 @@ export class CaballosInd implements OnDestroy, OnInit {
   deleteCaballo(caballoId: number) {
     console.log("ELIMINANDO ID:", caballoId);
     this.isDeleting = true;
-    this._commonService.showLoading("Eliminando..");
+    this._commonService.showLoading(this.labels["PANT002_ALT_PRO"]);
     this._caballoService.delete(caballoId)
       .subscribe(res => {
         this._commonService.hideLoading();
-        console.log(res);
-        this.loadcaballos();
+        this.loadcaballos(true);
         this.isDeleting = false;
       }, error => {
-        this._commonService.ShowErrorHttp(error, "Error al eliminar el caballo");
+        this._commonService.ShowErrorHttp(error, this.labels["PANT002_MSG_ERRELI"]);
         this.isDeleting = false;
       });
   }
@@ -116,9 +123,9 @@ export class CaballosInd implements OnDestroy, OnInit {
     this.tmpCaballoIdSelected = caballoId;
     this.isDeleting = true;
     let buttons = [];
-    buttons.push(this._commonService.NewButtonAlert(0, "Cancelar", this));
-    buttons.push(this._commonService.NewButtonAlert(1, "Aceptar", this));
-    this._commonService.ShowConfirmAlert("Eliminar caballo", "¿ Está seguro de eliminar toda la información asociada a este caballo ?", buttons)
+    buttons.push(this._commonService.NewButtonAlert(0, this.labels["PANT002_BTN_CAN"], this));
+    buttons.push(this._commonService.NewButtonAlert(1, this.labels["PANT002_BTN_ACE"], this));
+    this._commonService.ShowConfirmAlert(this.labels["PANT002_ALT_TIELI"], this.labels["PANT002_ALT_MSGELI"], buttons)
   }
 
   _callbackConfirmAlert(buttonIdClicked) {
@@ -129,27 +136,9 @@ export class CaballosInd implements OnDestroy, OnInit {
     }
   }
 
-  private loadCaballosAndfindCaballoById(idCaballo: any) {
-    this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
-      .subscribe(res => {
-        this.caballosList = res;
-
-        //Buscamos el caballo para enviarlo a la pantalla de "ficha de caballo"
-        let caballoList = this.caballosList.filter(c => c.ID == idCaballo);
-        if (caballoList.length > 0) {
-          this.events.publish("caballo:change", caballoList[0]);
-        } else { //Eliminaron el caballo que queriamos enviar
-          this.caballoIdSelected = 0;
-        }
-      }, error => {
-        this._commonService.ShowErrorHttp(error, "Error consultando los caballos");
-      });
-  }
-
   private addEvents(): void {
     this.events.subscribe("caballos:refresh", () => {
-      console.info("Intando refrescar lista de caballos!");
-      this.loadCaballosAndfindCaballoById(this.caballoIdSelected); //Refrescamos e intentamos enviar el nuevo caballo para refrescar el nombre de la tarjeta
+      this.loadcaballos(false);
     });
   }
 

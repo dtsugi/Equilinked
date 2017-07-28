@@ -4,10 +4,11 @@ import { EstablosService } from "../../../../../../../services/establos.service"
 import { CommonService } from "../../../../../../../services/common.service";
 import { PopoverOpcionesEstablo } from "./popover-establo/popover-establo";
 import { EdicionEstabloCaballosPage } from "../../../../../../perfil/establos/admin-establo/edicion-caballos";
+import { LanguageService } from '../../../../../../../services/language.service';
 
 @Component({
     templateUrl: "./detalle-establo.html",
-    providers: [CommonService, EstablosService],
+    providers: [LanguageService, CommonService, EstablosService],
     styles: [`
         .icon-hidden {
             visibility: hidden;
@@ -22,6 +23,7 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
 
     grupo: any;
     establo: any;
+    labels: any = {};
 
     constructor(
         private events: Events,
@@ -29,8 +31,10 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
         private establosService: EstablosService,
         private navController: NavController,
         private navParams: NavParams,
-        private popoverController: PopoverController
+        private popoverController: PopoverController,
+        private languageService: LanguageService
     ) {
+        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
@@ -67,7 +71,7 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
 
     private getInfoEstablo(showLoading: boolean): void {
         if (showLoading) {
-            this.commonService.showLoading("Procesando..");
+            this.commonService.showLoading(this.labels["PANT016_ALT_PRO"]);
         }
         this.establosService.getEstabloById(this.establoId)
             .then(establo => {
@@ -77,18 +81,17 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
                 }
             }).catch(err => {
                 console.error(err);
-                this.commonService.ShowErrorHttp(err, "Error obteniendo los establos del propietario");
+                this.commonService.ShowErrorHttp(err, this.labels["PANT016_MSG_ERRUB"]);
             });
     }
 
-
     private addEvents(): void {
-        this.events.subscribe("ubicacion:refresh", () => {
+        this.events.subscribe("grupo-ubicacion:refresh", () => {
             this.getInfoEstablo(false);
         });
     }
 
     private removeEvents(): void {
-        this.events.unsubscribe("ubicacion:refresh");
+        this.events.unsubscribe("grupo-ubicacion:refresh");
     }
 }

@@ -2,13 +2,13 @@
     <ion-toolbar>
         <ion-buttons left>
             <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                Cancelar
+                {{ 'PANT020_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
             <button ion-button class="equi-toolbar-btn" [disabled]="!alertaForm.valid" (click)="save()">
-                Guardar
+                {{ 'PANT020_BTN_GU' | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -17,46 +17,64 @@
 <ion-content>
     <form [formGroup]="alertaForm">
         <ion-grid>
-            <ion-row>
+            <ion-row class="border-bottom">
                 <ion-col col-2 class="col-center">
                     <ion-icon name="person" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-input class="equi-input-normal-text" type="text" formControlName="NombreProfesional" placeholder="¿Quién?"></ion-input>
-                    </ion-item>
+                    <ion-input style="padding-left: 5px;" formControlName="NombreProfesional" class="equi-input-normal-text" type="text" placeholder="{{ 'PANT020_TXT_QUI' | translate }}"></ion-input>
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row class="border-bottom">
                 <ion-col col-2 class="col-center">
                     <ion-icon name="calendar" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-datetime class="equi-input-normal-text" placeholder="Fecha" displayFormat="D/M/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar"
-                            formControlName="FechaNotificacion" max="2050"></ion-datetime>
-                    </ion-item>
+                    <ion-datetime formControlName="FechaNotificacion" class="equi-input-normal-text" placeholder="{{ 'PANT020_TXT_FEC' | translate }}"
+                        displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY" cancelText="Cancelar" doneText="Aceptar" max="2050"></ion-datetime>
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row class="border-bottom">
                 <ion-col col-2 class="col-center">
                     <ion-icon name="time" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-item>
-                        <ion-datetime class="equi-input-normal-text" placeholder="Hora" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="HoraNotificacion" cancelText="Cancelar"
-                            doneText="Aceptar"></ion-datetime>
-                    </ion-item>
+                    <ion-datetime formControlName="HoraNotificacion" class="equi-input-normal-text" placeholder="{{ 'PANT020_TXT_HR' | translate }}"
+                        displayFormat="h:mm A" pickerFormat="h mm A" cancelText="Cancelar" doneText="Aceptar"></ion-datetime>
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row class="border-bottom">
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col col-3 class="equi-col-center">
+                    <ion-toggle formControlName="Activa" style="margin-left: 15px;" checked="false"></ion-toggle>
+                </ion-col>
+                <ion-col class="equi-col-center equi-input-normal-text">
+                    <span>{{alertaForm.value.Activa ? labels['PANT020_LBL_ACT'] : labels['PANT020_LBL_DESC']}}</span>
+                </ion-col>
+            </ion-row>
+
+            <ion-row class="border-bottom">
                 <ion-col>
-                    <ion-item>
-                        <ion-textarea class="equi-input-normal-text" autoresize formControlName="Descripcion" [attr.rows]="3" placeholder="Ingresar nota"></ion-textarea>
-                    </ion-item>
+                    <ion-textarea formControlName="Descripcion" class="equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT020_TXT_INNO' | translate }}"></ion-textarea>
+                </ion-col>
+            </ion-row>
+
+            <ion-row class="border-bottom">
+                <ion-col col-2 class="col-center">
+                    <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
+                </ion-col>
+                <ion-col col-8 class="equi-col-center equi-input-normal-text">
+                    <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT020_LBL_ANT' | translate }}</span>
+                    <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT020_TXT_REC' | translate }}</span>
+                </ion-col>
+                <ion-col col-2 class="col-center">
+                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" (click)="removeRecordatorio()" class="equi-icon-input equi-icon-delete"></ion-icon>
+                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length == 0" name="add-circle" (click)="viewRecordatorios()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
 
@@ -64,11 +82,11 @@
                 <ion-col col-2 class="col-center">
                     <ion-icon name="list" class="equi-icon-input"></ion-icon>
                 </ion-col>
-                <ion-col>
-                    <ion-item>
-                        <h2 class="equi-input-normal-text">{{alertaGrupo.AllCaballos ? 'Todos' : alertaGrupo.Alerta.AlertaCaballo.length + ' caballo(s)'}}</h2>
-                        <p class="equi-input-normal-text" item-right (click)="selectCaballos()"><a class="equi-principal-color">Editar lista</a></p>
-                    </ion-item>
+                <ion-col col-7 class="equi-col-center equi-input-normal-text">
+                    <span>{{alerta.AlertaCaballo.length + ' ' + labels['PANT020_LBL_CAB']}}</span>
+                </ion-col>
+                <ion-col class="equi-col-center equi-input-normal-text">
+                    <a class="equi-principal-color" (click)="selectCaballos()">{{ 'PANT020_BTN_EDIC' | translate }}</a>
                 </ion-col>
             </ion-row>
         </ion-grid>

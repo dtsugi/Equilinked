@@ -39,28 +39,21 @@ namespace Equilinked.BLL
                     .Where(e => e.Propietario_ID == propietarioId)
                     .ToDictionary(e => e.ID);
 
-                List<GrupoCaballo> gruposCaballos = db.GrupoCaballo
-                    .Include("Caballo")
-                    .Where(g => gruposIds.Contains(g.Grupo_ID))
-                    .OrderBy(g => g.Caballo.Nombre)
-                    .ToList();
+                List<int> caballosIds = db.GrupoCaballo.Where(gc => gruposIds.Contains(gc.Grupo_ID))
+                    .Select(gc => gc.Caballo_ID).Distinct().ToList();
 
-                Caballo caballo;
+                List<Caballo> caballoos = db.Caballo.Where(c => caballosIds.Contains(c.ID)).ToList();
                 Establo establo;
-                foreach (GrupoCaballo grupoCaballo in gruposCaballos)
+                foreach (Caballo caballo in caballoos)
                 {
-                    caballo = grupoCaballo.Caballo;
-                    if (!idsCaballos.Contains(caballo.ID))
+                    if (caballo.Establo_ID != null)
                     {
-                        if (caballo.Establo_ID != null)
+                        if (mapEstablos.TryGetValue(caballo.Establo_ID.Value, out establo))
                         {
-                            if (mapEstablos.TryGetValue(caballo.Establo_ID.Value, out establo))
-                            {
-                                caballo.Establo = establo;
-                            }
+                            caballo.Establo = establo;
                         }
-                        caballos.Add(new CaballoDto(caballo));
-                    } 
+                    }
+                    caballos.Add(new CaballoDto(caballo));
                 }
             }
 
@@ -118,31 +111,42 @@ namespace Equilinked.BLL
             return entity;
         }
 
-        public List<GrupoCaballo> GetGrupoCaballosByGrupoId(int GrupoID)
+        public List<CaballoDto> GetGrupoCaballosByGrupoId(int GrupoID)
         {
+            List<CaballoDto> caballosDtos = new List<CaballoDto>();
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
+
+                Dictionary<int, GrupoCaballo> mapGrupoCaballos = db.GrupoCaballo
+                    .Where(gc => gc.Grupo_ID == GrupoID).ToDictionary(gc => gc.Caballo_ID);
+                List<int> caballosIds = new List<int>(mapGrupoCaballos.Keys);
                 Grupo grupo = db.Grupo.Where(g => g.ID == GrupoID).FirstOrDefault();
                 Dictionary<int, Establo> mapEstablos = db.Establo.Where(e => e.Propietario_ID == grupo.Propietario_ID)
                     .ToDictionary(e => e.ID);
 
-                List<GrupoCaballo> caballos = db.GrupoCaballo
-                    .Include("Caballo")
-                    .Where(gc => gc.Grupo_ID == GrupoID)
+                List<Caballo> caballos = db.Caballo
+                    .Include("GenealogiaCaballo")
+                    .Include("CriadorCaballo")
+                    .Include("ResponsableCaballo")
+                    .Include("Genero")
+                    .Include("Pelaje")
+                    .Include("Protector")
+                    .Where(c => caballosIds.Contains(c.ID))
                     .ToList();
 
                 Establo est = null;
-                foreach(var gc in caballos)
+                foreach(var c in caballos)
                 {
-                    if(gc.Caballo.Establo_ID != null)
+                    if(c.Establo_ID != null)
                     {
-                        mapEstablos.TryGetValue(gc.Caballo.Establo_ID.Value, out est);
+                        mapEstablos.TryGetValue(c.Establo_ID.Value, out est);
                     }
-                    gc.Caballo.Establo = est;
+                    c.Establo = est;
+                    caballosDtos.Add(new CaballoDto(c));
                 }
 
-                return caballos;
+                return caballosDtos;
             }
         }
 
@@ -235,14 +239,14 @@ namespace Equilinked.BLL
             return true;
         }
 
-        public void DeleteGrupoCaballoByIds(int[] grupoCaballoIds)
+        public void DeleteGrupoCaballoByIds(int grupoId, int[] caballosIds)
         {
             using(var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 List<GrupoCaballo> caballosGrupo = db.GrupoCaballo
-                    .Where(gc => grupoCaballoIds.Contains(gc.ID))
+                    .Where(gc => gc.Grupo_ID == grupoId && caballosIds.Contains(gc.Caballo_ID))
                     .ToList();
 
                 db.GrupoCaballo.RemoveRange(caballosGrupo);

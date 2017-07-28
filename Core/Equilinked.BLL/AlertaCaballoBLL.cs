@@ -1,28 +1,119 @@
 ﻿using Equilinked.DAL.Dto;
 using Equilinked.DAL.Models;
+using Equilinked.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
-    public class AlertaCaballoBLL : BLLBase, IBase<AlertaCaballo>
+    public class AlertaCaballoBLL : BLLBase
     {
-        public List<AlertaCaballo> GetAll()
+        public void DeleteAlertasCaballosByIds(int caballoId, int[] alertasIds)
         {
-            throw new NotImplementedException();
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                Dictionary<int, AlertaRecordatorio> mapRecordatoriosAlerta = db.AlertaRecordatorio
+                    .Where(ar => alertasIds.Contains(ar.Alerta_ID)).ToDictionary(ar => ar.Alerta_ID);
+
+                Dictionary<int, Alerta> mapAlertas = db.Alerta.Where(a => alertasIds.Contains(a.ID)).ToDictionary(a => a.ID);
+                List<AlertaGrupo> alertasGrupos = db.AlertaGrupo.Where(ag => alertasIds.Contains(ag.Alerta_ID)).ToList();
+                List<AlertaCaballo> alertasCaballos = db.AlertaCaballo.Where(ac => alertasIds.Contains(ac.Alerta_ID)).ToList();
+                Dictionary<int, AlertaCaballo> mapAlertaCaballo = db.AlertaCaballo.Where(ac => ac.Caballo_ID == caballoId && alertasIds.Contains(ac.Alerta_ID))
+                    .ToDictionary(ac => ac.Alerta_ID);
+
+                Alerta alerta;
+                foreach(var ag in alertasGrupos)
+                {
+                    if(mapAlertas.TryGetValue(ag.Alerta_ID, out alerta))
+                    {
+                        alerta.AlertaGrupo.Add(ag);
+                    }
+                }
+
+                foreach(var ac in alertasCaballos)
+                {
+                    if(mapAlertas.TryGetValue(ac.Alerta_ID, out alerta))
+                    {
+                        alerta.AlertaCaballo.Add(ac);
+                    }
+                }
+                List<Alerta> alertas = new List<Alerta>(mapAlertas.Values);
+                foreach(var a in alertas)
+                {
+                    AlertaCaballo ac;
+                    if (mapAlertaCaballo.TryGetValue(a.ID, out ac))
+                    {
+                        db.AlertaCaballo.Remove(ac);//Elimino la asociacion del caballo con la alerta
+                    }
+
+                    if (a.AlertaCaballo.Count() == 1 && a.AlertaGrupo.Count() == 0) //Si solo tenia al caballo que elimine y no hay asocaiciones al grupos elimino la alerta
+                    {
+                        a.AlertaCaballo = null;
+                        AlertaRecordatorio recordatorio;
+                        if (mapRecordatoriosAlerta.TryGetValue(a.ID, out recordatorio)) {
+                            db.AlertaRecordatorio.Remove(recordatorio);
+                        }
+                        db.Alerta.Remove(a);
+                    }
+                }
+
+                db.SaveChanges();
+            }
         }
 
-        public AlertaCaballo GetById(int id)
+        public List<Alerta> GetAlertasByCaballo(int propietarioId, int caballoId, int tipoAlerta, int filtroAlerta, DateTime fecha, int orden, int limite)
         {
-            throw new NotImplementedException();
-        }
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
 
-        public bool DeleteById(int id)
-        {
-            throw new NotImplementedException();
+                Dictionary<int, int> mapAlertasCaballo = db.AlertaCaballo
+                    .Where(ac => ac.Caballo_ID == caballoId).ToDictionary(ac => ac.Alerta_ID, ac => ac.Caballo_ID);
+                List<int> alertasCaballoIds = new List<int>(mapAlertasCaballo.Keys);
+
+                var query = db.Alerta
+                    .Where(a => a.Propietario_ID == propietarioId && alertasCaballoIds.Contains(a.ID));
+
+                if (tipoAlerta > 0) //de tipo x
+                {
+                    query = query.Where(a => a.Tipo == tipoAlerta);
+                }
+
+                if (filtroAlerta == (int) EquilinkedEnums.FilterAlertaEnum.HISTORY)//history
+                {
+                    query = query.Where(a => a.FechaNotificacion < fecha);
+                }
+                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.NEXT || filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY)//next
+                {
+                    if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY) //Despues de la fecha (sin considerar la fecha)
+                    {
+                        fecha = fecha.AddDays(1);
+                    }
+                    query = query.Where(a => a.FechaNotificacion > fecha);
+                }
+                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.TODAY) //Hoy
+                {
+                    query = query
+                        .Where(a => a.FechaNotificacion.Day == fecha.Day)
+                        .Where(a => a.FechaNotificacion.Month == fecha.Month)
+                        .Where(a => a.FechaNotificacion.Year == fecha.Year);
+                }
+                if(limite > 0)
+                {
+                    query = query.Take(limite);
+                }
+                if(orden == (int)EquilinkedEnums.OrdenamientoEnum.ASCENDENTE)
+                {
+                    query = query.OrderBy(a => a.FechaNotificacion);
+                } else if(orden == (int)EquilinkedEnums.OrdenamientoEnum.DESCENDENTE)
+                {
+                    query = query.OrderByDescending(a => a.FechaNotificacion);
+                }
+
+                return query.ToList();
+            }
         }
 
         public AlertaCaballo Insert(AlertaCaballo entity)
@@ -38,7 +129,6 @@ namespace Equilinked.BLL
                 .Where(x => x.Alerta_ID == alertaId).ToList());
             _dbContext.SaveChanges();
             return true;
-
         }
 
         public bool DeleteByCaballoId(int caballoId)
