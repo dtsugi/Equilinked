@@ -147,6 +147,8 @@
           <Property Name="Manager" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Direccion" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Propietario_ID" Type="int" Nullable="false" />
+          <Property Name="Latitud" Type="float" />
+          <Property Name="Longitud" Type="float" />
         </EntityType>
         <EntityType Name="EstabloCorreo">
           <Key>
@@ -1899,6 +1901,8 @@
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Establo_Propietario_ID" FromRole="Establo" ToRole="Propietario" />
           <NavigationProperty Name="EstabloTelefono" Relationship="EquilinkedModel.FK_EstabloTelefono_Establo_ID" FromRole="Establo" ToRole="EstabloTelefono" />
           <NavigationProperty Name="EstabloCorreo" Relationship="EquilinkedModel.FK_EstabloCorreo_Establo_ID" FromRole="Establo" ToRole="EstabloCorreo" />
+          <Property Name="Latitud" Type="Double" />
+          <Property Name="Longitud" Type="Double" />
         </EntityType>
         <Association Name="FK_Establo_Propietario_ID">
           <End Type="EquilinkedModel.Propietario" Role="Propietario" Multiplicity="1" />
@@ -2606,6 +2610,8 @@
           <EntitySetMapping Name="Establo">
             <EntityTypeMapping TypeName="EquilinkedModel.Establo">
               <MappingFragment StoreEntitySet="Establo">
+                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
+                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
                 <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="Direccion" ColumnName="Direccion" />
                 <ScalarProperty Name="Manager" ColumnName="Manager" />

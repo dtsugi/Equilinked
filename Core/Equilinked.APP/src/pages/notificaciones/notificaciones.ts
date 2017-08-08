@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Events, NavController, AlertController } from 'ionic-angular';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Events, NavController, AlertController, Slides } from 'ionic-angular';
 import { CommonService } from '../../services/common.service';
 import { NotificacionesEditPage } from "./notificaciones-edit/notificaciones-edit"
 import { NotificacionesViewPage } from './notificaciones-view';
@@ -23,6 +23,11 @@ export class NotificacionesPage implements OnInit, OnDestroy {
 
     private session: UserSessionEntity;
     private notificacionesProximasResp: Array<any>;
+    private slidesMap: Map<string, number>;
+    private indexSlidesMap: Map<number, string>;
+    private lastSlide: string;
+
+    @ViewChild(Slides) slides: Slides;
 
     dateMillis: number;
     selectedTab: string;
@@ -40,20 +45,51 @@ export class NotificacionesPage implements OnInit, OnDestroy {
         private _securityService: SecurityService,
         private languageService: LanguageService
     ) {
+        this.slidesMap = new Map<string, number>();
+        this.indexSlidesMap = new Map<number, string>();
+        this.selectedTab = "hoy";
+
         this.notificacionesHoy = new Array<any>();
         this.notificacionesProximas = new Array<any>();
-        languageService.loadLabels().then(labels => this.labels = labels);
     }
 
     ngOnInit(): void {
         this.session = this._securityService.getInitialConfigSession();
-        this.selectedTab = "hoy";
-        this.loadNotificaciones();
+        this.slides.threshold = 120;
+        
+        this.lastSlide = "hoy";
+        this.slidesMap.set("hoy", 0);
+        this.slidesMap.set("proximas", 1);
+        this.indexSlidesMap.set(0, "hoy");
+        this.indexSlidesMap.set(1, "proximas");
+
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.loadNotificaciones();
+        });
+
         this.addEvents();
     }
 
     ngOnDestroy(): void {
         this.removeEvents();
+    }
+
+    showSlide(slide: string) {
+        if (slide != this.lastSlide) {
+            this.slides.slideTo(this.slidesMap.get(slide), 500);
+            this.lastSlide = slide;
+            this.loadNotificaciones();//Refrescar notificaciones!
+        }
+    }
+
+    slideChanged(slide: any) {
+        let tab = this.indexSlidesMap.get(slide.realIndex);
+        if (this.lastSlide != tab) {
+            this.selectedTab = tab;
+            this.lastSlide = tab;
+            this.loadNotificaciones();
+        }
     }
 
     loadNotificaciones(): void {

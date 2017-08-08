@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Events, NavController, NavParams } from 'ionic-angular';
+import { Events, ModalController, NavController, NavParams } from 'ionic-angular';
 import { Utils } from '../../../app/utils'
 import { CommonService } from '../../../services/common.service';
 import { SecurityService } from '../../../services/security.service';
@@ -11,6 +11,7 @@ import { Caballo } from '../../../model/caballo';
 import { UserSessionEntity } from '../../../model/userSession';
 import moment from "moment";
 import { LanguageService } from '../../../services/language.service';
+import { SeleccionFotosModal } from "./seleccion-fotos/seleccion-fotos-modal";
 
 @Component({
     templateUrl: 'admin-caballos-insert.html',
@@ -38,6 +39,7 @@ export class AdminCaballosInsertPage {
         private _caballoService: CaballoService,
         private _extendedCaballoService: ExtendedCaballoService,
         private formBuilder: FormBuilder,
+        private modalController: ModalController,
         private languageService: LanguageService
     ) {
         this.age = "";
@@ -108,6 +110,10 @@ export class AdminCaballosInsertPage {
             this.age = this.age + (months > 1 ? months + " " + this.labels["PANT004_LBL_NAME"] : (months == 1 ? "1 " + this.labels["PANT004_LBL_NAME"] : ""));
         }
         console.info(this.age);
+    }
+
+    selectImage(): void {
+        this.modalController.create(SeleccionFotosModal).present();
     }
 
     private getGeneroList() {

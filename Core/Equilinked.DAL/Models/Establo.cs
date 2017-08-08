@@ -25,6 +25,8 @@ namespace Equilinked.DAL.Models
         public string Manager { get; set; }
         public string Direccion { get; set; }
         public int Propietario_ID { get; set; }
+        public Nullable<double> Latitud { get; set; }
+        public Nullable<double> Longitud { get; set; }
     
         public virtual Propietario Propietario { get; set; }
         public virtual ICollection<EstabloTelefono> EstabloTelefono { get; set; }

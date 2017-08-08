@@ -8,6 +8,7 @@ import { EstablosService } from "../../../../services/establos.service";
 import { TipoNumeroService } from "../../../../services/tipo-numero.service";
 import { UserSessionEntity } from "../../../../model/userSession";
 import { CaballosEstabloModal } from "./caballos-establo/caballos-establo-modal";
+import { MapaEstabloPage } from "./mapa-establo/mapa-establo";
 import { LanguageService } from '../../../../services/language.service';
 
 @Component({
@@ -161,6 +162,10 @@ export class AdminEstablosPage implements OnInit {
         modal.present(); //Abrir!
     }
 
+    openMap(): void {
+        this.navController.push(MapaEstabloPage, { establo: this.establo });
+    }
+
     save(): void {
         if (this.showConfirm) {
             this.alertController.create({
@@ -181,6 +186,8 @@ export class AdminEstablosPage implements OnInit {
 
     private confirmSave(): void {
         let establo = this.establo;
+        console.info("Lo que se guardará es:");
+        console.info(JSON.stringify(establo));
         establo.Nombre = this.establoForm.get("Nombre").value;
         establo.Manager = this.establoForm.get("Manager").value;
         establo.Direccion = this.establoForm.get("Direccion").value;

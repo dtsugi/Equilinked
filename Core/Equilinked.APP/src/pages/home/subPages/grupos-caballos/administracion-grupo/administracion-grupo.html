@@ -24,7 +24,8 @@
             </button>
 
             <!-- Se visualizan cuando está la pestana "CABALLOS" -->
-            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion && !parametrosCaballos.grupoDefault" (click)="enabledDeleteCaballos()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion && !parametrosCaballos.grupoDefault"
+                (click)="enabledDeleteCaballos()">
                 {{ 'PANT013_BTN_EDI' | translate }}
             </button>
             <button ion-button icon-only *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion" [disabled]="parametrosCaballos.getCountSelected() == 0"
@@ -38,7 +39,8 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-segment [(ngModel)]="segmentSelection" color="primary">
+
+    <ion-segment [(ngModel)]="segmentSelection" color="primary" (ngModelChange)="showSlide($event)">
         <ion-segment-button value="ficha">
             {{ 'PANT013_LBL_FIC' | translate }}
         </ion-segment-button>
@@ -47,11 +49,12 @@
         </ion-segment-button>
     </ion-segment>
 
-    <div *ngIf="segmentSelection == 'ficha'">
-        <segment-ficha-grupo [grupo]="grupo"></segment-ficha-grupo>
-    </div>
-
-    <div *ngIf="segmentSelection == 'caballos'">
-        <segment-caballos-grupo [grupo]="grupo" [parametros]="parametrosCaballos"></segment-caballos-grupo>
-    </div>
+    <ion-slides (ionSlideDidChange)="slideChanged($event)">
+        <ion-slide class="equi-content-slide-start">
+            <segment-ficha-grupo [grupo]="grupo"></segment-ficha-grupo>
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            <segment-caballos-grupo [grupo]="grupo" [parametros]="parametrosCaballos"></segment-caballos-grupo>
+        </ion-slide>
+    </ion-slides>
 </ion-content>

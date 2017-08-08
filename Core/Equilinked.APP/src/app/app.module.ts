@@ -1,14 +1,20 @@
-import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
 import { HttpModule, Http } from '@angular/http';
-import { IonicApp, IonicModule } from 'ionic-angular';
-import { MyApp } from './app.component';
-import { FormsModule } from '@angular/forms';
 import { MomentModule } from "angular2-moment";
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { GoogleMaps } from "@ionic-native/google-maps";
+import { PhotoLibrary } from "@ionic-native/photo-library";
+import { MyApp } from './app.component';
 
 /*Utils */
 import { TextareaAutoresize } from "../utils/equi-autoresize/autoresize.directive";
+import { CDVPhotoLibraryPipe } from "../utils/equi-cdvphotolibrary/equi-cdvphotolibrary.pipe";
 import { EquiButtonAdd } from "../utils/equi-button-add/equi-button-add";
 import { EquiItemList } from "../utils/equi-item-list/equi-item-list";
 import { EquiNextAlertHorse } from "../utils/equi-next-alert-horse/equi-next-alert-horse";
@@ -38,6 +44,7 @@ import { FichaCaballoPage } from "../pages/home/ficha-caballo/ficha-caballo-home
 import { OpcionesCaballoPopover } from "../pages/home/ficha-caballo/opciones-caballo/opciones-caballo";
 import { CambioNombreCaballoPage } from "../pages/home/ficha-caballo/cambio-nombre/cambio-nombre";
 import { AdminCaballosInsertPage } from "../pages/home/admin-caballos/admin-caballos-insert";
+import { SeleccionFotosModal } from "../pages/home/admin-caballos/seleccion-fotos/seleccion-fotos-modal";
 import { UbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/ubicacion";
 import { AsignacionUbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/asignacion-ubicacion/asignacion-ubicacion";
 import { OpcionesUbicacionModal } from "../pages/home/ficha-caballo/ubicacion/opciones-ubicacion/opciones-ubicacion";
@@ -92,6 +99,7 @@ import { EliminacionCuentaPage } from "../pages/perfil/datos/opciones-cuenta/eli
 import { SegmentEstablos } from "../pages/perfil/establos/segment-establos";
 import { AdminEstablosPage } from "../pages/perfil/establos/admin-establo/admin-establo";
 import { CaballosEstabloModal } from "../pages/perfil/establos/admin-establo/caballos-establo/caballos-establo-modal";
+import { MapaEstabloPage } from "../pages/perfil/establos/admin-establo/mapa-establo/mapa-establo";
 import { InfoEstabloPage } from "../pages/perfil/establos/admin-establo/info-establo";
 import { EdicionEstabloCaballosPage } from "../pages/perfil/establos/admin-establo/edicion-caballos";
 
@@ -109,6 +117,7 @@ export function createTranslateLoader(http: Http) {
     CaballosInd,
     /*Utils */
     TextareaAutoresize,
+    CDVPhotoLibraryPipe,
     EquiButtonAdd,
     EquiItemList,
     EquiNextAlertHorse,
@@ -130,6 +139,7 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
+    SeleccionFotosModal,
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
@@ -183,10 +193,12 @@ export function createTranslateLoader(http: Http) {
     SegmentEstablos,
     AdminEstablosPage,
     CaballosEstabloModal,
+    MapaEstabloPage,
     InfoEstabloPage,
     EdicionEstabloCaballosPage
   ],
   imports: [
+    BrowserModule,
     IonicModule.forRoot(MyApp, {
       mode: "md"
     }),
@@ -221,6 +233,7 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
+    SeleccionFotosModal,
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
@@ -269,6 +282,7 @@ export function createTranslateLoader(http: Http) {
     /* Establos */
     AdminEstablosPage,
     CaballosEstabloModal,
+    MapaEstabloPage,
     InfoEstabloPage,
     EdicionEstabloCaballosPage,
     /*Utils */
@@ -276,6 +290,12 @@ export function createTranslateLoader(http: Http) {
     EquiModalGrupos,
     EquiModalRecordatorio
   ],
-  providers: []
+  providers: [
+    GoogleMaps,
+    PhotoLibrary,
+    StatusBar,
+    SplashScreen,
+    { provide: ErrorHandler, useClass: IonicErrorHandler }
+  ]
 })
 export class AppModule { }

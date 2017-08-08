@@ -1,0 +1,5 @@
+ALTER TABLE Establo ADD Latitud FLOAT
+GO
+
+ALTER TABLE Establo ADD Longitud FLOAT
+GO

@@ -39,18 +39,16 @@ export class OpcionesFichaGrupo {
         this.navCtrlGrupo.push(CambioNombrePage, { grupo: this.grupo });
     }
 
-    private deleteGrupoHandler(): Function {
-        return () => {
-            this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
-            this.gruposCaballosService.deleteGrupoById(this.grupo.ID)
-                .then(res => {
-                    this.events.publish("grupos:refresh");
-                    this.commonService.hideLoading();
-                    this.navCtrlGrupo.pop();
-                }).catch(err => {
-                    this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERRELG"]);
-                });
-        };
+    deleteGrupoHandler = () => {
+        this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
+        this.gruposCaballosService.deleteGrupoById(this.grupo.ID)
+            .then(res => {
+                this.events.publish("grupos:refresh");
+                this.commonService.hideLoading();
+                this.navCtrlGrupo.pop();
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERRELG"]);
+            });
     }
 
     delete() {
@@ -64,7 +62,7 @@ export class OpcionesFichaGrupo {
                 },
                 {
                     text: this.labels["PANT013_BTN_ACEP"],
-                    handler: this.deleteGrupoHandler()
+                    handler: this.deleteGrupoHandler
                 }
             ]
         });

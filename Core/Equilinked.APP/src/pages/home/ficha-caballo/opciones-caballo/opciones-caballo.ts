@@ -43,33 +43,29 @@ export class OpcionesCaballoPopover {
             subTitle: "Se eliminará el caballo",
             buttons: [
                 { text: "Cancelar", role: "cancel" },
-                { text: "Aceptar", handler: this.deleteCaballoHandler() }
+                { text: "Aceptar", handler: this.deleteCaballoHandler }
             ]
         }).present();
     }
 
-    private deleteCaballoHandler(): Function {
-        return () => {
-            this.commonService.showLoading("Procesando...");
-            this.caballoService.delete(this.caballo.ID)
-                .toPromise()
-                .then(res => {
-                    this.commonService.hideLoading();
-                    this.events.publish("caballos:refresh");//Lista de caballos
-                    this.events.publish("caballos-grupo:refresh");//Lista de caballos de un grupo
-                    this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
-                    this.events.publish("grupo-ubicaciones:refresh");//Lista de ubicaciones del grupo (debe disminuir la cantidad de caballos)
-                    this.events.publish("establo:refresh");//detale de establo (se ve afectada la candad de caballos)
-                    this.events.publish("establo-caballos:refresh");//Lista de caballos del establo (se ve afectada)
+    deleteCaballoHandler = () => {
+        this.commonService.showLoading("Procesando...");
+        this.caballoService.delete(this.caballo.ID)
+            .toPromise()
+            .then(res => {
+                this.commonService.hideLoading();
+                this.events.publish("caballos:refresh");//Lista de caballos
+                this.events.publish("caballos-grupo:refresh");//Lista de caballos de un grupo
+                this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
+                this.events.publish("grupo-ubicaciones:refresh");//Lista de ubicaciones del grupo (debe disminuir la cantidad de caballos)
+                this.events.publish("establo:refresh");//detale de establo (se ve afectada la candad de caballos)
+                this.events.publish("establo-caballos:refresh");//Lista de caballos del establo (se ve afectada)
 
-                    this.navCtrlCaballo.pop().then(() => {
-                        this.commonService.ShowInfo("El caballo fue eliminado");
-                    })
-                }).catch(err => {
-                    this.commonService.ShowErrorHttp(err, "Error al eliminar el caballo");
-                });
-        };
+                this.navCtrlCaballo.pop().then(() => {
+                    this.commonService.ShowInfo("El caballo fue eliminado");
+                })
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, "Error al eliminar el caballo");
+            });
     }
-
-
 }

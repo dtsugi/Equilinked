@@ -4,13 +4,16 @@ import { EstablosService } from "../../../../services/establos.service";
 import { CommonService } from "../../../../services/common.service";
 import { OpcionesUbicacionModal } from "./opciones-ubicacion/opciones-ubicacion";
 import { LanguageService } from '../../../../services/language.service';
+import { AppConfig } from "../../../../app/app.config";
 
 @Component({
     templateUrl: "./ubicacion.html",
     providers: [LanguageService, CommonService, EstablosService]
 })
 export class UbicacionCaballoPage implements OnDestroy, OnInit {
-
+    
+    KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
+    
     private caballo;
 
     grupo: any;

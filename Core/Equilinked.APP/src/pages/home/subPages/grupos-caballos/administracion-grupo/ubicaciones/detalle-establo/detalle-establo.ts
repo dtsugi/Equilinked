@@ -5,6 +5,7 @@ import { CommonService } from "../../../../../../../services/common.service";
 import { PopoverOpcionesEstablo } from "./popover-establo/popover-establo";
 import { EdicionEstabloCaballosPage } from "../../../../../../perfil/establos/admin-establo/edicion-caballos";
 import { LanguageService } from '../../../../../../../services/language.service';
+import { AppConfig } from "../../../../../../../app/app.config";
 
 @Component({
     templateUrl: "./detalle-establo.html",
@@ -17,8 +18,8 @@ import { LanguageService } from '../../../../../../../services/language.service'
 })
 export class DetalleEstabloPage implements OnDestroy, OnInit {
 
-    private REFRESH_LIST_EVENT_NAME: string = "ubicaciones:refresh";
-    private REFRESH_ITEM_EVENT_NAME: string = "ubicacion:refresh";
+    KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
+
     private establoId: number;
 
     grupo: any;
@@ -62,9 +63,7 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
     editCaballos(): void {
         let params: any = {
             establo: JSON.parse(JSON.stringify(this.establo)),
-            grupo: this.grupo,
-            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME,
-            eventRefreshList: this.REFRESH_LIST_EVENT_NAME
+            grupo: this.grupo
         };
         this.navController.push(EdicionEstabloCaballosPage, params);
     }

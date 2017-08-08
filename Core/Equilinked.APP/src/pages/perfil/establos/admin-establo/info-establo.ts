@@ -5,6 +5,7 @@ import { EdicionEstabloCaballosPage } from "./edicion-caballos";
 import { EstablosService } from "../../../../services/establos.service";
 import { CommonService } from "../../../../services/common.service";
 import { LanguageService } from '../../../../services/language.service';
+import { AppConfig } from "../../../../app/app.config";
 
 @Component({
     templateUrl: "./info-establo.html",
@@ -17,8 +18,8 @@ import { LanguageService } from '../../../../services/language.service';
 })
 export class InfoEstabloPage implements OnDestroy, OnInit {
 
-    private REFRESH_LIST_EVENT_NAME: string = "establos:refresh";
-    private REFRESH_ITEM_EVENT_NAME: string = "establo:refresh";
+    KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
+    
     private establoId: number;
 
     establo: any;
@@ -64,17 +65,14 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
     edit(): void {
         let params: any = {
             establo: JSON.parse(JSON.stringify(this.establo)),
-            showConfirmSave: false,
-            eventRefreshList: this.REFRESH_LIST_EVENT_NAME,
-            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME
+            showConfirmSave: false
         };
         this.navController.push(AdminEstablosPage, params);
     }
 
     viewCaballos(): void {
         let params: any = {
-            establo: JSON.parse(JSON.stringify(this.establo)),
-            eventRefreshItem: this.REFRESH_ITEM_EVENT_NAME
+            establo: JSON.parse(JSON.stringify(this.establo))
         };
         this.navController.push(EdicionEstabloCaballosPage, params);
     }

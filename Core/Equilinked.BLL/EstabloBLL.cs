@@ -131,6 +131,8 @@ namespace Equilinked.BLL
                 est.Nombre = establo.Nombre;
                 est.Manager = establo.Manager;
                 est.Direccion = establo.Direccion;
+                est.Latitud = establo.Latitud;
+                est.Longitud = establo.Longitud;
 
                 List<EstabloTelefono> telefonosEliminar = new List<EstabloTelefono>();
                 List<EstabloTelefono> telefonosInsertar = new List<EstabloTelefono>();

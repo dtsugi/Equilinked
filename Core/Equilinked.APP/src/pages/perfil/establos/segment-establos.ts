@@ -44,7 +44,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
-        this.listEstablosByPropietarioId(true); //Listar establos del propietario
+        this.listEstablosByPropietarioId(false); //Listar establos del propietario
         this.addEvents();
         this.parametrosEstablos.getCountSelected = () => this.getCountSelected();
     }

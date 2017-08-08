@@ -42,7 +42,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     }
 
     ngOnInit(): void {
-        this.getAllCaballosGrupo(true);
+        this.getAllCaballosGrupo(false);
         this.addEvents();
         this.parametrosCaballos.getCountSelected = () => this.getCountSelected();
     }
@@ -76,7 +76,8 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         });
     }
 
-    private getAllCaballosGrupo(loading: boolean): void {
+    getAllCaballosGrupo(loading: boolean): void {
+        console.info("Ejelee!");
         if (loading)
             this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
         this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)

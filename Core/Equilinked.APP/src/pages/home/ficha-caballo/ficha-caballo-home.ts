@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Events, NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Events, NavController, NavParams, PopoverController, Slides } from 'ionic-angular';
 import { Utils } from '../../../app/utils'
 import { CaballoService } from '../../../services/caballo.service';
 import { CommonService } from '../../../services/common.service';
@@ -22,6 +22,12 @@ import { LanguageService } from '../../../services/language.service';
 })
 export class FichaCaballoPage implements OnDestroy, OnInit {
 
+    private slidesMap: Map<string, number>;
+    private indexSlidesMap: Map<number, string>;
+    private lastSlide: string;
+
+    @ViewChild(Slides) slides: Slides;
+
     labels: any = {};
     menu: string;
     caballo: Caballo;
@@ -36,18 +42,45 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
         private formBuilder: FormBuilder,
         private languageService: LanguageService
     ) {
-        languageService.loadLabels().then(labels => this.labels = labels);
+        this.slidesMap = new Map<string, number>();
+        this.indexSlidesMap = new Map<number, string>();
         this.menu = "informacion";
     }
 
     ngOnInit(): void {
+        this.slides.threshold = 120;
         this.caballo = this.navParams.get("caballoSelected");
-        this.getInfoCaballo(true);
+
+        this.lastSlide = "informacion";
+        this.slidesMap.set("informacion", 0);
+        this.slidesMap.set("fotos", 1);
+        this.indexSlidesMap.set(0, "informacion");
+        this.indexSlidesMap.set(1, "fotos");
+
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.getInfoCaballo(true);
+        });
         this.addEvents();
     }
 
     ngOnDestroy(): void {
         this.removeEvents();
+    }
+
+    showSlide(slide: string) {
+        if (slide != this.lastSlide) {
+            this.slides.slideTo(this.slidesMap.get(slide), 500);
+            this.lastSlide = slide;
+        }
+    }
+
+    slideChanged(slide: any) {
+        let tab: string = this.indexSlidesMap.get(slide.realIndex);
+        if (this.lastSlide != tab) {
+            this.menu = tab;
+            this.lastSlide = tab;
+        }
     }
 
     openMenu(ev: any): void {

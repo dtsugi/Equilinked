@@ -7,9 +7,15 @@ import { PopoverDatosPage } from "./datos/pop-over/pop-over-datos";
 })
 export class PerfilPage implements OnInit {
 
+    private slidesMap: Map<string, number>;
+    private indexSlidesMap: Map<number, string>;
+
+    private lastSlide: string;
+
     @ViewChild(Slides) slides: Slides;
 
-    selectedTab: string; //el tab seleleccionado
+    currentSlide: string; //el tab seleleccionado
+
     parametrosEstablos: any;
 
     constructor(
@@ -17,15 +23,37 @@ export class PerfilPage implements OnInit {
         public navCtrl: NavController,
         public popoverCtrl: PopoverController
     ) {
-        this.selectedTab = "datos";
+        this.slidesMap = new Map<string, number>();
+        this.indexSlidesMap = new Map<number, string>();
+
+        this.currentSlide = "datos";
         this.parametrosEstablos = { modoEdicion: false, getCountSelected: null };
     }
 
     ngOnInit() {
+        this.slides.threshold = 120;
+        //this.slides.simulateTouch = true;
+
+        this.lastSlide = "datos";
+        this.slidesMap.set("datos", 0);
+        this.slidesMap.set("establos", 1);
+        this.indexSlidesMap.set(0, "datos");
+        this.indexSlidesMap.set(1, "establos");
     }
 
-    slideChanged() {
-        let currentIndex = this.slides.getActiveIndex();
+    showSlide(slide: string) {
+        if (slide != this.lastSlide) {
+            this.slides.slideTo(this.slidesMap.get(slide), 500);
+            this.lastSlide = slide;
+        }
+    }
+
+    slideChanged(slide: any) {
+        let tab: string = this.indexSlidesMap.get(slide.realIndex);
+        if (this.lastSlide != tab) {
+            this.currentSlide = tab;
+            this.lastSlide = tab;
+        }
     }
 
     /*Se visualiza el popover de opciones en "DATOS" */

@@ -1,8 +1,8 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar> 
         <ion-buttons left>
             <!-- Se visualizada en seleccion de  "ESTABLOS" -->
-            <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && parametrosEstablos.modoEdicion" (click)="disabledDeleteCaballos()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && parametrosEstablos.modoEdicion" (click)="disabledDeleteCaballos()">
                 {{ 'PANT026_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
@@ -13,15 +13,15 @@
 
         <ion-buttons right>
             <!-- Se visualizada en seleccion de  "DATOS" -->
-            <button ion-button icon-only *ngIf="selectedTab == 'datos'" (click)="presentPopover($event) ">
+            <button ion-button icon-only *ngIf="currentSlide == 'datos'" (click)="presentPopover($event) ">
                 <ion-icon name="more"></ion-icon>
             </button>
 
             <!-- Se visualizadan en seleccion de  "ESTABLOS"... -->
-            <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && !parametrosEstablos.modoEdicion" (click)="enabledDeleteEstablos()">
+            <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && !parametrosEstablos.modoEdicion" (click)="enabledDeleteEstablos()">
                 {{ 'PANT026_BTN_EDI' | translate }}            
             </button>
-            <button ion-button class="equi-toolbar-btn" *ngIf="selectedTab == 'establos' && parametrosEstablos.modoEdicion" [disabled]="parametrosEstablos.getCountSelected() == 0"
+            <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && parametrosEstablos.modoEdicion" [disabled]="parametrosEstablos.getCountSelected() == 0"
                 (click)="deleteEstablos()">
                 {{ 'PANT026_BTN_ELI' | translate }}
             </button>
@@ -30,7 +30,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-segment [(ngModel)]="selectedTab" color="primary">
+    <ion-segment [(ngModel)]="currentSlide" (ngModelChange)="showSlide($event)" color="primary">
         <ion-segment-button value="datos">
             {{ 'PANT026_LBL_DAT' | translate }}
         </ion-segment-button>
@@ -39,11 +39,12 @@
         </ion-segment-button>
     </ion-segment>
 
-    <div *ngIf="selectedTab == 'datos'">
-        <segment-datos></segment-datos>
-    </div>
-    <div *ngIf="selectedTab == 'establos'">
-        <segment-establos [parametros]="parametrosEstablos"></segment-establos>
-    </div>
-
+    <ion-slides (ionSlideDidChange)="slideChanged($event)">
+        <ion-slide class="equi-content-slide-start">
+            <segment-datos></segment-datos>
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            <segment-establos [parametros]="parametrosEstablos"></segment-establos>
+        </ion-slide>
+    </ion-slides>
 </ion-content>

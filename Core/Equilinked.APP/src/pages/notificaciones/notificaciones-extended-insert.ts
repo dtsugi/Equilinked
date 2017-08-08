@@ -107,7 +107,7 @@ export class NotificacionesExtendedInsertPage {
             inputs: inputs,
             buttons: [
                 { text: this.labels["PANT010_BTN_CAN"], role: "cancel" },
-                { text: this.labels["PANT010_BTN_ACE"], handler: this.callbackViewRecordatorios() }
+                { text: this.labels["PANT010_BTN_ACE"], handler: this.callbackViewRecordatorios }
             ]
         }).present();
     }
@@ -154,29 +154,27 @@ export class NotificacionesExtendedInsertPage {
         alerta.FechaNotificacion = alerta.FechaNotificacion + " " + alerta.HoraNotificacion + ":00";
     }
 
-    private callbackViewRecordatorios(): Function {
-        return (data) => {
-            let recordatorio: any;
-            if (data.UnidadTiempo) {
-                recordatorio = {
-                    ValorTiempo: data.ValorTiempo,
-                    UnidadTiempo_ID: data.UnidadTiempo_ID,
-                    UnidadTiempo: data.UnidadTiempo
-                };
-                this.addRecordatorio(recordatorio);
-            } else {
-                let params: any = {
-                    funcionUnidadesTiempo: this.recordatorioService.getAllUnidadesTiempo()
-                };
-                let modal = this.modalController.create(EquiModalRecordatorio, params);
-                modal.onDidDismiss(recordatorioPersonalizado => {
-                    if (recordatorioPersonalizado) {
-                        this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
-                    }
-                });
-                modal.present(); //Abrir!
-            }
-        };
+    callbackViewRecordatorios = (data) => {
+        let recordatorio: any;
+        if (data.UnidadTiempo) {
+            recordatorio = {
+                ValorTiempo: data.ValorTiempo,
+                UnidadTiempo_ID: data.UnidadTiempo_ID,
+                UnidadTiempo: data.UnidadTiempo
+            };
+            this.addRecordatorio(recordatorio);
+        } else {
+            let params: any = {
+                funcionUnidadesTiempo: this.recordatorioService.getAllUnidadesTiempo()
+            };
+            let modal = this.modalController.create(EquiModalRecordatorio, params);
+            modal.onDidDismiss(recordatorioPersonalizado => {
+                if (recordatorioPersonalizado) {
+                    this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
+                }
+            });
+            modal.present(); //Abrir!
+        }
     }
 
     private addRecordatorio(recordatorio: any): void {

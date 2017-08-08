@@ -95,7 +95,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
             inputs: inputs,
             buttons: [
                 { text: this.labels["PANT023_BTN_CAN"], role: "cancel" },
-                { text: this.labels["PANT023_BTN_ACE"], handler: this.callbackViewRecordatorios() }
+                { text: this.labels["PANT023_BTN_ACE"], handler: this.callbackViewRecordatorios }
             ]
         }).present(); //abrete ZeZaMoOo!!
     }
@@ -115,7 +115,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         };
 
         let modal = this.modalController.create(EquiModalCaballos, params);
-        modal.onDidDismiss(this.callbackAddCaballos());
+        modal.onDidDismiss(this.callbackAddCaballos);
         modal.present(); //Abrir!
     }
 
@@ -129,7 +129,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         };
 
         let modal = this.modalController.create(EquiModalGrupos, params);
-        modal.onDidDismiss(this.callbackAddGrupos());
+        modal.onDidDismiss(this.callbackAddGrupos);
         modal.present();
     }
 
@@ -174,29 +174,27 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         });
     }
 
-    private callbackViewRecordatorios(): Function {
-        return (data) => {
-            let recordatorio: any;
-            if (data.UnidadTiempo) {
-                recordatorio = {
-                    ValorTiempo: data.ValorTiempo,
-                    UnidadTiempo_ID: data.UnidadTiempo_ID,
-                    UnidadTiempo: data.UnidadTiempo
-                };
-                this.addRecordatorio(recordatorio);
-            } else {
-                let params: any = {
-                    funcionUnidadesTiempo: this.recordatorioService.getAllUnidadesTiempo()
-                };
-                let modal = this.modalController.create(EquiModalRecordatorio, params);
-                modal.onDidDismiss(recordatorioPersonalizado => {
-                    if (recordatorioPersonalizado) {
-                        this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
-                    }
-                });
-                modal.present(); //Abrir!
-            }
-        };
+    callbackViewRecordatorios = (data) => {
+        let recordatorio: any;
+        if (data.UnidadTiempo) {
+            recordatorio = {
+                ValorTiempo: data.ValorTiempo,
+                UnidadTiempo_ID: data.UnidadTiempo_ID,
+                UnidadTiempo: data.UnidadTiempo
+            };
+            this.addRecordatorio(recordatorio);
+        } else {
+            let params: any = {
+                funcionUnidadesTiempo: this.recordatorioService.getAllUnidadesTiempo()
+            };
+            let modal = this.modalController.create(EquiModalRecordatorio, params);
+            modal.onDidDismiss(recordatorioPersonalizado => {
+                if (recordatorioPersonalizado) {
+                    this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
+                }
+            });
+            modal.present(); //Abrir!
+        }
     }
 
     private addRecordatorio(recordatorio: any): void {
@@ -209,60 +207,56 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
         recordatorio.UnidadTiempo = null;
     }
 
-    private callbackAddCaballos(): Function {
-        return (caballos) => {
-            let alertaCaballo: any;
-            let mapAlertaCaballo: Map<number, any> = new Map<number, any>();
+    callbackAddCaballos = (caballos) => {
+        let alertaCaballo: any;
+        let mapAlertaCaballo: Map<number, any> = new Map<number, any>();
 
-            for (let ac of this.alerta.AlertaCaballo) {
-                mapAlertaCaballo.set(ac.Caballo_ID, ac);
+        for (let ac of this.alerta.AlertaCaballo) {
+            mapAlertaCaballo.set(ac.Caballo_ID, ac);
+        }
+        if (caballos) {
+            this.alerta.AlertaCaballo = new Array<any>();
+            for (let c of caballos) {
+                alertaCaballo = mapAlertaCaballo.has(c.ID) ? mapAlertaCaballo.get(c.ID) : { Caballo_ID: c.ID };
+                this.alerta.AlertaCaballo.push(alertaCaballo);
             }
-            if (caballos) {
-                this.alerta.AlertaCaballo = new Array<any>();
-                for (let c of caballos) {
-                    alertaCaballo = mapAlertaCaballo.has(c.ID) ? mapAlertaCaballo.get(c.ID) : { Caballo_ID: c.ID };
-                    this.alerta.AlertaCaballo.push(alertaCaballo);
-                }
-            }
-        };
+        }
     }
 
-    private callbackAddGrupos(): Function {
-        return (grupoos) => {
-            let mapAlertaGrupo: Map<number, any> = new Map<number, any>();
-            for (let ag of this.alerta.AlertaGrupo) {
-                mapAlertaGrupo.set(ag.Grupo_ID, ag);
-            }
-            if (grupoos) { //Actualizo los grupos seleccionados a la alerta
-                let alertaGrupo: any;
-                let gruposIds: Array<number> = new Array<number>();
+    callbackAddGrupos = (grupoos) => {
+        let mapAlertaGrupo: Map<number, any> = new Map<number, any>();
+        for (let ag of this.alerta.AlertaGrupo) {
+            mapAlertaGrupo.set(ag.Grupo_ID, ag);
+        }
+        if (grupoos) { //Actualizo los grupos seleccionados a la alerta
+            let alertaGrupo: any;
+            let gruposIds: Array<number> = new Array<number>();
 
-                this.alerta.AlertaGrupo = new Array<any>();
-                grupoos.forEach(g => {
-                    alertaGrupo = mapAlertaGrupo.has(g.ID) ? mapAlertaGrupo.get(g.ID) : { Grupo_ID: g.ID };
-                    this.alerta.AlertaGrupo.push(alertaGrupo);
+            this.alerta.AlertaGrupo = new Array<any>();
+            grupoos.forEach(g => {
+                alertaGrupo = mapAlertaGrupo.has(g.ID) ? mapAlertaGrupo.get(g.ID) : { Grupo_ID: g.ID };
+                this.alerta.AlertaGrupo.push(alertaGrupo);
 
-                    if (!mapAlertaGrupo.has(g.ID)) {
-                        gruposIds.push(g.ID);
-                    }
-                });
-
-                //Ahora hay que asignar a la selección los caballos de los grupos que han sido seleccioandos
-                if (gruposIds.length > 0) {
-                    this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, gruposIds)
-                        .then(caballos => { //Ahora hay que agregar los caballos que no están
-                            let idsCaballos: Array<any> = this.alerta.AlertaCaballo.map(ag => ag.Caballo_ID);
-                            let nuevosCaballos: Array<any> = caballos.filter(c => idsCaballos.indexOf(c.ID) == -1)
-                                .map(c => { return { Caballo_ID: c.ID }; });
-                            if (nuevosCaballos.length > 0) {
-                                this.alerta.AlertaCaballo.push.apply(this.alerta.AlertaCaballo, nuevosCaballos);//Agrega a la lista existen los nuevos caballos
-                            }
-                        }).catch(err => {
-                            this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERR"]);
-                        });
+                if (!mapAlertaGrupo.has(g.ID)) {
+                    gruposIds.push(g.ID);
                 }
+            });
+
+            //Ahora hay que asignar a la selección los caballos de los grupos que han sido seleccioandos
+            if (gruposIds.length > 0) {
+                this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, gruposIds)
+                    .then(caballos => { //Ahora hay que agregar los caballos que no están
+                        let idsCaballos: Array<any> = this.alerta.AlertaCaballo.map(ag => ag.Caballo_ID);
+                        let nuevosCaballos: Array<any> = caballos.filter(c => idsCaballos.indexOf(c.ID) == -1)
+                            .map(c => { return { Caballo_ID: c.ID }; });
+                        if (nuevosCaballos.length > 0) {
+                            this.alerta.AlertaCaballo.push.apply(this.alerta.AlertaCaballo, nuevosCaballos);//Agrega a la lista existen los nuevos caballos
+                        }
+                    }).catch(err => {
+                        this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERR"]);
+                    });
             }
-        };
+        }
     }
 
     private loadPage(): void {

@@ -34,7 +34,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
-        this.getGruposCaballos(true);
+        this.getGruposCaballos(false);
         this.addEvents();
     }
 

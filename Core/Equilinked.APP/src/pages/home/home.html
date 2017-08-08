@@ -1,18 +1,24 @@
 <ion-header>
-    <menu-superior (menuChange)="menuChange($event);"></menu-superior>
+    <menu-superior #menuSuperior (menuChange)="menuChange($event)"></menu-superior>
 </ion-header>
 
 <ion-content padding>
-    <div *ngIf="menuSelected == 'caballos_ind'">
-        <caballos-ind></caballos-ind>
-    </div>
-    <div *ngIf="menuSelected == 'caballos_gru'">
-        <grupos-caballos></grupos-caballos>
-    </div>
-    <div *ngIf="menuSelected == 'fotos_todas'">
-    </div>
-    <div *ngIf="menuSelected == 'fotos_albums'">
-    </div>
-    <div *ngIf="menuSelected == 'veterinarios_ind'">
-    </div>
+
+    <ion-slides (ionSlideDidChange)="slideChanged($event)">
+        <ion-slide class="equi-content-slide-start">
+            <caballos-ind></caballos-ind>
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            <grupos-caballos></grupos-caballos>
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            Individuos veterinarios
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            Fotoss
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            Albumes
+        </ion-slide>
+    </ion-slides>
 </ion-content>

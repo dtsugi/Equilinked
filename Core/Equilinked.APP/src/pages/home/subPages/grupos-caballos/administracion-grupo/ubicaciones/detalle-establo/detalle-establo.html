@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar> 
+    <ion-navbar>
         <ion-title *ngIf="establo" class="equi-toolbar-title-content">
             <span class="equi-toolbar-title">{{establo.Nombre}}</span>
             <br />
@@ -42,6 +42,11 @@
         <ion-item *ngIf="establo.Direccion != ''">
             <ion-icon name="flag" class="equi-icon-input" item-left></ion-icon>
             <span class="equi-normal-text">{{establo.Direccion}}</span>
+        </ion-item>
+
+        <ion-item *ngIf="establo.Latitud && establo.Longitud" text-wrap>
+            <img [src]="'https://maps.googleapis.com/maps/api/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"
+            />
         </ion-item>
 
         <ion-item>

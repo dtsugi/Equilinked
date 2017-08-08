@@ -5,7 +5,6 @@ import { SecurityService } from "../../../services/security.service";
 import { PropietarioService } from "../../../services/propietario.service";
 import { UserSessionEntity } from "../../../model/userSession";
 import { Propietario } from "../../../model/propietario";
-import { ListadoEstablosPage } from "../establos/establos";
 
 @Component({
     selector: "segment-datos",

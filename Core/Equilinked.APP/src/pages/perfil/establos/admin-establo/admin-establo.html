@@ -67,7 +67,8 @@
                 </ion-col>
                 <ion-col col-3>
                     <ion-item>
-                        <ion-input type="text" class="equi-principal-color equi-input-italic-text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)" [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
+                        <ion-input type="text" class="equi-principal-color equi-input-italic-text" [value]="getLabelTipoTelefoById(tipoTelefonoPorTelefono[i].tipoTelefono)"
+                            [readonly]="true" (focus)="selectTipoTelefono(tipoTelefonoPorTelefono[i])"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col col-2 class="col-center">
@@ -83,10 +84,14 @@
             <ion-col col-2 class="col-center">
                 <ion-icon name="pin" class="equi-icon-input"></ion-icon>
             </ion-col>
-            <ion-col>
+            <ion-col col-8>
                 <ion-item>
                     <ion-input class="equi-input-normal-text" type="text" formControlName="Direccion" placeholder="{{ 'PANT034_TXT_DIR' | translate }}"></ion-input>
                 </ion-item>
+
+            </ion-col>
+            <ion-col col-2 class="col-center">
+                <ion-icon name="ios-map" class="equi-icon-input" (click)="openMap()"></ion-icon>
             </ion-col>
         </ion-row>
         <ion-row>

@@ -71,40 +71,43 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
             message: this.labels["PANT006_ALT_ASMSG"],
             buttons: [
                 { text: this.labels["PANT006_BTN_CAN"], role: "cancel" },
-                { text: this.labels["PANT006_BTN_ACE"], handler: this.callbackSelectEstablo(establo) }
+                {
+                    text: this.labels["PANT006_BTN_ACE"], handler: () => {
+                        this.callbackSelectEstablo(establo);
+                    }
+                }
             ]
         }).present();
     }
 
-    private callbackSelectEstablo(establo: any): Function {
-        return () => {
-            this.commonService.showLoading(this.labels["PANT006_ALT_CAR"]);
+    callbackSelectEstablo = (establo) => {
+        this.commonService.showLoading(this.labels["PANT006_ALT_CAR"]);
 
-            this.establosService.getEstabloById(establo.ID)
-                .then(establo => {
-                    if (!establo.Caballo) {
-                        establo.Caballo = new Array<any>();
-                    }
-                    establo.Caballo.push(this.caballo);
-                    return this.establosService.updateEstablo(establo);
-                }).then(() => {
-                    this.commonService.hideLoading();
+        this.establosService.getEstabloById(establo.ID)
+            .then(establo => {
+                if (!establo.Caballo) {
+                    establo.Caballo = new Array<any>();
+                }
+                establo.Caballo.push(this.caballo);
+                return this.establosService.updateEstablo(establo);
+            }).then(() => {
+                this.commonService.hideLoading();
 
-                    //Cuando viene de grupo de la pantalla sin ubicacion
-                    this.events.publish("grupo-ubicaciones:refresh");
-                    this.events.publish("grupo-caballos-sin-ubicacion:refresh");
+                //Cuando viene de grupo de la pantalla sin ubicacion
+                this.events.publish("grupo-ubicaciones:refresh");
+                this.events.publish("grupo-caballos-sin-ubicacion:refresh");
 
-                    //Cuando viene de caballos
-                    this.events.publish("caballo-ficha:refresh"); //Ficha de caballo
-                    this.events.publish("caballos:refresh"); //Lista de caballos
+                //Cuando viene de caballos
+                this.events.publish("caballo-ficha:refresh"); //Ficha de caballo
+                this.events.publish("caballos:refresh"); //Lista de caballos
 
 
-                    this.navController.pop().then(() => {
-                        this.commonService.ShowInfo(this.labels["PANT006_MSG_ASOK"]);
-                    });
-                }).catch(err => {
-                    this.commonService.ShowErrorHttp(err, this.labels["PANT006_MSG_ERRASI"]);
+                this.navController.pop().then(() => {
+                    this.commonService.ShowInfo(this.labels["PANT006_MSG_ASOK"]);
                 });
-        };
+            }).catch(err => {
+                this.commonService.ShowErrorHttp(err, this.labels["PANT006_MSG_ERRASI"]);
+            });
+
     }
 }

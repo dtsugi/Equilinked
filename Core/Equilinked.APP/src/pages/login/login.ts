@@ -10,7 +10,6 @@ import { SecurityService } from '../../services/security.service';
 import { LanguageService } from '../../services/language.service';
 import { NotificacionesPage } from '../notificaciones/notificaciones';
 import { HomePage } from '../home/home';
-import { MainCtrl } from "../../app/main-ctrl";
 
 @Component({
     templateUrl: 'login.html',
@@ -59,7 +58,7 @@ export class LoginPage {
                 // this.navCtrl.setRoot(HomePage);
             }, error => {
                 console.log(error);
-                this._commonService.hideLoading();
+                //this._commonService.hideLoading();
                 this._commonService.ShowErrorHttp(error, this.labels["PANT001_MSG_ERR_SES"]);
             });
         // () => console.log("FINISHED LOGIN"));

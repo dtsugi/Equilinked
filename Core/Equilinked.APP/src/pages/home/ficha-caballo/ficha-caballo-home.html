@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content>
-    <ion-segment [(ngModel)]="menu" color="primary">
+    <ion-segment [(ngModel)]="menu" (ngModelChange)="showSlide($event)" color="primary">
         <ion-segment-button value="informacion">
             {{ "PANT003_BTN_INF" | translate }}
         </ion-segment-button>
@@ -21,102 +21,104 @@
         </ion-segment-button>
     </ion-segment>
 
-    <div *ngIf="menu == 'informacion'">
-        <ion-grid>
-            <ion-row>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(1)">
-                        <div>
-                            <ion-icon name='albums'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_DAT" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(2)">
-                        <div>
-                            <ion-icon name='pin'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_UBI" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(3)">
-                        <div>
-                            <ion-icon name='medkit'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_VET" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-            </ion-row>
+    <ion-slides (ionSlideDidChange)="slideChanged($event)">
+        <ion-slide class="equi-content-slide-start">
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(1)">
+                            <div>
+                                <ion-icon name='albums'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_DAT" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(2)">
+                            <div>
+                                <ion-icon name='pin'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_UBI" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(3)">
+                            <div>
+                                <ion-icon name='medkit'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_VET" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                </ion-row>
 
 
-            <ion-row>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(4)">
-                        <div>
-                            <ion-icon name='trophy'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_EVETS" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(5)">
-                        <div>
-                            <ion-icon name='paw'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_HERR" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(6)">
-                        <div>
-                            <ion-icon name='nutrition'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_ALIM" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-            </ion-row>
+                <ion-row>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(4)">
+                            <div>
+                                <ion-icon name='trophy'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_EVETS" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(5)">
+                            <div>
+                                <ion-icon name='paw'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_HERR" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(6)">
+                            <div>
+                                <ion-icon name='nutrition'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_ALIM" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                </ion-row>
 
 
-            <ion-row>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(7)">
-                        <div>
-                            <ion-icon name='medical'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_DEN" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(8)">
-                        <div>
-                            <ion-icon name='nuclear'></ion-icon>
-                            <br>
-                            <label style="font-size: 12px">{{ "PANT003_BTN_DESP" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-                <ion-col width-33>
-                    <button ion-button style="width:100%" (click)="GoTo(9)">
-                        <div>
-                            <ion-icon name='paper'></ion-icon>
-                            <br>
-                            <label>{{ "PANT003_BTN_NOT" | translate }}</label>
-                        </div>
-                    </button>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </div>
-    <!--<div *ngIf="menu == 'fotos'">
-        <menuFotos-caballo></menuFotos-caballo>
-    </div>-->
+                <ion-row>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(7)">
+                            <div>
+                                <ion-icon name='medical'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_DEN" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(8)">
+                            <div>
+                                <ion-icon name='nuclear'></ion-icon>
+                                <br>
+                                <label style="font-size: 12px">{{ "PANT003_BTN_DESP" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                    <ion-col col-4>
+                        <button ion-button block (click)="GoTo(9)">
+                            <div>
+                                <ion-icon name='paper'></ion-icon>
+                                <br>
+                                <label>{{ "PANT003_BTN_NOT" | translate }}</label>
+                            </div>
+                        </button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-slide>
+        <ion-slide class="equi-content-slide-start">
+            Fotos
+        </ion-slide>
+    </ion-slides>
 </ion-content>

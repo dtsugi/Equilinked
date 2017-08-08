@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Events, NavController, NavParams, PopoverController, ToastController } from "ionic-angular";
+import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Events, NavController, NavParams, PopoverController, Slides, ToastController } from "ionic-angular";
 import { CommonService } from "../../../../../services/common.service";
 import { GruposCaballosService } from "../../../../../services/grupos-caballos.service";
 import { SecurityService } from "../../../../../services/security.service";
@@ -7,7 +7,7 @@ import { UserSessionEntity } from "../../../../../model/userSession";
 import { GruposCaballos } from "../grupos-caballos";
 import { OpcionesFichaGrupo } from "./opciones-ficha/opciones-ficha";
 import { LanguageService } from '../../../../../services/language.service';
-
+import { SegmentCaballosGrupo } from "./segment-caballos/segment-caballos";
 @Component({
     templateUrl: "./administracion-grupo.html",
     providers: [LanguageService, CommonService, GruposCaballosService, SecurityService]
@@ -16,6 +16,12 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
 
     private grupoId: number;
     private session: UserSessionEntity;
+    private slidesMap: Map<string, number>;
+    private indexSlidesMap: Map<number, string>;
+    private lastSlide: string;
+
+    @ViewChild(Slides) slides: Slides;
+    @ViewChild(SegmentCaballosGrupo) caballosGrupo: SegmentCaballosGrupo;
 
     labels: any = {};
     grupo: any;
@@ -33,21 +39,51 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
         private securityService: SecurityService,
         private languageService: LanguageService
     ) {
-        languageService.loadLabels().then(labels => this.labels = labels);
-        this.grupo = {};
+        this.slidesMap = new Map<string, number>();
+        this.indexSlidesMap = new Map<number, string>();
         this.segmentSelection = "ficha";
+
+        this.grupo = {};
         this.parametrosCaballos = { modoEdicion: false, getCountSelected: null, grupoDefault: false };
     }
 
     ngOnInit(): void {
         this.session = this.securityService.getInitialConfigSession();
         this.grupoId = this.navParams.get("grupoId");
-        this.getInfoGrupo(true);
+
+        this.lastSlide = "ficha";
+        this.slidesMap.set("ficha", 0);
+        this.slidesMap.set("caballos", 1);
+        this.indexSlidesMap.set(0, "ficha");
+        this.indexSlidesMap.set(1, "caballos");
+
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.getInfoGrupo(true);
+        });
+
         this.addEvents();
     }
 
     ngOnDestroy(): void {
         this.removeEvents();
+    }
+
+    showSlide(slide: string) {
+        if (slide != this.lastSlide) {
+            this.slides.slideTo(this.slidesMap.get(slide), 500);
+            this.lastSlide = slide;
+            this.loadInfoSegment();
+        }
+    }
+
+    slideChanged(slide: any) {
+        let tab: string = this.indexSlidesMap.get(slide.realIndex);
+        if (this.lastSlide != tab) {
+            this.segmentSelection = tab;
+            this.lastSlide = tab;
+            this.loadInfoSegment();
+        }
     }
 
     goBack(): void {
@@ -79,6 +115,12 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     /*Solicitar confirmacion de eliminacion en "CABALLOS"*/
     delete(): void {
         this.events.publish("caballos-grupo:eliminacion:confirmed");
+    }
+
+    private loadInfoSegment(): void {
+        if (this.segmentSelection == "caballos") {
+            this.caballosGrupo.getAllCaballosGrupo(true);
+        }
     }
 
     private getInfoGrupo(showLoading: boolean): void {
