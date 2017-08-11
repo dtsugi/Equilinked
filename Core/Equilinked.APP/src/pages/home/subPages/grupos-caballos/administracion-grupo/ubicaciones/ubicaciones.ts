@@ -4,16 +4,16 @@ import { CommonService } from "../../../../../../services/common.service";
 import { CaballoService } from "../../../../../../services/caballo.service";
 import { EstablosService } from "../../../../../../services/establos.service";
 import { SecurityService } from "../../../../../../services/security.service";
+import { GruposCaballosService }  from "../../../../../../services/grupos-caballos.service";
 import { UserSessionEntity } from "../../../../../../model/userSession";
 import { DetalleEstabloPage } from "./detalle-establo/detalle-establo";
 import { EdicionEstabloCaballosPage } from "../../../../../perfil/establos/admin-establo/edicion-caballos";
-import { AdminEstablosPage } from "../../../../../perfil/establos/admin-establo/admin-establo";
 import { CaballosSinUbicacionPage } from "./caballos-sin-ubicacion/caballos-sin-ubicacion";
 import { LanguageService } from "../../../../../../services/language.service";
 
 @Component({
     templateUrl: "./ubicaciones.html",
-    providers: [LanguageService, CaballoService, CommonService, EstablosService, SecurityService]
+    providers: [LanguageService, CaballoService, CommonService, EstablosService, GruposCaballosService, SecurityService]
 })
 export class UbicacionesGrupoPage implements OnDestroy, OnInit {
 
@@ -29,6 +29,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
         private commonService: CommonService,
         private events: Events,
         private establosService: EstablosService,
+        private gruposCaballosService: GruposCaballosService,
         private navController: NavController,
         private navParams: NavParams,
         private securityService: SecurityService,
@@ -97,7 +98,8 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
         this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
             .then(establos => {
                 establosPropietario = establos;
-                return this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
+                return this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID]);
+                //return this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
             }).then(caballos => {
                 let mapEstablos: Map<number, any> = new Map<number, any>();
                 for (let est of establosPropietario) {

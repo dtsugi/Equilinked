@@ -52,8 +52,8 @@
             </ion-item>
             <ion-item-options>
               <button ion-button color="danger" icon-left (click)="delete(nh)">
-              <ion-icon name="trash"></ion-icon>  
-              {{ 'PANT021_BTN_ELI' | translate }}     
+              <ion-icon name="trash"></ion-icon>
+              {{ 'PANT021_BTN_ELI' | translate }}
           </button>
             </ion-item-options>
           </ion-item-sliding>
@@ -85,7 +85,7 @@
           <ion-col col-8>
             <ion-list no-lines>
               <ion-item-sliding *ngFor="let n of nh.Notificaciones; let i = index">
-                <ion-item text-wrap (click)="delete(n)">
+                <ion-item text-wrap (click)="viewNotification(n)">
                   <ion-row [ngClass]="{'border-bottom': i < (nh.Notificaciones.length-1)}">
                     <ion-col col-12 class="equi-title-note"><span class="equi-bold-text">{{n.Titulo}}</span></ion-col>
                     <ion-col col-12 class="equi-title-note" *ngIf="n.Ubicacion && n.Ubicacion != null">
@@ -99,8 +99,8 @@
                 </ion-item>
                 <ion-item-options>
                   <button ion-button color="danger" icon-left (click)="delete(n)">
-                      <ion-icon name="trash"></ion-icon>  
-                      {{ 'PANT021_BTN_ELI' | translate }}     
+                      <ion-icon name="trash"></ion-icon>
+                      {{ 'PANT021_BTN_ELI' | translate }}
                   </button>
                 </ion-item-options>
               </ion-item-sliding>

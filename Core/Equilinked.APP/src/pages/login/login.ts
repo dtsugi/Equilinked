@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NavController, NavParams } from 'ionic-angular';
-import { Utils } from '../../app/utils'
 import { CommonService } from '../../services/common.service';
 import { TabsPage } from '../tabs/tabs';
 import { UserSessionEntity } from '../../model/UserSessionEntity';
 import { UsuarioService } from '../../services/usuario.service';
 import { SecurityService } from '../../services/security.service';
 import { LanguageService } from '../../services/language.service';
-import { NotificacionesPage } from '../notificaciones/notificaciones';
-import { HomePage } from '../home/home';
 
 @Component({
     templateUrl: 'login.html',
@@ -54,13 +51,9 @@ export class LoginPage {
                 this._securityService.setInitialConfigSession(res);
                 this._commonService.hideLoading();
                 this.navCtrl.setRoot(TabsPage);
-                // this.navCtrl.setRoot(NotificacionesPage);
-                // this.navCtrl.setRoot(HomePage);
             }, error => {
                 console.log(error);
-                //this._commonService.hideLoading();
                 this._commonService.ShowErrorHttp(error, this.labels["PANT001_MSG_ERR_SES"]);
             });
-        // () => console.log("FINISHED LOGIN"));
     }
 }

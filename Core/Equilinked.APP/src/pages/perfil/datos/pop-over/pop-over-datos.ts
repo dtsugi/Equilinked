@@ -1,6 +1,6 @@
+import { App } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { AlertController, NavParams, NavController, ViewController } from 'ionic-angular';
-import { CommonService } from '../../../../services/common.service';
 import { SecurityService } from '../../../../services/security.service';
 import { LoginPage } from '../../../login/login';
 import { PerfilPage } from "../../perfil";
@@ -11,7 +11,7 @@ import { LanguageService } from '../../../../services/language.service';
 @Component({
     selector: 'pop-over-datos',
     templateUrl: 'pop-over-datos.html',
-    providers: [LanguageService, CommonService, SecurityService]
+    providers: [LanguageService, SecurityService]
 })
 export class PopoverDatosPage {
 
@@ -20,10 +20,10 @@ export class PopoverDatosPage {
     labels: any = {};
 
     constructor(
+        private app: App,
         private alertController: AlertController,
         public navCtrl: NavController,
         public navParams: NavParams,
-        private _commonService: CommonService,
         private _securityService: SecurityService,
         public viewController: ViewController,
         private languageService: LanguageService
@@ -59,8 +59,10 @@ export class PopoverDatosPage {
                     text: this.labels["PANT026_BTN_ACE"],
                     handler: () => {
                         this._securityService.logout();
-                        this.navCtrl.setRoot(LoginPage);
-                        this.navCtrl.push(LoginPage);
+                        this.app.getRootNav().setRoot(LoginPage);
+                        //this.navCtrlDatos.setRoot(LoginPage);
+                        //this.navCtrl.popToRoot();
+                        //this.navCtrlDatos.push(LoginPage);
                     }
                 }
             ]

@@ -3,6 +3,18 @@
 <equi-button-add [label]="labels['PANT002_BTN_NUCA']" (action)="goInsertCaballo()"></equi-button-add>
 
 <ion-list no-lines>
-    <equi-item-list *ngFor="let caballo of caballosList" [title]="caballo.Nombre" [image]="'assets/img/caballo.jpg'" [labelDelete]="labels['PANT002_BTN_ELCA']"
-        (actionItemClick)="goToFicha(caballo)" (actionItemDelete)="confirmDeleteCaballo(caballo.ID)"></equi-item-list>
+  <ion-item-sliding *ngFor="let caballo of caballosList">
+    <ion-item (click)="goToFicha(caballo)">
+      <ion-avatar item-left>
+        <img src="assets/img/caballo.jpg">
+      </ion-avatar>
+      <span class="equi-title-form">{{caballo.Nombre}}</span>
+    </ion-item>
+    <ion-item-options>
+      <button ion-button color="danger" icon-left (click)="confirmDeleteCaballo(caballo.ID)">
+        <ion-icon name="trash"></ion-icon>
+        {{labels['PANT002_BTN_ELCA']}}
+      </button>
+    </ion-item-options>
+  </ion-item-sliding>
 </ion-list>

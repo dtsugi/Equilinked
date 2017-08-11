@@ -5,14 +5,14 @@
         </ion-buttons>
 
         <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="!form.valid" (click)="save()">
+            <button class="equi-toolbar-btn" [disabled]="form && !form.valid" (click)="save()">
                 {{ "PANT004_BTN_GUAR" | translate }}
             </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form [formGroup]="form">
+    <form *ngIf="form"  [formGroup]="form">
         <ion-grid>
             <ion-row>
                 <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOM" | translate }}</ion-col>
@@ -49,7 +49,7 @@
             <ion-row>
                 <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NAC" | translate }}</ion-col>
                 <ion-col col-5>
-                    <ion-datetime class="equi-input-normal-text" displayFormat="DD/MM/YYYY HH" pickerFormat="D MMMM YYYY HH" cancelText="{{ 'PANT004_BTN_CAN' | translate }}"
+                    <ion-datetime class="equi-input-normal-text" displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY" cancelText="{{ 'PANT004_BTN_CAN' | translate }}"
                         doneText="{{ 'PANT004_BTN_ACEPT' | translate }}" formControlName="FechaNacimiento" max="2050" (ngModelChange)="calculateAge($event)"></ion-datetime>
                 </ion-col>
                 <ion-col col-4 class="equi-col-center">
@@ -72,7 +72,7 @@
                     <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNMA' | translate }}" formControlName="NombreMadre"></ion-input>
                 </ion-col>
             </ion-row>
-            
+
             <!--<ion-row>
                 <ion-col col-3></ion-col>
                 <ion-col col-3>

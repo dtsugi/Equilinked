@@ -1,11 +1,11 @@
 <ion-header>
-    <ion-toolbar> 
+    <ion-toolbar>
         <ion-buttons left>
             <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
             <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
-                  {{ 'PANT035_BTN_CAN' | translate }} 
+                  {{ 'PANT035_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
@@ -21,7 +21,7 @@
             <span class="equi-toolbar-subtitle">{{ 'PANT035_LBL_SUBTCA' | translate }}</span>
         </ion-title>
 
-        <ion-buttons right>
+        <ion-buttons *ngIf="!grupo" right>
             <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
                 {{ 'PANT035_BTN_EDI' | translate }}
             </button>

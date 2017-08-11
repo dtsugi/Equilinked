@@ -48,6 +48,7 @@ import { SeleccionFotosModal } from "../pages/home/admin-caballos/seleccion-foto
 import { UbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/ubicacion";
 import { AsignacionUbicacionCaballoPage } from "../pages/home/ficha-caballo/ubicacion/asignacion-ubicacion/asignacion-ubicacion";
 import { OpcionesUbicacionModal } from "../pages/home/ficha-caballo/ubicacion/opciones-ubicacion/opciones-ubicacion";
+import { OpcionesTelefonoPopover } from "../pages/home/ficha-caballo/ubicacion/opciones-telefono/opciones-telefono";
 
 /* Caballos-Grupos */
 import { GruposCaballos } from "../pages/home/subPages/grupos-caballos/grupos-caballos";
@@ -143,6 +144,7 @@ export function createTranslateLoader(http: Http) {
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
+    OpcionesTelefonoPopover,
     /* Caballos-Grupos */
     GruposCaballos,
     CreacionGrupoPage,
@@ -237,6 +239,7 @@ export function createTranslateLoader(http: Http) {
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
+    OpcionesTelefonoPopover,
     /* Caballos-Grupos */
     CreacionGrupoPage,
     AdministracionGrupoPage,

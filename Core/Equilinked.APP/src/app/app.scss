@@ -29,7 +29,6 @@ $_EQUI_DANGER_COLOR: #f53d3d;
 
 body,ion-content {
     font-family: NotoSans !important;
-        
 }
 
 // .toolbar-top-center {
@@ -86,15 +85,15 @@ body,ion-content {
 
 /* Equilinked Styles */
 
-.equi-toolbar {    
+.equi-toolbar {
 }
 
-.equi-toolbar-title-content{    
-    margin: auto;    
+.equi-toolbar-title-content{
+    margin: auto;
     text-align: center;
 }
-.equi-toolbar-title{            
-    text-transform: uppercase !important;    
+.equi-toolbar-title{
+    text-transform: uppercase !important;
     font-weight: 700 !important;
     font-size: 17px !important;
 }
@@ -102,13 +101,13 @@ body,ion-content {
 .equi-toolbar-subtitle {
     color: $_EQUI_PRINCIPAL_COLOR;
     font-size: 13px !important;
-    font-style: italic !important;    
+    font-style: italic !important;
 }
 .equi-toolbar-btn{
     background-color: transparent;
     color: $_EQUI_PRINCIPAL_COLOR;
-    font-size: 16px !important;   
-    text-transform: none !important; 
+    font-size: 16px !important;
+    text-transform: none !important;
     padding-left: 5px !important;
     padding-right: 5px !important;
 }
@@ -117,14 +116,14 @@ body,ion-content {
 .equi-title-form-primary{
     font-family: NotoSans !important;
     font-size: 14px !important;
-    font-weight: bold !important;  
+    font-weight: bold !important;
 }
 
 .equi-subtitle-form {
     font-family: NotoSans !important;
     font-size: 13px !important;
     font-weight: normal !important;
-    font-style: italic !important;  
+    font-style: italic !important;
 }
 
 .equi-title-form-primary{
@@ -159,7 +158,7 @@ body,ion-content {
     color:#CCC6C8;
 }
 
-.equi-icon-add {    
+.equi-icon-add {
     color: $_EQUI_PRINCIPAL_COLOR;
     font-size: 35pt;
     padding: 0 5px;
@@ -223,7 +222,7 @@ body,ion-content {
 }
 
 .equi-input-title-note {
-    font-size: 18px !important; 
+    font-size: 18px !important;
     font-weight: bold !important;
     font-family: NotoSans !important;
 }
@@ -242,7 +241,7 @@ body,ion-content {
 
 .equi-select-width {
     max-width: none;
-} 
+}
 
 .equi-col-note {
     overflow: hidden !important;
@@ -263,7 +262,7 @@ body,ion-content {
 }
 
 .tabs-md .tab-button[aria-selected=true] {
-    color: white !important; 
+    color: white !important;
     background-color: #42A6AC !important;
 }
 
@@ -277,7 +276,7 @@ body,ion-content {
     font-family: NotoSans !important;
     font-size: 16px !important;
     font-weight: normal !important;
-    text-transform: capitalize !important; 
+    text-transform: capitalize !important;
 }
 
 .border-bottom {
@@ -297,8 +296,6 @@ body,ion-content {
 .equi-expired-alert-normal {
     color:#CCC6C8 !important;
     font-size: 16px !important;
-    font-family: NotoSans !important;
-    font-weight: normal !important;
 }
 
 .equi-expired-alert-bold {
@@ -310,6 +307,19 @@ body,ion-content {
 
 .equi-content-slide-start {
     align-items: flex-start !important;
+}
+
+a.equi-no-link:link {
+  text-decoration: none !important;
+}
+
+.equi-button-option {
+  font-size: 25px !important;
+}
+
+.equi-logo-login {
+  width: 200px;
+  height: 200px;
 }
 
 ion-slides {

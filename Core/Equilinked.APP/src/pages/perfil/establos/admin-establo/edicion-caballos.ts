@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Events, NavController, NavParams, ToastController } from "ionic-angular";
 import { FichaCaballoPage } from "../../../home/ficha-caballo/ficha-caballo-home";
-import { CaballoService } from "../../../../services/caballo.service";
+import { GruposCaballosService } from "../../../../services/grupos-caballos.service";
 import { CommonService } from "../../../../services/common.service";
 import { EstablosService } from "../../../../services/establos.service";
 import { LanguageService } from '../../../../services/language.service';
+import { SecurityService } from "../../../../services/security.service";
+import { UserSessionEntity } from "../../../../model/userSession";
 
 @Component({
     templateUrl: "./edicion-caballos.html",
-    providers: [LanguageService, CaballoService, CommonService, EstablosService]
+    providers: [LanguageService, CommonService, EstablosService, GruposCaballosService, SecurityService]
 })
 export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
 
@@ -16,6 +18,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     private establoCaballosEdicionResp: Array<any>;
     private eventList: string;
     private eventItem: string;
+    private session: UserSessionEntity;
 
     establoCabllos: Array<any>;
     establoCaballosEdicion: Array<any>;
@@ -25,26 +28,29 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     modoEdicion: boolean;
 
     constructor(
-        private caballoService: CaballoService,
         private commonService: CommonService,
         private establosService: EstablosService,
         private events: Events,
+        private gruposCaballosService: GruposCaballosService,
         private navController: NavController,
         private navParams: NavParams,
-        private languageService: LanguageService
+        private languageService: LanguageService,
+        private securityService: SecurityService
     ) {
-        languageService.loadLabels().then(labels => this.labels = labels);
         this.modoEdicion = false;
         this.establoCabllos = new Array<any>();
     }
 
     ngOnInit(): void {
+        this.session = this.securityService.getInitialConfigSession();
         this.establo = this.navParams.get("establo");
         this.grupo = this.navParams.get("grupo");
         this.eventList = this.navParams.get("eventRefreshList");
         this.eventItem = this.navParams.get("eventRefreshItem");
-
-        this.listCaballosByEstabloId(true); //Listamos los caballos del establo
+        this.languageService.loadLabels().then(labels => {
+            this.labels = labels;
+            this.listCaballos(true); //Listamos los caballos del establo
+        });
         this.addEvents();
     }
 
@@ -140,6 +146,29 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
             });
     }
 
+    private listCaballos(loading: boolean): void {
+      if(this.grupo) {
+        this.listCaballosByGrupo(loading);
+      } else {
+        this.listCaballosByEstabloId(loading);
+      }
+    }
+
+    private listCaballosByGrupo(loading): void {
+      if (loading)
+        this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
+        this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID])
+          .then(caballos => {
+            this.establoCabllos = caballos;
+            this.establoCaballosRespaldo = caballos;
+
+            if(loading)
+              this.commonService.hideLoading();
+          }).catch(err => {
+            this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
+        });
+    }
+
     private listCaballosByEstabloId(showLoading: boolean): void {
         if (showLoading)
             this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
@@ -151,14 +180,13 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
                 if (showLoading)
                     this.commonService.hideLoading();
             }).catch(err => {
-                console.error(err);
                 this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
             });
     }
 
     private addEvents(): void {
         this.events.subscribe("establo-caballos:refresh", () => {
-            this.listCaballosByEstabloId(false);
+            this.listCaballos(false);
         });
     }
 

@@ -1,19 +1,20 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Events, ModalController, NavController, NavParams } from "ionic-angular";
+import { Events, ModalController, NavController, NavParams, PopoverController } from "ionic-angular";
 import { EstablosService } from "../../../../services/establos.service";
 import { CommonService } from "../../../../services/common.service";
 import { OpcionesUbicacionModal } from "./opciones-ubicacion/opciones-ubicacion";
 import { LanguageService } from '../../../../services/language.service';
 import { AppConfig } from "../../../../app/app.config";
+import { OpcionesTelefonoPopover} from "./opciones-telefono/opciones-telefono";
 
 @Component({
     templateUrl: "./ubicacion.html",
     providers: [LanguageService, CommonService, EstablosService]
 })
 export class UbicacionCaballoPage implements OnDestroy, OnInit {
-    
+
     KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
-    
+
     private caballo;
 
     grupo: any;
@@ -27,7 +28,8 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
         private modalController: ModalController,
         private navController: NavController,
         private navParams: NavParams,
-        private languageService: LanguageService
+        private languageService: LanguageService,
+        private popoverController: PopoverController
     ) {
         languageService.loadLabels().then(labels => this.labels = labels);
     }
@@ -45,6 +47,13 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
     edit(): void {
         let params: any = { establo: JSON.parse(JSON.stringify(this.establo)), navCtrl: this.navController };
         this.modalController.create(OpcionesUbicacionModal, params).present();
+    }
+
+    openOptions(ev, number: string): void {
+        this.popoverController.create(OpcionesTelefonoPopover, {telephone: number})
+          .present({
+            ev: ev
+          });
     }
 
     private getInfoEstablo(showLoading: boolean): void {

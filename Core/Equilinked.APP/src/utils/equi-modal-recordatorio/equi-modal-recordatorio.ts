@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavParams, ToastController, ViewController } from "ionic-angular";
+import { NavParams, ViewController } from "ionic-angular";
 import { CommonService } from "../../services/common.service";
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonService } from "../../services/common.service";
 })
 export class EquiModalRecordatorio implements OnInit {
 
-    private funcionUnidadesTiempo: Promise<any>; //Esta la ejecutamos 
+    private funcionUnidadesTiempo: Promise<any>; //Esta la ejecutamos
 
     recordatorio: any;
     unidadesTiempo: Array<any>;

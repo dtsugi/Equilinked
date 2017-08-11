@@ -18,7 +18,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form [formGroup]="form">
+    <form *ngIf="form" [formGroup]="form">
         <ion-grid>
             <ion-row>
                 <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOM" | translate }}</ion-col>
@@ -59,7 +59,7 @@
             <ion-row>
                 <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NAC" | translate }}</ion-col>
                 <ion-col col-5>
-                    <ion-datetime class="equi-input-normal-text" [disabled]="true" displayFormat="DD/MM/YYYY HH" pickerFormat="D MMMM YYYY HH"
+                    <ion-datetime class="equi-input-normal-text" [disabled]="true" displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY"
                         cancelText="Cancelar" doneText="Aceptar" formControlName="FechaNacimiento" max="2050" (ngModelChange)="calculateAge($event)"></ion-datetime>
                 </ion-col>
                 <ion-col col-4 class="equi-col-center">
