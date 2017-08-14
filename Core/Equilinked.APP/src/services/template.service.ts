@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Rx';
-import { AppConfig } from '../app/app.config';
-import { Utils } from '../app/utils';
-// import { } from '../model/';
+import {AppConfig} from '../app/app.config';
 
 @Injectable()
 export class TemplateService {
-    private actionUrl: string = AppConfig.API_URL + "api/{controller}/";
-    private url = "";
+  private actionUrl: string = AppConfig.API_URL + "api/{controller}/";
+  private url = "";
 
-    constructor(private _http: Http) { }    
+  constructor(private _http: Http) {
+  }
 }

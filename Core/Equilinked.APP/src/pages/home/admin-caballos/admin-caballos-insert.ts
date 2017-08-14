@@ -61,8 +61,6 @@ export class AdminCaballosInsertPage {
       this.getAllPaises();
       this.initForm();
     });
-
-
   }
 
   initForm() {
@@ -93,7 +91,6 @@ export class AdminCaballosInsertPage {
       TelefonoResponsable: [this.caballoEntity.ResponsableCaballo.Telefono],
       CorreoResponsable: [this.caballoEntity.ResponsableCaballo.CorreoElectronico]
     });
-
     this.calculateAge(this.caballoEntity.FechaNacimiento);//Ajustar la edad!
     if (!this.caballoEntity.ID) {
       this.getInfoPropietario(); //Obtener info del propietario para autocompletar "nombre propietario"
@@ -160,7 +157,6 @@ export class AdminCaballosInsertPage {
   save() {
     this._commonService.showLoading(this.labels["PANT004_ALT_PRO"]);
     this.buildEntity(this.caballoEntity, this.form.value); //se pasan por referencia!
-
     this._caballoService.save(this.caballoEntity)
       .subscribe(res => {
         console.log(res);
@@ -168,12 +164,9 @@ export class AdminCaballosInsertPage {
         this.events.publish("caballo-ficha:refresh");
         this.events.publish("caballos:refresh");
         this.events.publish("grupo-ubicaciones:refresh");//Cuando se llega desde esta pantalla
-
         this.events.publish("caballos-grupo:refresh");//Lista de caballos del grupo
         this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
-
         this.events.publish("establo-caballos:refresh");//Lista de caballos del establo
-
         this._commonService.hideLoading();
         this.navCtrl.pop().then(() => {
           this._commonService.ShowInfo(this.labels["PANT004_MSG_GUOK"]);

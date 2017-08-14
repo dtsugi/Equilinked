@@ -1,23 +1,21 @@
-import { Component, ViewChild } from '@angular/core';
-import { Events, Tab, Tabs } from "ionic-angular"
-import { HomePage } from '../home/home';
-import { NotificacionesPage } from '../notificaciones/notificaciones';
-import { PerfilPage } from "../perfil/perfil";
+import {Component} from '@angular/core';
+import {Tab} from "ionic-angular"
+import {HomePage} from '../home/home';
+import {NotificacionesPage} from '../notificaciones/notificaciones';
+import {PerfilPage} from "../perfil/perfil";
 
 @Component({
   templateUrl: 'tabs.html'
 })
 export class TabsPage {
-
   private indexSelecteds: Array<number>;
-
   homeRoot: any = HomePage;
   // calendarRoot: any = CalendarioPage;
   // cameraRoot: any = CamaraPage;
   eventsRoot: any = NotificacionesPage;
   ownerRoot: any = PerfilPage;
 
-  constructor(private events: Events) {
+  constructor() {
   }
 
   ngOnInit() {

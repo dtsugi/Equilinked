@@ -1,85 +1,76 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Events, NavController, PopoverController, Slides } from "ionic-angular";
-import { PopoverDatosPage } from "./datos/pop-over/pop-over-datos";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {Events, NavController, PopoverController, Slides} from "ionic-angular";
+import {PopoverDatosPage} from "./datos/pop-over/pop-over-datos";
 
 @Component({
-    templateUrl: "perfil.html"
+  templateUrl: "perfil.html"
 })
 export class PerfilPage implements OnInit {
+  private slidesMap: Map<string, number>;
+  private indexSlidesMap: Map<number, string>;
+  private lastSlide: string;
+  @ViewChild(Slides) slides: Slides;
+  currentSlide: string; //el tab seleleccionado
+  parametrosEstablos: any;
 
-    private slidesMap: Map<string, number>;
-    private indexSlidesMap: Map<number, string>;
+  constructor(private events: Events,
+              public navCtrl: NavController,
+              public popoverCtrl: PopoverController) {
+    this.slidesMap = new Map<string, number>();
+    this.indexSlidesMap = new Map<number, string>();
+    this.currentSlide = "datos";
+    this.parametrosEstablos = {modoEdicion: false, getCountSelected: null};
+  }
 
-    private lastSlide: string;
+  ngOnInit() {
+    this.slides.threshold = 120;
+    //this.slides.simulateTouch = true;
+    this.lastSlide = "datos";
+    this.slidesMap.set("datos", 0);
+    this.slidesMap.set("establos", 1);
+    this.indexSlidesMap.set(0, "datos");
+    this.indexSlidesMap.set(1, "establos");
+  }
 
-    @ViewChild(Slides) slides: Slides;
-
-    currentSlide: string; //el tab seleleccionado
-
-    parametrosEstablos: any;
-
-    constructor(
-        private events: Events,
-        public navCtrl: NavController,
-        public popoverCtrl: PopoverController
-    ) {
-        this.slidesMap = new Map<string, number>();
-        this.indexSlidesMap = new Map<number, string>();
-
-        this.currentSlide = "datos";
-        this.parametrosEstablos = { modoEdicion: false, getCountSelected: null };
+  showSlide(slide: string) {
+    if (slide != this.lastSlide) {
+      this.slides.slideTo(this.slidesMap.get(slide), 500);
+      this.lastSlide = slide;
     }
+  }
 
-    ngOnInit() {
-        this.slides.threshold = 120;
-        //this.slides.simulateTouch = true;
-
-        this.lastSlide = "datos";
-        this.slidesMap.set("datos", 0);
-        this.slidesMap.set("establos", 1);
-        this.indexSlidesMap.set(0, "datos");
-        this.indexSlidesMap.set(1, "establos");
+  slideChanged(slide: any) {
+    let tab: string = this.indexSlidesMap.get(slide.realIndex);
+    if (this.lastSlide != tab) {
+      this.currentSlide = tab;
+      this.lastSlide = tab;
     }
+  }
 
-    showSlide(slide: string) {
-        if (slide != this.lastSlide) {
-            this.slides.slideTo(this.slidesMap.get(slide), 500);
-            this.lastSlide = slide;
-        }
-    }
+  /*Se visualiza el popover de opciones en "DATOS" */
+  presentPopover(ev) {
+    let popover = this.popoverCtrl.create(PopoverDatosPage, {
+      navController: this.navCtrl,
+      perfilPage: this
+    });
+    popover.present({
+      ev: ev
+    });
+  }
 
-    slideChanged(slide: any) {
-        let tab: string = this.indexSlidesMap.get(slide.realIndex);
-        if (this.lastSlide != tab) {
-            this.currentSlide = tab;
-            this.lastSlide = tab;
-        }
-    }
+  /*Activa la seleccion de establos para eliminacion en "ESTABLOS" */
+  enabledDeleteEstablos(): void {
+    this.parametrosEstablos.modoEdicion = true;
+    this.events.publish("establos:eliminacion:enabled");
+  }
 
-    /*Se visualiza el popover de opciones en "DATOS" */
-    presentPopover(ev) {
-        let popover = this.popoverCtrl.create(PopoverDatosPage, {
-            navController: this.navCtrl,
-            perfilPage: this
-        });
-        popover.present({
-            ev: ev
-        });
-    }
+  /*Desactiva la seleccion de establos para eliminacion en "ESTABLOS" */
+  disabledDeleteCaballos(): void {
+    this.parametrosEstablos.modoEdicion = false;
+  }
 
-    /*Activa la seleccion de establos para eliminacion en "ESTABLOS" */
-    enabledDeleteEstablos(): void {
-        this.parametrosEstablos.modoEdicion = true;
-        this.events.publish("establos:eliminacion:enabled");
-    }
-
-    /*Desactiva la seleccion de establos para eliminacion en "ESTABLOS" */
-    disabledDeleteCaballos(): void {
-        this.parametrosEstablos.modoEdicion = false;
-    }
-
-    /*Solicitar confirmacion de eliminacion en "ESTABLOS"*/
-    deleteEstablos(): void {
-        this.events.publish("establos:eliminacion:confirmed");
-    }
+  /*Solicitar confirmacion de eliminacion en "ESTABLOS"*/
+  deleteEstablos(): void {
+    this.events.publish("establos:eliminacion:confirmed");
+  }
 }

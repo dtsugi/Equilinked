@@ -16,7 +16,6 @@ import {LanguageService} from '../../../../services/language.service';
 })
 export class DatosViewPage implements OnInit, OnDestroy {
   labels: any = {};
-
   form: any;
   idCaballo: number;
   nombreCaballo: string = "";
@@ -54,7 +53,6 @@ export class DatosViewPage implements OnInit, OnDestroy {
         this.getCaballo(this.idCaballo);
       }
     });
-
     this.addEvents(); //Registrsamos eventos
   }
 
@@ -90,7 +88,6 @@ export class DatosViewPage implements OnInit, OnDestroy {
       TelefonoResponsable: [this.caballoEntity.ResponsableCaballo.Telefono],
       CorreoResponsable: [this.caballoEntity.ResponsableCaballo.CorreoElectronico]
     });
-
     this.calculateAge(this.caballoEntity.FechaNacimiento);//Ajustar la edad!
   }
 
@@ -136,7 +133,6 @@ export class DatosViewPage implements OnInit, OnDestroy {
         console.log(res);
         this.pelajeList = res;
       }, error => {
-
       });
   }
 
@@ -163,7 +159,6 @@ export class DatosViewPage implements OnInit, OnDestroy {
       caballoEntity: JSON.parse(JSON.stringify(this.caballoEntity)),
       isUpdate: true
     });
-
   }
 
   goBack() {

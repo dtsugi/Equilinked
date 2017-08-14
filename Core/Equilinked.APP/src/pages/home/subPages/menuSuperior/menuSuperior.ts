@@ -1,15 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'menu-superior',
   templateUrl: 'menuSuperior.html'
 })
 export class MenuSuperior implements OnInit {
-
   private mapMenus: Map<number, any>;
-
   @Output() menuChange = new EventEmitter();
-
   lastMenu: string;
   menu: string;
   lastSubmenu: string;
@@ -24,12 +21,11 @@ export class MenuSuperior implements OnInit {
 
   ngOnInit(): void {
     this.mapMenus = new Map<number, any>();
-
-    this.mapMenus.set(0, { submenu: "caballos_ind", menu: "caballos" });
-    this.mapMenus.set(1, { submenu: "caballos_gru", menu: "caballos" });
-    this.mapMenus.set(2, { submenu: "veterinarios_ind", menu: "veterinarios" });
-    this.mapMenus.set(3, { submenu: "fotos_todas", menu: "fotos" });
-    this.mapMenus.set(4, { submenu: "fotos_albums", menu: "fotos" });
+    this.mapMenus.set(0, {submenu: "caballos_ind", menu: "caballos"});
+    this.mapMenus.set(1, {submenu: "caballos_gru", menu: "caballos"});
+    this.mapMenus.set(2, {submenu: "veterinarios_ind", menu: "veterinarios"});
+    this.mapMenus.set(3, {submenu: "fotos_todas", menu: "fotos"});
+    this.mapMenus.set(4, {submenu: "fotos_albums", menu: "fotos"});
   }
 
   /*Consolan la seleccion inferior segun los elementos seleccionados*/
@@ -50,8 +46,7 @@ export class MenuSuperior implements OnInit {
       }
       this.subMenu = submenu;
       this.lastSubmenu = submenu;
-
-      this.menuChange.emit({ value: this.subMenu });
+      this.menuChange.emit({value: this.subMenu});
     }
   }
 
@@ -59,7 +54,6 @@ export class MenuSuperior implements OnInit {
   subMenuChanged(submenu: any): void {
     if (submenu != this.lastSubmenu) {
       this.lastSubmenu = submenu;
-
       let menu: string;
       switch (submenu) {
         case "caballos_ind":
@@ -76,8 +70,7 @@ export class MenuSuperior implements OnInit {
       }
       this.menu = menu;
       this.lastMenu = menu;
-
-      this.menuChange.emit({ value: submenu });
+      this.menuChange.emit({value: submenu});
     }
   }
 

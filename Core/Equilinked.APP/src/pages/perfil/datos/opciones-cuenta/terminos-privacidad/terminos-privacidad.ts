@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import {Component} from "@angular/core";
 
 @Component({
-    templateUrl: "./terminos-privacidad.html"
+  templateUrl: "./terminos-privacidad.html"
 })
 export class TerminosPrivacidadPage {
-    constructor() { }
+  constructor() {
+  }
 }

@@ -1,16 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NavController, Slides, Slide } from 'ionic-angular';
-import { MenuSuperior } from "./subPages/menuSuperior/menuSuperior";
+import {Component, ViewChild} from '@angular/core';
+import {NavController, Slides} from 'ionic-angular';
+import {MenuSuperior} from "./subPages/menuSuperior/menuSuperior";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-
   private mapSlides: Map<string, number>;
   private lastSlide: string;
-
   @ViewChild("menuSuperior") menuSuperior: MenuSuperior;
   @ViewChild(Slides) slides: Slides;
 
@@ -27,7 +25,6 @@ export class HomePage {
     this.mapSlides.set("fotos_todas", 3);
     this.mapSlides.set("fotos_albums", 4);
   }
-
 
   slideChanged(slide: any) {
     if (slide) {

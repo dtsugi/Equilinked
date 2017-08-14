@@ -1,15 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Events, NavController, NavParams } from 'ionic-angular';
-import { Utils } from '../../../../app/utils'
-import { CommonService } from '../../../../services/common.service';
-import { CaballoService } from '../../../../services/caballo.service';
-import { SecurityService } from '../../../../services/security.service';
-import { Caballo } from '../../../../model/caballo';
-import { UserSessionEntity } from '../../../../model/userSession';
-import { FichaCaballoPage } from '../../ficha-caballo/ficha-caballo-home';
-import { AdminCaballosInsertPage } from '../../admin-caballos/admin-caballos-insert';
-import { LanguageService } from '../../../../services/language.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Events, NavController, NavParams} from 'ionic-angular';
+import {CommonService} from '../../../../services/common.service';
+import {CaballoService} from '../../../../services/caballo.service';
+import {SecurityService} from '../../../../services/security.service';
+import {Caballo} from '../../../../model/caballo';
+import {UserSessionEntity} from '../../../../model/userSession';
+import {FichaCaballoPage} from '../../ficha-caballo/ficha-caballo-home';
+import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
+import {LanguageService} from '../../../../services/language.service';
 
 @Component({
   selector: 'caballos-ind',
@@ -17,30 +15,24 @@ import { LanguageService } from '../../../../services/language.service';
   providers: [CommonService, LanguageService, CaballoService, SecurityService]
 })
 export class CaballosInd implements OnDestroy, OnInit {
-
   private caballoIdSelected: number;
-
   caballos: Array<Caballo>;
   caballosList: Array<Caballo>;
   session: UserSessionEntity;
   isDeleting: boolean = false;
   tmpCaballoIdSelected: number = 0;
-
   labels: any = {};
 
-  constructor(
-    private events: Events,
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private _commonService: CommonService,
-    private _caballoService: CaballoService,
-    private _securityService: SecurityService,
-    private languageService: LanguageService
-  ) {
+  constructor(private events: Events,
+              public navCtrl: NavController,
+              public navParams: NavParams,
+              private _commonService: CommonService,
+              private _caballoService: CaballoService,
+              private _securityService: SecurityService,
+              private languageService: LanguageService) {
     languageService.loadLabels().then(labels => this.labels = labels);
     this.caballoIdSelected = 0; //No hay
   }
-
 
   ngOnInit(): void {
     console.log("CABALLOS IND");
@@ -58,12 +50,10 @@ export class CaballosInd implements OnDestroy, OnInit {
   loadcaballos(loading: boolean): void {
     if (loading)
       this._commonService.showLoading(this.labels["PANT002_ALT_PRO"]);
-
     this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
       .subscribe(res => {
         if (loading)
           this._commonService.hideLoading();
-
         this.caballosList = res;
         this.caballos = res;
       }, error => {
@@ -145,5 +135,4 @@ export class CaballosInd implements OnDestroy, OnInit {
   private removeEvents(): void {
     this.events.unsubscribe("caballos:refresh");
   }
-
 }
