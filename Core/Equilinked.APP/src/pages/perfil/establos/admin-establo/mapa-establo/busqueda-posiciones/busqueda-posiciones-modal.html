@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button class="equi-toolbar-btn" (click)="cancel()">
+        {{ 'PANT034_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar [(ngModel)]="search.value" (ionInput)="searchPositions()" [debounce]="1000" [placeholder]="labels['PANT034_TXT_BUSLU']"></ion-searchbar>
+
+  <div *ngIf="loading" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let place of places" (click)="selectPlace(place)">
+      {{place.name}}
+    </ion-item>
+  </ion-list>
+</ion-content>

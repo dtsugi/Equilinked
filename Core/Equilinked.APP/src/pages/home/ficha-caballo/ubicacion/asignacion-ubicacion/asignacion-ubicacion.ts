@@ -16,6 +16,7 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
   labels: any = {};
   establos: Array<any>;
   establosRespaldo: Array<any>;
+  loading: boolean;
 
   constructor(private alertController: AlertController,
               private commonService: CommonService,
@@ -25,26 +26,27 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.caballo = this.navParams.get("caballo");
-    this.listEstablosByPropietarioId(true); //Listar establos del propietario
+    this.listEstablosByPropietarioId(); //Listar establos del propietario
   }
 
-  listEstablosByPropietarioId(showLoading: boolean): void {
-    if (showLoading)
-      this.commonService.showLoading(this.labels["PANT006_ALT_CAR"]);
+  listEstablosByPropietarioId(): void {
+    this.loading = true;
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
         this.establosRespaldo = establos;
         this.establos = establos;
-        if (showLoading)
-          this.commonService.hideLoading();
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT006_MSG_ERREST"]);
+      console.error(err);
+      this.commonService.ShowInfo(this.labels["PANT006_MSG_ERREST"]);
+      this.loading = false;
     });
   }
 

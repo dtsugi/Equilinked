@@ -15,6 +15,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
   private session: UserSessionEntity;
   private caballosGrupoRespaldo: Array<any>;
   caballosGrupo: Array<any>;
+  loading: boolean;
 
   constructor(private caballoService: CaballoService,
               private commonService: CommonService,
@@ -23,6 +24,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
               private navController: NavController,
               private navParams: NavParams,
               private securityService: SecurityService) {
+    this.loading = true;
     this.caballosGrupoRespaldo = new Array<any>();
     this.caballosGrupo = new Array<any>();
   }
@@ -30,8 +32,6 @@ export class EdicionCaballosGrupoPage implements OnInit {
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.grupo = this.navParams.get("grupo");
-    console.info("El grupo:");
-    console.info(this.grupo);
     this.getCaballosForGrupo();
   }
 
@@ -55,7 +55,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
     this.grupo.GrupoCaballo = this.caballosGrupoRespaldo
       .filter(cg => cg.seleccion)
       .map(cg => cg.grupoCaballo);
-    this.commonService.showLoading("Procesando...");
+    this.commonService.showLoading("");
     this.gruposCaballosService.updateGrupo(this.grupo)
       .then(() => {
         this.events.publish("caballos-grupo:refresh");//Refresco las asignaciones de caballos
@@ -65,13 +65,12 @@ export class EdicionCaballosGrupoPage implements OnInit {
         this.navController.pop();
       }).catch(err => {
       console.error(err);
-      this.commonService.ShowErrorHttp(err, "Error al actualizar los caballos seleccionados para el establo");
     });
   }
 
   private getCaballosForGrupo(): void {
     let mapCaballosGrupo: Map<number, any> = new Map<number, any>();
-    this.commonService.showLoading("Procesando...");
+    this.loading = true;
     this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
       .then(caballos => {
         this.grupo.GrupoCaballo.forEach(cg => {
@@ -86,9 +85,10 @@ export class EdicionCaballosGrupoPage implements OnInit {
           }
         });
         this.caballosGrupo = this.caballosGrupoRespaldo;
-        this.commonService.hideLoading();
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, "Error al consultar los caballos del grupo");
+        console.error(err);
+        this.loading = false;
     });
   }
 }

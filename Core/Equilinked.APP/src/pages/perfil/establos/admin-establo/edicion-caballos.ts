@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Events, NavController, NavParams} from "ionic-angular";
 import {FichaCaballoPage} from "../../../home/ficha-caballo/ficha-caballo-home";
-import {GruposCaballosService} from "../../../../services/grupos-caballos.service";
 import {CommonService} from "../../../../services/common.service";
 import {EstablosService} from "../../../../services/establos.service";
 import {LanguageService} from '../../../../services/language.service';
@@ -10,13 +9,11 @@ import {UserSessionEntity} from "../../../../model/userSession";
 
 @Component({
   templateUrl: "./edicion-caballos.html",
-  providers: [LanguageService, CommonService, EstablosService, GruposCaballosService, SecurityService]
+  providers: [LanguageService, CommonService, EstablosService, SecurityService]
 })
 export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   private establoCaballosRespaldo: Array<any>;
   private establoCaballosEdicionResp: Array<any>;
-  private eventList: string;
-  private eventItem: string;
   private session: UserSessionEntity;
   establoCabllos: Array<any>;
   establoCaballosEdicion: Array<any>;
@@ -24,15 +21,16 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   establo: any;
   grupo: any;
   modoEdicion: boolean;
+  loading: boolean;
 
   constructor(private commonService: CommonService,
               private establosService: EstablosService,
               private events: Events,
-              private gruposCaballosService: GruposCaballosService,
               private navController: NavController,
               private navParams: NavParams,
               private languageService: LanguageService,
               private securityService: SecurityService) {
+    this.loading = true;
     this.modoEdicion = false;
     this.establoCabllos = new Array<any>();
   }
@@ -41,11 +39,9 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     this.session = this.securityService.getInitialConfigSession();
     this.establo = this.navParams.get("establo");
     this.grupo = this.navParams.get("grupo");
-    this.eventList = this.navParams.get("eventRefreshList");
-    this.eventItem = this.navParams.get("eventRefreshItem");
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
-      this.listCaballos(true); //Listamos los caballos del establo
+      this.listCaballos(); //Listamos los caballos del establo
     });
     this.addEvents();
   }
@@ -105,7 +101,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
         //grupos
         this.events.publish("grupo-ubicacion:refresh");//pantalla de detalle de establo en ubicaciones grupo
         this.events.publish("grupo-ubicaciones:refresh");//Lista de establos en ubicaciones de grupo
-        this.listCaballosByEstabloId(false); //Refresco la lista actual
+        this.listCaballosByEstabloId(); //Refresco la lista actual
         this.modoEdicion = false;
         this.commonService.hideLoading();
       }).catch(err => {
@@ -119,10 +115,10 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     this.establoCaballosRespaldo.forEach(ec => {
       mapEstabloCaballos.set(ec.ID, ec);
     });
-    this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
+    this.loading = true;
     this.establosService.getCaballosByEstablo(this.establo.ID, 1)
       .then(caballos => {
-        this.commonService.hideLoading();
+        this.loading = false;
         this.establoCaballosEdicion = caballos.map(c => {
           return {
             seleccion: mapEstabloCaballos.has(c.ID),
@@ -132,50 +128,51 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
         });
         this.establoCaballosEdicionResp = this.establoCaballosEdicion;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
       console.error(err);
+      this.loading = false;
+      this.commonService.ShowInfo(this.labels["PANT035_MSG_ERRCA"]);
     });
   }
 
-  private listCaballos(loading: boolean): void {
+  private listCaballos(): void {
     if (this.grupo) {
-      this.listCaballosByGrupo(loading);
+      this.listCaballosByGrupo();
     } else {
-      this.listCaballosByEstabloId(loading);
+      this.listCaballosByEstabloId();
     }
   }
 
-  private listCaballosByGrupo(loading): void {
-    if (loading)
-      this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
-    this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID])
+  private listCaballosByGrupo(): void {
+    this.loading = true;
+    this.establosService.getCaballosByEstabloAndGrupo(this.session.PropietarioId, this.establo.ID, this.grupo.ID)
       .then(caballos => {
         this.establoCabllos = caballos;
         this.establoCaballosRespaldo = caballos;
-        if (loading)
-          this.commonService.hideLoading();
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
+      console.error(err);
+      this.commonService.ShowInfo(this.labels["PANT035_MSG_ERRCA"]);
+      this.loading = false;
     });
   }
 
-  private listCaballosByEstabloId(showLoading: boolean): void {
-    if (showLoading)
-      this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
+  private listCaballosByEstabloId(): void {
+    this.loading = true;
     this.establosService.getCaballosByEstablo(this.establo.ID, 2)
       .then(establoCaballos => {
         this.establoCabllos = establoCaballos;
         this.establoCaballosRespaldo = establoCaballos;
-        if (showLoading)
-          this.commonService.hideLoading();
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT035_MSG_ERRCA"]);
+      console.error(err);
+      this.loading = false;
+      this.commonService.ShowInfo(this.labels["PANT035_MSG_ERRCA"]);
     });
   }
 
   private addEvents(): void {
     this.events.subscribe("establo-caballos:refresh", () => {
-      this.listCaballos(false);
+      this.listCaballos();
     });
   }
 

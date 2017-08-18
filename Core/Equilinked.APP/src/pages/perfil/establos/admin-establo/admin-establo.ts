@@ -1,9 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {Events, NavController, ModalController, NavParams, ToastController, AlertController} from "ionic-angular";
-import {FormBuilder, Validators, FormGroup, FormControl, FormArray} from "@angular/forms";
+import {Events, NavController, ModalController, NavParams, AlertController} from "ionic-angular";
+import {Validators, FormGroup, FormControl, FormArray} from "@angular/forms";
 import {CommonService} from "../../../../services/common.service";
 import {SecurityService} from "../../../../services/security.service";
-import {CaballoService} from '../../../../services/caballo.service';
 import {EstablosService} from "../../../../services/establos.service";
 import {TipoNumeroService} from "../../../../services/tipo-numero.service";
 import {UserSessionEntity} from "../../../../model/userSession";
@@ -13,7 +12,7 @@ import {LanguageService} from '../../../../services/language.service';
 
 @Component({
   templateUrl: "./admin-establo.html",
-  providers: [LanguageService, CaballoService, CommonService, EstablosService, SecurityService, TipoNumeroService],
+  providers: [LanguageService, CommonService, EstablosService, SecurityService, TipoNumeroService],
   styles: [`
     .item-md {
       padding-left: 0px;
@@ -31,17 +30,14 @@ export class AdminEstablosPage implements OnInit {
   labels: any = {};
 
   constructor(private alertController: AlertController,
-              private caballoService: CaballoService,
               private commonService: CommonService,
               private establosService: EstablosService,
               private events: Events,
-              private formBuilder: FormBuilder,
               public modalController: ModalController,
               private navController: NavController,
               private navParams: NavParams,
               private securityService: SecurityService,
               private tipoNumeroService: TipoNumeroService,
-              public toastController: ToastController,
               private languageService: LanguageService) {
     this.tiposTelefono = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);

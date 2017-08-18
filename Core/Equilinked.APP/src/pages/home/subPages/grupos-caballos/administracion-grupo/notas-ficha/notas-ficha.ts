@@ -23,6 +23,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
   labels: any = {};
   notas: Array<any>;
   modoEdicion: boolean;
+  loading: boolean;
 
   constructor(private alertController: AlertController,
               private alertaGrupoService: AlertaGrupoService,
@@ -32,6 +33,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     this.grupo = {};
     this.notas;
     this.notasRespaldo = new Array<any>();
@@ -44,7 +46,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     this.tipoAlerta = this.navParams.get("tipoAlerta");
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
-      this.getNotasByGrupo(true); //listar las notas!
+      this.getNotasByGrupo(); //listar las notas!
     });
     this.addEvents();
   }
@@ -125,7 +127,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
             this.alertaGrupoService.deleteAlertasGrupoByIds(this.session.PropietarioId,
               this.grupo.ID, this.notasRespaldo.filter(e => e.seleccion).map(e => e.nota.ID)
             ).then(() => {
-              this.getNotasByGrupo(false);//
+              this.getNotasByGrupo();//
               this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
               this.commonService.hideLoading();
               this.modoEdicion = false;
@@ -143,28 +145,28 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     this.navController.push(DetalleNotaPage, params);
   }
 
-  private getNotasByGrupo(showLoading: boolean): void {
+  private getNotasByGrupo(): void {
     let fecha: string = moment().format("YYYY-MM-DD");
-    if (showLoading)
-      this.commonService.showLoading(this.labels['PANT018_ALT_PRO']);
+    this.loading = true;
     this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
       ConstantsConfig.ALERTA_FILTER_NEXT, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE)
       .then(notas => {
-        if (showLoading)
-          this.commonService.hideLoading();
+        this.loading = false;
         this.notasRespaldo = notas.map(nota => {
           nota.Fecha = moment(new Date(nota.FechaNotificacion)).format("DD/MM/YYYY");
           return {seleccion: false, nota: nota};
         });
         this.notas = this.notasRespaldo;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT018_MSG_ERRCAR"]);
+      console.error(err);
+      this.loading = false;
+      this.commonService.ShowInfo(this.labels["PANT018_MSG_ERRCAR"]);
     });
   }
 
   private addEvents(): void {
     this.events.subscribe("notas:refresh", () => {
-      this.getNotasByGrupo(false);
+      this.getNotasByGrupo();
     });
   }
 

@@ -106,7 +106,7 @@ export class NotificacionesInsertPage {
       }
       this.navCtrl.pop();
     }).catch(ex => {
-      this._commonService.ShowErrorHttp(ex, this.labels["PANT010_MSG_ERRMOD"]);
+      this._commonService.ShowErrorHttp(ex, this.labels["PANT010_MSG_ERRGUA"]);
     });
   }
 

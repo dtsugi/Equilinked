@@ -1,5 +1,5 @@
-﻿using Equilinked.DAL.Models;
-using System;
+﻿using Equilinked.DAL.Dto;
+using Equilinked.DAL.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +7,38 @@ namespace Equilinked.BLL
 {
     public class EstabloBLL : BLLBase
     {
+        public List<CaballoDto> GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, int grupoId)
+        {
+            List<CaballoDto> listSerialized = new List<CaballoDto>();
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<int> caballosIds = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId)
+                    .Select(cg => cg.Caballo_ID).ToList();
+
+                List<Caballo> caballos = db.Caballo
+                    .Include("Protector")
+                    .Include("GenealogiaCaballo")
+                    .Include("CriadorCaballo")
+                    .Include("ResponsableCaballo")
+                    .Where(c => c.Propietario_ID == propietarioId)
+                    .Where(c => caballosIds.Contains(c.ID))
+                    .Where(c => c.Establo_ID == establoId)
+                    .OrderBy(c => c.Nombre)
+                    .ToList();
+
+                CaballoDto caballo;
+                foreach (Caballo item in caballos)
+                {
+                    caballo = new CaballoDto(item);
+                    listSerialized.Add(caballo);
+                }
+            }
+
+            return listSerialized;
+        }
+
         /*
          * Lista los establos asociados al propietario
          */

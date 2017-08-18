@@ -1,73 +1,83 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons left>
-            <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
-                <ion-icon name="arrow-back"></ion-icon>
-            </button>
-            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
-                  {{ 'PANT035_BTN_CAN' | translate }}
-            </button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
+        {{ 'PANT035_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
 
-        <ion-title *ngIf="grupo && !modoEdicion" class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{establo.Nombre}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{grupo.Descripcion}}</span>
-        </ion-title>
+    <ion-title *ngIf="grupo && !modoEdicion" class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{establo.Nombre}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{grupo.Descripcion}}</span>
+    </ion-title>
 
-        <ion-title *ngIf="!grupo" class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{establo.Nombre}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{ 'PANT035_LBL_SUBTCA' | translate }}</span>
-        </ion-title>
+    <ion-title *ngIf="!grupo" class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{establo.Nombre}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ 'PANT035_LBL_SUBTCA' | translate }}</span>
+    </ion-title>
 
-        <ion-buttons *ngIf="!grupo" right>
-            <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
-                {{ 'PANT035_BTN_EDI' | translate }}
-            </button>
-            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="save()">
-                {{ 'PANT035_BTN_ACE' | translate }}
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons *ngIf="!grupo" right>
+      <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
+        {{ 'PANT035_BTN_EDI' | translate }}
+      </button>
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="save()">
+        {{ 'PANT035_BTN_ACE' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div *ngIf="!modoEdicion">
-        <ion-searchbar (ionInput)="filterCaballos($event)" [autocomplete]="true" [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
+  <div *ngIf="!modoEdicion">
+    <ion-searchbar (ionInput)="filterCaballos($event)" [autocomplete]="true"
+                   [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
 
-        <ion-list no-lines>
-            <ion-item *ngFor="let ec of establoCabllos" (click)="viewDetail(ec)">
-                <ion-avatar item-left>
-                    <img src="assets/img/caballo.jpg">
-                </ion-avatar>
-                <h2 class="equi-title-form">{{ec.Nombre}}</h2>
-            </ion-item>
-        </ion-list>
+    <div *ngIf="loading" style="text-align: center;">
+      <ion-spinner></ion-spinner>
     </div>
 
-    <div *ngIf="modoEdicion">
-        <ion-grid>
-            <ion-row>
-                <ion-col col-12>
-                    <ion-searchbar (ionInput)="filterCaballosForEdition($event)" [autocomplete]="true" [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
-                </ion-col>
-                <ion-col col-12>
-                    <button ion-button full (click)="selectAll()">{{ 'PANT035_BTN_SETO' | translate }}</button>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
+    <ion-list no-lines>
+      <ion-item *ngFor="let ec of establoCabllos" (click)="viewDetail(ec)">
+        <ion-avatar item-left>
+          <img src="assets/img/caballo.jpg">
+        </ion-avatar>
+        <h2 class="equi-title-form">{{ec.Nombre}}</h2>
+      </ion-item>
+    </ion-list>
+  </div>
 
-        <ion-list no-lines>
-            <ion-item *ngFor="let ec of establoCaballosEdicion" (click)="ec.seleccion = !ec.seleccion">
-                <ion-avatar item-left>
-                    <img src="assets/img/caballo.jpg">
-                </ion-avatar>
-                <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': ec.seleccion}">{{ec.caballo.Nombre}}</h2>
+  <div *ngIf="modoEdicion">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-12>
+          <ion-searchbar (ionInput)="filterCaballosForEdition($event)" [autocomplete]="true"
+                         [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
+        </ion-col>
+        <ion-col col-12>
+          <button ion-button full (click)="selectAll()">{{ 'PANT035_BTN_SETO' | translate }}</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-                <ion-icon *ngIf="ec.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
-                <ion-icon *ngIf="!ec.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
-            </ion-item>
-        </ion-list>
+    <div *ngIf="loading" style="text-align: center;">
+      <ion-spinner></ion-spinner>
     </div>
+
+    <ion-list no-lines>
+      <ion-item *ngFor="let ec of establoCaballosEdicion" (click)="ec.seleccion = !ec.seleccion">
+        <ion-avatar item-left>
+          <img src="assets/img/caballo.jpg">
+        </ion-avatar>
+        <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': ec.seleccion}">{{ec.caballo.Nombre}}</h2>
+
+        <ion-icon *ngIf="ec.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
+        <ion-icon *ngIf="!ec.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

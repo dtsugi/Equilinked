@@ -26,6 +26,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
   establos: any[];
   establosRespaldo: any[];
   labels: any = {};
+  loading: boolean;
 
   constructor(private events: Events,
               private alertController: AlertController,
@@ -34,12 +35,13 @@ export class SegmentEstablos implements OnDestroy, OnInit {
               private navCtrl: NavController,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
-    this.listEstablosByPropietarioId(false); //Listar establos del propietario
+    this.listEstablosByPropietarioId(); //Listar establos del propietario
     this.addEvents();
     this.parametrosEstablos.getCountSelected = () => this.getCountSelected();
   }
@@ -52,10 +54,8 @@ export class SegmentEstablos implements OnDestroy, OnInit {
     this.navCtrl.pop();
   }
 
-  listEstablosByPropietarioId(showLoading: boolean): void {
-    if (showLoading) {
-      this.commonService.showLoading(this.labels["PANT026_ALT_PRO"]);
-    }
+  listEstablosByPropietarioId(): void {
+    this.loading = true;
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
         this.establos = establos.map(e => {
@@ -65,11 +65,10 @@ export class SegmentEstablos implements OnDestroy, OnInit {
           };
         });
         this.establosRespaldo = this.establos;
-        if (showLoading) {
-          this.commonService.hideLoading();
-        }
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT026_MSG_ERRES"]);
+      this.commonService.ShowInfo(this.labels["PANT026_MSG_ERRES"]);
+      this.loading = false;
     });
   }
 
@@ -127,7 +126,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
             this.establosService.deleteEstablosByIds(
               this.establosRespaldo.filter(e => e.seleccion).map(e => e.establo.ID)
             ).then(() => {
-              this.listEstablosByPropietarioId(false);//Refrescar los establos!
+              this.listEstablosByPropietarioId();//Refrescar los establos!
               this.commonService.hideLoading();
               this.parametrosEstablos.modoEdicion = false;
             }).catch(err => {
@@ -148,7 +147,7 @@ export class SegmentEstablos implements OnDestroy, OnInit {
 
   private addEvents(): void {
     this.events.subscribe("establos:refresh", () => {
-      this.listEstablosByPropietarioId(false);
+      this.listEstablosByPropietarioId();
     });
     this.events.subscribe("establos:eliminacion:enabled", () => {
       this.enabledDelete();

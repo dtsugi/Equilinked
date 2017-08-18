@@ -3,6 +3,7 @@ import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/toPromise";
 import {AppConfig} from "../app/app.config";
+import {Promisify} from "@ionic/app-scripts/dist/util/promisify";
 
 @Injectable()
 export class EstablosService {
@@ -10,6 +11,15 @@ export class EstablosService {
   private urlEstablos: string = AppConfig.API_URL + "api/establos";
 
   constructor(private http: Http) {
+  }
+
+  getCaballosByEstabloAndGrupo(propietarioId: number, establoId: number, grupoId: number): Promise<Array<any>> {
+    let url = this.urlPropietarios + "/" + propietarioId + "/establos/" + establoId + "/caballos";
+    let params = new URLSearchParams();
+    params.set("grupoId", grupoId.toString());
+    return this.http.get(url, new RequestOptions({search: params}))
+      .map(caballos => caballos.json() as Array<any>)
+      .toPromise();
   }
 
   getEstablosByPropietarioId(propietarioId: number): Promise<any[]> {

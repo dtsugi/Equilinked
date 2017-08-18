@@ -42,7 +42,7 @@
         </ion-item>
 
         <ion-item *ngIf="establo.Latitud && establo.Longitud" text-wrap>
-            <img [src]="'https://maps.googleapis.com/maps/api/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"
+            <img [src]="URL_API_GOOGLE + '/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"
             />
         </ion-item>
     </ion-list>

@@ -1,17 +1,21 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons left>
-            <button ion-button icon-only (click)="close()">
-                <ion-icon name="arrow-back"></ion-icon>
-            </button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button class="equi-toolbar-btn" (click)="close()">{{ 'PANT034_BTN_CAN' | translate }}</button>
+    </ion-buttons>
 
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">Mapa</span>
-        </ion-title>
-    </ion-toolbar>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">Mapa</span>
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button class="equi-toolbar-btn" (click)="accept()">{{ 'PANT034_BTN_ACEP' | translate }}</button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div id="{{mapaId}}" style="width: 100%; height: 100%;"></div>
+  <ion-searchbar [(ngModel)]="search.value" (ionFocus)="openModal()" [placeholder]="labels['PANT034_TXT_BUSLU']"></ion-searchbar>
+
+  <div id="{{mapaId}}" style="width: 100%; height: 100%;" [hidden]="isSearch"></div>
 </ion-content>

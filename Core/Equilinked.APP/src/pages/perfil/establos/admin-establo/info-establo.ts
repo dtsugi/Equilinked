@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Events, NavController, NavParams} from "ionic-angular";
+import {Events, NavController, NavParams, PopoverController} from "ionic-angular";
 import {AdminEstablosPage} from "./admin-establo";
 import {EdicionEstabloCaballosPage} from "./edicion-caballos";
 import {EstablosService} from "../../../../services/establos.service";
 import {CommonService} from "../../../../services/common.service";
 import {LanguageService} from '../../../../services/language.service';
 import {AppConfig} from "../../../../app/app.config";
+import {EquiOpcionesTelefonoPopover} from "../../../../utils/equi-opciones-telefono/equi-opciones-telefono-popover";
 
 @Component({
   templateUrl: "./info-establo.html",
@@ -17,6 +18,7 @@ import {AppConfig} from "../../../../app/app.config";
   `]
 })
 export class InfoEstabloPage implements OnDestroy, OnInit {
+  URL_API_GOOGLE: string = AppConfig.API_GOOGLE_URL;
   KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
   private establoId: number;
   establo: any;
@@ -27,18 +29,28 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
               private establosService: EstablosService,
               private navController: NavController,
               private navParams: NavParams,
+              private popoverController: PopoverController,
               private languageService: LanguageService) {
-    languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     this.establoId = this.navParams.get("establoId");
-    this.getInfoEstablo(true);
+    this.languageService.loadLabels().then(labels => {
+      this.labels = labels;
+      this.getInfoEstablo(true);
+    });
     this.addEvents();
   }
 
   ngOnDestroy(): void {
     this.removeEvents();
+  }
+
+  openOptionsTelephone(ev, number: string): void {
+    this.popoverController.create(EquiOpcionesTelefonoPopover, {telephone: number})
+      .present({
+        ev: ev
+      });
   }
 
   getInfoEstablo(showLoading: boolean): void {

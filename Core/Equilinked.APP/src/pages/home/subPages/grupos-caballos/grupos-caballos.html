@@ -2,6 +2,9 @@
 
 <equi-button-add [label]="labels['PANT002_BTN_NUGU']" (action)="newGrupo()"></equi-button-add>
 
+<div *ngIf="loading" style="text-align: center;">
+  <ion-spinner></ion-spinner>
+</div>
 
 <ion-list no-lines>
     <ion-item *ngFor="let grupo of grupos" (click)="viewGrupo(grupo)">

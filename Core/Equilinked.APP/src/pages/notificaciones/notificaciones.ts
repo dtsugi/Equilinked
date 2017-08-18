@@ -29,6 +29,8 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   notificacionesHoy: Array<any>;
   notificacionesProximas: Array<any>;
   labels: any = {};
+  loadingToday: boolean;
+  loadingNext: boolean;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -37,6 +39,8 @@ export class NotificacionesPage implements OnInit, OnDestroy {
               private _alertaService: AlertaService,
               private _securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loadingToday = true;
+    this.loadingNext = true;
     this.slidesMap = new Map<string, number>();
     this.indexSlidesMap = new Map<number, string>();
     this.selectedTab = "hoy";
@@ -148,7 +152,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
     let today = moment();
     this.today = today.format("dddd, D [de] MMMM [de] YYYY");
     this.today = this.today.charAt(0).toUpperCase() + this.today.slice(1);
-    this._commonService.showLoading(this.labels["PANT021_ALT_PRO"]);
+    this.loadingToday = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
       null, ConstantsConfig.ALERTA_FILTER_TODAY, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
     ).then(alertas => {
@@ -158,15 +162,17 @@ export class NotificacionesPage implements OnInit, OnDestroy {
         a.Hora = moment(d).format("hh:mm A").toUpperCase();
         return a;
       });
-      this._commonService.hideLoading();
+      this.loadingToday = false;
     }).catch(err => {
-      this._commonService.ShowErrorHttp(err, this.labels["PANT021_MSG_ERRCO"]);
+      console.error(err);
+      this._commonService.ShowInfo(this.labels["PANT021_MSG_ERRCO"]);
+      this.loadingToday = false;
     });
   }
 
   private loadNextNotificaciones(): void {
     let today = moment();
-    this._commonService.showLoading(this.labels["PANT021_ALT_PRO"]);
+    this.loadingNext = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
       null, ConstantsConfig.ALERTA_FILTER_AFTER_TODAY, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
     ).then(alertas => {
@@ -191,9 +197,10 @@ export class NotificacionesPage implements OnInit, OnDestroy {
       });
       this.notificacionesProximas = Array.from<any>(mapDates.values());
       this.notificacionesProximasResp = this.notificacionesProximas;
-      this._commonService.hideLoading();
+      this.loadingNext = false;
     }).catch(err => {
-      this._commonService.ShowErrorHttp(err, this.labels["PANT021_MSG_ERRCO"]);
+      this._commonService.ShowInfo(this.labels["PANT021_MSG_ERRCO"]);
+      this.loadingNext = false;
     });
   }
 

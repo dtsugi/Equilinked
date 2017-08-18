@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-navbar>
+
+    <ion-buttons end>
+      <button ion-button class="equi-toolbar-btn" (click)="edit()">
+        {{ "PANT009_BTN_EDI" | translate }}
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="evento">
+    <div *ngIf="evento.AlertaGrupal" class="equi-table-row-title equi-bold-text">
+      {{ "PANT009_LBL_EVGR" | translate }}
+    </div>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <p class="equi-bold-text">
+            {{evento.Titulo}}
+          </p>
+          <hr/>
+
+          <p class="equi-normal-text">
+            <strong>{{ "PANT009_LBL_EVINI" | translate }}:</strong> {{evento.FechaInicio}}
+          </p>
+
+          <p class="equi-normal-text">
+            <strong>{{ "PANT009_LBL_EVFIN" | translate }}:</strong> {{evento.FechaFin}}
+          </p>
+
+          <p *ngIf="evento.Ubicacion">
+            <span class="equi-normal-text">
+              <ion-icon name="flag" class="equi-principal-color"></ion-icon>
+              &nbsp;&nbsp;&nbsp;{{evento.Ubicacion}}
+            </span>
+          </p>
+
+          <p *ngIf="evento.AlertaRecordatorio && evento.AlertaRecordatorio.length > 0">
+            <span *ngFor="let recordatorio of evento.AlertaRecordatorio" class="equi-normal-text">
+                <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
+                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;{{ 'PANT009_LBL_ANT' | translate }}
+            </span>
+          </p>
+
+          <p class="equi-normal-text equi-detail-note">{{evento.Descripcion}}</p>
+
+          <p class="equi-bold-text">
+            {{ "PANT009_LBL_EVRES" | translate }}
+          </p>
+          <hr/>
+          <p class="equi-normal-text equi-edit" *ngIf="!evento.Resultado || evento.Resultado == ''">Sin resultados</p>
+          <p *ngIf="evento.Resultado && evento.Resultado != ''" class="equi-normal-text equi-detail-note">
+            {{evento.Resultado}}</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+</ion-content>

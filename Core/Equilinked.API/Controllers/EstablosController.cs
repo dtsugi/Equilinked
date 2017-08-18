@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Equilinked.BLL;
-using System.Web.Http.Description;
 using Equilinked.DAL.Models;
 using System.Collections.Generic;
+using Equilinked.DAL.Dto;
 
 namespace Equilinked.API.Controllers
 {
@@ -13,6 +13,21 @@ namespace Equilinked.API.Controllers
     {
 
         private EstabloBLL establosBll = new EstabloBLL();
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/establos/{establoId}/caballos")]
+        public IHttpActionResult GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, [FromUri] int grupoId)
+        {
+            try
+            {
+                List<CaballoDto> caballos = establosBll.GetCaballosByEstabloAndGrupo(propietarioId, establoId, grupoId);
+                return Ok(caballos);
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener los caballos del grupo asociados al establo"));
+            }
+        }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/caballos")]
         public IHttpActionResult GetEstablosPropietario(int propietarioId, [FromUri] bool establo)

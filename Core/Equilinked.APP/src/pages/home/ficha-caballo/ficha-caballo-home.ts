@@ -9,6 +9,7 @@ import {NotasPage} from './notas/notas';
 import {HerrajesPage} from './herrajes/herrajes';
 import {DentistaPage} from './dentista/dentista';
 import {DesparasitacionPage} from './desparasitacion/desparasitacion';
+import {EventosCaballoPage} from './eventos/eventos';
 import {OpcionesCaballoPopover} from "./opciones-caballo/opciones-caballo";
 import {UbicacionCaballoPage} from "./ubicacion/ubicacion";
 import {AsignacionUbicacionCaballoPage} from "./ubicacion/asignacion-ubicacion/asignacion-ubicacion";
@@ -102,6 +103,12 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
           page = AsignacionUbicacionCaballoPage;
         }
         this.navCtrl.push(page, {caballo: this.caballo});
+        break;
+        //EVENTOS
+      case 4:
+        this.navCtrl.push(EventosCaballoPage, {
+          caballo: this.caballo
+        });
         break;
       // HERRAJES
       case 5:

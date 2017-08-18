@@ -16,11 +16,11 @@ import {LanguageService} from '../../../../services/language.service';
 })
 export class CaballosInd implements OnDestroy, OnInit {
   private caballoIdSelected: number;
+  loading: boolean;
   caballos: Array<Caballo>;
   caballosList: Array<Caballo>;
   session: UserSessionEntity;
   isDeleting: boolean = false;
-  tmpCaballoIdSelected: number = 0;
   labels: any = {};
 
   constructor(private events: Events,
@@ -30,15 +30,16 @@ export class CaballosInd implements OnDestroy, OnInit {
               private _caballoService: CaballoService,
               private _securityService: SecurityService,
               private languageService: LanguageService) {
-    languageService.loadLabels().then(labels => this.labels = labels);
+    this.loading = true;
     this.caballoIdSelected = 0; //No hay
+    languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     console.log("CABALLOS IND");
     this.session = this._securityService.getInitialConfigSession();
     this.caballosList = new Array<Caballo>();
-    this.loadcaballos(true);
+    this.loadcaballos();
     this.addEvents(); //Registrar el listener para escuchar cuando se debe refrescar la pantalla
   }
 
@@ -47,18 +48,17 @@ export class CaballosInd implements OnDestroy, OnInit {
   }
 
   // CARGA DE CABALLOS
-  loadcaballos(loading: boolean): void {
-    if (loading)
-      this._commonService.showLoading(this.labels["PANT002_ALT_PRO"]);
+  loadcaballos(): void {
+    this.loading = true;
     this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
       .subscribe(res => {
-        if (loading)
-          this._commonService.hideLoading();
+        this.loading = false;
         this.caballosList = res;
         this.caballos = res;
       }, error => {
         console.log(error);
-        this._commonService.ShowErrorHttp(error, this.labels["PANT002_MSG_ERRCA"]);
+        this.loading = false;
+        this._commonService.ShowInfo(this.labels["PANT002_MSG_ERRCA"]);
       });
   }
 
@@ -94,41 +94,9 @@ export class CaballosInd implements OnDestroy, OnInit {
     });
   }
 
-  deleteCaballo(caballoId: number) {
-    console.log("ELIMINANDO ID:", caballoId);
-    this.isDeleting = true;
-    this._commonService.showLoading(this.labels["PANT002_ALT_PRO"]);
-    this._caballoService.delete(caballoId)
-      .subscribe(res => {
-        this._commonService.hideLoading();
-        this.loadcaballos(true);
-        this.isDeleting = false;
-      }, error => {
-        this._commonService.ShowErrorHttp(error, this.labels["PANT002_MSG_ERRELI"]);
-        this.isDeleting = false;
-      });
-  }
-
-  confirmDeleteCaballo(caballoId: number) {
-    this.tmpCaballoIdSelected = caballoId;
-    this.isDeleting = true;
-    let buttons = [];
-    buttons.push(this._commonService.NewButtonAlert(0, this.labels["PANT002_BTN_CAN"], this));
-    buttons.push(this._commonService.NewButtonAlert(1, this.labels["PANT002_BTN_ACE"], this));
-    this._commonService.ShowConfirmAlert(this.labels["PANT002_ALT_TIELI"], this.labels["PANT002_ALT_MSGELI"], buttons)
-  }
-
-  _callbackConfirmAlert(buttonIdClicked) {
-    if (buttonIdClicked === 1) {
-      this.deleteCaballo(this.tmpCaballoIdSelected);
-    } else {
-      this.isDeleting = false;
-    }
-  }
-
   private addEvents(): void {
     this.events.subscribe("caballos:refresh", () => {
-      this.loadcaballos(false);
+      this.loadcaballos();
     });
   }
 

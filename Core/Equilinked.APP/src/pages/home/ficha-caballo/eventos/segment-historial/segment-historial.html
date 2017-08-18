@@ -1,0 +1,28 @@
+<div *ngIf="loading" style="text-align: center;">
+  <ion-spinner></ion-spinner>
+</div>
+
+<ion-list no-lines *ngIf="eventos">
+  <ion-item-sliding *ngFor="let e of eventos">
+    <ion-item class="equi-normal-text" (click)="view(e)">
+      <ion-row>
+        <ion-col col-3>
+          {{e.Fecha}}
+        </ion-col>
+        <ion-col class="equi-title-note">
+          {{e.Titulo}}
+        </ion-col>
+        <ion-col col-1>
+          <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+
+    <ion-item-options>
+      <button ion-button color="danger" icon-left (click)="delete(e)">
+        <ion-icon name="trash"></ion-icon>
+        {{ "PANT007_BTN_ELI" | translate }}
+      </button>
+    </ion-item-options>
+  </ion-item-sliding>
+</ion-list>

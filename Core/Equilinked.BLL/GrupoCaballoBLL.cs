@@ -12,6 +12,38 @@ namespace Equilinked.BLL
     public class GrupoCaballoBLL : BLLBase, IBase<Grupo>
     {
 
+        public List<CaballoDto> GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, bool tieneEstablo)
+        {
+            List<CaballoDto> listSerialized = new List<CaballoDto>();
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<int> caballosIds = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId)
+                    .Select(cg => cg.Caballo_ID).ToList();
+
+                List <Caballo> caballos = db.Caballo
+                    .Include("Protector")
+                    .Include("GenealogiaCaballo")
+                    .Include("CriadorCaballo")
+                    .Include("ResponsableCaballo")
+                    .Where(c => c.Propietario_ID == propietarioId)
+                    .Where(c => caballosIds.Contains(c.ID))
+                    .Where(c => tieneEstablo ? c.Establo_ID != null : c.Establo_ID == null)
+                    .OrderBy(c => c.Nombre)
+                    .ToList();
+
+                CaballoDto caballo;
+                foreach (Caballo item in caballos)
+                {
+                    caballo = new CaballoDto(item);
+                    listSerialized.Add(caballo);
+                }
+            }
+
+            return listSerialized;
+        }
+
         public List<Grupo> GetAllGruposByPropietarioId(int propietarioId)
         {
             using (var db = this._dbContext)

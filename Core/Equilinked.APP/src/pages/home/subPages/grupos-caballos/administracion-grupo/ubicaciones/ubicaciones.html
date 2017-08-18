@@ -1,26 +1,32 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons left>
-            <button ion-button icon-only (click)="goBack()">
-                <ion-icon name="arrow-back"></ion-icon>
-            </button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
 
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{ 'PANT015_LBL_SUBTUG' | translate }}</span>
-        </ion-title>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ 'PANT015_LBL_SUBTUG' | translate }}</span>
+    </ion-title>
 
-    </ion-toolbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-list>
-        <ion-item *ngFor="let ubicacion of ubicaciones">
-            <h2 class="equi-bold-text" [ngClass]="{'equi-principal-color': !ubicacion.establo.ID}" (click)="selectUbicacion(ubicacion)">{{ubicacion.establo.Nombre}}</h2>
-            <p class="equi-normal-text equi-principal-color" item-right (click)="selectCaballos(ubicacion)">{{ubicacion.caballos}} {{ 'PANT015_LBL_CAB' | translate }}
-            </p>
-        </ion-item>
-    </ion-list>
+  <div *ngIf="loading" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let ubicacion of ubicaciones">
+      <h2 class="equi-bold-text" [ngClass]="{'equi-principal-color': !ubicacion.establo.ID}"
+          (click)="selectUbicacion(ubicacion)">{{ubicacion.establo.Nombre}}</h2>
+      <p class="equi-normal-text equi-principal-color" item-right (click)="selectCaballos(ubicacion)">
+        {{ubicacion.caballos}} {{ 'PANT015_LBL_CAB' | translate }}
+      </p>
+    </ion-item>
+  </ion-list>
 </ion-content>

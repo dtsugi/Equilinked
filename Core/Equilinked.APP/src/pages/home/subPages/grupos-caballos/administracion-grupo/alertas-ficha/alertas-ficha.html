@@ -1,111 +1,121 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{labels.title}}</span>
-        </ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{labels.title}}</span>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col class="equi-title-form">
-                {{labels.titleNextAlertas}}
+  <ion-grid>
+    <ion-row>
+      <ion-col class="equi-title-form">
+        {{labels.titleNextAlertas}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <hr>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="loadingNext" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list no-lines *ngIf="proximasAlertas">
+    <equi-next-alert-horse *ngFor="let notificacion of proximasAlertas" [alert]="notificacion"
+                           (actionClickItem)="viewNextAlert(notificacion)"
+                           [labelDelete]="labelsX['PANT018_BTN_ELI']"
+                           (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
+  </ion-list>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col class="equi-title-form">
+        {{ 'PANT018_LBL_HIST' | translate }}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <hr/>
+    </ion-row>
+
+    <equi-button-add [label]="labelsX['PANT018_BTN_AGNU']" (action)="create()"></equi-button-add>
+  </ion-grid>
+
+  <div *ngIf="loadingHistory" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="historicoAlertas">
+    <div *ngFor="let alerta of historicoAlertas">
+      <div *ngIf="!alerta.ShowDetail">
+        <ion-item-sliding>
+          <ion-item (click)="viewDetailHistoryAlert(alerta)">
+            <ion-row>
+              <ion-col col-4>
+                {{alerta.Fecha}}
+              </ion-col>
+              <ion-col col-7>
+                {{alerta.NombreProfesional}}
+              </ion-col>
+              <ion-col col-1>
+                <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+
+          <ion-item-options>
+            <button ion-button color="danger" icon-left (click)="delete(alerta)">
+              <ion-icon name="trash"></ion-icon>
+              {{ 'PANT018_BTN_ELI' | translate }}
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </div>
+
+      <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
+        <ion-item text-wrap no-lines>
+          <ion-row class="equi-table-row-title">
+            <ion-col col-8>
+              {{alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
             </ion-col>
-        </ion-row>
-        <ion-row>
-            <hr>
-        </ion-row>
-    </ion-grid>
-
-    <ion-list no-lines *ngIf="proximasAlertas">
-        <equi-next-alert-horse *ngFor="let notificacion of proximasAlertas" [alert]="notificacion" (actionClickItem)="viewNextAlert(notificacion)"
-            [labelDelete]="labelsX['PANT018_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
-    </ion-list>
-
-    <ion-grid>
-        <ion-row>
-            <ion-col class="equi-title-form">
-                {{ 'PANT018_LBL_HIST' | translate }}
+            <ion-col col-3>
+              <span (click)="editAlert(alerta)">{{ 'PANT018_BTN_EDI' | translate }}</span>
             </ion-col>
-        </ion-row>
-        <ion-row>
-            <hr />
-        </ion-row>
+            <ion-col col-1>
+              <ion-icon name="ios-arrow-down"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row class="equi-table-row-content">
+            <ion-col col-4>
+              {{labels.tablePerson}}
+            </ion-col>
+            <ion-col col-8>
+              {{alerta.NombreProfesional}}
+            </ion-col>
+          </ion-row>
+          <ion-row class="equi-table-row-content">
+            <ion-col col-4>
+              {{labels.tableDescription}}
+            </ion-col>
+            <ion-col col-8>
+              {{alerta.Descripcion}}
+            </ion-col>
+          </ion-row>
+          <ion-row class="equi-table-row-content">
+            <ion-col col-4>
+              {{ 'PANT018_LBL_CABA' | translate }}
+            </ion-col>
+            <ion-col col-8>
+              {{alerta.AllCaballos ? 'Todos' : alerta.AlertaCaballo.length + labelsX['PANT018_LBL_CA']}}
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </div>
+    </div>
 
-        <equi-button-add [label]="labelsX['PANT018_BTN_AGNU']" (action)="create()"></equi-button-add>
-    </ion-grid>
-
-    <ion-list *ngIf="historicoAlertas">
-        <div *ngFor="let alerta of historicoAlertas">
-            <div *ngIf="!alerta.ShowDetail">
-                <ion-item-sliding>
-                    <ion-item (click)="viewDetailHistoryAlert(alerta)">
-                        <ion-row>
-                            <ion-col col-4>
-                                {{alerta.Fecha}}
-                            </ion-col>
-                            <ion-col col-7>
-                                {{alerta.NombreProfesional}}
-                            </ion-col>
-                            <ion-col col-1>
-                                <ion-icon class="equi-principal-color" name="ios-arrow-forward"></ion-icon>
-                            </ion-col>
-                        </ion-row>
-                    </ion-item>
-
-                    <ion-item-options>
-                        <button ion-button color="danger" icon-left (click)="delete(alerta)">
-                            <ion-icon name="trash"></ion-icon>       
-                            {{ 'PANT018_BTN_ELI' | translate }}
-                        </button>
-                    </ion-item-options>
-                </ion-item-sliding>
-            </div>
-
-            <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
-                <ion-item text-wrap no-lines>
-                    <ion-row class="equi-table-row-title">
-                        <ion-col col-8>
-                            {{alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
-                        </ion-col>
-                        <ion-col col-3>
-                            <span (click)="editAlert(alerta)">{{ 'PANT018_BTN_EDI' | translate }}</span>
-                        </ion-col>
-                        <ion-col col-1>
-                            <ion-icon name="ios-arrow-down"></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row class="equi-table-row-content">
-                        <ion-col col-4>
-                            {{labels.tablePerson}}
-                        </ion-col>
-                        <ion-col col-8>
-                            {{alerta.NombreProfesional}}
-                        </ion-col>
-                    </ion-row>
-                    <ion-row class="equi-table-row-content">
-                        <ion-col col-4>
-                            {{labels.tableDescription}}
-                        </ion-col>
-                        <ion-col col-8>
-                            {{alerta.Descripcion}}
-                        </ion-col>
-                    </ion-row>
-                    <ion-row class="equi-table-row-content">
-                        <ion-col col-4>
-                            {{ 'PANT018_LBL_CABA' | translate }}
-                        </ion-col>
-                        <ion-col col-8>
-                            {{alerta.AllCaballos ? 'Todos' : alerta.AlertaCaballo.length + labelsX['PANT018_LBL_CA']}}
-                        </ion-col>
-                    </ion-row>
-                </ion-item>
-            </div>
-        </div>
-
-    </ion-list>
+  </ion-list>
 
 </ion-content>

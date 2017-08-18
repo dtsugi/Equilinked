@@ -26,6 +26,7 @@ export class NotasPage implements OnInit, OnDestroy {
   notificacionList;
   tipoAlerta: number = 5;
   isDeleting: boolean = false;
+  loading: boolean;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -34,6 +35,7 @@ export class NotasPage implements OnInit, OnDestroy {
               private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -42,7 +44,7 @@ export class NotasPage implements OnInit, OnDestroy {
     if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
       this.idCaballo = this.navParams.get("idCaballoSelected");
       this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-      this.getAllNotificacionesByCaballoId(true);
+      this.getAllNotificacionesByCaballoId();
     }
     this.addEvents();
   }
@@ -63,10 +65,9 @@ export class NotasPage implements OnInit, OnDestroy {
     }
   }
 
-  getAllNotificacionesByCaballoId(loading: boolean) {
+  getAllNotificacionesByCaballoId() {
     let fecha: string = moment().format("YYYY-MM-DD");
-    if (loading)
-      this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+    this.loading = true;
     this.alertaCaballoService.getAlertasByCaballoId(
       this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
       ConstantsConfig.ALERTA_FILTER_ALL, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
@@ -76,10 +77,11 @@ export class NotasPage implements OnInit, OnDestroy {
         return alerta;
       });
       this.notificacionesResp = this.notificacionList;
-      if (loading)
-        this._commonService.hideLoading();
+      this.loading = false;
     }).catch(error => {
-      this._commonService.ShowErrorHttp(error, this.labels["PANT007_MSG_ERRALT"]);
+      console.error(error);
+      this._commonService.ShowInfo(this.labels["PANT007_MSG_ERRALT"]);
+      this.loading = false;
     });
   }
 
@@ -104,7 +106,7 @@ export class NotasPage implements OnInit, OnDestroy {
       .then(() => {
         this._commonService.hideLoading();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
-        this.getAllNotificacionesByCaballoId(true);
+        this.getAllNotificacionesByCaballoId();
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
     });
@@ -116,7 +118,7 @@ export class NotasPage implements OnInit, OnDestroy {
 
   private addEvents(): void {
     this.events.subscribe("notificaciones:notas:caballo:refresh", () => {
-      this.getAllNotificacionesByCaballoId(false);
+      this.getAllNotificacionesByCaballoId();
     });
   }
 

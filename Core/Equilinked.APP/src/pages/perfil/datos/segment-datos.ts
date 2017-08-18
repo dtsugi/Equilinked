@@ -1,10 +1,11 @@
 import {Component, OnInit, OnDestroy} from "@angular/core";
-import {Events, NavController, NavParams} from "ionic-angular";
+import {Events, NavController, NavParams, PopoverController} from "ionic-angular";
 import {CommonService} from "../../../services/common.service";
 import {SecurityService} from "../../../services/security.service";
 import {PropietarioService} from "../../../services/propietario.service";
 import {UserSessionEntity} from "../../../model/userSession";
 import {Propietario} from "../../../model/propietario";
+import {EquiOpcionesTelefonoPopover} from "../../../utils/equi-opciones-telefono/equi-opciones-telefono-popover";
 
 @Component({
   selector: "segment-datos",
@@ -18,6 +19,7 @@ export class SegmentDatos implements OnInit, OnDestroy {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               public events: Events,
+              private popoverController: PopoverController,
               private commonService: CommonService,
               private securityService: SecurityService,
               private propietarioService: PropietarioService) {
@@ -32,6 +34,13 @@ export class SegmentDatos implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeEvents();
+  }
+
+  openOptionsTelephone(ev, number: string): void {
+    this.popoverController.create(EquiOpcionesTelefonoPopover, {telephone: number})
+      .present({
+        ev: ev
+      });
   }
 
   getPerfilPropietarioId(idPropietario: number, showLoading: boolean) {

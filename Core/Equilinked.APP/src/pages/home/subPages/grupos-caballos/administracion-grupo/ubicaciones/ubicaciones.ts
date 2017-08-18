@@ -21,6 +21,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
   labels: any = {};
   grupo: any;
   ubicaciones: Array<any>;
+  loading: boolean;
 
   constructor(private commonService: CommonService,
               private events: Events,
@@ -30,6 +31,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     this.ubicaciones = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);
   }
@@ -37,7 +39,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.grupo = this.navParams.get("grupo");
-    this.getListUbicaciones(true);
+    this.getListUbicaciones();
     this.addEvents();
   }
 
@@ -66,7 +68,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
   }
 
   private viewCaballosSinEstablo(): void {
-    this.navController.push(CaballosSinUbicacionPage);
+    this.navController.push(CaballosSinUbicacionPage, {grupo: this.grupo});
   }
 
   private view(ubicacion: any): void {
@@ -86,15 +88,13 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
     this.navController.push(EdicionEstabloCaballosPage, params);
   }
 
-  private getListUbicaciones(loading: boolean): void {
-    if (loading)
-      this.commonService.showLoading(this.labels["PANT015_ALT_PRO"]);
+  private getListUbicaciones(): void {
+    this.loading = true;
     let establosPropietario: Array<any>;
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
         establosPropietario = establos;
         return this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID]);
-        //return this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
       }).then(caballos => {
       let mapEstablos: Map<number, any> = new Map<number, any>();
       for (let est of establosPropietario) {
@@ -107,16 +107,17 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
         ubicacion.caballos += 1;
       }
       this.ubicaciones = Array.from(mapEstablos.values()).filter(u => u.caballos > 0);
-      if (loading)
-        this.commonService.hideLoading();
+      this.loading = false;
     }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT015_MSG_ERRES"]);
+      console.error(err);
+      this.loading = false;
+      this.commonService.ShowInfo(this.labels["PANT015_MSG_ERRES"]);
     });
   }
 
   private addEvents(): void {
     this.events.subscribe("grupo-ubicaciones:refresh", () => {
-      this.getListUbicaciones(false);
+      this.getListUbicaciones();
     });
   }
 

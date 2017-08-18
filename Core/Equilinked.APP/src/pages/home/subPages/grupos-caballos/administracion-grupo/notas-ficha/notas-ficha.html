@@ -1,65 +1,75 @@
 <ion-header>
-    <ion-toolbar class="equi-toolbar">
-        <ion-buttons left>
-            <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
-                <ion-icon name="arrow-back"></ion-icon>
-            </button>
-            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = false">
-                {{ 'PANT018_BTN_CAN' | translate }} 
-            </button>
-        </ion-buttons>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = false">
+        {{ 'PANT018_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
 
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{ 'PANT018_ALT_NOSUBT' | translate }}</span>
-        </ion-title>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{grupo.Descripcion}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ 'PANT018_ALT_NOSUBT' | translate }}</span>
+    </ion-title>
 
-        <ion-buttons right>
-            <button ion-button icon-only *ngIf="!modoEdicion" (click)="activeDelete()">
-                <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
-            </button>
-            <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" [disabled]="getCountSelected() == 0" (click)="confirmDelete()">
-                {{ 'PANT018_BTN_ELI' | translate }}
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons right>
+      <button ion-button icon-only *ngIf="!modoEdicion" (click)="activeDelete()">
+        <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
+      </button>
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" [disabled]="getCountSelected() == 0"
+              (click)="confirmDelete()">
+        {{ 'PANT018_BTN_ELI' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-searchbar *ngIf="!modoEdicion" (ionInput)="filter($event)" [placeholder]="labels['PANT018_TXT_FIBUNO']" [autocomplete]="true"></ion-searchbar>
+  <ion-searchbar *ngIf="!modoEdicion" (ionInput)="filter($event)" [placeholder]="labels['PANT018_TXT_FIBUNO']"
+                 [autocomplete]="true"></ion-searchbar>
 
-    <equi-button-add [label]="labels['PANT018_BTN_AGNU']" (action)="create()"></equi-button-add>
+  <equi-button-add [label]="labels['PANT018_BTN_AGNU']" (action)="create()"></equi-button-add>
 
-    <ion-item *ngIf="modoEdicion" (click)="selectAll()">
-        <ion-icon class="equi-principal-color" name="{{getCountSelected() != notasRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
-            item-left></ion-icon>
-        <h2 class="equi-title-form">{{ 'PANT018_LBL_SELTO' | translate }}</h2>
-    </ion-item>
+  <ion-item *ngIf="modoEdicion" (click)="selectAll()">
+    <ion-icon class="equi-principal-color"
+              name="{{getCountSelected() != notasRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
+              item-left></ion-icon>
+    <h2 class="equi-title-form">{{ 'PANT018_LBL_SELTO' | translate }}</h2>
+  </ion-item>
 
-    <div *ngIf="notas">
-        <ion-card *ngFor="let n of notas" (click)="select(n)">
-            <ion-card-content>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col col-8 class="equi-title-form equi-title-note">
-                            {{n.nota.Titulo}}
-                        </ion-col>
-                        <ion-col col-4 class="text-align-right">
-                            <ion-icon *ngIf="!modoEdicion && n.nota.Activa" class="equi-principal-color" name="notifications"></ion-icon>
-                            <ion-icon *ngIf="!modoEdicion && !n.nota.Activa" class="equi-edit" name="ios-notifications-off"></ion-icon>
+  <div *ngIf="loading" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
 
-                            <ion-icon class="equi-icon-input" name="{{n.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="modoEdicion" item-right></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col col-8 class="equi-col-note">{{n.nota.Descripcion}}</ion-col>
-                        <ion-col col-4 class="text-align-right equi-principal-color">
-                            {{n.nota.Fecha}}
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
-            </ion-card-content>
-        </ion-card>
-    </div>
+  <div *ngIf="notas">
+    <ion-card *ngFor="let n of notas" (click)="select(n)">
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-8 class="equi-title-form equi-title-note">
+              {{n.nota.Titulo}}
+            </ion-col>
+            <ion-col col-4 class="text-align-right">
+              <ion-icon *ngIf="!modoEdicion && n.nota.Activa" class="equi-principal-color"
+                        name="notifications"></ion-icon>
+              <ion-icon *ngIf="!modoEdicion && !n.nota.Activa" class="equi-edit"
+                        name="ios-notifications-off"></ion-icon>
+
+              <ion-icon class="equi-icon-input" name="{{n.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}"
+                        *ngIf="modoEdicion" item-right></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-8 class="equi-col-note">{{n.nota.Descripcion}}</ion-col>
+            <ion-col col-4 class="text-align-right equi-principal-color">
+              {{n.nota.Fecha}}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

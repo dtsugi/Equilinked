@@ -1,20 +1,28 @@
-<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT013_TXT_FICAB']"></ion-searchbar>
- 
-<equi-button-add *ngIf="!parametrosCaballos.modoEdicion && !grupo.GrupoDefault" [label]="labels['PANT013_BTN_AGNU']" (action)="addCaballos()"></equi-button-add>
+<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+               [placeholder]="labels['PANT013_TXT_FICAB']"></ion-searchbar>
+
+<equi-button-add *ngIf="!parametrosCaballos.modoEdicion && !grupo.GrupoDefault" [label]="labels['PANT013_BTN_AGNU']"
+                 (action)="addCaballos()"></equi-button-add>
+
+<ion-item (click)="selectAll()" *ngIf="parametrosCaballos.modoEdicion">
+  <h2 class="equi-title-form">{{ 'PANT013_LBL_SELTO' | translate }}</h2>
+  <ion-icon class="equi-principal-color"
+            name="{{getCountSelected() != caballosGrupoRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
+            item-right></ion-icon>
+</ion-item>
+
+<div *ngIf="loading" style="text-align: center;">
+  <ion-spinner></ion-spinner>
+</div>
 
 <ion-list no-lines>
-    <ion-item (click)="selectAll()" *ngIf="parametrosCaballos.modoEdicion">
-        <h2 class="equi-title-form">{{ 'PANT013_LBL_SELTO' | translate }}</h2>
-        <ion-icon class="equi-principal-color" name="{{getCountSelected() != caballosGrupoRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
-            item-right></ion-icon>
-    </ion-item>
-
-    <ion-item *ngFor="let c of caballosGrupo" (click)="select(c)">
-        <ion-avatar item-left>
-            <img src="assets/img/caballo.jpg">
-        </ion-avatar>
-        <h2 class="equi-title-form">{{c.caballo.Nombre}}</h2>
-        <ion-icon class="equi-principal-color" name="{{c.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="parametrosCaballos.modoEdicion"
-            item-right></ion-icon>
-    </ion-item>
+  <ion-item *ngFor="let c of caballosGrupo" (click)="select(c)">
+    <ion-avatar item-left>
+      <img src="assets/img/caballo.jpg">
+    </ion-avatar>
+    <h2 class="equi-title-form">{{c.caballo.Nombre}}</h2>
+    <ion-icon class="equi-principal-color" name="{{c.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}"
+              *ngIf="parametrosCaballos.modoEdicion"
+              item-right></ion-icon>
+  </ion-item>
 </ion-list>

@@ -19,6 +19,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
   parametrosCaballos: any;
   labels: any = {};
   caballosGrupoRespaldo: Array<any>;
+  loading: boolean;
 
   constructor(private alertController: AlertController,
               private commonService: CommonService,
@@ -26,6 +27,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
               private gruposCaballosService: GruposCaballosService,
               private navController: NavController,
               private languageService: LanguageService) {
+    this.loading = true;
     this.caballosGrupo = new Array<any>();
     this.caballosGrupoRespaldo = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);
@@ -36,7 +38,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllCaballosGrupo(false);
+    this.getAllCaballosGrupo();
     this.addEvents();
     this.parametrosCaballos.getCountSelected = () => this.getCountSelected();
   }
@@ -70,14 +72,11 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     });
   }
 
-  getAllCaballosGrupo(loading: boolean): void {
-    console.info("Ejelee!");
-    if (loading)
-      this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
+  getAllCaballosGrupo(): void {
+    this.loading = true;
     this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
       .then(caballos => {
-        if (loading)
-          this.commonService.hideLoading();
+        this.loading = false;
         this.caballosGrupoRespaldo = caballos.map(caballo => {
           return {
             seleccion: false,
@@ -87,6 +86,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
         this.caballosGrupo = this.caballosGrupoRespaldo;
       }).catch(err => {
       console.error(err);
+      this.loading = false;
     });
   }
 
@@ -112,7 +112,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
             this.gruposCaballosService.deleteAlertasByIds(
               this.grupo.ID, this.caballosGrupoRespaldo.filter(c => c.seleccion).map(c => c.caballo.ID)
             ).then(() => {
-              this.getAllCaballosGrupo(false);
+              this.getAllCaballosGrupo();
               this.events.publish("grupos:refresh");
               this.commonService.hideLoading();
               this.parametrosCaballos.modoEdicion = false;
@@ -127,7 +127,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
 
   private addEvents(): void {
     this.events.subscribe("caballos-grupo:refresh", () => {
-      this.getAllCaballosGrupo(false);
+      this.getAllCaballosGrupo();
     });
     this.events.subscribe("caballos-grupo:eliminacion:enabled", () => {
       this.enabledDelete();

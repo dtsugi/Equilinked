@@ -1,50 +1,62 @@
 <ion-header>
-    <ion-toolbar class="equi-toolbar">
-        <ion-buttons left>
-            <button ion-button icon-only (click)="goBack()">
-                <ion-icon name="arrow-back"></ion-icon>
-            </button>
-        </ion-buttons>
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{nombreCaballo}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{ "PANT007_LBL_SUBTDES" | translate }}</span>
-        </ion-title>
-    </ion-toolbar>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button ion-button icon-only (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{nombreCaballo}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ "PANT007_LBL_SUBTDES" | translate }}</span>
+    </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col class="equi-title-form">
-                {{ "PANT007_LBL_PRODESP" | translate }}
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <hr>
-        </ion-row>
-    </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="equi-title-form">
+        {{ "PANT007_LBL_PRODESP" | translate }}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <hr>
+    </ion-row>
+  </ion-grid>
 
-    <ion-list no-lines *ngIf="nextNotificacionList">
-        <equi-next-alert-horse *ngFor="let notificacion of nextNotificacionList" [alert]="notificacion" (actionClickItem)="view(notificacion)"
-            [labelDelete]="labels['PANT007_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
-    </ion-list>
+  <div *ngIf="loadingNext" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
 
-    <ion-grid>
-        <ion-row>
-            <ion-col class="equi-title-form">
-                {{ "PANT007_LBL_HIS" | translate }}
-            </ion-col>
-        </ion-row>
-        <ion-row>
-            <hr>
-        </ion-row>
+  <ion-list no-lines *ngIf="nextNotificacionList">
+    <equi-next-alert-horse *ngFor="let notificacion of nextNotificacionList" [alert]="notificacion"
+                           (actionClickItem)="view(notificacion)"
+                           [labelDelete]="labels['PANT007_BTN_ELI']"
+                           (actionDeleteItem)="delete(notificacion)"></equi-next-alert-horse>
+  </ion-list>
 
-        <equi-button-add [label]="labels['PANT007_BTN_AGEN']" (action)="insert()"></equi-button-add>
-    </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="equi-title-form">
+        {{ "PANT007_LBL_HIS" | translate }}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <hr>
+    </ion-row>
 
-    <ion-list no-lines *ngIf="historyNotificacionList">
-        <equi-history-alert-horse *ngFor="let notificacion of historyNotificacionList" [alert]="notificacion" [professionPerson]="labels['PANT007_LBL_APLI']"
-            (actionEditItem)="edit(notificacion)" [labelDelete]="labels['PANT007_BTN_ELI']" (actionDeleteItem)="delete(notificacion)"></equi-history-alert-horse>
-    </ion-list>
+    <equi-button-add [label]="labels['PANT007_BTN_AGEN']" (action)="insert()"></equi-button-add>
+  </ion-grid>
+
+  <div *ngIf="loadingHistory" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list no-lines *ngIf="historyNotificacionList">
+    <equi-history-alert-horse *ngFor="let notificacion of historyNotificacionList" [alert]="notificacion"
+                              [professionPerson]="labels['PANT007_LBL_APLI']"
+                              (actionEditItem)="edit(notificacion)" [labelDelete]="labels['PANT007_BTN_ELI']"
+                              (actionDeleteItem)="delete(notificacion)"></equi-history-alert-horse>
+  </ion-list>
 </ion-content>

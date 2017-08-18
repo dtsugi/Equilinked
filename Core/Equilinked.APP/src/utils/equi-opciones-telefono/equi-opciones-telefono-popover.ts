@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {NavParams, ViewController} from "ionic-angular";
-import {LanguageService} from '../../../../../services/language.service';
+import {LanguageService} from '../../services/language.service';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
@@ -19,7 +19,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   `,
   providers: [LanguageService]
 })
-export class OpcionesTelefonoPopover implements OnInit {
+export class EquiOpcionesTelefonoPopover implements OnInit {
   telephone: string;
   labels: any = {};
   options: Array<any>;

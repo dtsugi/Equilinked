@@ -10,9 +10,6 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-</ion-header>
-
-<ion-content>
 
   <ion-segment [(ngModel)]="selectedTab" (ngModelChange)="showSlide($event)" color="primary">
     <ion-segment-button value="hoy">
@@ -22,7 +19,9 @@
       {{ 'PANT021_LBL_PRO' | translate }}
     </ion-segment-button>
   </ion-segment>
+</ion-header>
 
+<ion-content>
   <ion-slides (ionSlideDidChange)="slideChanged($event)">
     <ion-slide class="equi-content-slide-start">
       <ion-grid>
@@ -33,6 +32,10 @@
         </ion-row>
       </ion-grid>
 
+      <div *ngIf="loadingToday" style="text-align: center;">
+        <ion-spinner></ion-spinner>
+      </div>
+
       <ion-grid>
         <ion-list no-lines>
           <ion-item-sliding *ngFor="let nh of notificacionesHoy">
@@ -42,19 +45,21 @@
                   <span [ngClass]="{'equi-expired-alert-normal': nh.Expired, 'equi-normal-text': !nh.Expired}">{{nh.Hora}}</span>
                 </ion-col>
                 <ion-col col-8 class="equi-title-note">
-                  <span [ngClass]="{'equi-expired-alert-bold': nh.Expired, 'equi-bold-text': !nh.Expired}">{{nh.Titulo}}</span>
+                  <span
+                    [ngClass]="{'equi-expired-alert-bold': nh.Expired, 'equi-bold-text': !nh.Expired}">{{nh.Titulo}}</span>
                 </ion-col>
                 <ion-col offset-4 col-8 class="equi-title-note" *ngIf="nh.Ubicacion && nh.Ubicacion != null">
-                  <ion-icon name="ios-pin" [ngClass]="{'equi-expired-alert-normal': nh.Expired, 'equi-principal-color': !nh.Expired}"></ion-icon>
+                  <ion-icon name="ios-pin"
+                            [ngClass]="{'equi-expired-alert-normal': nh.Expired, 'equi-principal-color': !nh.Expired}"></ion-icon>
                   <span [ngClass]="{'equi-expired-alert-normal': nh.Expired, 'equi-normal-text': !nh.Expired}">{{nh.Ubicacion}}</span>
                 </ion-col>
               </ion-row>
             </ion-item>
             <ion-item-options>
               <button ion-button color="danger" icon-left (click)="delete(nh)">
-              <ion-icon name="trash"></ion-icon>
-              {{ 'PANT021_BTN_ELI' | translate }}
-          </button>
+                <ion-icon name="trash"></ion-icon>
+                {{ 'PANT021_BTN_ELI' | translate }}
+              </button>
             </ion-item-options>
           </ion-item-sliding>
         </ion-list>
@@ -62,12 +67,15 @@
     </ion-slide>
 
 
-
     <ion-slide class="equi-content-slide-start">
       <ion-grid>
         <ion-row>
           <ion-col col-12>
-            <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT021_TXT_FIBU']"></ion-searchbar>
+            <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                           [placeholder]="labels['PANT021_TXT_FIBU']"></ion-searchbar>
+            <div *ngIf="loadingNext" style="text-align: center;">
+              <ion-spinner></ion-spinner>
+            </div>
           </ion-col>
         </ion-row>
         <ion-row *ngFor="let nh of notificacionesProximas" class="border-bottom">
@@ -99,8 +107,8 @@
                 </ion-item>
                 <ion-item-options>
                   <button ion-button color="danger" icon-left (click)="delete(n)">
-                      <ion-icon name="trash"></ion-icon>
-                      {{ 'PANT021_BTN_ELI' | translate }}
+                    <ion-icon name="trash"></ion-icon>
+                    {{ 'PANT021_BTN_ELI' | translate }}
                   </button>
                 </ion-item-options>
               </ion-item-sliding>

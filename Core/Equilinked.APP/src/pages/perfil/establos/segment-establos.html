@@ -1,10 +1,14 @@
-<ion-grid> 
+<ion-grid>
     <ion-row>
         <ion-col col-12>
             <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT026_TXT_FIES']"></ion-searchbar>
         </ion-col>
     </ion-row>
-</ion-grid> 
+</ion-grid>
+
+<div *ngIf="loading" style="text-align: center;">
+  <ion-spinner></ion-spinner>
+</div>
 
 <ion-list no-lines *ngIf="establos">
     <ion-item *ngIf="parametrosEstablos.modoEdicion" (click)="selectAll()">

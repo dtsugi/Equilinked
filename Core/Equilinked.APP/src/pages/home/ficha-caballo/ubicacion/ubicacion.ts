@@ -5,13 +5,14 @@ import {CommonService} from "../../../../services/common.service";
 import {OpcionesUbicacionModal} from "./opciones-ubicacion/opciones-ubicacion";
 import {LanguageService} from '../../../../services/language.service';
 import {AppConfig} from "../../../../app/app.config";
-import {OpcionesTelefonoPopover} from "./opciones-telefono/opciones-telefono";
+import {EquiOpcionesTelefonoPopover} from "../../../../utils/equi-opciones-telefono/equi-opciones-telefono-popover";
 
 @Component({
   templateUrl: "./ubicacion.html",
   providers: [LanguageService, CommonService, EstablosService]
 })
 export class UbicacionCaballoPage implements OnDestroy, OnInit {
+  URL_API_GOOGLE: string = AppConfig.API_GOOGLE_URL;
   KEY_GOOGLE: string = AppConfig.API_KEY_GOOGLE;
   private caballo;
   grupo: any;
@@ -45,7 +46,7 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
   }
 
   openOptions(ev, number: string): void {
-    this.popoverController.create(OpcionesTelefonoPopover, {telephone: number})
+    this.popoverController.create(EquiOpcionesTelefonoPopover, {telephone: number})
       .present({
         ev: ev
       });

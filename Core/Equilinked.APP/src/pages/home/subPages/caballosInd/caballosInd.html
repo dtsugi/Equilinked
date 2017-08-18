@@ -1,20 +1,17 @@
-<ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true" [placeholder]="labels['PANT002_TXT_FICA']"></ion-searchbar>
+<ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"
+               [placeholder]="labels['PANT002_TXT_FICA']"></ion-searchbar>
 
 <equi-button-add [label]="labels['PANT002_BTN_NUCA']" (action)="goInsertCaballo()"></equi-button-add>
 
+<div *ngIf="loading" style="text-align: center;">
+  <ion-spinner></ion-spinner>
+</div>
+
 <ion-list no-lines>
-  <ion-item-sliding *ngFor="let caballo of caballosList">
-    <ion-item (click)="goToFicha(caballo)">
-      <ion-avatar item-left>
-        <img src="assets/img/caballo.jpg">
-      </ion-avatar>
-      <span class="equi-title-form">{{caballo.Nombre}}</span>
-    </ion-item>
-    <ion-item-options>
-      <button ion-button color="danger" icon-left (click)="confirmDeleteCaballo(caballo.ID)">
-        <ion-icon name="trash"></ion-icon>
-        {{labels['PANT002_BTN_ELCA']}}
-      </button>
-    </ion-item-options>
-  </ion-item-sliding>
+  <ion-item *ngFor="let caballo of caballosList" (click)="goToFicha(caballo)">
+    <ion-avatar item-left>
+      <img src="assets/img/caballo.jpg">
+    </ion-avatar>
+    <span class="equi-title-form">{{caballo.Nombre}}</span>
+  </ion-item>
 </ion-list>

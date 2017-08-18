@@ -11,7 +11,7 @@
 
     <ion-item *ngFor="let telefono of propietarioEntity.PropietarioTelefono; let i = index">
         <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-principal-color" item-left></ion-icon>
-        <span class="equi-normal-text">{{telefono.Numero}}</span>
+        <span class="equi-normal-text" (click)="openOptionsTelephone($event, telefono.Numero)">{{telefono.Numero}}</span>
         <ion-note class="equi-principal-color equi-italic-text" item-right>
             {{telefono.Tipo_Numero.Descripcion}}
         </ion-note>

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{caballo.Nombre}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ "PANT007_LBL_SUBTEV" | translate }}</span>
+    </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="new()">
+        <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+
+  </ion-navbar>
+
+  <ion-segment [(ngModel)]="selectedTab" (ngModelChange)="showSlide($event)" color="primary">
+    <ion-segment-button value="proximos">
+      {{ "PANT007_LBL_EVPRO" | translate }}
+    </ion-segment-button>
+    <ion-segment-button value="historial">
+      {{ "PANT007_LBL_EVHIST" | translate }}
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content>
+  <ion-slides (ionSlideDidChange)="slideChanged($event)">
+    <ion-slide class="equi-content-slide-start">
+      <segment-eventos-prox *ngIf="caballo.ID" [caballo]="caballo"></segment-eventos-prox>
+    </ion-slide>
+
+    <ion-slide class="equi-content-slide-start">
+      <segment-eventos-his *ngIf="caballo.ID" [caballo]="caballo"></segment-eventos-his>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

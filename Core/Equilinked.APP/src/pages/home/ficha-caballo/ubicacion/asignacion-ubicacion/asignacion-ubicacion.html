@@ -1,37 +1,42 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{caballo.Nombre}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{ "PANT006_LBL_SUBT" | translate }}</span>
-        </ion-title>
-    </ion-navbar>
+  <ion-navbar>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{caballo.Nombre}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{ "PANT006_LBL_SUBT" | translate }}</span>
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT006_TXT_FILES']"></ion-searchbar>
-            </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-              <span class="equi-title-form">{{ "PANT006_LBL_SELEST" | translate }}</span>
-          </ion-col>
-        </ion-row>
-    </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                       [placeholder]="labels['PANT006_TXT_FILES']"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <span class="equi-title-form">{{ "PANT006_LBL_SELEST" | translate }}</span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <ion-list no-lines>
-        <ion-item *ngFor="let establo of establos" (click)="selectEstablo(establo)">
-            <ion-avatar item-left>
-                <img src="assets/img/caballo.jpg">
-            </ion-avatar>
-            <h2 class="equi-title-form">{{establo.Nombre}}</h2>
-            <p *ngIf="establo.Direccion">
-                <ion-icon class="equi-principal-color" name="pin"></ion-icon>
-                <span class="equi-subtitle-form">{{establo.Direccion}}</span>
-            </p>
-        </ion-item>
-    </ion-list>
+  <div *ngIf="loading" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list no-lines>
+    <ion-item *ngFor="let establo of establos" (click)="selectEstablo(establo)">
+      <ion-avatar item-left>
+        <img src="assets/img/caballo.jpg">
+      </ion-avatar>
+      <h2 class="equi-title-form">{{establo.Nombre}}</h2>
+      <p *ngIf="establo.Direccion">
+        <ion-icon class="equi-principal-color" name="pin"></ion-icon>
+        <span class="equi-subtitle-form">{{establo.Direccion}}</span>
+      </p>
+    </ion-item>
+  </ion-list>
 </ion-content>

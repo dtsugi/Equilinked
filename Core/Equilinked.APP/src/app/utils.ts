@@ -49,11 +49,7 @@ export class Utils {
 
 export class ConstantsConfig {
 
-    static USER_ID_LS = "userIdLS";
-    static USER_NAME_LS = "usernameLS";
-    static USER_PASSWORD_LS = "userPasswordLS";
-    static USER_TOKEN_LS = "userTokenLS";
-    static USER_PROPIETARIO_ID_LS = "userPropietarioIdLS";
+    static USER_SESSION: string = "userSession";
 
     static ERR_GNR_APP = "Sucedio un error al comunicarse con el servidor";
     static RES_NN = "Sin valor asignado";

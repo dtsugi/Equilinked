@@ -14,6 +14,7 @@ import {LanguageService} from '../../../../services/language.service';
   providers: [CommonService, LanguageService, GruposCaballosService, SecurityService]
 })
 export class GruposCaballos implements OnDestroy, OnInit {
+  loading: boolean;
   grupos: Array<any> = [];
   gruposRespaldo: Array<any> = [];
   session: UserSessionEntity;
@@ -25,12 +26,13 @@ export class GruposCaballos implements OnDestroy, OnInit {
               private gruposCaballosService: GruposCaballosService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loading = true;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
-    this.getGruposCaballos(false);
+    this.getGruposCaballos();
     this.addEvents();
   }
 
@@ -38,17 +40,17 @@ export class GruposCaballos implements OnDestroy, OnInit {
     this.removeEvents();
   }
 
-  getGruposCaballos(showLoading: boolean): void {
-    if (showLoading)
-      this.commonService.showLoading(this.labels['PANT002_ALT_PRO']);
+  getGruposCaballos(): void {
+    this.loading = true;
     this.gruposCaballosService.getGruposCaballosByPropietarioId(this.session.PropietarioId)
       .then(grupos => {
         this.gruposRespaldo = grupos;
         this.grupos = grupos;
-        if (showLoading)
-          this.commonService.hideLoading();
+        this.loading = false;
       }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels['PANT002_MSG_ERRCG']);
+      this.loading = false;
+      console.error(err);
+      this.commonService.ShowInfo(this.labels['PANT002_MSG_ERRCG']);
     });
   }
 
@@ -66,7 +68,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
 
   private addEvents(): void {
     this.events.subscribe("grupos:refresh", () => {
-      this.getGruposCaballos(false);
+      this.getGruposCaballos();
     });
   }
 

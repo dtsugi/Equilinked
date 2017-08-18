@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {Events, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {Events, NavController, NavParams} from 'ionic-angular';
 import {ConstantsConfig} from '../../../../app/utils'
 import {CommonService} from '../../../../services/common.service';
 import {AlertaService} from '../../../../services/alerta.service';
@@ -26,7 +25,8 @@ export class DentistaPage implements OnDestroy, OnInit {
   historyNotificacionList;
   nextNotificacionList;
   tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_DENTISTA;
-  isDeleting: boolean = false;
+  loadingNext: boolean;
+  loadingHistory: boolean;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -36,6 +36,8 @@ export class DentistaPage implements OnDestroy, OnInit {
               private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loadingNext = true;
+    this.loadingHistory = true;
   }
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class DentistaPage implements OnDestroy, OnInit {
       if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
         this.idCaballo = this.navParams.get("idCaballoSelected");
         this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-        this.getAlertasByCaballo(true);
+        this.getAlertasByCaballo();
       }
       this.addEvents();
     });
@@ -55,10 +57,10 @@ export class DentistaPage implements OnDestroy, OnInit {
     this.removeEvents();
   }
 
-  private getAlertasByCaballo(loading: boolean): void {
+  private getAlertasByCaballo(): void {
     let fecha: string = moment().format("YYYY-MM-DD");
-    if (loading)
-      this._commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
+    this.loadingNext = true;
+    this.loadingHistory = true;
     this.alertaCaballoService.getAlertasByCaballoId(
       this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
       ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_TIPO_DESPARACITACION
@@ -68,6 +70,7 @@ export class DentistaPage implements OnDestroy, OnInit {
         alerta.Fecha = moment(d).format("DD/MM/YY");
         return alerta;
       });
+      this.loadingHistory = false;
       return this.alertaCaballoService
         .getAlertasByCaballoId(this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
           ConstantsConfig.ALERTA_FILTER_NEXT, 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE);
@@ -78,10 +81,12 @@ export class DentistaPage implements OnDestroy, OnInit {
         alerta.Hora = moment(d).format("hh:mm a");
         return alerta;
       });
-      if (loading)
-        this._commonService.hideLoading();
+        this.loadingNext = false;
     }).catch(err => {
-      this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRALT"]);
+      console.error(err);
+      this._commonService.ShowInfo(this.labels["PANT007_MSG_ERRALT"]);
+      this.loadingNext = false;
+      this.loadingHistory = false;
     });
   }
 
@@ -125,14 +130,14 @@ export class DentistaPage implements OnDestroy, OnInit {
       .then(() => {
         this._commonService.hideLoading();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
-        this.getAlertasByCaballo(true);
+        this.getAlertasByCaballo();
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
     });
   }
 
   reloadController() {
-    this.getAlertasByCaballo(true);
+    this.getAlertasByCaballo();
   }
 
   goBack() {
@@ -141,7 +146,7 @@ export class DentistaPage implements OnDestroy, OnInit {
 
   private addEvents(): void {
     this.events.subscribe("notificaciones:caballo:refresh", () => {
-      this.getAlertasByCaballo(false);
+      this.getAlertasByCaballo();
     });
   }
 

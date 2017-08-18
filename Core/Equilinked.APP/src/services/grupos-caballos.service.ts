@@ -12,6 +12,15 @@ export class GruposCaballosService {
   constructor(private http: Http) {
   }
 
+  getCaballosByGrupoAndStatusEstablo(propietarioId: number, grupoId: number, tieneEstablo: boolean): Promise<Array<any>> {
+    let url: string = this.urlGrupos + propietarioId + "/grupos/" + grupoId + "/caballos";
+    let params = new URLSearchParams();
+    params.set("tieneEstablo", tieneEstablo ? "true" : "false");
+    return this.http.get(url, new RequestOptions({search: params}))
+      .map(caballos => caballos.json() as Array<any>)
+      .toPromise();
+  }
+
   getCaballosByGruposIds(propietarioId: number, gruposIds: number[]): Promise<any> {
     let url: string = this.urlGrupos + propietarioId + "/grupos/caballos";
     let params = new URLSearchParams();
@@ -91,8 +100,8 @@ export class GruposCaballosService {
   filterCaballosByNombreOrGrupo(value: string, caballos: any[]): any[] {
     if (value && value !== "") {
       return caballos.filter(c => {
-        return ((c.caballoGrupo.Caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1)
-          || (c.caballoGrupo.Caballo.Grupo != null && c.caballoGrupo.Caballo.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1));
+        return ((c.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1)
+          || (c.caballo.Grupo != null && c.caballo.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1));
       });
     }
     return caballos;

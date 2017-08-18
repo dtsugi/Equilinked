@@ -109,7 +109,7 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
 
   private loadInfoSegment(): void {
     if (this.segmentSelection == "caballos") {
-      this.caballosGrupo.getAllCaballosGrupo(true);
+      this.caballosGrupo.getAllCaballosGrupo();
     }
   }
 

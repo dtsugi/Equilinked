@@ -39,6 +39,8 @@ export class AlertasFicha implements OnInit, OnDestroy {
   labels: any;
   proximasAlertas: Array<any>;
   historicoAlertas: Array<any>;
+  loadingNext: boolean;
+  loadingHistory: boolean;
 
   constructor(private alertaService: AlertaService,
               private alertaGrupoService: AlertaGrupoService,
@@ -48,6 +50,8 @@ export class AlertasFicha implements OnInit, OnDestroy {
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.loadingNext = true;
+    this.loadingHistory = false;
     this.labels = {};
     this.grupo = {};
   }
@@ -60,7 +64,7 @@ export class AlertasFicha implements OnInit, OnDestroy {
     this.languageService.loadLabels().then(labels => {
       this.labelsX = labels;
       this.applyLabels(); //Ajustar las leyendas según el tipo de alerta
-      this.getAlertasByGrupo(true);
+      this.getAlertasByGrupo();
     });
     this.addEvents();
   }
@@ -137,7 +141,7 @@ export class AlertasFicha implements OnInit, OnDestroy {
     this.commonService.showLoading(this.labelsX["PANT018_ALT_PRO"]);
     this.alertaGrupoService.deleteAlertasGrupoByIds(this.session.PropietarioId, this.grupo.ID, [notificacion.ID])
       .then(() => {
-        this.getAlertasByGrupo(false);
+        this.getAlertasByGrupo();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
         this.commonService.hideLoading();
       }).catch(err => {
@@ -168,11 +172,10 @@ export class AlertasFicha implements OnInit, OnDestroy {
     }
   }
 
-  private getAlertasByGrupo(showLoading: boolean): void {
+  private getAlertasByGrupo(): void {
     let fecha: string = moment().format("YYYY-MM-DD");
-    if (showLoading)
-      this.commonService.showLoading(this.labelsX["PANT018_ALT_PRO"]);
-    //this.alertaGrupoService.getAlertasByGrupo(this.grupo.ID, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_NEXT)
+    this.loadingNext = true;
+    this.loadingHistory = true;
     this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
       ConstantsConfig.ALERTA_FILTER_NEXT, 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE)
       .then(alertas => { //Primero las proximas!
@@ -180,27 +183,28 @@ export class AlertasFicha implements OnInit, OnDestroy {
           let d = new Date(a.FechaNotificacion);
           a.Fecha = moment(d).format("D [de] MMMM [de] YYYY");
           a.Hora = moment(d).format("hh:mm a");
-          //debugger;
           return a;
         });
+        this.loadingNext = false;
         return this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
           ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE);
-        //return this.alertaGrupoService.getAlertasByGrupo(this.grupo.ID, this.tipoAlerta, ConstantsConfig.ALERTA_FILTER_HISTORY);
       }).then(alertas => {
       this.historicoAlertas = alertas.map(a => {
         a.Fecha = moment(new Date(a.FechaNotificacion)).format("DD/MM/YY");
         return a;
       });
-      if (showLoading)
-        this.commonService.hideLoading();
+      this.loadingHistory = false;
     }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labelsX["PANT018_MSG_ERRCAR"]);
+      console.error(err);
+      this.commonService.ShowInfo(this.labelsX["PANT018_MSG_ERRCAR"]);
+      this.loadingNext = false;
+      this.loadingHistory = false;
     });
   }
 
   private addEvents(): void {
     this.events.subscribe("alertas:refresh", () => {
-      this.getAlertasByGrupo(false);
+      this.getAlertasByGrupo();
     });
   }
 

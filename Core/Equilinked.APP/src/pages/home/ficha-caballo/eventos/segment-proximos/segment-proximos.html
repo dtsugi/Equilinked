@@ -1,0 +1,49 @@
+<ion-grid>
+  <ion-row>
+    <ion-col col-12>
+      <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT007_TXT_FILNOT']"></ion-searchbar>
+
+      <div *ngIf="loading" style="text-align: center;">
+        <ion-spinner></ion-spinner>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngFor="let ec of eventos" class="border-bottom">
+    <ion-col col-4>
+      <ion-row>
+        <ion-col col-12 class="col-center">
+          <span class="equi-bold-text">{{ec.FechaCorta}}</span>
+        </ion-col>
+        <ion-col col-12 class="col-center">
+          <span class="equi-normal-text">{{ec.Dia}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+
+    <ion-col col-8>
+      <ion-list no-lines>
+        <ion-item-sliding *ngFor="let e of ec.Notificaciones; let i = index">
+          <ion-item text-wrap (click)="view(e)">
+            <ion-row [ngClass]="{'border-bottom': i < (ec.Notificaciones.length-1)}">
+              <ion-col col-12 class="equi-title-note"><span class="equi-bold-text">{{e.Titulo}}</span></ion-col>
+              <ion-col col-12 class="equi-title-note" *ngIf="e.Ubicacion && e.Ubicacion != null">
+                <ion-icon name="ios-pin" class="equi-principal-color"></ion-icon>
+                <span class="equi-normal-text">{{e.Ubicacion}}</span>
+              </ion-col>
+              <ion-col col-12>
+                <span class="equi-normal-text">{{e.Hora}}</span>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+          <ion-item-options>
+            <button ion-button color="danger" icon-left (click)="delete(e)">
+              <ion-icon name="trash"></ion-icon>
+              Eliminar
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>

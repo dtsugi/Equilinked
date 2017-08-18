@@ -129,7 +129,7 @@ export class NotificacionesExtendedInsertPage {
         }
       });
     }).catch(error => {
-      this._commonService.ShowErrorHttp(error, this.labels["PANT010_MSG_ERRMOD"]);
+      this._commonService.ShowErrorHttp(error, this.labels["PANT010_MSG_ERRGUA"]);
     });
   }
 
