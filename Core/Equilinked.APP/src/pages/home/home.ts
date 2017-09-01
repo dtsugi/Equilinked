@@ -17,7 +17,7 @@ export class HomePage {
   }
 
   ngOnInit(): void {
-    this.slides.threshold = 120;
+    //this.slides.threshold = 120;
     this.mapSlides = new Map<string, number>();
     this.mapSlides.set("caballos_ind", 0);
     this.mapSlides.set("caballos_gru", 1);

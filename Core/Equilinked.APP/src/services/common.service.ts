@@ -12,11 +12,12 @@ export class CommonService {
   }
 
   // Mostrar la animación de 'Loading'
-  showLoading(mje: string) {
+  showLoading(mje: string): any {
     this.loader = this.loadingCtrl.create({
       content: mje
     });
     this.loader.present();
+    return this.loader;
   }
 
   // Ocultar la animación de 'Loading'

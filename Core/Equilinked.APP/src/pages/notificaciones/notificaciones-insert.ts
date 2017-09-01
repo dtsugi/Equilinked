@@ -128,7 +128,7 @@ export class NotificacionesInsertPage {
     alerta.Descripcion = formValues["Descripcion"];
     alerta.NombreProfesional = formValues["NombreProfesional"];
     alerta.Activa = formValues["Activa"];
-    alerta.FechaNotificacion = alerta.FechaNotificacion + " " + alerta.HoraNotificacion + ":00";
+    alerta.FechaNotificacion = alerta.FechaNotificacion + " " + alerta.HoraNotificacion;
   }
 
   callbackViewRecordatorios = (data) => {

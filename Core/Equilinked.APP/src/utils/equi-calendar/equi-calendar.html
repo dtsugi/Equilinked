@@ -1,0 +1,68 @@
+<ion-grid>
+  <ion-row>
+    <ion-col col-2 (click)="lastMonth()" style="font-size: 40px;">
+      <span><ion-icon name="ios-arrow-back"></ion-icon></span>
+    </ion-col>
+    <ion-col style="margin: auto;">
+      <span class="equi-bold-text">{{monthCalendar.nameMonth}} {{monthCalendar.year}}</span>
+    </ion-col>
+    <ion-col col-2 (click)="nextMonth()" style="font-size: 40px;">
+      <span><ion-icon name="ios-arrow-forward"></ion-icon></span>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="equi-row-days">
+    <ion-col>L</ion-col>
+    <ion-col>M</ion-col>
+    <ion-col>M</ion-col>
+    <ion-col>J</ion-col>
+    <ion-col>V</ion-col>
+    <ion-col>S</ion-col>
+    <ion-col>D</ion-col>
+  </ion-row>
+
+  <div *ngFor="let week of monthCalendar.weeksMonth">
+    <!-- dias -->
+    <ion-row class="border-bottom" *ngIf="!selectedWeek || (selectedWeek && selectedWeek.days[0].id == week.days[0].id)">
+      <ion-col *ngFor="let day of week.days" class="equi-col-calendar">
+        <div class="equi-container-day equi-normal-text" [ngClass]="{'equi-selected-day': day.id == selectedDate.id}"
+             (click)="selectDate(week, day)"><!-- day -->
+          <span style="display: block">{{day.numberDate}}</span>
+        </div>
+        <div *ngIf="week.hasAlerts && !week.selectedDay"><!-- circle notificacation -->
+          <span *ngIf="!day.alerts" class="equi-circle-day"></span>
+          <span *ngIf="day.alerts" class="equi-circle-day equi-principal-color"></span>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="week.selectedDay && week.selectedDay.alerts">
+      <ion-col>
+        <ion-list no-lines>
+          <ion-item-sliding *ngFor="let nh of week.selectedDay.alerts">
+            <ion-item text-wrap (click)="callViewAlert(nh)">
+              <ion-row>
+                <ion-col col-4 class="col-center">
+                  <span clas="equi-normal-text">{{nh.Hora}}</span>
+                </ion-col>
+                <ion-col col-8 class="equi-title-note">
+                  <span class="equi-bold-text">{{nh.Titulo}}</span>
+                </ion-col>
+                <ion-col offset-4 col-8 class="equi-title-note" *ngIf="nh.Ubicacion && nh.Ubicacion != null">
+                  <ion-icon name="ios-pin" class="equi-principal-color"></ion-icon>
+                  <span class="equi-normal-text">{{nh.Ubicacion}}</span>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+            <ion-item-options *ngIf="nh.canDelete">
+              <button ion-button color="danger" icon-left (click)="callDeleteAlert(nh)">
+                <ion-icon name="trash"></ion-icon>
+                {{ "PANT007_BTN_ELI" | translate }}
+              </button>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </div>
+
+</ion-grid>

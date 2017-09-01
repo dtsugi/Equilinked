@@ -148,8 +148,8 @@ export class NotasFichaPage implements OnInit, OnDestroy {
   private getNotasByGrupo(): void {
     let fecha: string = moment().format("YYYY-MM-DD");
     this.loading = true;
-    this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
-      ConstantsConfig.ALERTA_FILTER_NEXT, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE)
+    this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, null, null,
+      [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE)
       .then(notas => {
         this.loading = false;
         this.notasRespaldo = notas.map(nota => {

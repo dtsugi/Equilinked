@@ -57,9 +57,6 @@ export class PopoverDatosPage {
           handler: () => {
             this._securityService.logout();
             this.app.getRootNav().setRoot(LoginPage);
-            //this.navCtrlDatos.setRoot(LoginPage);
-            //this.navCtrl.popToRoot();
-            //this.navCtrlDatos.push(LoginPage);
           }
         }
       ]

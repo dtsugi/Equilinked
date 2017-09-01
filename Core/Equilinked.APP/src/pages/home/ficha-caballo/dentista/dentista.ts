@@ -58,12 +58,12 @@ export class DentistaPage implements OnDestroy, OnInit {
   }
 
   private getAlertasByCaballo(): void {
-    let fecha: string = moment().format("YYYY-MM-DD");
+    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     this.loadingNext = true;
     this.loadingHistory = true;
     this.alertaCaballoService.getAlertasByCaballoId(
-      this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
-      ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_TIPO_DESPARACITACION
+      this.session.PropietarioId, this.idCaballo, null, fecha,
+      [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(res => {
       this.historyNotificacionList = res.map(alerta => {
         let d = new Date(alerta.FechaNotificacion);
@@ -72,8 +72,8 @@ export class DentistaPage implements OnDestroy, OnInit {
       });
       this.loadingHistory = false;
       return this.alertaCaballoService
-        .getAlertasByCaballoId(this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
-          ConstantsConfig.ALERTA_FILTER_NEXT, 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE);
+        .getAlertasByCaballoId(this.session.PropietarioId, this.idCaballo, fecha, null,
+          [this.tipoAlerta], 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE);
     }).then(res => {
       this.nextNotificacionList = res.map(alerta => {
         let d = new Date(alerta.FechaNotificacion);
@@ -81,7 +81,7 @@ export class DentistaPage implements OnDestroy, OnInit {
         alerta.Hora = moment(d).format("hh:mm a");
         return alerta;
       });
-        this.loadingNext = false;
+      this.loadingNext = false;
     }).catch(err => {
       console.error(err);
       this._commonService.ShowInfo(this.labels["PANT007_MSG_ERRALT"]);

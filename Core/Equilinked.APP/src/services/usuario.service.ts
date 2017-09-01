@@ -13,6 +13,13 @@ export class UsuarioService {
   constructor(private _http: Http) {
   }
 
+  loginWithToken(session: any): Promise<any> {
+    let url: string = this.actionUrl + "login/token";
+    return this._http.post(url, session)
+      .map(response => response.json())
+      .toPromise();
+  }
+
   login(session: UserSessionEntity): any {
     let bodyString = JSON.stringify(session);
     let headers = new Headers({'Content-Type': 'application/json'}); // ... Set content type to JSON

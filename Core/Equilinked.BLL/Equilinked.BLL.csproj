@@ -33,8 +33,14 @@
     <Reference Include="EntityFramework">
       <HintPath>..\Equilinked.DAL\bin\Debug\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,6 +74,7 @@
     <Compile Include="RecordatorioBLL.cs" />
     <Compile Include="TipoNumeroBLL.cs" />
     <Compile Include="UsuarioBLL.cs" />
+    <Compile Include="ValidacionTokensBLL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Equilinked.DAL\Equilinked.DAL.csproj">
@@ -78,6 +85,9 @@
       <Project>{6ba93172-b4af-45b9-9b5c-a2f1bf0ceb69}</Project>
       <Name>Equilinked.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

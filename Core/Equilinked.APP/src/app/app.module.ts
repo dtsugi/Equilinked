@@ -10,6 +10,8 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {GoogleMaps} from "@ionic-native/google-maps";
 import {PhotoLibrary} from "@ionic-native/photo-library";
+import {Facebook} from "@ionic-native/facebook";
+import {GooglePlus} from "@ionic-native/google-plus";
 import {MyApp} from './app.component';
 /*Utils */
 import {TextareaAutoresize} from "../utils/equi-autoresize/autoresize.directive";
@@ -22,9 +24,15 @@ import {EquiModalCaballos} from "../utils/equi-modal-caballos/equi-modal-caballo
 import {EquiModalGrupos} from "../utils/equi-modal-grupos/equi-modal-grupos";
 import {EquiModalRecordatorio} from "../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import {EquiOpcionesTelefonoPopover} from "../utils/equi-opciones-telefono/equi-opciones-telefono-popover";
+import {EquiCalendar} from "../utils/equi-calendar/equi-calendar";
+import {EquiCalendar2} from "../utils/equi-calendar2/equi-calendar2";
+import {EquiPopoverFiltroCalendario} from "../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
+
+/*Home*/
 import {HomePage} from '../pages/home/home';
 import {TabsPage} from '../pages/tabs/tabs';
 import {LoginPage} from '../pages/login/login';
+import {RegistroPage} from "../pages/login/registro/registro";
 import {MenuSuperior} from '../pages/home/subPages/menuSuperior/menuSuperior';
 import {CaballosInd} from '../pages/home/subPages/caballosInd/caballosInd';
 /* Notificaciones */
@@ -65,6 +73,8 @@ import {OpcionesFichaGrupo} from "../pages/home/subPages/grupos-caballos/adminis
 import {CambioNombrePage} from "../pages/home/subPages/grupos-caballos/administracion-grupo/cambio-nombre/cambio-nombre";
 import {SegmentCaballosGrupo} from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-caballos/segment-caballos";
 import {EdicionCaballosGrupoPage} from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-caballos/edicion-caballos/edicion-caballos";
+import {SegmentCalendarioGrupo} from '../pages/home/subPages/grupos-caballos/administracion-grupo/segment-calendario/calendario-grupo';
+import {GrupoAlertasEditPage} from '../pages/home/subPages/grupos-caballos/administracion-grupo/segment-calendario/alertas-edit/grupo-alertas-edit';
 /* Caballos-ALimentacion */
 import {AlimentacionPage} from "../pages/home/ficha-caballo/alimentacion/alimentacion";
 import {AlimentacionEditPage} from "../pages/home/ficha-caballo/alimentacion/alimentacion-edit";
@@ -81,6 +91,7 @@ import {DentistaPage} from "../pages/home/ficha-caballo/dentista/dentista";
 import {DesparasitacionPage} from "../pages/home/ficha-caballo/desparasitacion/desparasitacion";
 import {EventosCaballoPage} from '../pages/home/ficha-caballo/eventos/eventos';
 import {SegmentEventosProximos} from '../pages/home/ficha-caballo/eventos/segment-proximos/segment-proximos';
+import {SegmentCalendarioEventos} from "../pages/home/ficha-caballo/eventos/segment-calendario/segment-calendario";
 import {SegmentEventosHistorial} from '../pages/home/ficha-caballo/eventos/segment-historial/segment-historial';
 import {DetalleEventoCaballoPage} from "../pages/home/ficha-caballo/eventos/detalle-evento/detalle-evento";
 import {EdicionEventoCaballoPage} from '../pages/home/ficha-caballo/eventos/edicion-evento/edicion-evento';
@@ -104,6 +115,10 @@ import {MapaEstabloPage} from "../pages/perfil/establos/admin-establo/mapa-estab
 import {BusquedaPosicionModal} from '../pages/perfil/establos/admin-establo/mapa-establo/busqueda-posiciones/busqueda-posiciones-modal';
 import {InfoEstabloPage} from "../pages/perfil/establos/admin-establo/info-establo";
 import {EdicionEstabloCaballosPage} from "../pages/perfil/establos/admin-establo/edicion-caballos";
+/* Calendario */
+import {CalendarioPage} from "../pages/calendario/calendario";
+/* Camara */
+import {CamaraPage} from "../pages/camara/camara";
 
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -113,6 +128,7 @@ export function createTranslateLoader(http: Http) {
   declarations: [
     MyApp,
     LoginPage,
+    RegistroPage,
     HomePage,
     TabsPage,
     MenuSuperior,
@@ -128,6 +144,9 @@ export function createTranslateLoader(http: Http) {
     EquiModalGrupos,
     EquiModalRecordatorio,
     EquiOpcionesTelefonoPopover,
+    EquiCalendar,
+    EquiCalendar2,
+    EquiPopoverFiltroCalendario,
     /* Notificaciones */
     NotificacionesPage,
     EdicionNotificacionGeneralPage,
@@ -165,7 +184,9 @@ export function createTranslateLoader(http: Http) {
     OpcionesFichaGrupo,
     CambioNombrePage,
     SegmentCaballosGrupo,
+    SegmentCalendarioGrupo,
     EdicionCaballosGrupoPage,
+    GrupoAlertasEditPage,
     /* Caballos-ALimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -184,6 +205,7 @@ export function createTranslateLoader(http: Http) {
     DetalleEventoCaballoPage,
     EdicionEventoCaballoPage,
     SegmentEventosProximos,
+    SegmentCalendarioEventos,
     SegmentEventosHistorial,
     /* Perfil */
     PerfilPage,
@@ -204,7 +226,11 @@ export function createTranslateLoader(http: Http) {
     MapaEstabloPage,
     BusquedaPosicionModal,
     InfoEstabloPage,
-    EdicionEstabloCaballosPage
+    EdicionEstabloCaballosPage,
+    /*Calendario*/
+    CalendarioPage,
+    /*Camara*/
+    CamaraPage
   ],
   imports: [
     BrowserModule,
@@ -228,6 +254,7 @@ export function createTranslateLoader(http: Http) {
     HomePage,
     TabsPage,
     LoginPage,
+    RegistroPage,
     /* Notificaciones */
     NotificacionesPage,
     EdicionNotificacionGeneralPage,
@@ -263,6 +290,7 @@ export function createTranslateLoader(http: Http) {
     OpcionesFichaGrupo,
     CambioNombrePage,
     EdicionCaballosGrupoPage,
+    GrupoAlertasEditPage,
     /* Caballos-Alimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -302,11 +330,18 @@ export function createTranslateLoader(http: Http) {
     EquiModalCaballos,
     EquiModalGrupos,
     EquiModalRecordatorio,
-    EquiOpcionesTelefonoPopover
+    EquiOpcionesTelefonoPopover,
+    EquiPopoverFiltroCalendario,
+    /*Calendario*/
+    CalendarioPage,
+    /*Camara*/
+    CamaraPage
   ],
   providers: [
     GoogleMaps,
     PhotoLibrary,
+    Facebook,
+    GooglePlus,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

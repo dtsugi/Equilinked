@@ -5,8 +5,12 @@ import {GruposCaballosService} from "../../../../../services/grupos-caballos.ser
 import {SecurityService} from "../../../../../services/security.service";
 import {UserSessionEntity} from "../../../../../model/userSession";
 import {OpcionesFichaGrupo} from "./opciones-ficha/opciones-ficha";
+import {GrupoAlertasEditPage} from "./segment-calendario/alertas-edit/grupo-alertas-edit";
 import {LanguageService} from '../../../../../services/language.service';
 import {SegmentCaballosGrupo} from "./segment-caballos/segment-caballos";
+import {SegmentCalendarioGrupo} from './segment-calendario/calendario-grupo';
+import {EquiPopoverFiltroCalendario} from "../../../../../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
+import {ConstantsConfig} from "../../../../../app/utils";
 
 @Component({
   templateUrl: "./administracion-grupo.html",
@@ -20,10 +24,13 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
   private lastSlide: string;
   @ViewChild(Slides) slides: Slides;
   @ViewChild(SegmentCaballosGrupo) caballosGrupo: SegmentCaballosGrupo;
+  @ViewChild(SegmentCalendarioGrupo) segmentCalendar: SegmentCalendarioGrupo;
   labels: any = {};
   grupo: any;
   segmentSelection: string;
   parametrosCaballos: any;
+  calendarOptions: any;
+  optionsTypeAlerts: any;
 
   constructor(private commonService: CommonService,
               private events: Events,
@@ -37,6 +44,7 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.indexSlidesMap = new Map<number, string>();
     this.segmentSelection = "ficha";
     this.grupo = {};
+    this.calendarOptions = {step: 1}; //este objeto se le pasa al calendar
     this.parametrosCaballos = {modoEdicion: false, getCountSelected: null, grupoDefault: false};
   }
 
@@ -45,11 +53,16 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.grupoId = this.navParams.get("grupoId");
     this.lastSlide = "ficha";
     this.slidesMap.set("ficha", 0);
-    this.slidesMap.set("caballos", 1);
+    this.slidesMap.set("calendario", 1);
+    this.slidesMap.set("caballos", 2);
     this.indexSlidesMap.set(0, "ficha");
-    this.indexSlidesMap.set(1, "caballos");
+    this.indexSlidesMap.set(1, "calendario");
+    this.indexSlidesMap.set(2, "caballos");
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
+      let alertTypes: Array<any> = this.getAlertTypes();
+      alertTypes.unshift({name: this.labels["PANT013_LBL_TODS"], checked: true});
+      this.optionsTypeAlerts = {modified: false, alertTypes: alertTypes};
       this.getInfoGrupo(true);
     });
     this.addEvents();
@@ -80,6 +93,22 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.navController.pop();
   }
 
+  backCalendar(): void {
+    this.segmentCalendar.backCalendar();//que el componente le diga al otro componente que regrese a la vista anterior
+  }
+
+  newAlert(): void {
+    let params: any = {grupo: this.grupo};
+    this.navController.push(GrupoAlertasEditPage, params);
+  }
+
+  editAlert(): void {
+    console.info("Editar alerta!");
+    let alert: any = this.segmentCalendar.getAlert();
+    let params: any = {grupo: this.grupo, alerta: JSON.parse(JSON.stringify(alert))};
+    this.navController.push(GrupoAlertasEditPage, params);
+  }
+
   /*Muestra las opciones cuando se encuentra activa "FICHA"*/
   showOptionsFicha(ev: any): void {
     let popover = this.popoverController.create(OpcionesFichaGrupo, {
@@ -107,9 +136,25 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.events.publish("caballos-grupo:eliminacion:confirmed");
   }
 
+  /*Popover de filtro de notificaciones calendario*/
+  showFilterAlertTypes(ev: any): void {
+    let popover = this.popoverController.create(EquiPopoverFiltroCalendario, {
+      options: this.optionsTypeAlerts
+    });
+    popover.onDidDismiss(() => {
+      console.info("Refrescar las notificaciones del mes de los tipos seleccionados");
+      this.segmentCalendar.reloadAlerts();//refrescar
+    });
+    popover.present({
+      ev: ev
+    });
+  }
+
   private loadInfoSegment(): void {
     if (this.segmentSelection == "caballos") {
       this.caballosGrupo.getAllCaballosGrupo();
+    } else if (this.segmentSelection == "calendario") {
+      this.segmentCalendar.reloadAlerts();//mandamos a refrescar las alertas
     }
   }
 
@@ -135,5 +180,15 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
 
   private removeEvents(): void {
     this.events.unsubscribe("grupo:refresh");
+  }
+
+  private getAlertTypes(): Array<any> {
+    return [
+      {id: ConstantsConfig.ALERTA_TIPO_EVENTOS, name: this.labels["PANT013_LBL_EVTS"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_HERRAJE, name: this.labels["PANT013_LBL_HERR"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, name: this.labels["PANT013_LBL_DESP"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_DENTISTA, name: this.labels["PANT013_LBL_DENT"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, name: this.labels["PANT013_LBL_NOTS"], checked: true}
+    ];
   }
 }

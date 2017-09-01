@@ -149,12 +149,13 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   }
 
   private loadNotificacionesToday(): void {
-    let today = moment();
-    this.today = today.format("dddd, D [de] MMMM [de] YYYY");
+    let inicio: string = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss");
+    let fin: string = moment(new Date()).endOf("day").format("YYYY-MM-DD HH:mm:ss");
+    this.today = moment(new Date()).format("dddd, D [de] MMMM [de] YYYY");
     this.today = this.today.charAt(0).toUpperCase() + this.today.slice(1);
     this.loadingToday = true;
-    this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
-      null, ConstantsConfig.ALERTA_FILTER_TODAY, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
+    this._alertaService.getAlertasByPropietario(this.session.PropietarioId, inicio, fin,
+      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
     ).then(alertas => {
       this.notificacionesHoy = alertas.map(a => {
         let d = new Date(a.FechaNotificacion);
@@ -171,10 +172,10 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   }
 
   private loadNextNotificaciones(): void {
-    let today = moment();
+    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     this.loadingNext = true;
-    this._alertaService.getAlertasByPropietario(this.session.PropietarioId, today.format("YYYY-MM-DD"),
-      null, ConstantsConfig.ALERTA_FILTER_AFTER_TODAY, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
+    this._alertaService.getAlertasByPropietario(this.session.PropietarioId, fecha, null,
+      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
     ).then(alertas => {
       let mapDates: Map<string, any> = new Map<string, any>();
       let day: any;

@@ -23,21 +23,25 @@ export class AlertaCaballoService {
       .toPromise();
   }
 
-  getAlertasByCaballoId(propietarioId: number, caballoId: number, fecha: string, tipoAlerta: number, filtroAlerta: number, limite: number, orden: number): Promise<Array<any>> {
+  getAlertasByCaballoId(propietarioId: number, caballoId: number, inicio: string, fin: string, tipos: Array<number>, cantidad: number, orden: number): Promise<Array<any>> {
     let url: string = this.alertaUrl + "/" + propietarioId + "/caballos/" + caballoId + "/alertas";
     let params = new URLSearchParams();
-    params.set("fecha", fecha);
-    if (limite != null) {
-      params.set("limite", limite.toString());
+    if (inicio != null) {
+      params.set("inicio", inicio);
+    }
+    if (fin != null) {
+      params.set("fin", fin);
+    }
+    if (tipos != null) {
+      tipos.forEach(tipo => {
+        params.append("tipos", tipo.toString());
+      });
+    }
+    if (cantidad != null) {
+      params.set("cantidad", cantidad.toString());
     }
     if (orden != null) {
       params.set("orden", orden.toString());
-    }
-    if (tipoAlerta != null) {
-      params.set("tipoAlerta", tipoAlerta.toString());
-    }
-    if (filtroAlerta != null) {
-      params.set("filtroAlerta", filtroAlerta.toString());
     }
     return this._http.get(url, new RequestOptions({search: params}))
       .map(alertas => alertas.json() as Array<any>).toPromise();

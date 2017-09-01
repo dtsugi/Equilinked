@@ -1,51 +1,57 @@
 <ion-content>
-    <form [formGroup]="form" (ngSubmit)="Login()">
-        <ion-grid>
-            <ion-row style="text-align:center">
-                <ion-col col-12>
-                    <img class="equi-logo-login" src="assets/img/icon-equilinked.png" />
-                </ion-col>
-            </ion-row>
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="Login()">
+    <ion-grid>
+      <ion-row style="text-align:center">
+        <ion-col col-12>
+          <img class="equi-logo-login" src="assets/img/icon-equilinked.png"/>
+        </ion-col>
+      </ion-row>
 
-            <ion-item>
-                <ion-label floating>{{ "PANT001_TXT_USR" | translate }}</ion-label>
-                <ion-input type="text" formControlName="UserName"></ion-input>
-            </ion-item>
+      <ion-item>
+        <ion-label floating>{{ "PANT001_TXT_USR" | translate }}</ion-label>
+        <ion-input type="text" formControlName="UserName"></ion-input>
+      </ion-item>
 
-            <ion-item>
-                <ion-label floating>{{ "PANT001_TXT_PWD" | translate }}</ion-label>
-                <ion-input type="text" formControlName="Password"></ion-input>
-            </ion-item>
-            <br>
-            <ion-row>
-                <ion-col col-12>
-                    <button ion-button full type="submit" [disabled]="!form.valid" style="background-color:#00A7A5">{{ "PANT001_BTN_INSE" | translate }}</button>
-                </ion-col>
-            </ion-row>
-            <ion-row style="text-align:center">
-                <ion-col col-12>
-                    {{ "PANT001_LBL_0" | translate }}
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col col-6>
-                    <button ion-button full style="background-color:#3B5998">{{ "PANT001_BTN_FAC" | translate }}</button>
-                </ion-col>
-                <ion-col col-6>
-                    <button ion-button full color="danger">{{ "PANT001_BTN_GOO" | translate }}</button>
-                </ion-col>
-            </ion-row>
-            <hr style="color:red">
-            <ion-row style="text-align:center">
-                <ion-col col-12>
-                    <p style="color:#CBC4C0"> {{ "PANT001_LBL_CRCU" | translate }}
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col col-12>
-                    <button ion-button full style="background-color:#00A7A5">{{ "PANT001_BTN_REG" | translate }}</button>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </form>
+      <ion-item>
+        <ion-label floating>{{ "PANT001_TXT_PWD" | translate }}</ion-label>
+        <ion-input type="text" formControlName="Password"></ion-input>
+      </ion-item>
+      <br>
+      <ion-row>
+        <ion-col col-12>
+          <button ion-button full type="submit" [disabled]="form && !form.valid" style="background-color:#00A7A5">{{
+            "PANT001_BTN_INSE" | translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+      <ion-row style="text-align:center">
+        <ion-col col-12>
+          {{ "PANT001_LBL_0" | translate }}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6>
+          <button type="button" ion-button full style="background-color:#3B5998" (click)="loginWithFacebook()">{{
+            "PANT001_BTN_FAC" | translate }}
+          </button>
+        </ion-col>
+        <ion-col col-6>
+          <button type="button" ion-button full color="danger" (click)="loginWithGoogle()">{{ "PANT001_BTN_GOO" |
+            translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+      <hr style="color:red">
+      <ion-row style="text-align:center">
+        <ion-col col-12>
+          <p style="color:#CBC4C0"> {{ "PANT001_LBL_CRCU" | translate }}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <button ion-button full style="background-color:#00A7A5" type="button" (click)="createAccount()">{{ "PANT001_BTN_REG" | translate }}</button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

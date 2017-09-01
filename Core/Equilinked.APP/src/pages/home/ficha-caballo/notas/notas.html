@@ -23,11 +23,50 @@
     <ion-spinner></ion-spinner>
   </div>
 
-  <ion-list *ngIf="notificacionList">
+  <!-- notas de caballos -->
+  <ion-list *ngIf="notasCaballo.length > 0">
     <ion-grid>
-      <ion-item-sliding *ngFor="let notificacion of notificacionList">
+      <ion-item-sliding *ngFor="let notificacion of notasCaballo">
         <ion-item text-wrap (click)="goViewNotificacion(notificacion)">
-          <ion-row *ngIf="notificacion.AlertaGrupal">
+          <ion-row>
+            <ion-col col-10>
+              <p class="equi-title-form equi-title-note">{{notificacion.Titulo}}</p>
+            </ion-col>
+            <ion-col col-2 class="text-align-right">
+              <ion-icon *ngIf="notificacion.Activa" class="equi-principal-color" name="notifications"></ion-icon>
+              <ion-icon *ngIf="!notificacion.Activa" class="equi-edit" name="ios-notifications-off"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col col-8 class="equi-col-note">{{notificacion.Descripcion}}</ion-col>
+            <ion-col col-4 class="text-align-right equi-principal-color">
+              {{notificacion.Fecha}}
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+        <ion-item-options>
+          <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
+            <ion-icon name="trash"></ion-icon>
+            {{ "PANT007_BTN_ELI" | translate }}
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-grid>
+  </ion-list>
+
+  <!-- notas grupales -->
+  <ion-list *ngIf="notasGrupos.length > 0">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="equi-table-row-title">
+          {{ "PANT007_LBL_NOGU" | translate }}
+        </ion-col>
+      </ion-row>
+
+      <ion-item-sliding *ngFor="let notificacion of notasGrupos">
+        <ion-item text-wrap (click)="goViewNotificacion(notificacion)">
+          <ion-row *ngIf="notificacion.showLabelGrupal">
             <ion-col class="equi-table-row-title">
               {{ "PANT007_LBL_NOGU" | translate }}
             </ion-col>

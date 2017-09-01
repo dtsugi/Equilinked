@@ -3,10 +3,8 @@ using Equilinked.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Equilinked.BLL
 {
@@ -95,8 +93,11 @@ namespace Equilinked.BLL
             }
         }
 
-        public List<Alerta> GetAlertasByGrupo(int propietarioId, int grupoId, int tipoAlerta, int filtroAlerta, DateTime fecha, int orden, int limite)
+        public List<Alerta> GetAlertasByGrupo(int propietarioId, int grupoId, string inicio, string fin, int[] tipos, int orden, int cantidad)
         {
+            Nullable<DateTime> inicioo = null, finn = null;
+            inicioo = inicio != "" ? DateTime.Parse(inicio) : inicioo;
+            finn = fin != "" ? DateTime.Parse(fin) : finn;
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
@@ -108,33 +109,21 @@ namespace Equilinked.BLL
                 var query = db.Alerta
                     .Where(a => a.Propietario_ID == propietarioId && alertasGruposIds.Contains(a.ID));
 
-                if (tipoAlerta > 0) //de tipo x
+                if (tipos != null && tipos.Length > 0)
                 {
-                    query = query.Where(a => a.Tipo == tipoAlerta);
+                    query = query.Where(a => tipos.Contains(a.Tipo));
                 }
-
-                if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.HISTORY)//history
+                if (inicio != "")
                 {
-                    query = query.Where(a => a.FechaNotificacion < fecha);
+                    query = query.Where(a => a.FechaNotificacion >= inicioo.Value);
                 }
-                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.NEXT || filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY)//next
+                if (fin != "")
                 {
-                    if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.AFTER_TODAY) //Despues de la fecha (sin considerar la fecha)
-                    {
-                        fecha = fecha.AddDays(1);
-                    }
-                    query = query.Where(a => a.FechaNotificacion > fecha);
+                    query = query.Where(a => a.FechaNotificacion <= finn.Value);
                 }
-                else if (filtroAlerta == (int)EquilinkedEnums.FilterAlertaEnum.TODAY) //Hoy
+                if (cantidad > 0)
                 {
-                    query = query
-                        .Where(a => a.FechaNotificacion.Day == fecha.Day)
-                        .Where(a => a.FechaNotificacion.Month == fecha.Month)
-                        .Where(a => a.FechaNotificacion.Year == fecha.Year);
-                }
-                if (limite > 0)
-                {
-                    query = query.Take(limite);
+                    query = query.Take(cantidad);
                 }
                 if (orden == (int)EquilinkedEnums.OrdenamientoEnum.ASCENDENTE)
                 {

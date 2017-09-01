@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Events, NavController} from 'ionic-angular';
 import {CommonService} from '../../../../../services/common.service';
 import {AlertaCaballoService} from '../../../../../services/alerta.caballo.service';
 import {LanguageService} from '../../../../../services/language.service';
@@ -25,6 +25,7 @@ export class SegmentEventosHistorial implements OnInit {
   constructor(public navController: NavController,
               private commonService: CommonService,
               private alertaCaballoService: AlertaCaballoService,
+              private events: Events,
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
@@ -46,6 +47,7 @@ export class SegmentEventosHistorial implements OnInit {
     this.commonService.showLoading(this.labels["PANT007_ALT_CARG"]);
     this.alertaCaballoService.deleteAlertasCaballosByIds(this.session.PropietarioId, this.caballo.ID, [evento.ID])
       .then(() => {
+        this.events.publish("notificaciones:refresh");
         this.commonService.hideLoading();
         this.loadEventos();
       }).catch(err => {
@@ -55,9 +57,9 @@ export class SegmentEventosHistorial implements OnInit {
 
   loadEventos(): void {
     this.loading = true;
-    let today = moment();
-    this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID, today.format("YYYY-MM-DD"),
-      ConstantsConfig.ALERTA_TIPO_EVENTOS, ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
+    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+    this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID, null, fecha,
+      [ConstantsConfig.ALERTA_TIPO_EVENTOS], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(alertas => {
       alertas.forEach(a => {
         a.Fecha = moment(new Date(a.FechaNotificacion)).format("DD/MM/YY");

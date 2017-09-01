@@ -86,7 +86,7 @@ export class EdicionAlertaPage implements OnInit {
 
   save(): void {
     let alerta: any = this.alerta;
-    alerta.FechaNotificacion = this.alertaForm.value.FechaNotificacion + " " + this.alertaForm.value.HoraNotificacion + ":00";
+    alerta.FechaNotificacion = this.alertaForm.value.FechaNotificacion + " " + this.alertaForm.value.HoraNotificacion;
     alerta.HoraNotificacion = this.alertaForm.value.HoraNotificacion;
     alerta.NombreProfesional = this.alertaForm.value.NombreProfesional;
     alerta.Descripcion = this.alertaForm.value.Descripcion;

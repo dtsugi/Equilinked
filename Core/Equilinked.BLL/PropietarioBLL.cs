@@ -4,13 +4,84 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
     public class PropietarioBLL : BLLBase, IBase<Propietario>
     {
+
+        public void SavePropietarioAndUsuario(Propietario propietario, out bool usernameValid)
+        {
+            usernameValid = false;
+            Usuario usuario = propietario.Usuario;
+            propietario.Usuario = null;
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                if(db.Usuario.Where(u => u.Login.ToLower() == usuario.Login.ToLower()).FirstOrDefault() == null)
+                {
+                    usernameValid = true;
+                    //El usuario ya trae el "login" y "password"
+                    usuario.SignInDate = DateTime.Now;
+                    usuario.Activo = true;
+                    db.Usuario.Add(usuario);
+
+                    //El propietario solo trae "correo"
+                    propietario.FechaNacimiento = DateTime.Now;
+                    propietario.Usuario_ID = usuario.ID;
+
+                    db.Propietario.Add(propietario);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        public Propietario ValidateUsuarioByToken(InfoUsuarioToken infoUsuarioToken)
+        {
+            string user = null;
+            Usuario usuario;
+            Propietario propietario;
+            if(infoUsuarioToken.TipoIdentificacion == 2)//Face
+            {
+                user = "fb_" + infoUsuarioToken.Correo;
+            } else if(infoUsuarioToken.TipoIdentificacion == 3)//google
+            {
+                user = "gg_" + infoUsuarioToken.Correo;
+            }
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                     usuario = db.Usuario
+                    .Where(u => u.Login == user).FirstOrDefault();
+                if(usuario == null)
+                {
+                    string uuid = System.Guid.NewGuid().ToString();
+                    usuario = new Usuario();
+                    usuario.Login = user;
+                    usuario.Password = uuid.Substring(uuid.Length - 10);
+                    usuario.SignInDate = DateTime.Now;
+                    usuario.Activo = true;
+                    db.Usuario.Add(usuario);
+
+                    propietario = new Propietario();
+                    propietario.Nombre = infoUsuarioToken.Nombre;
+                    propietario.Mail = infoUsuarioToken.Correo;
+                    propietario.Usuario_ID = usuario.ID;
+                    propietario.FechaNacimiento = DateTime.Now;
+                    db.Propietario.Add(propietario);
+
+                    db.SaveChanges();
+                    propietario.Usuario = usuario;
+                } else
+                {
+                    propietario = db.Propietario
+                        .Include("Usuario")
+                        .Where(p => p.Usuario_ID == usuario.ID)
+                        .FirstOrDefault();
+                }
+            }
+            return propietario;
+        }
 
         public List<Propietario> GetAll()
         {

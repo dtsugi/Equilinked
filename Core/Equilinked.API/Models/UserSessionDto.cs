@@ -12,5 +12,6 @@ namespace Equilinked.API.Models
         public string Password { get; set; }
         public string Token { get; set; }
         public int PropietarioId { get; set; }
+        public int TipoIdentificacion { get; set; }
     }
 }

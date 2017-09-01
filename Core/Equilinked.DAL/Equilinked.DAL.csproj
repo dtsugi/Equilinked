@@ -58,6 +58,7 @@
     <Compile Include="Dto\CuentaEliminacion.cs" />
     <Compile Include="Dto\EntidadBase.cs" />
     <Compile Include="Dto\EstabloDto.cs" />
+    <Compile Include="Dto\InfoUsuarioToken.cs" />
     <Compile Include="Dto\PropietarioDto.cs" />
     <Compile Include="Models\Alerta.cs">
       <DependentUpon>Model1.tt</DependentUpon>

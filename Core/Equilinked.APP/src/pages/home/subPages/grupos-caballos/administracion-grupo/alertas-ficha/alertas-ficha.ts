@@ -173,11 +173,11 @@ export class AlertasFicha implements OnInit, OnDestroy {
   }
 
   private getAlertasByGrupo(): void {
-    let fecha: string = moment().format("YYYY-MM-DD");
+    let fecha: string = moment().format("YYYY-MM-DD HH:mm:ss");
     this.loadingNext = true;
     this.loadingHistory = true;
-    this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
-      ConstantsConfig.ALERTA_FILTER_NEXT, 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE)
+    this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, null,
+      [this.tipoAlerta], 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE)
       .then(alertas => { //Primero las proximas!
         this.proximasAlertas = alertas.map(a => {
           let d = new Date(a.FechaNotificacion);
@@ -186,8 +186,8 @@ export class AlertasFicha implements OnInit, OnDestroy {
           return a;
         });
         this.loadingNext = false;
-        return this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, fecha, this.tipoAlerta,
-          ConstantsConfig.ALERTA_FILTER_HISTORY, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE);
+        return this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, null, fecha,
+          [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE);
       }).then(alertas => {
       this.historicoAlertas = alertas.map(a => {
         a.Fecha = moment(new Date(a.FechaNotificacion)).format("DD/MM/YY");

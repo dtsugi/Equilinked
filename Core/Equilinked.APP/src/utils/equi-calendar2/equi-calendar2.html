@@ -1,0 +1,94 @@
+<ion-grid *ngIf="(options.step == 1 || options.step == 2) && selectedYear">
+  <ion-row>
+    <ion-col col-2 (click)="lastMonth()" style="font-size: 40px;">
+      <span><ion-icon name="ios-arrow-back"></ion-icon></span>
+    </ion-col>
+    <ion-col style="margin: auto;">
+      <span class="equi-bold-text">{{selectedMonth.nameMonth}} {{selectedMonth.year.id}}</span>
+    </ion-col>
+    <ion-col col-2 (click)="nextMonth()" style="font-size: 40px;">
+      <span><ion-icon name="ios-arrow-forward"></ion-icon></span>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="equi-row-days">
+    <ion-col>L</ion-col>
+    <ion-col>M</ion-col>
+    <ion-col>M</ion-col>
+    <ion-col>J</ion-col>
+    <ion-col>V</ion-col>
+    <ion-col>S</ion-col>
+    <ion-col>D</ion-col>
+  </ion-row>
+
+  <div *ngFor="let week of selectedMonth.weeks">
+    <div *ngIf="!selectedMonth.hideWeeks || (selectedMonth.hideWeeks && selectedWeek.id == week.id)">
+      <!-- dias -->
+      <ion-row class="border-bottom">
+        <ion-col *ngFor="let day of week.days" class="equi-col-calendar">
+          <div class="equi-container-day equi-normal-text"
+               [ngClass]="{'equi-selected-day': day && day.id == selectedDate.id}"
+               (click)="selectDate(week, day)"><!-- day -->
+            <span style="display: block">{{day ? day.numberDay : ' '}}</span>
+          </div>
+          <div *ngIf="week.hasAlerts && !selectedDate.showAlerts"><!-- circle notificacation -->
+            <span *ngIf="day && day.alerts.length == 0" class="equi-circle-day"></span>
+            <span *ngIf="day && day.alerts.length > 0" class="equi-circle-day equi-principal-color"></span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <!-- alertas -->
+      <ion-row *ngIf="selectedWeek.id == week.id && selectedDate.showAlerts && selectedDate.alerts.length > 0">
+        <ion-col>
+          <ion-list no-lines>
+            <ion-item text-wrap *ngFor="let alert of selectedDate.alerts" (click)="view(alert)">
+              <ion-row>
+                <ion-col col-4 class="col-center">
+                  <span clas="equi-normal-text">{{alert.Hora}}</span>
+                </ion-col>
+                <ion-col col-8 class="equi-title-note">
+                  <span class="equi-bold-text">{{alert.Titulo}}</span>
+                </ion-col>
+                <ion-col offset-4 col-8 class="equi-title-note" *ngIf="alert.Ubicacion && alert.Ubicacion != null">
+                  <ion-icon name="ios-pin" class="equi-principal-color"></ion-icon>
+                  <span class="equi-normal-text">{{alert.Ubicacion}}</span>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-grid>
+
+<div style="text-align: left; margin: 15px;" *ngIf="options.step == 3 && selectedAlert">
+  <p class="equi-bold-text">{{selectedAlert.Titulo}}</p>
+  <p class="equi-normal-text equi-detail-note">{{selectedAlert.Descripcion}}</p>
+  <hr/>
+
+  <p class="equi-normal-text">
+    {{selectedAlert.Fecha}}
+  </p>
+  <p class="equi-normal-text">
+    <span style="font-size: 40px;font-weight: bold;">{{selectedAlert.Hora}}</span> &nbsp;
+    {{selectedAlert.Meridiano}}
+  </p>
+  <div *ngIf="selectedAlert.AlertaRecordatorio && selectedAlert.AlertaRecordatorio.length > 0">
+            <span *ngFor="let recordatorio of selectedAlert.AlertaRecordatorio" class="equi-normal-text">
+                <ion-icon name="notifications" class="equi-principal-color"></ion-icon>
+                &nbsp;&nbsp;&nbsp;{{recordatorio.ValorTiempo}}&nbsp;{{recordatorio.UnidadTiempo.Descripcion}}&nbsp;{{ 'COMP001_LBL_ANT' | translate }}
+            </span>
+  </div>
+  <hr/>
+
+  <p *ngIf="selectedAlert.Ubicacion" class="equi-normal-text">
+    <ion-icon name="ios-home" class="equi-principal-color"></ion-icon>
+    &nbsp;&nbsp; {{selectedAlert.Ubicacion}}
+  </p>
+  <p class="equi-normal-text">
+    <ion-icon name="list-box" class="equi-principal-color"></ion-icon>
+    &nbsp;&nbsp; {{selectedAlert.AllCaballos ? labels['COMP001_LBL_TOD'] : selectedAlert.AlertaCaballo.length + ' ' +
+    labels['COMP001_LBL_CAB']}}
+  </p>
+</div>

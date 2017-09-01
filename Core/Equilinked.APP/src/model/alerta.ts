@@ -18,11 +18,13 @@ export class Alerta {
     public AlertaRecordatorio: Array<any>;
     public Resultado: string;
     public Propietario_ID: number;
-    
+    public AlertaGrupal: boolean;
+
     constructor() {
         this.AlertaCaballo = new Array<any>();
         this.AlertaGrupo = new Array<any>();
         this.AlertaRecordatorio = new Array<any>();
+        this.AlertaGrupal = false;
     }
 }
 

@@ -1,5 +1,5 @@
 <ion-list no-lines>
-    <ion-item>
+    <ion-item *ngIf="propietarioEntity.Nombre">
         <ion-icon name="person" class="equi-principal-color" item-left></ion-icon>
         <span class="equi-normal-text">{{propietarioEntity.Nombre}}</span>
     </ion-item>
@@ -17,7 +17,7 @@
         </ion-note>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="propietarioEntity.EstadoProvincia_Nombre">
         <ion-icon name="flag" class="equi-principal-color" item-left></ion-icon>
         <span class="equi-normal-text">
             {{propietarioEntity.EstadoProvincia_Nombre}}, {{propietarioEntity.PaisNombre}}

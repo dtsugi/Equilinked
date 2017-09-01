@@ -4,4 +4,5 @@ export class UserSessionEntity {
     public Password: string;
     public Token: string;
     public PropietarioId: number;
+    public TipoIdentificacion: number;
 }

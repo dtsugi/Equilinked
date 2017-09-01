@@ -1,15 +1,9 @@
 ﻿using Equilinked.API.helpers;
 using Equilinked.BLL;
-using Equilinked.DAL.Dto;
-using Equilinked.DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 
 namespace Equilinked.API.Controllers
 {
@@ -33,12 +27,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/alertas")]
-        public IHttpActionResult GetAlertasByCaballo(int propietarioId, int caballoId, [FromUri] int tipoAlerta = 0, [FromUri] int filtroAlerta = 1, [FromUri] string fecha = "", [FromUri] int limite = 0, [FromUri] int orden = 0)
+        public IHttpActionResult GetAlertasByCaballo(int propietarioId, int caballoId, [FromUri] int[] tipos, [FromUri] string inicio = "", [FromUri] string fin = "", [FromUri] int orden = 1, [FromUri] int cantidad = 0)
         {
             try
             {
-                DateTime fechaAjustada = DateTime.Parse(fecha);
-                return Ok(_alertaCaballoBLL.GetAlertasByCaballo(propietarioId, caballoId, tipoAlerta, filtroAlerta, fechaAjustada, orden, limite));
+                return Ok(_alertaCaballoBLL.GetAlertasByCaballo(propietarioId, caballoId, inicio, fin, tipos, orden, cantidad));
             }
             catch (Exception ex)
             {

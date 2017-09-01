@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{ "PANT036_MSG_TIREUS" | translate }}</span>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <form #form="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label floating>{{ "PANT036_TXT_NOMUS" | translate }}</ion-label>
+            <ion-input type="text" name="usuario" [(ngModel)]="propietario.Usuario.Login"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label floating>{{ "PANT036_TXT_CORUS" | translate }}</ion-label>
+            <ion-input type="email" name="correo" [(ngModel)]="propietario.Mail"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label floating>{{ "PANT036_TXT_PASSU" | translate }}</ion-label>
+            <ion-input type="password" name="password" [(ngModel)]="propietario.Usuario.Password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-12>
+          <button ion-button full type="button" style="background-color:#00A7A5" (click)="saveUsuario()">
+            {{ "PANT036_BTN_REGUS" | translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="col-center">
+          {{ "PANT036_LBL_OPCRE" | translate }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-6>
+          <button type="button" ion-button full style="background-color:#3B5998" (click)="loginWithFacebook()">
+            {{ "PANT036_BTN_REGFB" | translate }}
+          </button>
+        </ion-col>
+        <ion-col col-6>
+          <button type="button" ion-button full color="danger" (click)="loginWithGoogle()">
+            {{ "PANT036_BTN_REGGG" | translate }}
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

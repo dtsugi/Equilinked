@@ -333,3 +333,45 @@ ion-slides {
 .toolbar-background {
   background-color: white !important;
 }
+
+.equi-col-calendar {
+  height: 70px !important;
+  display: grid;
+  align-content: center;
+  text-align: center;
+  padding: 0px;
+  color: #FFF;
+}
+
+.equi-container-day {
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  color: #000;
+}
+
+.equi-selected-day {
+  background-color: $_EQUI_PRINCIPAL_COLOR;
+  color: #FFF;
+}
+
+.equi-container-circle {
+  height: 55px;
+}
+
+.equi-circle-day:before {
+  content: ' \25CF';
+  font-size: 20px;
+}
+
+.equi-row-days {
+  font-size: 12px;
+  color: #CCC6C8;
+  border-bottom-style: solid !important;
+  border-bottom-color: #CCC6C8 !important;
+  border-top-style: solid !important;
+  border-bottom-color: #CCC6C8 !important;
+  border-width: 1px !important;
+}

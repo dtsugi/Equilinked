@@ -6,10 +6,17 @@ import {Utils} from '../app/utils';
 
 @Injectable()
 export class PropietarioService {
-  private actionUrl: string = AppConfig.API_URL + "api/Propietario/";
+  private actionUrl: string = AppConfig.API_URL + "api/propietarios/";
   private url = "";
 
   constructor(private _http: Http) {
+  }
+
+  savePropietario(propietario: any): Promise<any> {
+    let url = this.actionUrl;
+    return this._http.post(url, propietario)
+      .map(response => response.json())
+      .toPromise();
   }
 
   getSerializedById(id: number) {

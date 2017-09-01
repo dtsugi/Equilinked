@@ -23,7 +23,7 @@ export class PerfilPage implements OnInit {
   }
 
   ngOnInit() {
-    this.slides.threshold = 120;
+    //this.slides.threshold = 120;
     //this.slides.simulateTouch = true;
     this.lastSlide = "datos";
     this.slidesMap.set("datos", 0);

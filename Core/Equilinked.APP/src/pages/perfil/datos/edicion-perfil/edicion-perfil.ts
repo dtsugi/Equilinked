@@ -170,12 +170,17 @@ export class EdicionPerfilPage implements OnInit {
     }).then(paises => {
       this.paises = paises;
       this.perfil.Pais = this.getPaisById(this.perfil.Pais_ID);
-      return this.paisService.getAllEstadoProvinciaByPaisId(this.perfil.Pais_ID);
+      if (this.perfil.Pais_ID) {
+        return this.paisService.getAllEstadoProvinciaByPaisId(this.perfil.Pais_ID);
+      } else {
+        return Promise.resolve([]);
+      }
     }).then(estados => {
       this.estados = estados;
       this.perfil.Estado = this.getEstadoProvinciaById(this.perfil.EstadoProvincia_Id);
       this.commonService.hideLoading();
     }).catch(err => {
+      console.error(JSON.stringify(err));
       this.commonService.ShowErrorHttp(err, this.labels["PANT027_MSG_ERRCA"]);
     });
   }

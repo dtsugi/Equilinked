@@ -3,6 +3,8 @@ import {Tab} from "ionic-angular"
 import {HomePage} from '../home/home';
 import {NotificacionesPage} from '../notificaciones/notificaciones';
 import {PerfilPage} from "../perfil/perfil";
+import {CalendarioPage} from "../calendario/calendario";
+import {CamaraPage} from "../camara/camara";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -10,8 +12,8 @@ import {PerfilPage} from "../perfil/perfil";
 export class TabsPage {
   private indexSelecteds: Array<number>;
   homeRoot: any = HomePage;
-  // calendarRoot: any = CalendarioPage;
-  // cameraRoot: any = CamaraPage;
+  calendarRoot: any = CalendarioPage;
+  cameraRoot: any = CamaraPage;
   eventsRoot: any = NotificacionesPage;
   ownerRoot: any = PerfilPage;
 

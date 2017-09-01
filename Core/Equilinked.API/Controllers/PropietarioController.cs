@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Threading.Tasks;
 
 namespace Equilinked.API.Controllers
 {
@@ -14,7 +15,30 @@ namespace Equilinked.API.Controllers
     {
         private PropietarioBLL _propietarioBLL = new PropietarioBLL();
 
-        [HttpGet, Route("api/Propietario/GetSerializedById/{id}")]
+        [HttpPost, Route("api/propietarios")]
+        public IHttpActionResult SavePropietario([FromBody] Propietario propietario)
+        {
+            bool usernameValid;
+            try
+            {
+                _propietarioBLL.SavePropietarioAndUsuario(propietario, out usernameValid);
+                if (usernameValid)
+                {
+                    return Ok(new { Mensaje = "Usuario creado con éxito" });
+                }
+                else
+                {
+                    return BadRequest("El nombre de usuario ya existe");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al crear el propietario"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/GetSerializedById/{id}")]
         public IHttpActionResult GetSerializedById(int id)
         {
             try
@@ -28,7 +52,7 @@ namespace Equilinked.API.Controllers
             }
         }
 
-        [HttpPut, Route("api/Propietario/{propietarioId}")]
+        [HttpPut, Route("api/propietarios/{propietarioId}")]
         [ResponseType(typeof(Propietario))]
         public IHttpActionResult UpdateGrupo(int propietarioId, PropietarioDto propietario)
         {

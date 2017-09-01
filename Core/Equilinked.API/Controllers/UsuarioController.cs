@@ -3,8 +3,6 @@ using Equilinked.DAL.Dto;
 using Equilinked.BLL;
 using Equilinked.DAL.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +15,53 @@ namespace Equilinked.API.Controllers
     {
 
         private UsuarioBLL _usuarioBLL = new UsuarioBLL();
+        private PropietarioBLL propietarioBLL = new PropietarioBLL();
+        private ValidacionTokensBLL validacionTokenBLL = new ValidacionTokensBLL();
+
+        [HttpPost, Route("api/usuario/login/token")]
+        public IHttpActionResult LoginWithToken([FromBody] UserSessionDto session)
+        {
+            InfoUsuarioToken infoUsuarioToken = null;
+            try
+            {
+                if (session.TipoIdentificacion == 2)//Facebook
+                {
+                    infoUsuarioToken = validacionTokenBLL.ValidarTokenFacebook(session.Token);
+                }
+                else if (session.TipoIdentificacion == 3)//Google
+                {
+                    infoUsuarioToken = validacionTokenBLL.ValidarTokenGoogle(session.Token);
+                }
+
+                if (infoUsuarioToken != null)
+                {
+                    Propietario propietario = propietarioBLL.ValidateUsuarioByToken(infoUsuarioToken);
+                    if(propietario != null)
+                    {
+                        UserSessionDto userSession = new UserSessionDto();
+                        userSession.IdUser = propietario.Usuario.ID;
+                        userSession.PropietarioId = propietario.ID;
+                        userSession.TipoIdentificacion = session.TipoIdentificacion;
+                        userSession.UserName = propietario.Usuario.Login;
+                        userSession.Password = propietario.Usuario.Password;
+                        return Ok(userSession);
+                    }
+                    else
+                    {
+                        return BadRequest("No fue posible identificar al usuario");
+                    }
+                }
+                else
+                {
+                    return BadRequest("El token es inválido");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al validar token de usuario"));
+            }
+        }
 
         [HttpPost, Route("api/Usuario/Login")]
         [ResponseType(typeof(UserSessionDto))]
@@ -33,6 +78,7 @@ namespace Equilinked.API.Controllers
                     {
                         session.IdUser = user.ID;
                         session.PropietarioId = propietario.ID;
+                        session.TipoIdentificacion = 1; //NO fue por face o google
                         response = Request.CreateResponse(HttpStatusCode.OK, session);
                     }
                     else

@@ -18,13 +18,16 @@ import {LanguageService} from '../../../../services/language.service';
   providers: [LanguageService, CommonService, AlertaService, AlertaCaballoService, SecurityService]
 })
 export class NotasPage implements OnInit, OnDestroy {
+  private tipoAlerta: number = ConstantsConfig.ALERTA_TIPO_NOTASVARIAS;
   private session: UserSessionEntity;
-  private notificacionesResp: Array<any>;
+  private notasCaballoResp: Array<any>;
+  private notasGruposResp: Array<any>;
+
+  notasCaballo: Array<any>;
+  notasGrupos: Array<any>;
   labels: any = {};
   idCaballo: number;
-  nombreCaballo: string = "";
-  notificacionList;
-  tipoAlerta: number = 5;
+  nombreCaballo: string;
   isDeleting: boolean = false;
   loading: boolean;
 
@@ -36,6 +39,8 @@ export class NotasPage implements OnInit, OnDestroy {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.notasCaballo = new Array<any>();
+    this.notasGrupos = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -55,28 +60,48 @@ export class NotasPage implements OnInit, OnDestroy {
 
   filter(evt: any): void {
     let value: string = evt.target.value;
-    if (value && value !== null) {
-      this.notificacionList = this.notificacionesResp.filter(nota => {
-        return nota.Titulo.toUpperCase().indexOf(value.toUpperCase()) > -1
-          || nota.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1
-      });
-    } else {
-      this.notificacionList = this.notificacionesResp;
-    }
+    this.notasCaballo = new Array<any>();
+    this.notasGrupos = new Array<any>();
+    this.filterNotas(value, this.notasCaballo, this.notasCaballoResp);
+    this.filterNotas(value, this.notasGrupos, this.notasGruposResp);
+  }
+
+  private filterNotas(text: any, notas: Array<any>, notasResp: Array<any>): void {
+    notasResp.forEach(nota => {
+      if (text && text !== null) {//primero checamos que el filtro venga con valor
+        if (nota.Titulo.toUpperCase().indexOf(text.toUpperCase()) > -1 //Ahora vemos que coincida alguna nota
+          || nota.Descripcion.toUpperCase().indexOf(text.toUpperCase()) > -1) {
+          notas.push(nota);
+        }
+      } else {
+        notas.push(nota);
+      }
+    });
   }
 
   getAllNotificacionesByCaballoId() {
-    let fecha: string = moment().format("YYYY-MM-DD");
+    let fecha: string = moment().format("YYYY-MM-DD HH:mm:ss");
     this.loading = true;
     this.alertaCaballoService.getAlertasByCaballoId(
-      this.session.PropietarioId, this.idCaballo, fecha, this.tipoAlerta,
-      ConstantsConfig.ALERTA_FILTER_ALL, null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
+      this.session.PropietarioId, this.idCaballo, null, null, [this.tipoAlerta],
+      null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(res => {
-      this.notificacionList = res.map(alerta => {
+      console.info("Cantidad de alertas: " + res.length);
+      this.notasCaballo = new Array<any>();
+      this.notasGrupos = new Array<any>();
+      res.forEach(alerta => {
         alerta.Fecha = moment(new Date(alerta.FechaNotificacion)).format("DD/MM/YY");
-        return alerta;
+        if (!alerta.AlertaGrupal) {
+          this.notasCaballo.push(alerta);
+        }
       });
-      this.notificacionesResp = this.notificacionList;
+      res.forEach(alerta => {
+        if (alerta.AlertaGrupal) {
+          this.notasGrupos.push(alerta);
+        }
+      });
+      this.notasCaballoResp = this.notasCaballo;
+      this.notasGruposResp = this.notasGrupos;
       this.loading = false;
     }).catch(error => {
       console.error(error);

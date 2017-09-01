@@ -19,6 +19,9 @@
     <ion-segment-button value="proximos">
       {{ "PANT007_LBL_EVPRO" | translate }}
     </ion-segment-button>
+    <ion-segment-button value="calendario">
+      {{ "PANT007_LBL_EVCAL" | translate }}
+    </ion-segment-button>
     <ion-segment-button value="historial">
       {{ "PANT007_LBL_EVHIST" | translate }}
     </ion-segment-button>
@@ -29,6 +32,10 @@
   <ion-slides (ionSlideDidChange)="slideChanged($event)">
     <ion-slide class="equi-content-slide-start">
       <segment-eventos-prox *ngIf="caballo.ID" [caballo]="caballo"></segment-eventos-prox>
+    </ion-slide>
+
+    <ion-slide class="equi-content-slide-start">
+      <segment-calendario-eventos *ngIf="caballo.ID" [caballo]="caballo"></segment-calendario-eventos>
     </ion-slide>
 
     <ion-slide class="equi-content-slide-start">
