@@ -102,7 +102,7 @@
         <variable name="APP_NAME" value="Equilinked" />
     </plugin>
     <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
-        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.AIzaSyDTl0pJu9Ywao6osMU4BFG3fAJhZ396FfI" />
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.443449288559-0lcjn9qqi0bcm84p7cmsmpba2m5flj6f" />
     </plugin>
     <engine name="android" spec="~6.1.2" />
 </widget>

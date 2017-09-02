@@ -27,6 +27,10 @@ $_EQUI_DANGER_COLOR: #f53d3d;
     src: url(../assets/fonts/NotoSans-Regular.ttf);
 }
 
+.content {
+  font-family: NotoSans !important;
+}
+
 body,ion-content {
     font-family: NotoSans !important;
 }
