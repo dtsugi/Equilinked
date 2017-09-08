@@ -27,7 +27,6 @@ import {EquiOpcionesTelefonoPopover} from "../utils/equi-opciones-telefono/equi-
 import {EquiCalendar} from "../utils/equi-calendar/equi-calendar";
 import {EquiCalendar2} from "../utils/equi-calendar2/equi-calendar2";
 import {EquiPopoverFiltroCalendario} from "../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
-
 /*Home*/
 import {HomePage} from '../pages/home/home';
 import {TabsPage} from '../pages/tabs/tabs';
@@ -95,6 +94,9 @@ import {SegmentCalendarioEventos} from "../pages/home/ficha-caballo/eventos/segm
 import {SegmentEventosHistorial} from '../pages/home/ficha-caballo/eventos/segment-historial/segment-historial';
 import {DetalleEventoCaballoPage} from "../pages/home/ficha-caballo/eventos/detalle-evento/detalle-evento";
 import {EdicionEventoCaballoPage} from '../pages/home/ficha-caballo/eventos/edicion-evento/edicion-evento';
+/* Caballos-Calendario */
+import {SegmentCalendarioCaballo} from '../pages/home/ficha-caballo/calendario/calendario-caballo';
+import {CaballoAlertasEditPage} from '../pages/home/ficha-caballo/calendario/alertas-edit/caballo-alertas-edit';
 /* Perfil */
 import {PerfilPage} from "../pages/perfil/perfil";
 import {SegmentDatos} from "../pages/perfil/datos/segment-datos";
@@ -207,6 +209,9 @@ export function createTranslateLoader(http: Http) {
     SegmentEventosProximos,
     SegmentCalendarioEventos,
     SegmentEventosHistorial,
+    /* Caballos-calendario*/
+    SegmentCalendarioCaballo,
+    CaballoAlertasEditPage,
     /* Perfil */
     PerfilPage,
     SegmentDatos,
@@ -235,7 +240,12 @@ export function createTranslateLoader(http: Http) {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp, {
-      mode: "md"
+      mode: "md",
+      platforms: {
+        ios: {
+          statusbarPadding: true
+        }
+      }
     }),
     HttpModule,
     FormsModule,
@@ -308,6 +318,8 @@ export function createTranslateLoader(http: Http) {
     EventosCaballoPage,
     DetalleEventoCaballoPage,
     EdicionEventoCaballoPage,
+    /*calendario caballos*/
+    CaballoAlertasEditPage,
     /* Perfil */
     PerfilPage,
     EdicionPerfilPage,

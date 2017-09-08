@@ -19,6 +19,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
   gruposRespaldo: Array<any> = [];
   session: UserSessionEntity;
   labels: any = {};
+  isFilter: boolean;
 
   constructor(private events: Events,
               private commonService: CommonService,
@@ -27,6 +28,7 @@ export class GruposCaballos implements OnDestroy, OnInit {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -45,8 +47,8 @@ export class GruposCaballos implements OnDestroy, OnInit {
     this.gruposCaballosService.getGruposCaballosByPropietarioId(this.session.PropietarioId)
       .then(grupos => {
         this.gruposRespaldo = grupos;
-        this.grupos = grupos;
         this.loading = false;
+        this.filter(null);//Aplicar filtrado
       }).catch(err => {
       this.loading = false;
       console.error(err);
@@ -55,7 +57,31 @@ export class GruposCaballos implements OnDestroy, OnInit {
   }
 
   filter(evt: any): void {
-    this.grupos = this.gruposCaballosService.filterGruposByName(evt.target.value, this.gruposRespaldo);
+    this.isFilter = false;
+    this.gruposRespaldo.forEach(grupo => {
+      grupo.DescripcionFilter = grupo.Descripcion;
+      grupo.CaballosFilter = grupo.GrupoCaballo.length + ' ' + this.labels['PANT002_LBL_GUCA'];
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.grupos = this.gruposRespaldo.filter(grupo => {
+        grupo.Caballos = grupo.GrupoCaballo.length + ' ' + this.labels['PANT002_LBL_GUCA'];//leyenda de n caballos
+        let indexMatchGrupo = grupo.Descripcion.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchCaballos = grupo.Caballos.toUpperCase().indexOf(value.toUpperCase());
+        if (indexMatchGrupo > -1) {
+          let textReplace = grupo.Descripcion.substring(indexMatchGrupo, indexMatchGrupo + value.length);
+          grupo.DescripcionFilter = grupo.Descripcion.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (indexMatchCaballos > -1) {
+          let textReplace = grupo.Caballos.substring(indexMatchCaballos, indexMatchCaballos + value.length);
+          grupo.CaballosFilter = grupo.Caballos.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchGrupo > -1 || indexMatchCaballos > -1;
+      });
+    } else {
+      this.grupos = this.gruposRespaldo;
+    }
   }
 
   viewGrupo(grupo: any): void {

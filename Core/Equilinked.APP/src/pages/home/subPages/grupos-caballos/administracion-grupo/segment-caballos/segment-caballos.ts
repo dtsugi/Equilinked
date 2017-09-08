@@ -20,6 +20,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
   labels: any = {};
   caballosGrupoRespaldo: Array<any>;
   loading: boolean;
+  isFilter: boolean;
 
   constructor(private alertController: AlertController,
               private commonService: CommonService,
@@ -28,6 +29,8 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
               private navController: NavController,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
+
     this.caballosGrupo = new Array<any>();
     this.caballosGrupoRespaldo = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);
@@ -44,7 +47,30 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
   }
 
   filter(evt: any): void {
-    this.caballosGrupo = this.gruposCaballosService.filterCaballosByNombreOrGrupo(evt.target.value, this.caballosGrupoRespaldo);
+    this.isFilter = false;
+    this.caballosGrupoRespaldo.forEach(cab => {
+      cab.caballo.NombreFilter = cab.caballo.Nombre;
+      cab.caballo.EstabloFilter = cab.caballo.Establo ? cab.caballo.Establo.Nombre : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.caballosGrupo = this.caballosGrupoRespaldo.filter(cab => {
+        let indexMatchCaballo = cab.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = cab.caballo.Establo ? (cab.caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = cab.caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          cab.caballo.NombreFilter = cab.caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (cab.caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = cab.caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          cab.caballo.EstabloFilter = cab.caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.caballosGrupo = this.caballosGrupoRespaldo;
+    }
   }
 
   addCaballos(): void {
@@ -83,7 +109,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
             caballo: caballo
           };
         });
-        this.caballosGrupo = this.caballosGrupoRespaldo;
+        this.filter(null);
       }).catch(err => {
       console.error(err);
       this.loading = false;
@@ -113,7 +139,8 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
               this.grupo.ID, this.caballosGrupoRespaldo.filter(c => c.seleccion).map(c => c.caballo.ID)
             ).then(() => {
               this.getAllCaballosGrupo();
-              this.events.publish("grupos:refresh");
+              this.events.publish("grupo:refresh");//Refrescamos el grupo seleccionado
+              this.events.publish("grupos:refresh");//Refrescamos la lista de caballos
               this.commonService.hideLoading();
               this.parametrosCaballos.modoEdicion = false;
             }).catch(err => {

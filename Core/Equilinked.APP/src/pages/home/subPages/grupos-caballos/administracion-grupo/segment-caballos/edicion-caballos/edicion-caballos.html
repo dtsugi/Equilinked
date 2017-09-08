@@ -43,7 +43,15 @@
       <ion-avatar item-left>
         <img src="assets/img/caballo.jpg">
       </ion-avatar>
-      <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': cg.seleccion}">{{cg.caballo.Nombre}}</h2>
+
+      <span [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': cg.seleccion && !isFilter}"
+            class="equi-title-form"
+            [innerHTML]="cg.caballo.NombreFilter"></span><br/>
+      <span *ngIf="cg.caballo.Establo"
+            [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': cg.seleccion && !isFilter}"
+            class="equi-subtitle-form"
+            [innerHTML]="cg.caballo.EstabloFilter"></span>
+
       <ion-icon name="{{cg.seleccion ? 'remove-circle' : 'add-circle'}}"
                 [ngClass]="{'equi-icon-selected': cg.seleccion, 'equi-icon-unselected': !cg.seleccion}"
                 item-right></ion-icon>

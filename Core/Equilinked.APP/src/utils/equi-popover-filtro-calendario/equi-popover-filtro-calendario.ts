@@ -20,11 +20,18 @@ export class EquiPopoverFiltroCalendario {
   selectType(alertType: any): void {
     this.options.modified = true;//marcamos como modificado
     alertType.checked = !alertType.checked;
-    if(!alertType.id) { //si no tiene id es que es "todos" por lo tanto del estado que seleccione marcamos todos
+    if (!alertType.id) { //si no tiene id es que es "todos" por lo tanto del estado que seleccione marcamos todos
       this.options.alertTypes.forEach(type => {
         type.checked = alertType.checked;
       });
+    } else {
+      let statusAll: boolean = true;
+      let i = 1;
+      while (statusAll && i < this.options.alertTypes.length) {
+        statusAll = this.options.alertTypes[i].checked;
+        i++;
+      }
+      this.options.alertTypes[0].checked = statusAll;
     }
-
   }
 }

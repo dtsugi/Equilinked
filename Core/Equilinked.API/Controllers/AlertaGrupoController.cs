@@ -27,11 +27,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/alertas")]
-        public IHttpActionResult GetAlertasByCaballo(int propietarioId, int grupoId, [FromUri] int[] tipos, [FromUri] string inicio = "", [FromUri] string fin = "", [FromUri] int orden = 1, [FromUri] int cantidad = 0)
+        public IHttpActionResult GetAlertasByCaballo(int propietarioId, int grupoId, [FromUri] int[] tipos, [FromUri] string inicio = "", [FromUri] string fin = "", [FromUri] int orden = 1, [FromUri] int cantidad = 0, [FromUri] bool todosTipos = false)
         {
             try
             {
-                return Ok(alertaGrupoBll.GetAlertasByGrupo(propietarioId, grupoId, inicio, fin, tipos, orden, cantidad));
+                return Ok(alertaGrupoBll.GetAlertasByGrupo(propietarioId, grupoId, inicio, fin, tipos, orden, cantidad, todosTipos));
             }
             catch (Exception ex)
             {

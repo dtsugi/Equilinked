@@ -1,46 +1,55 @@
 <ion-header>
-    <ion-navbar>
-        <ion-buttons start>
-            <button ion-button class="equi-toolbar-btn" (click)="close()">
-                {{ 'PANT034_BTN_CE' | translate }}
-            </button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button class="equi-toolbar-btn" (click)="close()">
+        {{ 'PANT034_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
 
-        <ion-title class="equi-toolbar-title-content">
-            <span *ngIf="establo.Nombre" class="equi-toolbar-title">{{establo.Nombre}}</span>
-            <br *ngIf="establo.Nombre" />
-            <span class="equi-toolbar-subtitle">{{ 'PANT034_LBL_SUBTCA' | translate }}</span>
-        </ion-title>
-    </ion-navbar>
+    <ion-title class="equi-toolbar-title-content">
+      <span *ngIf="establo.Nombre" class="equi-toolbar-title">{{establo.Nombre}}</span>
+      <br *ngIf="establo.Nombre"/>
+      <span class="equi-toolbar-subtitle">{{ 'PANT034_LBL_SUBTCA' | translate }}</span>
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button class="equi-toolbar-btn" (click)="accept()">
+        {{ 'PANT034_BTN_ACEP' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT034_TXT_FICAB']"></ion-searchbar>
-            </ion-col>
-            <ion-col col-12>
-                <button (click)="selectAll()" ion-button full>{{ 'PANT034_BTN_SELTO' | translate }}</button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                       [placeholder]="labels['PANT034_TXT_FICAB']"></ion-searchbar>
+      </ion-col>
+      <ion-col col-12>
+        <button (click)="selectAll()" ion-button full>{{ 'PANT034_BTN_SELTO' | translate }}</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <div *ngIf="showSpinner" style="text-align: center;">
-        <ion-spinner></ion-spinner>
-    </div>
+  <div *ngIf="showSpinner" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
 
-    <ion-list no-lines>
-        <ion-item *ngFor="let c of caballos" (click)="c.seleccion = !c.seleccion">
-            <ion-avatar item-left>
-                <img src="assets/img/caballo.jpg">
-            </ion-avatar>
+  <ion-list no-lines>
+    <ion-item *ngFor="let c of caballos" (click)="c.seleccion = !c.seleccion">
+      <ion-avatar item-left>
+        <img src="assets/img/caballo.jpg">
+      </ion-avatar>
 
-            <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': c.seleccion}">{{c.caballo.Nombre}}</h2>
+      <span [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': c.seleccion && !isFilter}"
+            class="equi-title-form"
+            [innerHTML]="c.caballo.NombreFilter"></span>
 
-            <ion-icon *ngIf="c.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
-            <ion-icon *ngIf="!c.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
-        </ion-item>
-    </ion-list>
+      <ion-icon *ngIf="c.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
+      <ion-icon *ngIf="!c.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

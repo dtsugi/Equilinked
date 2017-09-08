@@ -31,6 +31,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   labels: any = {};
   loadingToday: boolean;
   loadingNext: boolean;
+  isFilter: boolean;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -39,6 +40,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
               private _alertaService: AlertaService,
               private _securityService: SecurityService,
               private languageService: LanguageService) {
+    this.isFilter = false;
     this.loadingToday = true;
     this.loadingNext = true;
     this.slidesMap = new Map<string, number>();
@@ -94,34 +96,69 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   }
 
   filter(evt: any): void {
-    let textFilter: string = evt.target.value;
-    if (textFilter) {
-      let value = textFilter.toUpperCase();
+    this.isFilter = false;
+    this.notificacionesProximasResp.forEach(pn => {
+      pn.FechaCortaFilter = pn.FechaCorta;
+      pn.DiaFilter = pn.Dia;
+      pn.Notificaciones.forEach(n => {
+        n.TituloFilter = n.Titulo;
+        n.UbicacionFilter = n.Ubicacion;
+        n.HoraFilter = n.Hora;
+      });
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
       let mapDates: Map<string, any> = new Map<string, any>();
       this.notificacionesProximasResp.forEach(pn => {
-        if (pn.FechaCorta.toUpperCase().indexOf(value) > -1
-          || pn.Dia.toUpperCase().indexOf(value) > -1) { //El dia corresponde al texto buscado?
-          mapDates.set(pn.Fecha, pn);
-        } else {
-          pn.Notificaciones.forEach(n => {
-            if (n.Hora.toUpperCase().indexOf(value) > -1
-              || (n.Ubicacion != null && n.Ubicacion.toUpperCase().indexOf(value) > -1)
-              || (n.Titulo != null && n.Titulo.toUpperCase().indexOf(value) > -1)) { //Alguna parte dela notificacion corresponde al texto buscado?
-              if (!mapDates.has(pn.Fecha)) {
-                let notificacionDia = {
-                  Fecha: pn.Fecha,
-                  Dia: pn.Dia,
-                  FechaCorta: pn.FechaCorta,
-                  Notificaciones: []
-                };
-                mapDates.set(pn.Fecha, notificacionDia);
-              }
-              mapDates.get(pn.Fecha).Notificaciones.push(n);
+        let notificacionDia: any;
+        pn.Notificaciones.forEach(n => {
+          let indexTitulo = n.Titulo.toUpperCase().indexOf(value.toUpperCase());
+          let indexUbicacion = n.Ubicacion ? n.Ubicacion.toUpperCase().indexOf(value.toUpperCase()) : -1;
+          let indexHora = n.Hora.toUpperCase().indexOf(value.toUpperCase());
+          if (indexTitulo > -1 || indexUbicacion > -1 || indexHora > -1) { //Alguna parte dela notificacion corresponde al texto buscado?
+            if (!mapDates.has(pn.Fecha)) {
+              notificacionDia = {
+                Fecha: pn.Fecha,
+                Dia: pn.Dia,
+                DiaFilter: pn.Dia,
+                FechaCorta: pn.FechaCorta,
+                FechaCortaFilter: pn.FechaCorta,
+                Notificaciones: []
+              };
+              mapDates.set(pn.Fecha, notificacionDia);
             }
-          });
+            mapDates.get(pn.Fecha).Notificaciones.push(n);
+            if (indexTitulo > -1) {
+              let textReplace = n.Titulo.substring(indexTitulo, indexTitulo + value.length);
+              n.TituloFilter = n.Titulo.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+            }
+            if (n.Ubicacion && indexUbicacion > -1) {
+              let textReplace = n.Ubicacion.substring(indexUbicacion, indexUbicacion + value.length);
+              n.UbicacionFilter = n.Ubicacion.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+            }
+            if (indexHora > -1) {
+              let textReplace = n.Hora.substring(indexHora, indexHora + value.length);
+              n.HoraFilter = n.Hora.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+            }
+          }
+        });
+        let notificacionDiaTemp = !notificacionDia ? pn : notificacionDia;
+        let indexFechaCorta = notificacionDiaTemp.FechaCorta.toUpperCase().indexOf(value.toUpperCase());
+        let indexDia = notificacionDiaTemp.Dia.toUpperCase().indexOf(value.toUpperCase());
+        if (indexFechaCorta > -1) {
+          let textReplace = notificacionDiaTemp.FechaCorta.substring(indexFechaCorta, indexFechaCorta + value.length);
+          notificacionDiaTemp.FechaCortaFilter = notificacionDiaTemp.FechaCorta.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (indexDia > -1) {
+          let textReplace = notificacionDiaTemp.Dia.substring(indexDia, indexDia + value.length);
+          notificacionDiaTemp.DiaFilter = notificacionDiaTemp.Dia.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (!notificacionDia && (indexFechaCorta > -1 || indexDia > -1)) {
+          mapDates.set(pn.Fecha, notificacionDiaTemp);
         }
       });
       this.notificacionesProximas = Array.from(mapDates.values());
+      this.isFilter = true;
     } else {
       this.notificacionesProximas = this.notificacionesProximasResp;
     }
@@ -155,7 +192,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
     this.today = this.today.charAt(0).toUpperCase() + this.today.slice(1);
     this.loadingToday = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, inicio, fin,
-      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
+      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, true
     ).then(alertas => {
       this.notificacionesHoy = alertas.map(a => {
         let d = new Date(a.FechaNotificacion);
@@ -175,7 +212,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
     let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     this.loadingNext = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, fecha, null,
-      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
+      null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, true
     ).then(alertas => {
       let mapDates: Map<string, any> = new Map<string, any>();
       let day: any;
@@ -196,8 +233,8 @@ export class NotificacionesPage implements OnInit, OnDestroy {
         day = mapDates.get(date);
         day.Notificaciones.push(nn);
       });
-      this.notificacionesProximas = Array.from<any>(mapDates.values());
-      this.notificacionesProximasResp = this.notificacionesProximas;
+      this.notificacionesProximasResp = Array.from<any>(mapDates.values());
+      this.filter(null);
       this.loadingNext = false;
     }).catch(err => {
       this._commonService.ShowInfo(this.labels["PANT021_MSG_ERRCO"]);

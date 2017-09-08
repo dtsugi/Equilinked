@@ -17,6 +17,9 @@ import {ConstantsConfig} from "../../../../../app/utils";
   providers: [LanguageService, CommonService, GruposCaballosService, SecurityService]
 })
 export class AdministracionGrupoPage implements OnInit, OnDestroy {
+  public CALENDAR_STEP_MONTH: number = ConstantsConfig.CALENDAR_STEP_MONTH;
+  public CALENDAR_STEP_WEEK: number = ConstantsConfig.CALENDAR_STEP_WEEK;
+  public CALENDAR_STEP_ALERT: number = ConstantsConfig.CALENDAR_STEP_ALERT;
   private grupoId: number;
   private session: UserSessionEntity;
   private slidesMap: Map<string, number>;

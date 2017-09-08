@@ -1,24 +1,24 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Events, NavController} from 'ionic-angular';
-import {CommonService} from '../../../../../../services/common.service';
-import {AlertaService} from '../../../../../../services/alerta.service';
-import {AlertaGrupoService} from '../../../../../../services/alerta-grupo.service';
-import {LanguageService} from '../../../../../../services/language.service';
-import {SecurityService} from '../../../../../../services/security.service';
-import {UserSessionEntity} from '../../../../../../model/userSession';
-import {ConstantsConfig} from "../../../../../../app/utils";
-import {EquiCalendar2} from "../../../../../../utils/equi-calendar2/equi-calendar2";
-import moment from "moment";
-import "moment/locale/es";
+import {CommonService} from '../../../../services/common.service';
+import {AlertaService} from '../../../../services/alerta.service';
+import {AlertaCaballoService} from '../../../../services/alerta.caballo.service';
+import {LanguageService} from '../../../../services/language.service';
+import {SecurityService} from '../../../../services/security.service';
+import {UserSessionEntity} from '../../../../model/userSession';
+import {ConstantsConfig} from '../../../../app/utils';
+import {EquiCalendar2} from '../../../../utils/equi-calendar2/equi-calendar2';
+import moment from 'moment';
+import 'moment/locale/es';
 
 @Component({
-  selector: 'segment-calendario-grupo',
-  templateUrl: 'calendario-grupo.html',
-  providers: [AlertaService, AlertaGrupoService, CommonService, LanguageService, SecurityService]
+  selector: 'segment-calendario-caballo',
+  templateUrl: 'calendario-caballo.html',
+  providers: [AlertaService, AlertaCaballoService, CommonService, LanguageService, SecurityService]
 })
-export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
+export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
   private session: UserSessionEntity;
-  @Input("grupo") grupo: any;
+  @Input("caballo") caballo: any;
   @Input("optionsAlertTypes") optionsAlertTypes: any;
   @Input("calendarOptions") calendarOptions: any;
   @ViewChild(EquiCalendar2) calendar: EquiCalendar2;
@@ -28,7 +28,7 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
               public navController: NavController,
               private commonService: CommonService,
               private events: Events,
-              private alertaGrupoService: AlertaGrupoService,
+              private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
   }
@@ -65,8 +65,9 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
     let alertTypes: Array<number> = this.optionsAlertTypes.alertTypes
       .filter(type => type.id && type.checked)
       .map(type => type.id);
-    this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID,
-      evt.start, evt.end, alertTypes, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, true
+    this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID,
+      evt.start, evt.end, alertTypes, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE,
+      this.optionsAlertTypes.alertTypes[0].checked
     ).then(alertas => {
       alertas.forEach(alerta => {
         let d = new Date(alerta.FechaNotificacion);
@@ -96,16 +97,16 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
   }
 
   private addEvents(): void {
-    this.events.subscribe("calendario:grupo:notificaciones", () => {
+    this.events.subscribe("calendario:caballo:notificaciones", () => {
       this.reloadAlerts();//que refresque el mes
     });
-    this.events.subscribe("calendario:grupo:notificacion", () => {
+    this.events.subscribe("calendario:caballo:notificacion", () => {
       this.reloadAlert();//refrescar el detalle de la alerta
     });
   }
 
   private removeEvents(): void {
-    this.events.unsubscribe("calendario:grupo:notificaciones");
-    this.events.unsubscribe("calendario:grupo:notificacion");
+    this.events.unsubscribe("calendario:caballo:notificaciones");
+    this.events.unsubscribe("calendario:caballo:notificacion");
   }
 }

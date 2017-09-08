@@ -29,19 +29,22 @@
       <ion-item-sliding *ngFor="let notificacion of notasCaballo">
         <ion-item text-wrap (click)="goViewNotificacion(notificacion)">
           <ion-row>
-            <ion-col col-10>
-              <p class="equi-title-form equi-title-note">{{notificacion.Titulo}}</p>
+            <ion-col col-10 class="equi-title-note">
+              <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form"
+                 [innerHTML]="notificacion.TituloFilter"></span>
             </ion-col>
             <ion-col col-2 class="text-align-right">
-              <ion-icon *ngIf="notificacion.Activa" class="equi-principal-color" name="notifications"></ion-icon>
+              <ion-icon *ngIf="notificacion.Activa"
+                        [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
+                        name="notifications"></ion-icon>
               <ion-icon *ngIf="!notificacion.Activa" class="equi-edit" name="ios-notifications-off"></ion-icon>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col col-8 class="equi-col-note">{{notificacion.Descripcion}}</ion-col>
-            <ion-col col-4 class="text-align-right equi-principal-color">
-              {{notificacion.Fecha}}
-            </ion-col>
+            <ion-col col-8 class="equi-col-note" [ngClass]="{'equi-edit': isFilter}"
+                     [innerHTML]="notificacion.DescripcionFilter"></ion-col>
+            <ion-col col-4 [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
+                     class="text-align-right" [innerHTML]="notificacion.FechaFilter"></ion-col>
           </ion-row>
         </ion-item>
 
@@ -72,19 +75,22 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col col-10>
-              <p class="equi-title-form equi-title-note">{{notificacion.Titulo}}</p>
+            <ion-col col-10 class="equi-title-note">
+              <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form"
+                 [innerHTML]="notificacion.TituloFilter"></span>
             </ion-col>
             <ion-col col-2 class="text-align-right">
-              <ion-icon *ngIf="notificacion.Activa" class="equi-principal-color" name="notifications"></ion-icon>
+              <ion-icon *ngIf="notificacion.Activa"
+                        [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
+                        name="notifications"></ion-icon>
               <ion-icon *ngIf="!notificacion.Activa" class="equi-edit" name="ios-notifications-off"></ion-icon>
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col col-8 class="equi-col-note">{{notificacion.Descripcion}}</ion-col>
-            <ion-col col-4 class="text-align-right equi-principal-color">
-              {{notificacion.Fecha}}
-            </ion-col>
+            <ion-col col-8 class="equi-col-note" [ngClass]="{'equi-edit': isFilter}"
+                     [innerHTML]="notificacion.DescripcionFilter"></ion-col>
+            <ion-col col-4 [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
+                     class="text-align-right" [innerHTML]="notificacion.FechaFilter"></ion-col>
           </ion-row>
         </ion-item>
 

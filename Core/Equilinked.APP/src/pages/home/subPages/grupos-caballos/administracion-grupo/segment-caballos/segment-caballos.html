@@ -20,7 +20,11 @@
     <ion-avatar item-left>
       <img src="assets/img/caballo.jpg">
     </ion-avatar>
-    <h2 class="equi-title-form">{{c.caballo.Nombre}}</h2>
+
+    <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="c.caballo.NombreFilter"></span><br/>
+    <span *ngIf="c.caballo.Establo" [ngClass]="{'equi-edit': isFilter}" class="equi-subtitle-form"
+          [innerHTML]="c.caballo.EstabloFilter"></span>
+
     <ion-icon class="equi-principal-color" name="{{c.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}"
               *ngIf="parametrosCaballos.modoEdicion"
               item-right></ion-icon>

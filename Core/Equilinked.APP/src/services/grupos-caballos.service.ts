@@ -1,11 +1,14 @@
 import {Injectable} from "@angular/core";
 import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/map";
+import 'rxjs/add/operator/timeout';
 import "rxjs/add/operator/toPromise";
 import {AppConfig} from "../app/app.config";
 
 @Injectable()
 export class GruposCaballosService {
+
+  private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private endPointGruposCaballos: string = AppConfig.API_URL + "api/grupo";
   private urlGrupos: string = AppConfig.API_URL + "api/propietarios/";
 
@@ -17,6 +20,7 @@ export class GruposCaballosService {
     let params = new URLSearchParams();
     params.set("tieneEstablo", tieneEstablo ? "true" : "false");
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
@@ -28,13 +32,17 @@ export class GruposCaballosService {
       params.append("gruposIds", id.toString());
     });
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
 
   getAllGruposByPropietarioId(propietarioId: number): Promise<any> {
     let url: string = this.urlGrupos + propietarioId + "/grupos";
-    return this.http.get(url).map(grupos => grupos.json()).toPromise();
+    return this.http.get(url)
+      .timeout(this.requestTimeout)
+      .map(grupos => grupos.json())
+      .toPromise();
   }
 
   deleteAlertasByIds(grupoId: number, ids: number[]): Promise<any> {
@@ -44,12 +52,14 @@ export class GruposCaballosService {
       params.append("caballosIds", id.toString());
     });
     return this.http.delete(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 
   deleteGrupoById(grupoId: number): Promise<any> {
     let url: string = this.endPointGruposCaballos + "/" + grupoId;
     return this.http.delete(url)
+      .timeout(this.requestTimeout)
       .map(res => res.json())
       .toPromise();
   }
@@ -57,6 +67,7 @@ export class GruposCaballosService {
   getGrupoById(grupoId: number): Promise<any> {
     let url: string = this.endPointGruposCaballos + "/" + grupoId;
     return this.http.get(url)
+      .timeout(this.requestTimeout)
       .map(grupo => grupo.json())
       .toPromise();
   }
@@ -64,6 +75,7 @@ export class GruposCaballosService {
   getCaballosByGroupId(groupId: number): Promise<any[]> {
     let url = this.endPointGruposCaballos + "/GetAllGrupoCaballoByGrupoId/" + groupId;
     return this.http.get(url)
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as any[])
       .toPromise();
   }
@@ -71,6 +83,7 @@ export class GruposCaballosService {
   getGruposCaballosByPropietarioId(idPropietario: number): Promise<any[]> {
     let url = this.endPointGruposCaballos + "/GetAllByPropietarioId/" + idPropietario;
     return this.http.get(url)
+      .timeout(this.requestTimeout)
       .map(grupos => grupos.json() as any[])
       .toPromise();
   }
@@ -78,18 +91,21 @@ export class GruposCaballosService {
   getCaballosByPropietarioId(idPropietario: number): Promise<any[]> {
     let url = this.endPointGruposCaballos + "/GetAllCaballosByPropietarioId/" + idPropietario;
     return this.http.get(url)
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as any[])
       .toPromise();
   }
 
   saveGrupo(grupo: any): Promise<any> {
     return this.http.post(this.endPointGruposCaballos, grupo)
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 
   updateGrupo(grupo: any): Promise<any> {
     let url = this.endPointGruposCaballos + "/" + grupo.ID;
     return this.http.put(url, grupo)
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 

@@ -10,7 +10,7 @@
 // import { PersonaACargo } from './personaACargo';
 
 // export class Caballo {
-//   ID: number;  
+//   ID: number;
 //   Nombre: string;
 //   FechaNacimiento: Date;
 //   NumeroId: number;
@@ -74,6 +74,7 @@ export class Caballo {
   Propietario_ID: number;
   Observaciones: string;
   Establo_ID: number;
+  Establo: any;
   NombrePropietario: string;
   Marcas: string;
   Protector_ID: number;
@@ -81,6 +82,10 @@ export class Caballo {
   GenealogiaCaballo: any;
   CriadorCaballo: any;
   ResponsableCaballo: any;
+
+  ///de apoyo
+  NombreFilter: string;
+  EstabloFilter: string;
 
   constructor() {
     this.GenealogiaCaballo = {};

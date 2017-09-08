@@ -20,6 +20,7 @@ export class CreacionGrupoPage implements OnInit {
   grupo: Grupo;
   grupoCaballosForm: any;
   session: UserSessionEntity;
+  isFilter: boolean;
 
   constructor(private caballoService: CaballoService,
               private commonService: CommonService,
@@ -30,6 +31,7 @@ export class CreacionGrupoPage implements OnInit {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.grupo = new Grupo();
+    this.isFilter = false;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -49,7 +51,30 @@ export class CreacionGrupoPage implements OnInit {
   }
 
   filter(evt: any): void {
-    this.caballos = this.gruposCaballosService.filterCaballo(evt.target.value, this.caballosRespaldo);
+    this.isFilter = false;
+    this.caballosRespaldo.forEach(cab => {
+      cab.caballo.NombreFilter = cab.caballo.Nombre;
+      cab.caballo.EstabloFilter = cab.caballo.Establo ? cab.caballo.Establo.Nombre : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.caballos = this.caballosRespaldo.filter(cab => {
+        let indexMatchCaballo = cab.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = cab.caballo.Establo ? (cab.caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = cab.caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          cab.caballo.NombreFilter = cab.caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (cab.caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = cab.caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          cab.caballo.EstabloFilter = cab.caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.caballos = this.caballosRespaldo;
+    }
   }
 
   save(): void {
@@ -83,7 +108,7 @@ export class CreacionGrupoPage implements OnInit {
         this.caballosRespaldo = caballos.map(c => {
           return {caballo: c, seleccion: false};
         });
-        this.caballos = this.caballosRespaldo;
+        this.filter(null);
       }, error => {
         console.error(error);
       });

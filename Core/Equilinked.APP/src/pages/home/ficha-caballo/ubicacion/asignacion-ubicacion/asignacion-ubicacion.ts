@@ -17,6 +17,7 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
   establos: Array<any>;
   establosRespaldo: Array<any>;
   loading: boolean;
+  isFilter: boolean;
 
   constructor(private alertController: AlertController,
               private commonService: CommonService,
@@ -27,6 +28,7 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -41,7 +43,7 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
         this.establosRespaldo = establos;
-        this.establos = establos;
+        this.filter(null);
         this.loading = false;
       }).catch(err => {
       console.error(err);
@@ -51,12 +53,27 @@ export class AsignacionUbicacionCaballoPage implements OnInit {
   }
 
   filter(evt: any): void {
-    let value: string = evt.target.value;
-    if (value && value != "") {
-      this.establos = this.establosRespaldo.filter(establo => {
-        return establo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1
-          || (establo.Direccion && establo.Direccion.toUpperCase().indexOf(value.toUpperCase()) > -1);
+    this.isFilter = false;
+    this.establosRespaldo.forEach(est => { //Ajustamos los textos de todos
+      est.NombreFilter = est.Nombre;
+      est.DireccionFilter = est.Direccion ? est.Direccion : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) { //Vemos si es necesario filtrar
+      this.establos = this.establosRespaldo.filter(est => {
+        let indexMatchNombre = est.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchDireccion = est.Direccion ? (est.Direccion.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchNombre > -1) {
+          let textReplace = est.Nombre.substring(indexMatchNombre, indexMatchNombre + value.length);
+          est.NombreFilter = est.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (est.Direccion && indexMatchDireccion > -1) {
+          let textReplace = est.Direccion.substring(indexMatchDireccion, indexMatchDireccion + value.length);
+          est.DireccionFilter = est.Direccion.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        return indexMatchNombre > -1 || indexMatchDireccion > -1;
       });
+      this.isFilter = true;
     } else {
       this.establos = this.establosRespaldo;
     }

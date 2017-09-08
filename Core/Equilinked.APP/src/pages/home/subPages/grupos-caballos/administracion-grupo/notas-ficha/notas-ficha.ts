@@ -16,6 +16,8 @@ import {LanguageService} from '../../../../../../services/language.service';
   providers: [LanguageService, AlertaService, AlertaGrupoService, CommonService, SecurityService]
 })
 export class NotasFichaPage implements OnInit, OnDestroy {
+  private MAX_INDEX_FOR_CUT: number = 30;
+  private SIZE_WORDS_BEFORE_CUT: number = 0;
   private grupo: any;
   private tipoAlerta: number;
   private session: UserSessionEntity;
@@ -24,6 +26,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
   notas: Array<any>;
   modoEdicion: boolean;
   loading: boolean;
+  isFilter: boolean;
 
   constructor(private alertController: AlertController,
               private alertaGrupoService: AlertaGrupoService,
@@ -34,6 +37,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
     this.grupo = {};
     this.notas;
     this.notasRespaldo = new Array<any>();
@@ -60,11 +64,46 @@ export class NotasFichaPage implements OnInit, OnDestroy {
   }
 
   filter(evt: any): void {
-    let value: string = evt.target.value;
-    if (value && value !== null) {
+    this.isFilter = false;
+    this.notasRespaldo.forEach(n => {
+      n.nota.TituloFilter = n.nota.Titulo;
+      n.nota.DescripcionFilter = n.nota.Descripcion;
+      n.nota.FechaFilter = n.nota.Fecha;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
       this.notas = this.notasRespaldo.filter(n => {
-        return n.nota.Titulo.toUpperCase().indexOf(value.toUpperCase()) > -1
-          || n.nota.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1
+        let indexTitutlo = n.nota.Titulo.toUpperCase().indexOf(value.toUpperCase());
+        let indexDescripcion = n.nota.Descripcion.toUpperCase().indexOf(value.toUpperCase());
+        let indexFecha = n.nota.Fecha.toUpperCase().indexOf(value.toUpperCase());
+        if (indexTitutlo > -1) {
+          if (indexTitutlo > this.MAX_INDEX_FOR_CUT) {
+            let indices = this.getIndicesOf(" ", n.nota.Titulo, true, indexTitutlo);
+            if (indices.length > this.SIZE_WORDS_BEFORE_CUT) {
+              n.nota.TituloFilter = "... " + n.nota.TituloFilter.substring(indices[indices.length - (this.SIZE_WORDS_BEFORE_CUT + 1)]);
+              indexTitutlo = n.nota.TituloFilter.toUpperCase().indexOf(value.toUpperCase());
+            }
+          }
+          let textReplace = n.nota.TituloFilter.substring(indexTitutlo, indexTitutlo + value.length);
+          n.nota.TituloFilter = n.nota.TituloFilter.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (indexDescripcion > -1) {
+          if (indexDescripcion > this.MAX_INDEX_FOR_CUT) {
+            let indices = this.getIndicesOf(" ", n.nota.Descripcion, true, indexDescripcion);
+            if (indices.length > this.SIZE_WORDS_BEFORE_CUT) {
+              n.nota.DescripcionFilter = "... " + n.nota.DescripcionFilter.substring(indices[indices.length - (this.SIZE_WORDS_BEFORE_CUT + 1)]);
+              indexDescripcion = n.nota.DescripcionFilter.toUpperCase().indexOf(value.toUpperCase());
+            }
+          }
+          let textReplace = n.nota.DescripcionFilter.substring(indexDescripcion, indexDescripcion + value.length);
+          n.nota.DescripcionFilter = n.nota.DescripcionFilter.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (indexFecha > -1) {
+          let textReplace = n.nota.Fecha.substring(indexFecha, indexFecha + value.length);
+          n.nota.FechaFilter = n.nota.Fecha.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexTitutlo > -1 || indexDescripcion > -1 || indexFecha > -1;
       });
     } else {
       this.notas = this.notasRespaldo;
@@ -140,6 +179,28 @@ export class NotasFichaPage implements OnInit, OnDestroy {
     }).present();
   }
 
+  /*
+  Permite obtener los indices de las palabras que coincidian en el texto
+   */
+  private getIndicesOf(searchStr: string, str: string, caseSensitive: boolean, limitIndex: number): Array<number> {
+    let indices: Array<number> = new Array<number>();
+    let startIndex: number = 0;
+    let index: number;
+    let searchStrLen: number = searchStr.length;
+    searchStr = caseSensitive ? searchStr.toLowerCase() : searchStr;
+    str = caseSensitive ? str.toLowerCase() : str;
+    if (searchStrLen > 0) {
+      while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+        if (index > limitIndex) {
+          break;
+        }
+        indices.push(index);
+        startIndex = index + searchStrLen;
+      }
+    }
+    return indices;
+  }
+
   private view(nota: any): void {
     let params: any = {grupoId: this.grupo.ID, alertaId: nota.ID};
     this.navController.push(DetalleNotaPage, params);
@@ -156,7 +217,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
           nota.Fecha = moment(new Date(nota.FechaNotificacion)).format("DD/MM/YYYY");
           return {seleccion: false, nota: nota};
         });
-        this.notas = this.notasRespaldo;
+        this.filter(null);
       }).catch(err => {
       console.error(err);
       this.loading = false;

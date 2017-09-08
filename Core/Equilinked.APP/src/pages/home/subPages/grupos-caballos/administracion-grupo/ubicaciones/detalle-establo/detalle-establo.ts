@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Events, NavController, NavParams, PopoverController} from "ionic-angular";
+import {DomSanitizer} from '@angular/platform-browser';
 import {EstablosService} from "../../../../../../../services/establos.service";
 import {CommonService} from "../../../../../../../services/common.service";
 import {PopoverOpcionesEstablo} from "./popover-establo/popover-establo";
@@ -27,18 +28,21 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
 
   constructor(private events: Events,
               private commonService: CommonService,
+              private domSanitizer: DomSanitizer,
               private establosService: EstablosService,
               private navController: NavController,
               private navParams: NavParams,
               private popoverController: PopoverController,
               private languageService: LanguageService) {
-    languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit(): void {
     this.establoId = this.navParams.get("establoId");
     this.grupo = this.navParams.get("grupo");
-    this.getInfoEstablo(true);
+    this.languageService.loadLabels().then(labels => {
+      this.labels = labels;
+      this.getInfoEstablo(true);
+    });
     this.addEvents();
   }
 
@@ -66,10 +70,14 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
 
   editCaballos(): void {
     let params: any = {
-      establo: JSON.parse(JSON.stringify(this.establo)),
-      grupo: this.grupo
+      establo: JSON.parse(JSON.stringify(this.establo))
+      //grupo: this.grupo
     };
     this.navController.push(EdicionEstabloCaballosPage, params);
+  }
+
+  sanitize(url: string) {
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
   }
 
   private getInfoEstablo(showLoading: boolean): void {

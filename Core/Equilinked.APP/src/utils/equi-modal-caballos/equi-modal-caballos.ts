@@ -13,14 +13,15 @@ export class EquiModalCaballos implements OnInit {
   caballosRespaldo: Array<any>;
   private caballosInput: any;
   private funcionCaballos: Promise<any>; //Esta la ejecutamos
-  private caballosRestantes: Array<any>;
   showSpinner: boolean;
+  isFilter: boolean;
 
   constructor(private commonService: CommonService,
               public navParams: NavParams,
               public viewController: ViewController,
               private languageService: LanguageService) {
     this.caballos = [];
+    this.isFilter = false;
     this.showSpinner = true;
   }
 
@@ -53,10 +54,30 @@ export class EquiModalCaballos implements OnInit {
   }
 
   filter(evt: any) {
-    let value: string = evt.target.value;
-    this.caballos = this.caballosRespaldo.filter(c => {
-      return c.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1;
+    this.isFilter = false;
+    this.caballosRespaldo.forEach(cab => {
+      cab.caballo.NombreFilter = cab.caballo.Nombre;
+      cab.caballo.EstabloFilter = cab.caballo.Establo ? cab.caballo.Establo.Nombre : null;
     });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.caballos = this.caballosRespaldo.filter(cab => {
+        let indexMatchCaballo = cab.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = cab.caballo.Establo ? (cab.caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = cab.caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          cab.caballo.NombreFilter = cab.caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (cab.caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = cab.caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          cab.caballo.EstabloFilter = cab.caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.caballos = this.caballosRespaldo;
+    }
   }
 
   selectAll(): void {
@@ -80,7 +101,7 @@ export class EquiModalCaballos implements OnInit {
             caballo: caballo
           }
         });
-        this.caballos = this.caballosRespaldo;
+        this.filter(null);
         this.showSpinner = false;
       }).catch(err => {
       this.showSpinner = false;

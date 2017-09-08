@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Events, ModalController, NavController, NavParams, PopoverController} from "ionic-angular";
+import {DomSanitizer} from '@angular/platform-browser';
 import {EstablosService} from "../../../../services/establos.service";
 import {CommonService} from "../../../../services/common.service";
 import {OpcionesUbicacionModal} from "./opciones-ubicacion/opciones-ubicacion";
@@ -21,6 +22,7 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
 
   constructor(private events: Events,
               private commonService: CommonService,
+              private domSanitizer: DomSanitizer,
               private establosService: EstablosService,
               private modalController: ModalController,
               private navController: NavController,
@@ -50,6 +52,10 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
       .present({
         ev: ev
       });
+  }
+
+  sanitize(url: string) {
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
   }
 
   private getInfoEstablo(showLoading: boolean): void {

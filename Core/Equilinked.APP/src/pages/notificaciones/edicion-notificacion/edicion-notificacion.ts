@@ -80,6 +80,10 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
     this.alerta.Tipo = evt;//Asignar el tipo elegido
     this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
     this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
+    if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+      this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
+      this.alerta.HoraFinal = moment().format("HH:mm:ss");
+    }
   }
 
   viewRecordatorios(): void {

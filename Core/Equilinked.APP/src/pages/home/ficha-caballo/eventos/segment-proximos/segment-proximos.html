@@ -1,7 +1,8 @@
 <ion-grid>
   <ion-row>
     <ion-col col-12>
-      <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT007_TXT_FILNOT']"></ion-searchbar>
+      <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                     [placeholder]="labels['PANT007_TXT_FILNOT']"></ion-searchbar>
 
       <div *ngIf="loading" style="text-align: center;">
         <ion-spinner></ion-spinner>
@@ -13,10 +14,10 @@
     <ion-col col-4>
       <ion-row>
         <ion-col col-12 class="col-center">
-          <span class="equi-bold-text">{{ec.FechaCorta}}</span>
+          <span [ngClass]="{'equi-edit': isFilter}" class="equi-bold-text" [innerHTML]="ec.FechaCortaFilter"></span>
         </ion-col>
         <ion-col col-12 class="col-center">
-          <span class="equi-normal-text">{{ec.Dia}}</span>
+          <span [ngClass]="{'equi-edit': isFilter}" class="equi-normal-text" [innerHTML]="ec.DiaFilter"></span>
         </ion-col>
       </ion-row>
     </ion-col>
@@ -26,13 +27,18 @@
         <ion-item-sliding *ngFor="let e of ec.Notificaciones; let i = index">
           <ion-item text-wrap (click)="view(e)">
             <ion-row [ngClass]="{'border-bottom': i < (ec.Notificaciones.length-1)}">
-              <ion-col col-12 class="equi-title-note"><span class="equi-bold-text">{{e.Titulo}}</span></ion-col>
+              <ion-col col-12 class="equi-title-note">
+                <span [ngClass]="{'equi-edit': isFilter}" class="equi-bold-text" [innerHTML]="e.TituloFilter"></span>
+              </ion-col>
               <ion-col col-12 class="equi-title-note" *ngIf="e.Ubicacion && e.Ubicacion != null">
-                <ion-icon name="ios-pin" class="equi-principal-color"></ion-icon>
-                <span class="equi-normal-text">{{e.Ubicacion}}</span>
+                <ion-icon name="ios-pin"
+                          [ngClass]="{'equi-edit': isFilter,'equi-principal-color': !isFilter}"></ion-icon>
+                <span [ngClass]="{'equi-edit': isFilter}" class="equi-normal-text"
+                      [innerHTML]="e.UbicacionFilter"></span>
               </ion-col>
               <ion-col col-12>
-                <span class="equi-normal-text">{{e.Hora}}</span>
+                      <span [ngClass]="{'equi-edit': isFilter}" class="equi-normal-text"
+                            [innerHTML]="e.HoraFilter"></span>
               </ion-col>
             </ion-row>
           </ion-item>

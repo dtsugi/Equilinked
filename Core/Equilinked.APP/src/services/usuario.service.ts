@@ -1,12 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/timeout';
 import {AppConfig} from '../app/app.config';
 import {Utils} from '../app/utils';
 import {UserSessionEntity} from '../model/UserSessionEntity';
 
 @Injectable()
 export class UsuarioService {
+  private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private actionUrl: string = AppConfig.API_URL + "api/usuario/";
   private url = "";
 
@@ -16,6 +18,7 @@ export class UsuarioService {
   loginWithToken(session: any): Promise<any> {
     let url: string = this.actionUrl + "login/token";
     return this._http.post(url, session)
+      .timeout(this.requestTimeout)
       .map(response => response.json())
       .toPromise();
   }
@@ -27,6 +30,7 @@ export class UsuarioService {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "Login", []);
     console.log("URL" + this.url);
     return this._http.post(this.url, bodyString, options)
+      .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 
@@ -36,6 +40,7 @@ export class UsuarioService {
       NuevaContrasena: newPassword,
       ContrasenaActual: password
     })
+      .timeout(this.requestTimeout)
       .map(response => response.json())
       .toPromise();
   }
@@ -47,6 +52,7 @@ export class UsuarioService {
       Password: password
     };
     return this._http.delete(url, new RequestOptions({body: account}))
+      .timeout(this.requestTimeout)
       .map(response => response.json())
       .toPromise();
   }

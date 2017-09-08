@@ -23,10 +23,12 @@
         <ion-avatar item-left>
             <img src="assets/img/caballo.jpg">
         </ion-avatar>
-        <h2 class="equi-title-form">{{e.establo.Nombre}}</h2>
+
+        <h2 [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="e.establo.NombreFilter"></h2>
+
         <p *ngIf="e.establo.Direccion != ''">
-            <ion-icon class="equi-principal-color" name="pin"></ion-icon>
-            <span class="equi-subtitle-form">{{e.establo.Direccion}}</span>
+            <ion-icon [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}" name="pin"></ion-icon>
+            <span [ngClass]="{'equi-edit': isFilter}" class="equi-subtitle-form" [innerHTML]="e.establo.DireccionFilter"></span>
         </p>
 
         <ion-icon class="equi-icon-input" name="{{e.seleccion ? 'ios-checkbox' : 'ios-square-outline'}}" *ngIf="parametrosEstablos.modoEdicion"

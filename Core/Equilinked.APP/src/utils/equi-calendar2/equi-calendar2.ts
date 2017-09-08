@@ -6,6 +6,7 @@ import {EquiCalWeek} from "./equi-cal-week";
 import {EquiCalDay} from "./equi-cal-day";
 import moment from "moment";
 import "moment/locale/es";
+import {ConstantsConfig} from "../../app/utils";
 
 @Component({
   selector: "equi-calendar2",
@@ -13,6 +14,7 @@ import "moment/locale/es";
   providers: [LanguageService]
 })
 export class EquiCalendar2 implements OnInit {
+
   public years: Map<string, EquiCalYear>;
   public selectedYear: EquiCalYear;
   public selectedMonth: EquiCalMonth;
@@ -30,7 +32,7 @@ export class EquiCalendar2 implements OnInit {
   }
 
   ngOnInit(): void {
-    this.options.step = 1;//Pantalla de mes
+    this.options.step = ConstantsConfig.CALENDAR_STEP_MONTH;//Pantalla de mes
     let now = moment();
     let year = this.createYear(now.year());
     this.selectedYear = year;
@@ -46,8 +48,6 @@ export class EquiCalendar2 implements OnInit {
 
   /*Permite asignar las alertas que se desean visualizar para el mes seleccionado*/
   public setAlerts(alerts: Array<any>): void {
-    //this.options.step = 1; //vista del mes
-    //this.selectedMonth.hideWeeks = false;
     this.selectedMonth.weeks.forEach(week => {
       week.hasAlerts = false;
       week.days.forEach(day => {
@@ -70,15 +70,15 @@ export class EquiCalendar2 implements OnInit {
 
   /*Permite asignar una alerta que se ha seleccionar para ver su detalle*/
   public setAlert(alert: any): void {
-    this.options.step = 3; //Vista de la alerta!
+    this.options.step = ConstantsConfig.CALENDAR_STEP_ALERT; //Vista de la alerta!
     this.selectedAlert = alert;
   }
 
   public back(): void {
-    if (this.options.step == 3) {//si esta en la vista de detalle alerta regresamos a la vista de semana
-      this.options.step = 2;
-    } else if (this.options.step == 2) { //si esta en la vista de semana regresamos a la vista mensual
-      this.options.step = 1; //vista de mes de nuevo
+    if (this.options.step == ConstantsConfig.CALENDAR_STEP_ALERT) {//si esta en la vista de detalle alerta regresamos a la vista de semana
+      this.options.step = ConstantsConfig.CALENDAR_STEP_WEEK;
+    } else if (this.options.step == ConstantsConfig.CALENDAR_STEP_WEEK) { //si esta en la vista de semana regresamos a la vista mensual
+      this.options.step = ConstantsConfig.CALENDAR_STEP_MONTH; //vista de mes de nuevo
       this.selectedDate.showAlerts = false;//se ocultan las alertas
       this.selectedMonth.hideWeeks = false;// se visualizan de nuevo las semanas
     }
@@ -89,7 +89,6 @@ export class EquiCalendar2 implements OnInit {
       start: this.selectedMonth.start,
       end: this.selectedMonth.end
     });
-    //this.selectedMonth.hideWeeks = false;
   }
 
   public reloadCurrentAlert(): void {
@@ -102,11 +101,11 @@ export class EquiCalendar2 implements OnInit {
 
   protected selectDate(week: EquiCalWeek, day: EquiCalDay): void {
     if (day.id == this.selectedDate.id) { //volvio a seleccionar el mismo
-      this.options.step = 1; //vista de mes de nuevo
+      this.options.step = ConstantsConfig.CALENDAR_STEP_MONTH; //vista de mes de nuevo
       this.selectedDate.showAlerts = !this.selectedDate.showAlerts;
       this.selectedMonth.hideWeeks = this.selectedDate.showAlerts;
     } else { //Selecciono distinto
-      this.options.step = 2; //Vista de semana
+      this.options.step = ConstantsConfig.CALENDAR_STEP_WEEK; //Vista de semana
       this.selectedWeek = week;
       this.selectedDate = day;
       this.selectedDate.showAlerts = true;

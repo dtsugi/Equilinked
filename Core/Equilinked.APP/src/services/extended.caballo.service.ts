@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/timeout';
 import {AppConfig} from '../app/app.config';
 import {Utils} from '../app/utils';
 
 @Injectable()
 export class ExtendedCaballoService {
+
+  private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private actionUrl: string = AppConfig.API_URL + "api/ExtendedCaballo/";
   private url = "";
 
@@ -15,6 +18,7 @@ export class ExtendedCaballoService {
   getAllPaises(): Promise<any> {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllPaises/", []);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(paises => paises.json())
       .toPromise();
   }
@@ -22,6 +26,7 @@ export class ExtendedCaballoService {
   getAllProtector(): Promise<any> {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllProtector/", []);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(response => response.json())
       .toPromise();
   }
@@ -30,6 +35,7 @@ export class ExtendedCaballoService {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllGeneroComboBox/", []);
     console.log("URL" + this.url);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 
@@ -37,6 +43,7 @@ export class ExtendedCaballoService {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllPelajeComboBox/", []);
     console.log("URL" + this.url);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 
@@ -44,6 +51,7 @@ export class ExtendedCaballoService {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllCriadorComboBox/", []);
     console.log("URL" + this.url);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 
@@ -51,6 +59,7 @@ export class ExtendedCaballoService {
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllOtrasMarcasComboBox/", []);
     console.log("URL" + this.url);
     return this._http.get(this.url)
+      .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 }

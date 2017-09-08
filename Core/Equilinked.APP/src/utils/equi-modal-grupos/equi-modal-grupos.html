@@ -1,46 +1,48 @@
 <ion-header>
-    <ion-toolbar class="equi-toolbar">
-        <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="cancel()">
-                {{ 'PANT025_BTN_CAN' | translate }}
-            </button>
-        </ion-buttons>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button class="equi-toolbar-btn" (click)="cancel()">
+        {{ 'PANT025_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
 
-        <ion-buttons right>
-            <button class="equi-toolbar-btn" (click)="accept()">
-                {{ 'PANT025_BTN_ACE' | translate }}
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons right>
+      <button class="equi-toolbar-btn" (click)="accept()">
+        {{ 'PANT025_BTN_ACE' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-grid>
-        <ion-row>
-            <ion-col col-12>
-                <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT025_TXT_FIGR']"></ion-searchbar>
-            </ion-col>
-            <ion-col col-12>
-                <button (click)="selectAll()" ion-button full>{{ 'PANT025_BTN_SETO' | translate }}</button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                       [placeholder]="labels['PANT025_TXT_FIGR']"></ion-searchbar>
+      </ion-col>
+      <ion-col col-12>
+        <button (click)="selectAll()" ion-button full>{{ 'PANT025_BTN_SETO' | translate }}</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <div *ngIf="showSpinner" style="text-align: center;">
-        <ion-spinner></ion-spinner>
-    </div>
+  <div *ngIf="showSpinner" style="text-align: center;">
+    <ion-spinner></ion-spinner>
+  </div>
 
-    <ion-list no-lines>
-        <ion-item *ngFor="let g of grupos" (click)="g.seleccion = !g.seleccion">
-            <ion-avatar item-left>
-                <img src="assets/img/caballo.jpg">
-            </ion-avatar>
+  <ion-list no-lines>
+    <ion-item *ngFor="let g of grupos" (click)="g.seleccion = !g.seleccion">
+      <ion-avatar item-left>
+        <img src="assets/img/caballo.jpg">
+      </ion-avatar>
 
-            <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': g.seleccion}">{{g.grupo.Descripcion}}</h2>
+      <span [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter && g.seleccion}"
+            class="equi-title-form" [innerHTML]="g.grupo.DescripcionFilter"></span><br/>
 
-            <ion-icon *ngIf="g.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
-            <ion-icon *ngIf="!g.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
-        </ion-item>
-    </ion-list>
+      <ion-icon *ngIf="g.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
+      <ion-icon *ngIf="!g.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

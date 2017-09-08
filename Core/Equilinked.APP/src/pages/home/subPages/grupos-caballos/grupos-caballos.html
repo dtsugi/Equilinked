@@ -1,4 +1,5 @@
-<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT002_TXT_FIGU']"></ion-searchbar>
+<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+               [placeholder]="labels['PANT002_TXT_FIGU']"></ion-searchbar>
 
 <equi-button-add [label]="labels['PANT002_BTN_NUGU']" (action)="newGrupo()"></equi-button-add>
 
@@ -7,11 +8,12 @@
 </div>
 
 <ion-list no-lines>
-    <ion-item *ngFor="let grupo of grupos" (click)="viewGrupo(grupo)">
-        <ion-avatar item-left>
-            <img src="assets/img/caballo.jpg">
-        </ion-avatar>
-        <span class="equi-title-form">{{grupo.Descripcion}}</span>
-        <p class="equi-principal-color">{{grupo.GrupoCaballo.length + ' ' + labels['PANT002_LBL_GUCA']}}</p>
-    </ion-item>
+  <ion-item *ngFor="let grupo of grupos" (click)="viewGrupo(grupo)">
+    <ion-avatar item-left>
+      <img src="assets/img/caballo.jpg">
+    </ion-avatar>
+    <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="grupo.DescripcionFilter"></span><br/>
+    <span [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}" class="equi-input-normal-text"
+          [innerHTML]="grupo.CaballosFilter"></span>
+  </ion-item>
 </ion-list>

@@ -12,6 +12,8 @@
     <ion-avatar item-left>
       <img src="assets/img/caballo.jpg">
     </ion-avatar>
-    <span class="equi-title-form">{{caballo.Nombre}}</span>
+
+    <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="caballo.NombreFilter"></span><br />
+    <span *ngIf="caballo.Establo" [ngClass]="{'equi-edit': isFilter}" class="equi-subtitle-form" [innerHTML]="caballo.EstabloFilter"></span>
   </ion-item>
 </ion-list>

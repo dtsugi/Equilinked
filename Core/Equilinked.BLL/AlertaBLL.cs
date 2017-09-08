@@ -161,7 +161,7 @@ namespace Equilinked.BLL
             }
         }
 
-        public List<Alerta> GetAlertasByFilter(int propietarioId, string inicio, string fin, int[] tipos, int orden, int cantidad)
+        public List<Alerta> GetAlertasByFilter(int propietarioId, string inicio, string fin, int[] tipos, int orden, int cantidad, bool todosTipos)
         {
             Nullable<DateTime> inicioo = null, finn = null;
             inicioo = inicio != "" ? DateTime.Parse(inicio) : inicioo;
@@ -171,7 +171,7 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
 
                 var query = db.Alerta.Where(a => a.Propietario_ID == propietarioId);
-                if(tipos != null && tipos.Length > 0)
+                if(!todosTipos && tipos != null)
                 {
                     query = query.Where(a => tipos.Contains(a.Tipo));
                 }

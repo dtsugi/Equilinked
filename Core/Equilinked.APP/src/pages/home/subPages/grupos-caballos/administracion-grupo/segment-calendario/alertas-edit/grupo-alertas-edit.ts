@@ -77,11 +77,15 @@ export class GrupoAlertasEditPage implements OnDestroy, OnInit {
     this.alerta = new Alerta();
     this.alerta.Propietario_ID = this.session.PropietarioId;
     this.alerta.Tipo = evt;//Asignar el tipo elegido
-    this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
-    this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
     this.alerta.AlertaGrupal = true;
     this.alerta.AlertaGrupo = [{Grupo_ID: this.grupo.ID}];
     this.alerta.AlertaCaballo = [];
+    this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
+    this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
+    if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+      this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
+      this.alerta.HoraFinal = moment().format("HH:mm:ss");
+    }
     this.setCaballosToAlerta();//le asignamos los caballos
   }
 

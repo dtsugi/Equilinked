@@ -16,6 +16,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
   private caballosGrupoRespaldo: Array<any>;
   caballosGrupo: Array<any>;
   loading: boolean;
+  isFilter: boolean;
 
   constructor(private caballoService: CaballoService,
               private commonService: CommonService,
@@ -25,6 +26,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
               private navParams: NavParams,
               private securityService: SecurityService) {
     this.loading = true;
+    this.isFilter = false;
     this.caballosGrupoRespaldo = new Array<any>();
     this.caballosGrupo = new Array<any>();
   }
@@ -40,7 +42,30 @@ export class EdicionCaballosGrupoPage implements OnInit {
   }
 
   filter(evt: any): void {
-    this.caballosGrupo = this.gruposCaballosService.filterCaballo(evt.target.value, this.caballosGrupoRespaldo);
+    this.isFilter = false;
+    this.caballosGrupoRespaldo.forEach(cab => {
+      cab.caballo.NombreFilter = cab.caballo.Nombre;
+      cab.caballo.EstabloFilter = cab.caballo.Establo ? cab.caballo.Establo.Nombre : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.caballosGrupo = this.caballosGrupoRespaldo.filter(cab => {
+        let indexMatchCaballo = cab.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = cab.caballo.Establo ? (cab.caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = cab.caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          cab.caballo.NombreFilter = cab.caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (cab.caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = cab.caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          cab.caballo.EstabloFilter = cab.caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.caballosGrupo = this.caballosGrupoRespaldo;
+    }
   }
 
   selectAll(): void {
@@ -84,7 +109,7 @@ export class EdicionCaballosGrupoPage implements OnInit {
               mapCaballosGrupo.get(c.ID) : {Caballo_ID: c.ID}
           }
         });
-        this.caballosGrupo = this.caballosGrupoRespaldo;
+        this.filter(null);
         this.loading = false;
       }).catch(err => {
         console.error(err);

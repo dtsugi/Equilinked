@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Events, NavController, NavParams, PopoverController} from "ionic-angular";
+import {DomSanitizer} from '@angular/platform-browser';
 import {AdminEstablosPage} from "./admin-establo";
 import {EdicionEstabloCaballosPage} from "./edicion-caballos";
 import {EstablosService} from "../../../../services/establos.service";
@@ -26,6 +27,7 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
 
   constructor(private events: Events,
               private commonService: CommonService,
+              private domSanitizer: DomSanitizer,
               private establosService: EstablosService,
               private navController: NavController,
               private navParams: NavParams,
@@ -82,6 +84,10 @@ export class InfoEstabloPage implements OnDestroy, OnInit {
       establo: JSON.parse(JSON.stringify(this.establo))
     };
     this.navController.push(EdicionEstabloCaballosPage, params);
+  }
+
+  sanitize(url: string) {
+    return this.domSanitizer.bypassSecurityTrustUrl(url);
   }
 
   private addEvents(): void {

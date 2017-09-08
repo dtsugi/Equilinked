@@ -1,14 +1,51 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
+    <ion-buttons left>
+      <!-- opciones y fotos -->
+      <button ion-button icon-only *ngIf="menu == 'informacion'"
+              (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+
+      <!-- calendario -->
+      <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_MONTH"
+              (click)="back()">
+        <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
+      </button>
+      <button ion-button icon-only class="equi-toolbar-btn"
+              *ngIf="menu == 'calendario' && (calendarOptions.step == CALENDAR_STEP_WEEK || calendarOptions.step == CALENDAR_STEP_ALERT)"
+              (click)="backCalendar()">
+        <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+
     <ion-title class="equi-toolbar-title-content">
       <span class="equi-toolbar-title">{{caballo.Nombre}}</span>
     </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="openMenu($event)">
+
+    <ion-buttons right>
+      <!-- opciones caballo -->
+      <button ion-button icon-only *ngIf="menu == 'informacion'" (click)="openMenu($event)">
         <ion-icon name="more"></ion-icon>
       </button>
+
+      <!-- calendario -->
+      <button ion-button class="equi-toolbar-btn"
+              *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
+              (click)="showFilterAlertTypes($event)">
+        Ver
+      </button>
+      <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
+              (click)="newAlert()">
+        <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
+      </button>
+      <button ion-button class="equi-toolbar-btn"
+              *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_ALERT"
+              (click)="editAlert()">
+        Editar
+      </button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 
   <ion-segment [(ngModel)]="menu" (ngModelChange)="showSlide($event)" color="primary">
     <ion-segment-button value="informacion">
@@ -17,11 +54,15 @@
     <ion-segment-button value="fotos">
       {{ "PANT003_BTN_FOT" | translate }}
     </ion-segment-button>
+    <ion-segment-button value="calendario">
+      CALENDARIO
+    </ion-segment-button>
   </ion-segment>
 </ion-header>
 
 <ion-content>
   <ion-slides (ionSlideDidChange)="slideChanged($event)">
+    <!-- seccion de opciones del caballo -->
     <ion-slide class="equi-content-slide-start">
       <ion-grid>
         <ion-row>
@@ -117,8 +158,23 @@
         </ion-row>
       </ion-grid>
     </ion-slide>
+
+    <!-- seccion de fotos -->
     <ion-slide class="equi-content-slide-start">
       Fotos
+    </ion-slide>
+
+    <!-- seccion de calendario -->
+    <ion-slide class="equi-content-slide-start">
+      <!--
+            <segment-calendario-grupo *ngIf="grupo.ID" [grupo]="grupo"
+                                [optionsAlertTypes]="optionsTypeAlerts"
+                                [calendarOptions]="calendarOptions">
+      </segment-calendario-grupo>
+      -->
+      <segment-calendario-caballo *ngIf="optionsTypeAlerts && calendarOptions" [caballo]="caballo"
+                                  [optionsAlertTypes]="optionsTypeAlerts"
+                                  [calendarOptions]="calendarOptions"></segment-calendario-caballo>
     </ion-slide>
   </ion-slides>
 </ion-content>

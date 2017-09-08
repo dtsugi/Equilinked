@@ -46,7 +46,9 @@
         <ion-avatar item-left>
           <img src="assets/img/caballo.jpg">
         </ion-avatar>
-        <h2 class="equi-title-form">{{ec.Nombre}}</h2>
+
+        <span [ngClass]="{'equi-edit': isFilterView}" class="equi-title-form" [innerHTML]="ec.NombreFilter"></span><br />
+        <span *ngIf="ec.Establo" [ngClass]="{'equi-edit': isFilterView}" class="equi-subtitle-form" [innerHTML]="ec.EstabloFilter"></span>
       </ion-item>
     </ion-list>
   </div>
@@ -73,7 +75,14 @@
         <ion-avatar item-left>
           <img src="assets/img/caballo.jpg">
         </ion-avatar>
-        <h2 class="equi-title-form" [ngClass]="{'equi-principal-color': ec.seleccion}">{{ec.caballo.Nombre}}</h2>
+
+        <span [ngClass]="{'equi-edit': isFilterEdit, 'equi-principal-color': ec.seleccion && !isFilterEdit}"
+              class="equi-title-form"
+              [innerHTML]="ec.caballo.NombreFilter"></span><br/>
+        <span *ngIf="ec.caballo.Establo"
+              [ngClass]="{'equi-edit': isFilterEdit, 'equi-principal-color': ec.seleccion && !isFilterEdit}"
+              class="equi-subtitle-form"
+              [innerHTML]="ec.caballo.EstabloFilter"></span>
 
         <ion-icon *ngIf="ec.seleccion" class="equi-icon-input" name="remove-circle" item-right></ion-icon>
         <ion-icon *ngIf="!ec.seleccion" class="equi-icon-unselected" name="add-circle" item-right></ion-icon>

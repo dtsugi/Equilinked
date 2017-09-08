@@ -63,11 +63,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/alertas")]
-        public IHttpActionResult GetAlertasByFilter(int propietarioId, [FromUri] int[] tipos, [FromUri] string inicio = "", [FromUri] string fin = "", [FromUri] int orden = 1, [FromUri] int cantidad = 0)
+        public IHttpActionResult GetAlertasByFilter(int propietarioId, [FromUri] int[] tipos, [FromUri] string inicio = "", [FromUri] string fin = "", [FromUri] int orden = 1, [FromUri] int cantidad = 0, [FromUri] bool todosTipos = false)
         {
             try
             {
-                return Ok(_alertaBLL.GetAlertasByFilter(propietarioId, inicio, fin, tipos, orden, cantidad));
+                return Ok(_alertaBLL.GetAlertasByFilter(propietarioId, inicio, fin, tipos, orden, cantidad, todosTipos));
             }
             catch (Exception ex)
             {

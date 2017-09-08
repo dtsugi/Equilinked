@@ -38,8 +38,9 @@
     </ion-item>
 
     <ion-item *ngIf="establo.Latitud && establo.Longitud" text-wrap>
-      <img
-        [src]="URL_API_GOOGLE + '/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"/>
+      <a [href]="sanitize('geo://?q=' + establo.Latitud + ',' + establo.Longitud)">
+        <img class="equi-map-establo" [src]="URL_API_GOOGLE + '/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"/>
+      </a>
     </ion-item>
 
     <ion-item>

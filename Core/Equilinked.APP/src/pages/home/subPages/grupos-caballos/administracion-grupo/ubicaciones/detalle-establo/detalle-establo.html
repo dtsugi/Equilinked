@@ -1,59 +1,61 @@
 <ion-header>
-    <ion-navbar>
-        <ion-title *ngIf="establo" class="equi-toolbar-title-content">
-            <span class="equi-toolbar-title">{{establo.Nombre}}</span>
-            <br />
-            <span class="equi-toolbar-subtitle">{{grupo.Descripcion}}</span>
-        </ion-title>
+  <ion-navbar>
+    <ion-title *ngIf="establo" class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">{{establo.Nombre}}</span>
+      <br/>
+      <span class="equi-toolbar-subtitle">{{grupo.Descripcion}}</span>
+    </ion-title>
 
-        <ion-buttons end>
-            <button ion-button icon-only (click)="showOptions($event) ">
-                <ion-icon name="more"></ion-icon>
-            </button>
-        </ion-buttons>
-    </ion-navbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="showOptions($event) ">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <ion-list *ngIf="establo" no-lines>
-        <ion-item>
-            <ion-icon name="ios-home" class="equi-icon-input" item-left></ion-icon>
-            <span class="equi-normal-text">{{establo.Nombre}}</span>
-        </ion-item>
+  <ion-list *ngIf="establo" no-lines>
+    <ion-item>
+      <ion-icon name="ios-home" class="equi-icon-input" item-left></ion-icon>
+      <span class="equi-normal-text">{{establo.Nombre}}</span>
+    </ion-item>
 
-        <ion-item *ngIf="establo.Manager != ''">
-            <ion-icon name="person" class="equi-icon-input" item-left></ion-icon>
-            <span class="equi-normal-text">{{establo.Manager}}</span>
-        </ion-item>
+    <ion-item *ngIf="establo.Manager != ''">
+      <ion-icon name="person" class="equi-icon-input" item-left></ion-icon>
+      <span class="equi-normal-text">{{establo.Manager}}</span>
+    </ion-item>
 
-        <ion-item *ngFor="let correo of establo.EstabloCorreo; let i = index">
-            <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="mail" item-left></ion-icon>
-            <span class="equi-normal-text">{{correo.CorreoElectronico}}</span>
-        </ion-item>
+    <ion-item *ngFor="let correo of establo.EstabloCorreo; let i = index">
+      <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="mail" item-left></ion-icon>
+      <span class="equi-normal-text">{{correo.CorreoElectronico}}</span>
+    </ion-item>
 
-        <ion-item *ngFor="let telefono of establo.EstabloTelefono; let i = index">
-            <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="call" item-left></ion-icon>
-            <span class="equi-normal-text" (click)="openOptionsTelephone($event, telefono.Numero)">{{telefono.Numero}}</span>
-            <ion-note class="equi-principal-color equi-italic-text" item-right>
-                {{telefono.Tipo_Numero.Descripcion}}
-            </ion-note>
-        </ion-item>
+    <ion-item *ngFor="let telefono of establo.EstabloTelefono; let i = index">
+      <ion-icon [ngClass]="{'icon-hidden': i > 0}" class="equi-icon-input" name="call" item-left></ion-icon>
+      <span class="equi-normal-text" (click)="openOptionsTelephone($event, telefono.Numero)">{{telefono.Numero}}</span>
+      <ion-note class="equi-principal-color equi-italic-text" item-right>
+        {{telefono.Tipo_Numero.Descripcion}}
+      </ion-note>
+    </ion-item>
 
-        <ion-item *ngIf="establo.Direccion != ''">
-            <ion-icon name="flag" class="equi-icon-input" item-left></ion-icon>
-            <span class="equi-normal-text">{{establo.Direccion}}</span>
-        </ion-item>
+    <ion-item *ngIf="establo.Direccion != ''">
+      <ion-icon name="flag" class="equi-icon-input" item-left></ion-icon>
+      <span class="equi-normal-text">{{establo.Direccion}}</span>
+    </ion-item>
 
-        <ion-item *ngIf="establo.Latitud && establo.Longitud" text-wrap>
-            <img [src]="URL_API_GOOGLE + '/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"
-            />
-        </ion-item>
+    <ion-item *ngIf="establo.Latitud && establo.Longitud" text-wrap>
+      <a [href]="sanitize('geo://?q=' + establo.Latitud + ',' + establo.Longitud)">
+        <img class="equi-map-establo"
+             [src]="URL_API_GOOGLE + '/staticmap?center=' + establo.Latitud + ',' + establo.Longitud + '&zoom=18&size=640x400&markers=color:red%7C' + establo.Latitud + ',' + establo.Longitud + '&key=' + KEY_GOOGLE"/>
+      </a>
+    </ion-item>
 
-        <ion-item>
-            <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
-            <a class="equi-principal-color" (click)="editCaballos()">
-                <span class="equi-normal-text">{{establo.Caballo.length}} {{ 'PANT016_LBL_CAB' | translate }}</span>
-            </a>
-        </ion-item>
-    </ion-list>
+    <ion-item>
+      <ion-icon name="list-box" class="equi-icon-input" item-left></ion-icon>
+      <a class="equi-principal-color" (click)="editCaballos()">
+        <span class="equi-normal-text">{{establo.Caballo.length}} {{ 'PANT016_LBL_CAB' | translate }}</span>
+      </a>
+    </ion-item>
+  </ion-list>
 </ion-content>

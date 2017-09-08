@@ -14,12 +14,14 @@ export class EquiModalGrupos implements OnInit {
   private gruposInput: any;
   private funcionGrupos: Promise<any>; //Esta la ejecutamos
   showSpinner: boolean;
+  isFilter: boolean;
 
   constructor(private commonService: CommonService,
               public navParams: NavParams,
               public viewController: ViewController,
               private languageService: LanguageService) {
     this.grupos = [];
+    this.isFilter = false;
     this.showSpinner = true;
   }
 
@@ -44,10 +46,20 @@ export class EquiModalGrupos implements OnInit {
   }
 
   filter(evt: any) {
-    let value: string = evt.target.value;
+    this.isFilter = false;
+    this.gruposRespaldo.forEach(g => {
+      g.grupo.DescripcionFilter = g.grupo.Descripcion;
+    });
+    let value: string = evt ? evt.target.value : null;
     if (value) {
       this.grupos = this.gruposRespaldo.filter(g => {
-        return g.grupo.Descripcion.toUpperCase().indexOf(value.toUpperCase()) > -1;
+        let indexMatchGrupo = g.grupo.Descripcion.toUpperCase().indexOf(value.toUpperCase());
+        if (indexMatchGrupo > -1) {
+          let textReplace = g.grupo.Descripcion.substring(indexMatchGrupo, indexMatchGrupo + value.length);
+          g.grupo.DescripcionFilter = g.grupo.Descripcion.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchGrupo > -1;
       });
     } else {
       this.grupos = this.gruposRespaldo;
@@ -75,7 +87,7 @@ export class EquiModalGrupos implements OnInit {
             grupo: grupo
           }
         });
-        this.grupos = this.gruposRespaldo;
+        this.filter(null);
         this.showSpinner = false;
       }).catch(err => {
       this.showSpinner = false;

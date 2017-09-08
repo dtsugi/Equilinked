@@ -49,11 +49,13 @@
       <ion-card-content>
         <ion-grid>
           <ion-row>
-            <ion-col col-8 class="equi-title-form equi-title-note">
-              {{n.nota.Titulo}}
+            <ion-col col-8 class="equi-title-note">
+              <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form"
+                    [innerHTML]="n.nota.TituloFilter"></span>
             </ion-col>
             <ion-col col-4 class="text-align-right">
-              <ion-icon *ngIf="!modoEdicion && n.nota.Activa" class="equi-principal-color"
+              <ion-icon *ngIf="!modoEdicion && n.nota.Activa"
+                        [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
                         name="notifications"></ion-icon>
               <ion-icon *ngIf="!modoEdicion && !n.nota.Activa" class="equi-edit"
                         name="ios-notifications-off"></ion-icon>
@@ -63,10 +65,10 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col col-8 class="equi-col-note">{{n.nota.Descripcion}}</ion-col>
-            <ion-col col-4 class="text-align-right equi-principal-color">
-              {{n.nota.Fecha}}
-            </ion-col>
+            <ion-col col-8 class="equi-col-note" [ngClass]="{'equi-edit': isFilter}"
+                     [innerHTML]="n.nota.DescripcionFilter"></ion-col>
+            <ion-col col-4 [ngClass]="{'equi-edit': isFilter, 'equi-principal-color': !isFilter}"
+                     class="text-align-right" [innerHTML]="n.nota.FechaFilter"></ion-col>
           </ion-row>
         </ion-grid>
       </ion-card-content>

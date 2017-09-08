@@ -22,6 +22,7 @@ export class CaballosInd implements OnDestroy, OnInit {
   session: UserSessionEntity;
   isDeleting: boolean = false;
   labels: any = {};
+  isFilter: boolean;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -31,6 +32,7 @@ export class CaballosInd implements OnDestroy, OnInit {
               private _securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
     this.caballoIdSelected = 0; //No hay
     languageService.loadLabels().then(labels => this.labels = labels);
   }
@@ -53,8 +55,9 @@ export class CaballosInd implements OnDestroy, OnInit {
     this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
       .subscribe(res => {
         this.loading = false;
-        this.caballosList = res;
+        //this.caballosList = res;
         this.caballos = res;
+        this.findCaballos(null);
       }, error => {
         console.log(error);
         this.loading = false;
@@ -64,10 +67,26 @@ export class CaballosInd implements OnDestroy, OnInit {
 
   // BÚSQUEDA EN LISTADO
   findCaballos(ev: any) {
-    let value: string = ev.target.value;
-    if (value && value !== null) {
+    this.isFilter = false;
+    this.caballos.forEach(caballo => {
+      caballo.NombreFilter = caballo.Nombre;
+      caballo.EstabloFilter = caballo.Establo ? caballo.Establo.Nombre : null;
+    });
+    let value: string = ev ? ev.target.value : null;
+    if (value) {
       this.caballosList = this.caballos.filter(caballo => {
-        return caballo.Nombre.toUpperCase().indexOf(value.toUpperCase()) > -1;
+        let indexMatchCaballo = caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = caballo.Establo ? (caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          caballo.NombreFilter = caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          caballo.EstabloFilter = caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilter = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
       });
     } else {
       this.caballosList = this.caballos;

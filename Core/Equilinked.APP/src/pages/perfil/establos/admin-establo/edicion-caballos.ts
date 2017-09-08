@@ -22,6 +22,8 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   grupo: any;
   modoEdicion: boolean;
   loading: boolean;
+  isFilterView: boolean;
+  isFilterEdit: boolean;
 
   constructor(private commonService: CommonService,
               private establosService: EstablosService,
@@ -31,6 +33,8 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
               private languageService: LanguageService,
               private securityService: SecurityService) {
     this.loading = true;
+    this.isFilterView = false;
+    this.isFilterEdit = false;
     this.modoEdicion = false;
     this.establoCabllos = new Array<any>();
   }
@@ -74,15 +78,57 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   }
 
   filterCaballos(evt: any): void {
-    this.establoCabllos = this.establosService.filterEstabloCaballosByNombre(
-      evt.target.value, this.establoCaballosRespaldo
-    );
+    this.isFilterView = false;
+    this.establoCaballosRespaldo.forEach(caballo => {
+      caballo.NombreFilter = caballo.Nombre;
+      caballo.EstabloFilter = caballo.Establo ? caballo.Establo.Nombre : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.establoCabllos = this.establoCaballosRespaldo.filter(caballo => {
+        let indexMatchCaballo = caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = caballo.Establo ? (caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          caballo.NombreFilter = caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          caballo.EstabloFilter = caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilterView = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.establoCabllos = this.establoCaballosRespaldo;
+    }
   }
 
   filterCaballosForEdition(evt: any): void {
-    this.establoCaballosEdicion = this.establosService.filterEstabloCaballosForEdition(
-      evt.target.value, this.establoCaballosEdicionResp
-    );
+    this.isFilterEdit = false;
+    this.establoCaballosEdicionResp.forEach(cab => {
+      cab.caballo.NombreFilter = cab.caballo.Nombre;
+      cab.caballo.EstabloFilter = cab.caballo.Establo ? cab.caballo.Establo.Nombre : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) {
+      this.establoCaballosEdicion = this.establoCaballosEdicionResp.filter(cab => {
+        let indexMatchCaballo = cab.caballo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchEstablo = cab.caballo.Establo ? (cab.caballo.Establo.Nombre.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchCaballo > -1) {
+          let textReplace = cab.caballo.Nombre.substring(indexMatchCaballo, indexMatchCaballo + value.length);
+          cab.caballo.NombreFilter = cab.caballo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (cab.caballo.Establo && indexMatchEstablo > -1) {
+          let textReplace = cab.caballo.Establo.Nombre.substring(indexMatchEstablo, indexMatchEstablo + value.length);
+          cab.caballo.EstabloFilter = cab.caballo.Establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        this.isFilterEdit = true;
+        return indexMatchCaballo > -1 || indexMatchEstablo > -1;
+      });
+    } else {
+      this.establoCaballosEdicion = this.establoCaballosEdicionResp;
+    }
   }
 
   save(): void {
@@ -119,14 +165,14 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     this.establosService.getCaballosByEstablo(this.establo.ID, 1)
       .then(caballos => {
         this.loading = false;
-        this.establoCaballosEdicion = caballos.map(c => {
+        this.establoCaballosEdicionResp = caballos.map(c => {
           return {
             seleccion: mapEstabloCaballos.has(c.ID),
             caballo: mapEstabloCaballos.has(c.ID) ?
               mapEstabloCaballos.get(c.ID) : c
           };
         });
-        this.establoCaballosEdicionResp = this.establoCaballosEdicion;
+        this.filterCaballosForEdition(null);
       }).catch(err => {
       console.error(err);
       this.loading = false;
@@ -146,8 +192,8 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     this.loading = true;
     this.establosService.getCaballosByEstabloAndGrupo(this.session.PropietarioId, this.establo.ID, this.grupo.ID)
       .then(caballos => {
-        this.establoCabllos = caballos;
         this.establoCaballosRespaldo = caballos;
+        this.filterCaballos(null);
         this.loading = false;
       }).catch(err => {
       console.error(err);
@@ -160,8 +206,8 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     this.loading = true;
     this.establosService.getCaballosByEstablo(this.establo.ID, 2)
       .then(establoCaballos => {
-        this.establoCabllos = establoCaballos;
         this.establoCaballosRespaldo = establoCaballos;
+        this.filterCaballos(null);
         this.loading = false;
       }).catch(err => {
       console.error(err);

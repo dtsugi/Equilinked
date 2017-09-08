@@ -1,12 +1,14 @@
 import {Injectable} from "@angular/core";
 import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/map";
+import 'rxjs/add/operator/timeout';
 import "rxjs/add/operator/toPromise";
 import {AppConfig} from "../app/app.config";
-import {Promisify} from "@ionic/app-scripts/dist/util/promisify";
 
 @Injectable()
 export class EstablosService {
+
+  private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private urlPropietarios: string = AppConfig.API_URL + "api/propietarios";
   private urlEstablos: string = AppConfig.API_URL + "api/establos";
 
@@ -18,6 +20,7 @@ export class EstablosService {
     let params = new URLSearchParams();
     params.set("grupoId", grupoId.toString());
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
@@ -26,6 +29,7 @@ export class EstablosService {
     let url = this.urlPropietarios + "/" + propietarioId + "/establos";
     return this.http
       .get(url)
+      .timeout(this.requestTimeout)
       .map(establos => establos.json() as any[])
       .toPromise();
   }
@@ -34,6 +38,7 @@ export class EstablosService {
     let url = this.urlEstablos + "/" + establoId;
     return this.http
       .get(url)
+      .timeout(this.requestTimeout)
       .map(establo => establo.json())
       .toPromise();
   }
@@ -43,6 +48,7 @@ export class EstablosService {
     let params = new URLSearchParams();
     params.set("filtro", filtro.toString());
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
@@ -52,22 +58,29 @@ export class EstablosService {
     let params = new URLSearchParams();
     params.set("establo", "false");
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
 
   saveEstablo(establo: any): Promise<any> {
-    return this.http.post(this.urlEstablos, establo).toPromise();
+    return this.http.post(this.urlEstablos, establo)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   updateEstablo(establo: any): Promise<any> {
     let url = this.urlEstablos + "/" + establo.ID;
-    return this.http.put(url, establo).toPromise();
+    return this.http.put(url, establo)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   deleteEstablo(id: number): Promise<any> {
     let url: string = this.urlEstablos + "/" + id;
-    return this.http.delete(url).toPromise();
+    return this.http.delete(url)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   deleteEstablosByIds(ids: number[]): Promise<any> {
@@ -76,6 +89,7 @@ export class EstablosService {
       params.append("establosIds", id.toString());
     });
     return this.http.delete(this.urlEstablos, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 
@@ -84,6 +98,7 @@ export class EstablosService {
     let url = this.urlEstablos + "/GetAllEstabloCaballoByEstabloId/" + establoId;
     return this.http
       .get(url)
+      .timeout(this.requestTimeout)
       .map(establoCaballos => establoCaballos.json() as any[])
       .toPromise();
   }

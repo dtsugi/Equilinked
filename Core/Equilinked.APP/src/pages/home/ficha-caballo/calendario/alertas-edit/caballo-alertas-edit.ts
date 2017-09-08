@@ -1,54 +1,50 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {AlertController, Events, ModalController, NavController, NavParams} from "ionic-angular";
 import {AlertaService} from "../../../../../services/alerta.service";
 import {CommonService} from "../../../../../services/common.service";
 import {LanguageService} from '../../../../../services/language.service';
 import {RecordatorioService} from "../../../../../services/recordatorio.service";
 import {SecurityService} from "../../../../../services/security.service";
+import {Alerta} from "../../../../../model/alerta";
 import {UserSessionEntity} from "../../../../../model/userSession";
 import {ConstantsConfig} from "../../../../../app/utils";
 import {EquiModalRecordatorio} from "../../../../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import moment from "moment";
 
 @Component({
-  templateUrl: "edicion-evento.html",
+  templateUrl: "caballo-alertas-edit.html",
   providers: [LanguageService, AlertaService, CommonService, RecordatorioService, SecurityService]
 })
-export class EdicionEventoCaballoPage implements OnInit {
+export class CaballoAlertasEditPage implements OnDestroy, OnInit {
   private session: UserSessionEntity;
   private caballo: any;
-  alerta: any;
+  alerta: Alerta;
+  tiposAlerta: Array<any>;
   recordatorios: Array<any>;
   labels: any = {};
 
   constructor(private alertController: AlertController,
               private alertaService: AlertaService,
-              private events: Events,
               private commonService: CommonService,
+              private events: Events,
               private modalController: ModalController,
               public navController: NavController,
               public navParams: NavParams,
               private recordatorioService: RecordatorioService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.alerta = new Alerta();
+    this.tiposAlerta = new Array<any>();
   }
 
   ngOnInit(): void {
-    this.session = this.securityService.getInitialConfigSession();
-    this.caballo = this.navParams.get("caballo");
-    this.alerta = this.navParams.get("alerta");
     this.languageService.loadLabels().then(labels => {
       this.labels = labels
+      this.session = this.securityService.getInitialConfigSession();
+      this.alerta = this.navParams.get("alerta");
+      this.caballo = this.navParams.get("caballo");
       if (!this.alerta) {
-        this.alerta = {};
-        this.alerta.Tipo = ConstantsConfig.ALERTA_TIPO_EVENTOS;
-        this.alerta.Propietario_ID = this.session.PropietarioId;
-        this.alerta.AlertaCaballo = [{Caballo_ID: this.caballo.ID}];
-        this.alerta.AlertaRecordatorio = [];
-        this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
-        this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
-        this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
-        this.alerta.HoraFinal = moment().format("HH:mm:ss");
+        this.alerta = new Alerta();
       } else {
         let di = new Date(this.alerta.FechaNotificacion);
         this.alerta.FechaNotificacion = moment(di).format("YYYY-MM-DD");
@@ -63,12 +59,30 @@ export class EdicionEventoCaballoPage implements OnInit {
           });
         }
       }
-      this.loadPage();
+      this.loadPage();//Cargar todo lo que necesita la pantalla
     });
   }
 
-  cancel(): void {
+  ngOnDestroy(): void {
+  }
+
+  goBack(): void {
     this.navController.pop();
+  }
+
+  changeTipoAlerta(evt: any): void {
+    this.alerta = new Alerta();
+    this.alerta.Propietario_ID = this.session.PropietarioId;
+    this.alerta.Tipo = evt;//Asignar el tipo elegido
+    this.alerta.AlertaGrupal = false;
+    this.alerta.AlertaCaballo = [{Caballo_ID: this.caballo.ID}];
+    this.alerta.AlertaGrupo = [];
+    this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
+    this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
+    if(this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+      this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
+      this.alerta.HoraFinal = moment().format("HH:mm:ss");
+    }
   }
 
   viewRecordatorios(): void {
@@ -78,8 +92,8 @@ export class EdicionEventoCaballoPage implements OnInit {
     this.alertController.create({
       inputs: inputs,
       buttons: [
-        {text: this.labels["PANT010_BTN_CAN"], role: "cancel"},
-        {text: this.labels["PANT010_BTN_ACE"], handler: this.callbackViewRecordatorios}
+        {text: this.labels["PANT037_BTN_CAN"], role: "cancel"},
+        {text: this.labels["PANT037_BTN_ACE"], handler: this.callbackViewRecordatorios}
       ]
     }).present();
   }
@@ -88,26 +102,42 @@ export class EdicionEventoCaballoPage implements OnInit {
     this.alerta.AlertaRecordatorio = new Array<any>();
   }
 
+  /*Se requiere un ajuste posterior para menejar correctamente la hora */
   save(): void {
     console.log(this.alerta);
     this.alerta.FechaNotificacion = this.alerta.FechaNotificacion + " " + this.alerta.HoraNotificacion;
-    this.alerta.FechaFinal = this.alerta.FechaFinal + " " + this.alerta.HoraFinal;
+    if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+      this.alerta.FechaFinal = this.alerta.FechaFinal + " " + this.alerta.HoraFinal;
+    }
+    switch (this.alerta.Tipo) { //El titulo por el momento fijo
+      case ConstantsConfig.ALERTA_TIPO_DENTISTA:
+        this.alerta.Titulo = this.labels["PANT037_LBL_VIDEN"];
+        break;
+      case ConstantsConfig.ALERTA_TIPO_HERRAJE:
+        this.alerta.Titulo = this.labels["PANT037_LBL_VIHE"];
+        break;
+      case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
+        this.alerta.Titulo = this.labels["PANT037_LBL_VIDESP"];
+        break;
+    }
     let promise;
     if (this.alerta.ID) {
       promise = this.alertaService.updateAlerta(this.session.PropietarioId, this.alerta);
     } else {
       promise = this.alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
-    this.commonService.showLoading(this.labels["PANT010_ALT_PRO"]);
+    this.commonService.showLoading(this.labels["PANT037_ALT_PRO"]);
     promise.then(() => {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
-        this.events.publish("notificacion:evento:caballo:refresh");
-        this.events.publish("notificaciones:caballo:refresh");
+        this.events.publish("calendario:caballo:notificaciones");//refrescar notificaciones de calendario grupal
         this.events.publish("notificaciones:refresh");
+        if (this.alerta.ID) {
+          this.events.publish("calendario:caballo:notificacion");//refrescar detalle de notificacion del calendario grupal
+        }
       });
     }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRGUA"]);
+      this.commonService.ShowErrorHttp(err, this.labels["PANT037_MSG_ERRGU"]);
     });
   }
 
@@ -130,7 +160,7 @@ export class EdicionEventoCaballoPage implements OnInit {
           this.addRecordatorio(recordatorioPersonalizado);//lo agregamos a la alerta
         }
       });
-      modal.present(); //Abrir!
+      modal.present();
     }
   }
 
@@ -145,13 +175,28 @@ export class EdicionEventoCaballoPage implements OnInit {
   }
 
   private loadPage(): void {
-    this.commonService.showLoading(this.labels["PANT010_ALT_PRO"]);
-    this.recordatorioService.getAllRecordatorios()
-      .then(recordatorios => {
-        this.recordatorios = recordatorios;
-        this.commonService.hideLoading();
-      }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRCA"]);
+    this.commonService.showLoading(this.labels["PANT037_ALT_PRO"]);
+    this.loadTiposAlerta().then(tiposAlerta => {
+      this.tiposAlerta = tiposAlerta;
+      return this.recordatorioService.getAllRecordatorios();
+    }).then(recordatorios => {
+      this.recordatorios = recordatorios;
+      this.commonService.hideLoading();
+    }).catch(err => {
+      this.commonService.ShowErrorHttp(err, this.labels["PANT037_MSG_ERR"]);
+    });
+  }
+
+  private loadTiposAlerta(): Promise<Array<any>> {
+    return new Promise((resolve, reject) => {
+      let tiposAlerta: Array<any> = [
+        {tipo: ConstantsConfig.ALERTA_TIPO_EVENTOS, descripcion: this.labels["PANT037_LBL_TEV"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_HERRAJE, descripcion: this.labels["PANT037_LBL_THE"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, descripcion: this.labels["PANT037_LBL_TDES"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_DENTISTA, descripcion: this.labels["PANT037_LBL_TDEN"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, descripcion: this.labels["PANT037_LBL_TNO"]}
+      ]
+      resolve(tiposAlerta);
     });
   }
 }

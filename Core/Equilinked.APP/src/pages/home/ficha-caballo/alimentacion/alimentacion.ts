@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
 import {NavController, NavParams, PopoverController} from 'ionic-angular';
 import {CommonService} from '../../../../services/common.service';
 import {AlimentacionService} from '../../../../services/alimentacion.service';
@@ -26,34 +25,36 @@ export class AlimentacionPage {
               private _alimentacionService: AlimentacionService,
               private languageService: LanguageService) {
     this.edicion = true;
-    languageService.loadLabels().then(labels => this.labels = labels);
   }
 
   ngOnInit() {
     this.alimentacion = new Alimentacion();
-    if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
-      this.idCaballo = this.navParams.get("idCaballoSelected");
-      this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
-      console.log(this.idCaballo);
-      this.getAlimentacionByIdCaballo(this.idCaballo);
-    }
+    this.languageService.loadLabels().then(labels => {
+      this.labels = labels;
+      if (this._commonService.IsValidParams(this.navParams, ["idCaballoSelected", "nombreCaballoSelected"])) {
+        this.idCaballo = this.navParams.get("idCaballoSelected");
+        this.nombreCaballo = this.navParams.get("nombreCaballoSelected");
+        this.getAlimentacionByIdCaballo(this.idCaballo);
+      }
+    });
   }
 
   getAlimentacionByIdCaballo(idCaballo) {
     this.edicion = false;
     this._commonService.showLoading(this.labels["PANT008_ALT_CARG"]);
     this._alimentacionService.getByCaballoId(idCaballo)
-      .subscribe(res => {
-        this._commonService.hideLoading();
+      .toPromise()
+      .then(res => {
         if (res) {
+          this._commonService.hideLoading();
           this.alimentacion = res;
         } else {
           this._commonService.ShowInfo(this.labels["PANT008_MSG_NOALI"]);
         }
         this.alimentacion.Caballo_ID = this.idCaballo;
-      }, error => {
-        this._commonService.ShowErrorHttp(error, this.labels["PANT008_MSG_ERRAL"]);
-      });
+      }).catch(err => {
+      this._commonService.ShowErrorHttp(err, this.labels["PANT008_MSG_ERRAL"]);
+    });
   }
 
   presentPopover(ev) {

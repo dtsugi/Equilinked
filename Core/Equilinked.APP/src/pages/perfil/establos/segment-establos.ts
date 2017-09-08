@@ -7,6 +7,7 @@ import {EstablosService} from "../../../services/establos.service";
 import {AdminEstablosPage} from "./admin-establo/admin-establo";
 import {InfoEstabloPage} from "./admin-establo/info-establo";
 import {LanguageService} from '../../../services/language.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: "segment-establos",
@@ -27,15 +28,18 @@ export class SegmentEstablos implements OnDestroy, OnInit {
   establosRespaldo: any[];
   labels: any = {};
   loading: boolean;
+  isFilter: boolean;
 
   constructor(private events: Events,
               private alertController: AlertController,
               private commonService: CommonService,
+              private domSanitizer: DomSanitizer,
               private establosService: EstablosService,
               private navCtrl: NavController,
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
+    this.isFilter = false;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
 
@@ -58,14 +62,14 @@ export class SegmentEstablos implements OnDestroy, OnInit {
     this.loading = true;
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
-        this.establos = establos.map(e => {
+        this.establosRespaldo = establos.map(e => {
           return {
             seleccion: false,
             establo: e
           };
         });
-        this.establosRespaldo = this.establos;
         this.loading = false;
+        this.filter(null);
       }).catch(err => {
       this.commonService.ShowInfo(this.labels["PANT026_MSG_ERRES"]);
       this.loading = false;
@@ -73,8 +77,30 @@ export class SegmentEstablos implements OnDestroy, OnInit {
   }
 
   filter(evt: any): void {
-    this.establos = this.establosService
-      .filterEstablosByNombreOrDireccion(evt.target.value, this.establosRespaldo);
+    this.isFilter = false;
+    this.establosRespaldo.forEach(est => { //Ajustamos los textos de todos
+      est.establo.NombreFilter = est.establo.Nombre;
+      est.establo.DireccionFilter = est.establo.Direccion ? est.establo.Direccion : null;
+    });
+    let value: string = evt ? evt.target.value : null;
+    if (value) { //Vemos si es necesario filtrar
+      this.establos = this.establosRespaldo.filter(est => {
+        let indexMatchNombre = est.establo.Nombre.toUpperCase().indexOf(value.toUpperCase());
+        let indexMatchDireccion = est.establo.Direccion ? (est.establo.Direccion.toUpperCase().indexOf(value.toUpperCase())) : -1;
+        if (indexMatchNombre > -1) {
+          let textReplace = est.establo.Nombre.substring(indexMatchNombre, indexMatchNombre + value.length);
+          est.establo.NombreFilter = est.establo.Nombre.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        if (est.establo.Direccion && indexMatchDireccion > -1) {
+          let textReplace = est.establo.Direccion.substring(indexMatchDireccion, indexMatchDireccion + value.length);
+          est.establo.DireccionFilter = est.establo.Direccion.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
+        }
+        return indexMatchNombre > -1 || indexMatchDireccion > -1;
+      });
+      this.isFilter = true;
+    } else {
+      this.establos = this.establosRespaldo;
+    }
   }
 
   selectAll(): void {

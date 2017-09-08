@@ -1,11 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/map";
+import 'rxjs/add/operator/timeout';
 import "rxjs/add/operator/toPromise";
 import {AppConfig} from "../app/app.config";
 
 @Injectable()
 export class AlertaGrupoService {
+  private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private urlAlertas: string = AppConfig.API_URL + "api/propietarios/"
   private urlAlertasGrupo: string = AppConfig.API_URL + "api/grupos/";
 
@@ -19,10 +21,11 @@ export class AlertaGrupoService {
       params.append("alertasIds", id.toString());
     });
     return this.http.delete(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 
-  getAlertasByGrupoId(propietarioId: number, grupoId: number, inicio: string, fin: string, tipos: Array<number>, cantidad: number, orden: number): Promise<Array<any>> {
+  getAlertasByGrupoId(propietarioId: number, grupoId: number, inicio: string, fin: string, tipos: Array<number>, cantidad: number, orden: number, todosTipos?: boolean): Promise<Array<any>> {
     let url: string = this.urlAlertas + propietarioId + "/grupos/" + grupoId + "/alertas";
     let params = new URLSearchParams();
     if (inicio != null) {
@@ -30,6 +33,9 @@ export class AlertaGrupoService {
     }
     if (fin != null) {
       params.set("fin", fin);
+    }
+    if (todosTipos != null) {
+      params.set("todosTipos", todosTipos ? 'true' : 'false');
     }
     if (tipos != null) {
       tipos.forEach(tipo => {
@@ -43,12 +49,14 @@ export class AlertaGrupoService {
       params.set("orden", orden.toString());
     }
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(alertas => alertas.json() as Array<any>).toPromise();
   }
 
   getAlertaById(grupoId: number, alertaId: number): Promise<any> {
     let url: string = this.urlAlertasGrupo + grupoId + "/alertas/" + alertaId;
     return this.http.get(url)
+      .timeout(this.requestTimeout)
       .map(alerta => alerta.json())
       .toPromise();
   }
@@ -63,23 +71,30 @@ export class AlertaGrupoService {
       params.set("filtroAlerta", tipoFiltro.toString());
     }
     return this.http.get(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .map(alertas => alertas.json())
       .toPromise();
   }
 
   saveAlerta(alertaGrupo: any): Promise<any> {
     let url: string = this.urlAlertasGrupo + alertaGrupo.Grupo_ID + "/alertas";
-    return this.http.post(url, alertaGrupo).toPromise();
+    return this.http.post(url, alertaGrupo)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   updateAlerta(alertaGrupo: any): Promise<any> {
     let url: string = this.urlAlertasGrupo + alertaGrupo.Grupo_ID + "/alertas/" + alertaGrupo.ID;
-    return this.http.put(url, alertaGrupo).toPromise();
+    return this.http.put(url, alertaGrupo)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   deleteAlerta(alertaGrupo: any): Promise<any> {
     let url: string = this.urlAlertasGrupo + alertaGrupo.Grupo_ID + "/alertas/" + alertaGrupo.ID;
-    return this.http.delete(url).toPromise();
+    return this.http.delete(url)
+      .timeout(this.requestTimeout)
+      .toPromise();
   }
 
   deleteAlertasByIds(grupoId: number, ids: number[]): Promise<any> {
@@ -90,6 +105,7 @@ export class AlertaGrupoService {
       params.append("alertaGrupoId", id.toString());
     });
     return this.http.delete(url, new RequestOptions({search: params}))
+      .timeout(this.requestTimeout)
       .toPromise();
   }
 
