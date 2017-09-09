@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Events, NavController, NavParams, PopoverController} from "ionic-angular";
+import {Events, NavController, NavParams, Platform, PopoverController} from "ionic-angular";
 import {DomSanitizer} from '@angular/platform-browser';
 import {EstablosService} from "../../../../../../../services/establos.service";
 import {CommonService} from "../../../../../../../services/common.service";
@@ -32,6 +32,7 @@ export class DetalleEstabloPage implements OnDestroy, OnInit {
               private establosService: EstablosService,
               private navController: NavController,
               private navParams: NavParams,
+              private platform: Platform,
               private popoverController: PopoverController,
               private languageService: LanguageService) {
   }

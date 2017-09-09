@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Events, ModalController, NavController, NavParams, PopoverController} from "ionic-angular";
+import {Events, ModalController, NavController, NavParams, Platform, PopoverController} from "ionic-angular";
 import {DomSanitizer} from '@angular/platform-browser';
 import {EstablosService} from "../../../../services/establos.service";
 import {CommonService} from "../../../../services/common.service";
@@ -28,6 +28,7 @@ export class UbicacionCaballoPage implements OnDestroy, OnInit {
               private navController: NavController,
               private navParams: NavParams,
               private languageService: LanguageService,
+              private platform: Platform,
               private popoverController: PopoverController) {
     languageService.loadLabels().then(labels => this.labels = labels);
   }
