@@ -92,8 +92,8 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
     this.alertController.create({
       inputs: inputs,
       buttons: [
-        {text: this.labels["PANT037_BTN_CAN"], role: "cancel"},
-        {text: this.labels["PANT037_BTN_ACE"], handler: this.callbackViewRecordatorios}
+        {text: this.labels["PANT038_BTN_CAN"], role: "cancel"},
+        {text: this.labels["PANT038_BTN_ACE"], handler: this.callbackViewRecordatorios}
       ]
     }).present();
   }
@@ -111,13 +111,13 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
     }
     switch (this.alerta.Tipo) { //El titulo por el momento fijo
       case ConstantsConfig.ALERTA_TIPO_DENTISTA:
-        this.alerta.Titulo = this.labels["PANT037_LBL_VIDEN"];
+        this.alerta.Titulo = this.labels["PANT038_LBL_VIDEN"];
         break;
       case ConstantsConfig.ALERTA_TIPO_HERRAJE:
-        this.alerta.Titulo = this.labels["PANT037_LBL_VIHE"];
+        this.alerta.Titulo = this.labels["PANT038_LBL_VIHE"];
         break;
       case ConstantsConfig.ALERTA_TIPO_DESPARACITACION:
-        this.alerta.Titulo = this.labels["PANT037_LBL_VIDESP"];
+        this.alerta.Titulo = this.labels["PANT038_LBL_VIDESP"];
         break;
     }
     let promise;
@@ -126,7 +126,7 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
     } else {
       promise = this.alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
-    this.commonService.showLoading(this.labels["PANT037_ALT_PRO"]);
+    this.commonService.showLoading(this.labels["PANT038_ALT_PRO"]);
     promise.then(() => {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
@@ -137,7 +137,7 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
         }
       });
     }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT037_MSG_ERRGU"]);
+      this.commonService.ShowErrorHttp(err, this.labels["PANT038_MSG_ERRGU"]);
     });
   }
 
@@ -175,7 +175,7 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
   }
 
   private loadPage(): void {
-    this.commonService.showLoading(this.labels["PANT037_ALT_PRO"]);
+    this.commonService.showLoading(this.labels["PANT038_ALT_PRO"]);
     this.loadTiposAlerta().then(tiposAlerta => {
       this.tiposAlerta = tiposAlerta;
       return this.recordatorioService.getAllRecordatorios();
@@ -183,18 +183,18 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
       this.recordatorios = recordatorios;
       this.commonService.hideLoading();
     }).catch(err => {
-      this.commonService.ShowErrorHttp(err, this.labels["PANT037_MSG_ERR"]);
+      this.commonService.ShowErrorHttp(err, this.labels["PANT038_MSG_ERR"]);
     });
   }
 
   private loadTiposAlerta(): Promise<Array<any>> {
     return new Promise((resolve, reject) => {
       let tiposAlerta: Array<any> = [
-        {tipo: ConstantsConfig.ALERTA_TIPO_EVENTOS, descripcion: this.labels["PANT037_LBL_TEV"]},
-        {tipo: ConstantsConfig.ALERTA_TIPO_HERRAJE, descripcion: this.labels["PANT037_LBL_THE"]},
-        {tipo: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, descripcion: this.labels["PANT037_LBL_TDES"]},
-        {tipo: ConstantsConfig.ALERTA_TIPO_DENTISTA, descripcion: this.labels["PANT037_LBL_TDEN"]},
-        {tipo: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, descripcion: this.labels["PANT037_LBL_TNO"]}
+        {tipo: ConstantsConfig.ALERTA_TIPO_EVENTOS, descripcion: this.labels["PANT038_LBL_TEV"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_HERRAJE, descripcion: this.labels["PANT038_LBL_THE"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, descripcion: this.labels["PANT038_LBL_TDES"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_DENTISTA, descripcion: this.labels["PANT038_LBL_TDEN"]},
+        {tipo: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, descripcion: this.labels["PANT038_LBL_TNO"]}
       ]
       resolve(tiposAlerta);
     });

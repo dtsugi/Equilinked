@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button class="equi-toolbar-btn" (click)="goBack()">Cancelar</button>
+      <button class="equi-toolbar-btn" (click)="goBack()">{{ 'PANT038_BTN_CAN' | translate }}</button>
     </ion-buttons>
 
     <ion-buttons right>
       <button class="equi-toolbar-btn"
               [disabled]="!perfilForm.valid || (alerta.AlertaCaballo.length == 0 && alerta.AlertaGrupo.length == 0)"
-              (click)="save()">Guardar
+              (click)="save()">{{ 'PANT038_BTN_GUA' | translate }}
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -21,8 +21,8 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-select name="TipoAlerta" class="equi-input-normal-text equi-select-width" required="true"
-                      placeholder="{{ 'PANT037_TXT_TIP' | translate }}"
-                      okText="{{ 'PANT037_BTN_ACE' | translate }}" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
+                      placeholder="{{ 'PANT038_TXT_TIP' | translate }}"
+                      okText="{{ 'PANT038_BTN_ACE' | translate }}" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
                       [(ngModel)]="alerta.Tipo"
                       (ngModelChange)="changeTipoAlerta($event)">
             <ion-option *ngFor="let tipoAlerta of tiposAlerta" [value]="tipoAlerta.tipo">{{tipoAlerta.descripcion}}
@@ -37,8 +37,8 @@
       <ion-row class="border-bottom" [hidden]="alerta.ID">
         <ion-col>
           <ion-select name="TipoAlerta" class="equi-input-normal-text equi-select-width" required="true"
-                      placeholder="{{ 'PANT037_TXT_TIP' | translate }}"
-                      okText="{{ 'PANT037_BTN_ACE' | translate }}" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
+                      placeholder="{{ 'PANT038_TXT_TIP' | translate }}"
+                      okText="{{ 'PANT038_BTN_ACE' | translate }}" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
                       [(ngModel)]="alerta.Tipo"
                       (ngModelChange)="changeTipoAlerta($event)">
             <ion-option *ngFor="let tipoAlerta of tiposAlerta" [value]="tipoAlerta.tipo">{{tipoAlerta.descripcion}}
@@ -53,7 +53,7 @@
         </ion-col>
         <ion-col>
           <ion-input style="padding-left: 5px;" name="NombreProfesional" class="equi-input-normal-text" type="text"
-                     placeholder="{{ 'PANT037_LBL_ALGQUI' | translate }}"
+                     placeholder="{{ 'PANT038_LBL_ALGQUI' | translate }}"
                      required="true" [(ngModel)]="alerta.NombreProfesional"></ion-input>
         </ion-col>
       </ion-row>
@@ -64,10 +64,10 @@
         </ion-col>
         <ion-col>
           <ion-datetime name="FechaNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_LBL_ALGF' | translate }}"
+                        placeholder="{{ 'PANT038_LBL_ALGF' | translate }}"
                         displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY"
-                        cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
+                        cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
                         required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -78,9 +78,9 @@
         </ion-col>
         <ion-col>
           <ion-datetime name="HoraNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_LBL_ALGH' | translate }}" displayFormat="h:mm A"
-                        pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}"
+                        placeholder="{{ 'PANT038_LBL_ALGH' | translate }}" displayFormat="h:mm A"
+                        pickerFormat="h mm A" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraNotificacion" required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -93,7 +93,7 @@
           <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
         </ion-col>
         <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
+          <span>{{alerta.Activa ? labels['PANT038_LBL_ACT'] : labels['PANT038_LBL_DESC']}}</span>
         </ion-col>
       </ion-row>
 
@@ -102,8 +102,8 @@
           <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
         </ion-col>
         <ion-col col-8 class="equi-col-center equi-input-normal-text">
-          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT037_LBL_ANTS' | translate }}</span>
-          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT037_TXT_REC' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT038_LBL_ANTS' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT038_TXT_REC' | translate }}</span>
         </ion-col>
         <ion-col col-2 class="col-center">
           <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" (click)="removeRecordatorio()"
@@ -119,7 +119,7 @@
         </ion-col>
         <ion-col>
           <ion-input style="padding-left: 5px;" name="Ubicacion" class="equi-input-normal-text" type="text"
-                     placeholder="{{ 'PANT037_TXT_UBI' | translate }}"
+                     placeholder="{{ 'PANT038_TXT_UBI' | translate }}"
                      [(ngModel)]="alerta.Ubicacion"></ion-input>
         </ion-col>
       </ion-row>
@@ -127,7 +127,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
-                        placeholder="{{ 'PANT037_TXT_NO' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_NO' | translate }}"
                         [(ngModel)]="alerta.Descripcion"></ion-textarea>
         </ion-col>
       </ion-row>
@@ -138,8 +138,8 @@
       <ion-row class="border-bottom" [hidden]="alerta.ID">
         <ion-col>
           <ion-select name="TipoAlerta" class="equi-input-normal-text equi-select-width" required="true"
-                      placeholder="{{ 'PANT037_TXT_TIP' | translate }}"
-                      okText="{{ 'PANT037_BTN_ACE' | translate }}" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
+                      placeholder="{{ 'PANT038_TXT_TIP' | translate }}"
+                      okText="{{ 'PANT038_BTN_ACE' | translate }}" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
                       [(ngModel)]="alerta.Tipo"
                       (ngModelChange)="changeTipoAlerta($event)">
             <ion-option *ngFor="let tipoAlerta of tiposAlerta" [value]="tipoAlerta.tipo">{{tipoAlerta.descripcion}}
@@ -151,7 +151,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-input name="Titulo" class="equi-input-title-note" type="text"
-                     placeholder="{{ 'PANT037_TXT_TI' | translate }}" required="true"
+                     placeholder="{{ 'PANT038_TXT_TI' | translate }}" required="true"
                      [(ngModel)]="alerta.Titulo"></ion-input>
         </ion-col>
       </ion-row>
@@ -159,7 +159,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
-                        placeholder="{{ 'PANT037_TXT_NO' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_NO' | translate }}"
                         [(ngModel)]="alerta.Descripcion"></ion-textarea>
         </ion-col>
       </ion-row>
@@ -170,10 +170,10 @@
         </ion-col>
         <ion-col>
           <ion-datetime name="FechaNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_LBL_ALGF' | translate }}"
+                        placeholder="{{ 'PANT038_LBL_ALGF' | translate }}"
                         displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY"
-                        cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
+                        cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
                         required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -184,9 +184,9 @@
         </ion-col>
         <ion-col>
           <ion-datetime name="HoraNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_LBL_ALGH' | translate }}" displayFormat="h:mm A"
-                        pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}"
+                        placeholder="{{ 'PANT038_LBL_ALGH' | translate }}" displayFormat="h:mm A"
+                        pickerFormat="h mm A" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraNotificacion" required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -199,7 +199,7 @@
           <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
         </ion-col>
         <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
+          <span>{{alerta.Activa ? labels['PANT038_LBL_ACT'] : labels['PANT038_LBL_DESC']}}</span>
         </ion-col>
       </ion-row>
 
@@ -208,8 +208,8 @@
           <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
         </ion-col>
         <ion-col col-8 class="equi-col-center equi-input-normal-text">
-          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT037_LBL_ANTS' | translate }}</span>
-          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT037_TXT_REC' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT038_LBL_ANTS' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT038_TXT_REC' | translate }}</span>
         </ion-col>
         <ion-col col-2 class="col-center">
           <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" (click)="removeRecordatorio()"
@@ -225,8 +225,8 @@
       <ion-row class="border-bottom" [hidden]="alerta.ID">
         <ion-col>
           <ion-select name="TipoAlerta" class="equi-input-normal-text equi-select-width" required="true"
-                      placeholder="{{ 'PANT037_TXT_TIP' | translate }}"
-                      okText="{{ 'PANT037_BTN_ACE' | translate }}" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
+                      placeholder="{{ 'PANT038_TXT_TIP' | translate }}"
+                      okText="{{ 'PANT038_BTN_ACE' | translate }}" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
                       [(ngModel)]="alerta.Tipo"
                       (ngModelChange)="changeTipoAlerta($event)">
             <ion-option *ngFor="let tipoAlerta of tiposAlerta" [value]="tipoAlerta.tipo">{{tipoAlerta.descripcion}}
@@ -238,7 +238,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-input name="Titulo" class="equi-input-title-note" type="text"
-                     placeholder="{{ 'PANT037_TXT_TI' | translate }}" required="true"
+                     placeholder="{{ 'PANT038_TXT_TI' | translate }}" required="true"
                      [(ngModel)]="alerta.Titulo"></ion-input>
         </ion-col>
       </ion-row>
@@ -246,7 +246,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
-                        placeholder="{{ 'PANT037_TXT_NO' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_NO' | translate }}"
                         [(ngModel)]="alerta.Descripcion"></ion-textarea>
         </ion-col>
       </ion-row>
@@ -257,17 +257,17 @@
         </ion-col>
         <ion-col col-5>
           <ion-datetime name="FechaNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_TXT_EVFI' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_EVFI' | translate }}"
                         displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY"
-                        cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
+                        cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}" max="2050" [(ngModel)]="alerta.FechaNotificacion"
                         required="true"></ion-datetime>
         </ion-col>
         <ion-col col-5>
           <ion-datetime name="FechaFin" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_TXT_EVFF' | translate }}" displayFormat="DD/MM/YYYY"
-                        pickerFormat="D MMMM YYYY" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_EVFF' | translate }}" displayFormat="DD/MM/YYYY"
+                        pickerFormat="D MMMM YYYY" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}"
                         max="2050" [(ngModel)]="alerta.FechaFinal" required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -278,16 +278,16 @@
         </ion-col>
         <ion-col col-5>
           <ion-datetime name="HoraNotificacion" class="equi-input-normal-text"
-                        placeholder="{{ 'PANT037_TXT_EVHI' | translate }}" displayFormat="h:mm A"
-                        pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_EVHI' | translate }}" displayFormat="h:mm A"
+                        pickerFormat="h mm A" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraNotificacion" required="true"></ion-datetime>
         </ion-col>
         <ion-col col-5>
-          <ion-datetime name="HoraFin" class="equi-input-normal-text" placeholder="{{ 'PANT037_TXT_EVHF' | translate }}"
+          <ion-datetime name="HoraFin" class="equi-input-normal-text" placeholder="{{ 'PANT038_TXT_EVHF' | translate }}"
                         displayFormat="h:mm A"
-                        pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT037_BTN_ACE' | translate }}"
+                        pickerFormat="h mm A" cancelText="{{ 'PANT038_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT038_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraFinal" required="true"></ion-datetime>
         </ion-col>
       </ion-row>
@@ -300,7 +300,7 @@
           <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
         </ion-col>
         <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
+          <span>{{alerta.Activa ? labels['PANT038_LBL_ACT'] : labels['PANT038_LBL_DESC']}}</span>
         </ion-col>
       </ion-row>
 
@@ -309,8 +309,8 @@
           <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
         </ion-col>
         <ion-col col-8 class="equi-col-center equi-input-normal-text">
-          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT037_LBL_ANTS' | translate }}</span>
-          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT037_TXT_REC' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length > 0">&nbsp;&nbsp;&nbsp;&nbsp;{{alerta.AlertaRecordatorio[0].Descripcion}}&nbsp;{{ 'PANT038_LBL_ANTS' | translate }}</span>
+          <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT038_TXT_REC' | translate }}</span>
         </ion-col>
         <ion-col col-2 class="col-center">
           <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" (click)="removeRecordatorio()"
@@ -326,7 +326,7 @@
         </ion-col>
         <ion-col>
           <ion-input style="padding-left: 5px;" name="Ubicacion" class="equi-input-normal-text" type="text"
-                     placeholder="{{ 'PANT037_TXT_UBI' | translate }}"
+                     placeholder="{{ 'PANT038_TXT_UBI' | translate }}"
                      [(ngModel)]="alerta.Ubicacion"></ion-input>
         </ion-col>
       </ion-row>
@@ -334,7 +334,7 @@
       <ion-row class="border-bottom">
         <ion-col>
           <ion-textarea name="Resultado" class="equi-input-normal-text" autoresize rows="3"
-                        placeholder="{{ 'PANT037_TXT_EVRES' | translate }}"
+                        placeholder="{{ 'PANT038_TXT_EVRES' | translate }}"
                         [(ngModel)]="alerta.Resultado"></ion-textarea>
         </ion-col>
       </ion-row>

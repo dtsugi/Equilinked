@@ -47,7 +47,7 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.indexSlidesMap = new Map<number, string>();
     this.segmentSelection = "ficha";
     this.grupo = {};
-    this.calendarOptions = {step: 1}; //este objeto se le pasa al calendar
+    this.calendarOptions = {step: 1, isAlertGroup: true}; //este objeto se le pasa al calendar
     this.parametrosCaballos = {modoEdicion: false, getCountSelected: null, grupoDefault: false};
   }
 

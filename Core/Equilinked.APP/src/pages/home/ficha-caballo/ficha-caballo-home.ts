@@ -49,7 +49,7 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
     this.slidesMap = new Map<string, number>();
     this.indexSlidesMap = new Map<number, string>();
     this.menu = "informacion";
-    this.calendarOptions = {step: 1};
+    this.calendarOptions = {step: 1, isAlertGroup: false};
   }
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
       let alertTypes: Array<any> = this.getAlertTypes();
-      alertTypes.unshift({name: "todas", checked: true});
+      alertTypes.unshift({name: this.labels["PANT003_LBL_TODS"], checked: true});
       this.optionsTypeAlerts = {modified: false, alertTypes: alertTypes};
       this.getInfoCaballo(true);
     });
@@ -228,11 +228,11 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
 
   private getAlertTypes(): Array<any> {
     return [
-      {id: ConstantsConfig.ALERTA_TIPO_EVENTOS, name: "eventos", checked: true},
-      {id: ConstantsConfig.ALERTA_TIPO_HERRAJE, name: "herraje", checked: true},
-      {id: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, name: "desparacitaciones", checked: true},
-      {id: ConstantsConfig.ALERTA_TIPO_DENTISTA, name: "dentista", checked: true},
-      {id: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, name: "notas", checked: true}
+      {id: ConstantsConfig.ALERTA_TIPO_EVENTOS, name: this.labels["PANT003_LBL_EVTS"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_HERRAJE, name: this.labels["PANT003_LBL_HERR"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_DESPARACITACION, name: this.labels["PANT003_LBL_DESP"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_DENTISTA, name: this.labels["PANT003_LBL_DENT"], checked: true},
+      {id: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS, name: this.labels["PANT003_LBL_NOTS"], checked: true},
     ];
   }
 }

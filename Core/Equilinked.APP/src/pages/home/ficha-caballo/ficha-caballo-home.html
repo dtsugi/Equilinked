@@ -33,7 +33,7 @@
       <button ion-button class="equi-toolbar-btn"
               *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
               (click)="showFilterAlertTypes($event)">
-        Ver
+        {{ "PANT003_BTN_VER" | translate }}
       </button>
       <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
               (click)="newAlert()">
@@ -42,7 +42,7 @@
       <button ion-button class="equi-toolbar-btn"
               *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_ALERT"
               (click)="editAlert()">
-        Editar
+        {{ "PANT003_BTN_EDIT" | translate }}
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -55,7 +55,7 @@
       {{ "PANT003_BTN_FOT" | translate }}
     </ion-segment-button>
     <ion-segment-button value="calendario">
-      CALENDARIO
+      {{ "PANT003_BTN_CALE" | translate }}
     </ion-segment-button>
   </ion-segment>
 </ion-header>
@@ -161,17 +161,11 @@
 
     <!-- seccion de fotos -->
     <ion-slide class="equi-content-slide-start">
-      Fotos
+      {{ "PANT003_BTN_FOT" | translate }}
     </ion-slide>
 
     <!-- seccion de calendario -->
     <ion-slide class="equi-content-slide-start">
-      <!--
-            <segment-calendario-grupo *ngIf="grupo.ID" [grupo]="grupo"
-                                [optionsAlertTypes]="optionsTypeAlerts"
-                                [calendarOptions]="calendarOptions">
-      </segment-calendario-grupo>
-      -->
       <segment-calendario-caballo *ngIf="optionsTypeAlerts && calendarOptions" [caballo]="caballo"
                                   [optionsAlertTypes]="optionsTypeAlerts"
                                   [calendarOptions]="calendarOptions"></segment-calendario-caballo>

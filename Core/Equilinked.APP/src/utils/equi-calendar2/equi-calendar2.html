@@ -86,7 +86,7 @@
     <ion-icon name="ios-home" class="equi-principal-color"></ion-icon>
     &nbsp;&nbsp; {{selectedAlert.Ubicacion}}
   </p>
-  <p class="equi-normal-text">
+  <p class="equi-normal-text" *ngIf="options.isAlertGroup">
     <ion-icon name="list-box" class="equi-principal-color"></ion-icon>
     &nbsp;&nbsp; {{selectedAlert.AllCaballos ? labels['COMP001_LBL_TOD'] : selectedAlert.AlertaCaballo.length + ' ' +
     labels['COMP001_LBL_CAB']}}
