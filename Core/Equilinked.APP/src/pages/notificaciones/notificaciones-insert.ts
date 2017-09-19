@@ -99,11 +99,12 @@ export class NotificacionesInsertPage {
     }
     promise.then(() => {
       this._commonService.hideLoading();
-      this.events.publish("notificaciones:refresh");
       this.events.publish("notificaciones:notas:caballo:refresh");
-      if (this.alerta.ID != null && this.alerta.ID > 0) {
-        this.events.publish("notificacion:nota:caballo:refresh");
-      }
+      this.events.publish("notificacion:nota:caballo:refresh");
+      this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+      this.events.publish("notificaciones:refresh");//refrescar
+      this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+      this.events.publish("calendario:refresh");//refrescar alertas calendario
       this.navCtrl.pop();
     }).catch(ex => {
       this._commonService.ShowErrorHttp(ex, this.labels["PANT010_MSG_ERRGUA"]);

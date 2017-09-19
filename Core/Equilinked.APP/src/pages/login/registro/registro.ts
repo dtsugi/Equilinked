@@ -50,7 +50,12 @@ export class RegistroPage {
       }).catch(err => {
       console.error(JSON.stringify(err));
       if (err.status === 400) {
-        this.commonService.ShowErrorHttp(err, "El nombre de usuario ya se encuentra en uso");
+        let body = JSON.parse(err._body);
+        if (body.Message == 1) {
+          this.commonService.ShowErrorHttp(err, "El nombre de usuario ya se encuentra en uso");
+        } else {
+          this.commonService.ShowErrorHttp(err, "El correo electrónico ya se encuentra en uso");
+        }
       } else {
         this.commonService.ShowErrorHttp(err, "Error al crear la cuenta");
       }

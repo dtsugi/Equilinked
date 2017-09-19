@@ -167,7 +167,8 @@ export class NotasFichaPage implements OnInit, OnDestroy {
               this.grupo.ID, this.notasRespaldo.filter(e => e.seleccion).map(e => e.nota.ID)
             ).then(() => {
               this.getNotasByGrupo();//
-              this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
+              this.events.publish("notificaciones:refresh");//Actualimamos area de ontificacionesario
+              this.events.publish("calendario:refresh");//refrescar alertas calendario
               this.commonService.hideLoading();
               this.modoEdicion = false;
             }).catch(err => {

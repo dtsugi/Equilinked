@@ -6,6 +6,7 @@ import {PopoverDatosPage} from "./datos/pop-over/pop-over-datos";
   templateUrl: "perfil.html"
 })
 export class PerfilPage implements OnInit {
+  private HEIGHT_FOR_REMOVE: number = 98 + 64; //98barra superior 64 barra inferior
   private slidesMap: Map<string, number>;
   private indexSlidesMap: Map<number, string>;
   private lastSlide: string;
@@ -23,8 +24,7 @@ export class PerfilPage implements OnInit {
   }
 
   ngOnInit() {
-    //this.slides.threshold = 120;
-    //this.slides.simulateTouch = true;
+    this.adjustHeightSlides();
     this.lastSlide = "datos";
     this.slidesMap.set("datos", 0);
     this.slidesMap.set("establos", 1);
@@ -72,5 +72,13 @@ export class PerfilPage implements OnInit {
   /*Solicitar confirmacion de eliminacion en "ESTABLOS"*/
   deleteEstablos(): void {
     this.events.publish("establos:eliminacion:confirmed");
+  }
+
+  private adjustHeightSlides(): void {
+    let slides = document.querySelectorAll(".perfil.equi-content-slide-scroll");
+    for (let i = 0; i < slides.length; i++) {
+      let element: any = slides[i];
+      element.style.height = (window.innerHeight - this.HEIGHT_FOR_REMOVE) + "px";
+    }
   }
 }

@@ -143,6 +143,7 @@ export class AlertasFicha implements OnInit, OnDestroy {
       .then(() => {
         this.getAlertasByGrupo();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.commonService.hideLoading();
       }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labelsX["PANT018_MSG_ERRELI"]);

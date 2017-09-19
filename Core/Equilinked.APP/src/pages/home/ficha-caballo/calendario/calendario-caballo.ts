@@ -18,11 +18,14 @@ import 'moment/locale/es';
 })
 export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
   private session: UserSessionEntity;
+  protected CALENDAR_STEP_YEAR: number = ConstantsConfig.CALENDAR_STEP_YEAR;
+  protected CALENDAR_STEP_ALERT: number = ConstantsConfig.CALENDAR_STEP_ALERT;
   @Input("caballo") caballo: any;
   @Input("optionsAlertTypes") optionsAlertTypes: any;
   @Input("calendarOptions") calendarOptions: any;
   @ViewChild(EquiCalendar2) calendar: EquiCalendar2;
   labels: any = {};
+  selectedYear: string;
 
   constructor(private alertaService: AlertaService,
               public navController: NavController,
@@ -31,6 +34,7 @@ export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
               private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.selectedYear = new Date().getFullYear().toString();
   }
 
   ngOnInit(): void {
@@ -46,7 +50,7 @@ export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
   }
 
   reloadAlerts(): void {
-    this.calendar.reloadAlertsCurrentMonth();//Mandamos a ejecutar la consulta de alertas
+    this.calendar.reloadAlertsCurrentYear();//Mandamos a ejecutar la consulta de alertas
   }
 
   reloadAlert(): void {
@@ -80,6 +84,27 @@ export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
     });
   }
 
+  public changeYear(evt: any): void {
+    console.info("El año que llego fue;" + evt.year);
+    this.selectedYear = evt.year;
+    let alertTypes: Array<number> = this.optionsAlertTypes.alertTypes
+      .filter(type => type.id && type.checked)
+      .map(type => type.id);
+    this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID,
+      evt.start, evt.end, alertTypes, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE,
+      this.optionsAlertTypes.alertTypes[0].checked
+    ).then(alertas => {
+      alertas.forEach(alerta => {
+        let d = new Date(alerta.FechaNotificacion);
+        alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+      });
+      this.calendar.setAlertsYear(alertas);
+    }).catch(err => {
+      console.error(err);
+      this.commonService.ShowInfo(this.labels["PANT007_MSG_ERRALT"]);
+    });
+  }
+
   viewAlert(evt: any): void {
     this.alertaService.getAlertaById(this.session.PropietarioId, evt.alert.ID)
       .then(alert => {
@@ -101,7 +126,9 @@ export class SegmentCalendarioCaballo implements OnInit, OnDestroy {
       this.reloadAlerts();//que refresque el mes
     });
     this.events.subscribe("calendario:caballo:notificacion", () => {
-      this.reloadAlert();//refrescar el detalle de la alerta
+      if (this.calendarOptions.step == this.CALENDAR_STEP_ALERT) {
+        this.reloadAlert();//refrescar el detalle de la alerta
+      }
     });
   }
 

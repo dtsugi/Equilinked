@@ -29,7 +29,6 @@ export class EventosCaballoPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.slides.threshold = 120;
     this.lastSlide = "proximos";
     this.slidesMap.set("proximos", 0);
     this.slidesMap.set("calendario", 1);

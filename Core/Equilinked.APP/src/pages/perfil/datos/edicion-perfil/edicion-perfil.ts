@@ -36,17 +36,19 @@ export class EdicionPerfilPage implements OnInit {
               private securityService: SecurityService,
               private tipoNumeroService: TipoNumeroService,
               private languageService: LanguageService) {
-    languageService.loadLabels().then(labels => this.labels = labels);
     this.tiposTelefonos = new Array<any>();
     this.paises = new Array<any>();
     this.estados = new Array<any>();
-    this.perfil = {};
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.navCtrlMenu = this.navParams.get("navCtrlMenu");
-    this.getInfoPerfil(); //Cargar info del propietario y lista de paises y estados
+    this.languageService.loadLabels().then(labels => {
+      this.labels = labels;
+      this.getInfoPerfil(); //Cargar info del propietario y lista de paises y estados
+    });
+
   }
 
   goBack(): void {
@@ -157,6 +159,7 @@ export class EdicionPerfilPage implements OnInit {
       .toPromise()
       .then(propietario => {
         this.perfil = propietario;
+        console.log(this.perfil);
         return this.tipoNumeroService.getAll();
       }).then(tiposNumeros => {
       this.tiposTelefonos = tiposNumeros;

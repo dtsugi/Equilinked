@@ -22,6 +22,7 @@ namespace Equilinked.DAL.Dto
         public string PaisNombre { get; set; }
         public Nullable<int> Usuario_ID { get; set; }
         public List<PropietarioTelefono> PropietarioTelefono { get; set; }
+        public Usuario Usuario { get; set; }
 
         public PropietarioDto() { }
 
@@ -43,6 +44,7 @@ namespace Equilinked.DAL.Dto
             }
             this.Usuario_ID = propietario.Usuario_ID;
             this.PropietarioTelefono = new List<PropietarioTelefono>(propietario.PropietarioTelefono);
+            this.Usuario = propietario.Usuario;
         }
     }
 }

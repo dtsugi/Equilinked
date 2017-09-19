@@ -1,10 +1,53 @@
-<ion-grid *ngIf="(options.step == 1 || options.step == 2) && selectedYear">
+<div *ngIf="options.step == CALENDAR_STEP_YEAR">
+  <ion-grid class="equi-calendar-space">
+    <ion-row class="equi-calendar-space">
+      <ion-col col-4 *ngFor="let month of selectedYear.months"
+               class="equi-calendar-space equi-calendar-month-col"
+               (click)="selectMonth(month)">
+
+        <!-- cada mes -->
+        <ion-grid class="equi-calendar-space">
+          <ion-row class="equi-calendar-space">
+            <ion-col col-12 class="equi-calendar-space equi-calendar-title-month">{{month.nameMonth}}</ion-col>
+          </ion-row>
+          <ion-row class="equi-calendar-space">
+            <ion-col class="equi-calendar-space equi-calendar-days">L</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">M</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">M</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">J</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">V</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">S</ion-col>
+            <ion-col class="equi-calendar-space equi-calendar-days">D</ion-col>
+          </ion-row>
+          <ion-row *ngFor="let week of month.weeks" class="equi-calendar-space">
+            <ion-col *ngFor="let day of week.days" class="equi-calendar-space equi-calendar-days-month">
+
+              <div class="equi-calendar-number"
+                   [ngClass]="{'equi-calendar-today': day && day.alerts.length > 0}">
+                <span style="display: block">{{day ? day.numberDay : ''}}</span>
+              </div>
+
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-item style="visibility: hidden;">
+    <ion-datetime displayFormat="YYYY" (ngModelChange)="selectYear($event)" [(ngModel)]="yearCalendar"
+                  min="{{MIN_YEAR_CALENDAR}}"
+                  max="{{MAX_YEAR_CALENDAR}}"></ion-datetime>
+  </ion-item>
+</div>
+
+<ion-grid *ngIf="(options.step == CALENDAR_STEP_MONTH || options.step == CALENDAR_STEP_WEEK) && selectedYear">
   <ion-row>
     <ion-col col-2 (click)="lastMonth()" style="font-size: 40px;">
       <span><ion-icon name="ios-arrow-back"></ion-icon></span>
     </ion-col>
     <ion-col style="margin: auto;">
-      <span class="equi-bold-text">{{selectedMonth.nameMonth}} {{selectedMonth.year.id}}</span>
+      <span class="equi-bold-text" (click)="showYear()">{{selectedMonth.nameMonth}} {{selectedMonth.year.id}}</span>
     </ion-col>
     <ion-col col-2 (click)="nextMonth()" style="font-size: 40px;">
       <span><ion-icon name="ios-arrow-forward"></ion-icon></span>
@@ -31,7 +74,7 @@
                (click)="selectDate(week, day)"><!-- day -->
             <span style="display: block">{{day ? day.numberDay : ' '}}</span>
           </div>
-          <div *ngIf="week.hasAlerts && !selectedDate.showAlerts"><!-- circle notificacation -->
+          <div *ngIf="week.hasAlerts"><!-- circle notificacation -->
             <span *ngIf="day && day.alerts.length == 0" class="equi-circle-day"></span>
             <span *ngIf="day && day.alerts.length > 0" class="equi-circle-day equi-principal-color"></span>
           </div>
@@ -62,7 +105,7 @@
   </div>
 </ion-grid>
 
-<div style="text-align: left; margin: 15px;" *ngIf="options.step == 3 && selectedAlert">
+<div style="text-align: left; margin: 15px;" *ngIf="options.step == CALENDAR_STEP_ALERT && selectedAlert">
   <p class="equi-bold-text">{{selectedAlert.Titulo}}</p>
   <p class="equi-normal-text equi-detail-note">{{selectedAlert.Descripcion}}</p>
   <hr/>

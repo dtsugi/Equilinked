@@ -18,17 +18,19 @@ namespace Equilinked.API.Controllers
         [HttpPost, Route("api/propietarios")]
         public IHttpActionResult SavePropietario([FromBody] Propietario propietario)
         {
-            bool usernameValid;
+            bool usernameValid, emailValid;
             try
             {
-                _propietarioBLL.SavePropietarioAndUsuario(propietario, out usernameValid);
-                if (usernameValid)
+                _propietarioBLL.SavePropietarioAndUsuario(propietario, out usernameValid, out emailValid);
+                if(!usernameValid)
+                {
+                    return BadRequest("1");
+                } else if(!emailValid)
+                {
+                    return BadRequest("2");
+                } else
                 {
                     return Ok(new { Mensaje = "Usuario creado con éxito" });
-                }
-                else
-                {
-                    return BadRequest("El nombre de usuario ya existe");
                 }
             }
             catch (Exception ex)

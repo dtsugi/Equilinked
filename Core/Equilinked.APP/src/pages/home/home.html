@@ -2,23 +2,33 @@
     <menu-superior #menuSuperior (menuChange)="menuChange($event)"></menu-superior>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="equi-content-no-scroll">
 
     <ion-slides (ionSlideDidChange)="slideChanged($event)">
         <ion-slide class="equi-content-slide-start">
+          <div class="home equi-content-slide-scroll">
             <caballos-ind></caballos-ind>
+          </div>
         </ion-slide>
         <ion-slide class="equi-content-slide-start">
+          <div class="home equi-content-slide-scroll">
             <grupos-caballos></grupos-caballos>
+          </div>
         </ion-slide>
         <ion-slide class="equi-content-slide-start">
+          <div class="home equi-content-slide-scroll">
             Individuos veterinarios
+          </div>
         </ion-slide>
         <ion-slide class="equi-content-slide-start">
-            Fotoss
+          <div class="home equi-content-slide-scroll">
+            Fotos
+          </div>
         </ion-slide>
         <ion-slide class="equi-content-slide-start">
+          <div class="home equi-content-slide-scroll">
             Albumes
+          </div>
         </ion-slide>
     </ion-slides>
 </ion-content>

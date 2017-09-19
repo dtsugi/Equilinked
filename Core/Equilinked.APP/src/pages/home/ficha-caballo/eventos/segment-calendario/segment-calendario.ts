@@ -30,7 +30,7 @@ export class SegmentCalendarioEventos implements OnInit {
               private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
-    this.calendarOptions = {step: 1, isAlertGroup: false}; //este objeto se le pasa al calendar
+    this.calendarOptions = {step: ConstantsConfig.CALENDAR_STEP_MONTH, isAlertGroup: false, disabledYearView: true}; //este objeto se le pasa al calendar
   }
 
   ngOnInit(): void {

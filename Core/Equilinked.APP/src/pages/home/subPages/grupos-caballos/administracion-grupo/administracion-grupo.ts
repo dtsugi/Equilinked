@@ -17,6 +17,8 @@ import {ConstantsConfig} from "../../../../../app/utils";
   providers: [LanguageService, CommonService, GruposCaballosService, SecurityService]
 })
 export class AdministracionGrupoPage implements OnInit, OnDestroy {
+  private HEIGHT_FOR_REMOVE: number = 98 + 64; //98barra superior 64 barra inferior
+  public CALENDAR_STEP_YEAR: number = ConstantsConfig.CALENDAR_STEP_YEAR;
   public CALENDAR_STEP_MONTH: number = ConstantsConfig.CALENDAR_STEP_MONTH;
   public CALENDAR_STEP_WEEK: number = ConstantsConfig.CALENDAR_STEP_WEEK;
   public CALENDAR_STEP_ALERT: number = ConstantsConfig.CALENDAR_STEP_ALERT;
@@ -47,11 +49,12 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     this.indexSlidesMap = new Map<number, string>();
     this.segmentSelection = "ficha";
     this.grupo = {};
-    this.calendarOptions = {step: 1, isAlertGroup: true}; //este objeto se le pasa al calendar
+    this.calendarOptions = {step: this.CALENDAR_STEP_YEAR, isAlertGroup: true}; //este objeto se le pasa al calendar
     this.parametrosCaballos = {modoEdicion: false, getCountSelected: null, grupoDefault: false};
   }
 
   ngOnInit(): void {
+    this.adjustHeightSlides();
     this.session = this.securityService.getInitialConfigSession();
     this.grupoId = this.navParams.get("grupoId");
     this.lastSlide = "ficha";
@@ -106,7 +109,6 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
   }
 
   editAlert(): void {
-    console.info("Editar alerta!");
     let alert: any = this.segmentCalendar.getAlert();
     let params: any = {grupo: this.grupo, alerta: JSON.parse(JSON.stringify(alert))};
     this.navController.push(GrupoAlertasEditPage, params);
@@ -151,6 +153,14 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     popover.present({
       ev: ev
     });
+  }
+
+  private adjustHeightSlides(): void {
+    let slides = document.querySelectorAll(".ficha-grupo.equi-content-slide-scroll");
+    for (let i = 0; i < slides.length; i++) {
+      let element: any = slides[i];
+      element.style.height = (window.innerHeight - this.HEIGHT_FOR_REMOVE) + "px";
+    }
   }
 
   private loadInfoSegment(): void {

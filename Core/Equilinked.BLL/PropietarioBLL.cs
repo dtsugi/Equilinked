@@ -10,17 +10,19 @@ namespace Equilinked.BLL
     public class PropietarioBLL : BLLBase, IBase<Propietario>
     {
 
-        public void SavePropietarioAndUsuario(Propietario propietario, out bool usernameValid)
+        public void SavePropietarioAndUsuario(Propietario propietario, out bool usernameValid, out bool emailValid)
         {
             usernameValid = false;
+            emailValid = false;
             Usuario usuario = propietario.Usuario;
             propietario.Usuario = null;
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                if(db.Usuario.Where(u => u.Login.ToLower() == usuario.Login.ToLower()).FirstOrDefault() == null)
+                usernameValid = db.Usuario.Where(u => u.Login.ToLower() == usuario.Login.ToLower()).FirstOrDefault() == null;
+                emailValid = db.Propietario.Where(p => p.Mail.ToLower() == propietario.Mail.ToLower()).FirstOrDefault() == null;
+                if (usernameValid && emailValid)
                 {
-                    usernameValid = true;
                     //El usuario ya trae el "login" y "password"
                     usuario.SignInDate = DateTime.Now;
                     usuario.Activo = true;
@@ -140,6 +142,7 @@ namespace Equilinked.BLL
                     .Include("EstadoProvincia.Pais")
                     .Include("PropietarioTelefono")
                     .Include("PropietarioTelefono.Tipo_Numero")
+                    .Include("Usuario")
                     .Where(x => x.ID == id)
                     .FirstOrDefault()
                     );

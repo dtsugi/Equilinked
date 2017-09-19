@@ -65,7 +65,9 @@ export class ConstantsConfig {
   static ALERTA_ORDEN_ASCENDENTE = 1;
   static ALERTA_ORDEN_DESCENDENTE = 2;
   //constantes del calendario
-  public static CALENDAR_STEP_MONTH: number = 1;
-  public static CALENDAR_STEP_WEEK: number = 2;
-  public static CALENDAR_STEP_ALERT: number = 3;
+
+  public static CALENDAR_STEP_YEAR: number = 2;
+  public static CALENDAR_STEP_MONTH: number = 3;
+  public static CALENDAR_STEP_WEEK: number = 4;
+  public static CALENDAR_STEP_ALERT: number = 5;
 }

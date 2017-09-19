@@ -7,7 +7,7 @@
         </ion-buttons>
 
         <ion-buttons right>
-            <button ion-button class="equi-toolbar-btn" [disabled]="!perfilForm.valid" (click)="save(perfilForm)">
+            <button ion-button class="equi-toolbar-btn" [disabled]="perfil && perfilForm && !perfilForm.valid" (click)="save(perfilForm)">
                 {{ 'PANT027_BTN_GUA' | translate }}
             </button>
         </ion-buttons>
@@ -15,15 +15,25 @@
 </ion-header>
 
 <ion-content>
-    <form #perfilForm="ngForm">
+    <form #perfilForm="ngForm" *ngIf="perfil">
         <ion-grid>
-            <ion-row>
+
+          <ion-row>
+            <ion-col col-2 class="col-center">
+              <ion-icon class="equi-icon-input" name="ios-finger-print"></ion-icon>
+            </ion-col>
+            <ion-col>
+              <p style="padding-left: 8px;" class="equi-bold-text">{{perfil.Usuario.Login}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
                 <ion-col col-2 class="col-center">
                     <ion-icon class="equi-icon-input" name="person"></ion-icon>
                 </ion-col>
                 <ion-col>
                     <ion-input class="equi-input-normal-text" type="text" name="nombre" placeholder="{{ 'PANT027_TXT_NOM' | translate }}" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
-                </ion-col> 
+                </ion-col>
             </ion-row>
 
             <ion-row>
@@ -31,7 +41,7 @@
                     <ion-icon class="equi-icon-input" name="mail"></ion-icon>
                 </ion-col>
                 <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" name="correo" placeholder="{{ 'PANT027_TXT_CORR' | translate }}" required="true" [(ngModel)]="perfil.Mail"></ion-input>
+                  <p style="padding-left: 8px;" class="equi-input-normal-text equi-text-edit">{{perfil.Mail}}</p>
                 </ion-col>
             </ion-row>
 

@@ -79,7 +79,7 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
     this.alerta.AlertaGrupo = [];
     this.alerta.FechaNotificacion = moment().format("YYYY-MM-DD");
     this.alerta.HoraNotificacion = moment().format("HH:mm:ss");
-    if(this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
+    if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
       this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
       this.alerta.HoraFinal = moment().format("HH:mm:ss");
     }
@@ -130,11 +130,12 @@ export class CaballoAlertasEditPage implements OnDestroy, OnInit {
     promise.then(() => {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
-        this.events.publish("calendario:caballo:notificaciones");//refrescar notificaciones de calendario grupal
-        this.events.publish("notificaciones:refresh");
-        if (this.alerta.ID) {
-          this.events.publish("calendario:caballo:notificacion");//refrescar detalle de notificacion del calendario grupal
-        }
+        this.events.publish("calendario:caballo:notificaciones");//refrescar notificaciones de caballo
+        this.events.publish("calendario:caballo:notificacion");//refrescar detalle de notificacion del caballo
+        this.events.publish("notificaciones:refresh");//para refrescar la lista de alertas de centro notificaciones
+        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla centro notificaciones
+        this.events.publish("calendario:refresh");//refrescar calendario
+        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada calendario
       });
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT038_MSG_ERRGU"]);

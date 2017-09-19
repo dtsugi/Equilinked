@@ -122,6 +122,7 @@ export class SegmentEventosProximos implements OnInit {
     this.alertaCaballoService.deleteAlertasCaballosByIds(this.session.PropietarioId, this.caballo.ID, [evento.ID])
       .then(() => {
         this.events.publish("notificaciones:refresh");
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.commonService.hideLoading();
         this.loadEventos();
       }).catch(err => {

@@ -101,11 +101,12 @@ export class EdicionAlertaPage implements OnInit {
     }
     res.then(() => {
       this.commonService.hideLoading();
-      if (this.alerta.ID) {
-        this.events.publish("alerta:refresh"); //Refrescamos el detalle de la alerta seleccionada
-      }
-      this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
+      this.events.publish("alerta:refresh"); //Refrescamos el detalle de la alerta seleccionada
       this.events.publish("alertas:refresh"); //Refrescamos la lista de alertas
+      this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+      this.events.publish("notificaciones:refresh");//refrescar
+      this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+      this.events.publish("calendario:refresh");//refrescar alertas calendario
       this.navController.pop(); //pa atras!
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT020_MSG_ERRGU"]);

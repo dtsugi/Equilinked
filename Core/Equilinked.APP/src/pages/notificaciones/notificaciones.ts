@@ -17,6 +17,7 @@ import {LanguageService} from '../../services/language.service';
   providers: [LanguageService, CommonService, AlertaService, SecurityService]
 })
 export class NotificacionesPage implements OnInit, OnDestroy {
+  private HEIGHT_FOR_REMOVE: number = 98 + 64;//98barra 64superior barra inferior
   private session: UserSessionEntity;
   private notificacionesProximasResp: Array<any>;
   private slidesMap: Map<string, number>;
@@ -51,8 +52,8 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.adjustHeightSlides();
     this.session = this._securityService.getInitialConfigSession();
-    this.slides.threshold = 120;
     this.lastSlide = "hoy";
     this.slidesMap.set("hoy", 0);
     this.slidesMap.set("proximas", 1);
@@ -183,6 +184,14 @@ export class NotificacionesPage implements OnInit, OnDestroy {
       this._commonService.ShowErrorHttp(err, this.labels["PANT021_MSG_ERRELI"]);
     });
     console.info(notificacion);
+  }
+
+  private adjustHeightSlides(): void {
+    let slides = document.querySelectorAll(".alertas.equi-content-slide-scroll");
+    for (let i = 0; i < slides.length; i++) {
+      let element: any = slides[i];
+      element.style.height = (window.innerHeight - this.HEIGHT_FOR_REMOVE) + "px";
+    }
   }
 
   private loadNotificacionesToday(): void {

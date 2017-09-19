@@ -48,6 +48,7 @@ export class SegmentDatos implements OnInit, OnDestroy {
       this.commonService.showLoading("Procesando..");
     this.propietarioService.getSerializedById(idPropietario)
       .subscribe(res => {
+        console.log(res);
         this.propietarioEntity = res;
         if (showLoading)
           this.commonService.hideLoading();

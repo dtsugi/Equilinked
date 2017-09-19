@@ -1,0 +1,86 @@
+<div>
+  <div
+    style="background-image: url(assets/img/ficha-caballo.PNG); background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+  </div>
+
+  <ion-grid style="margin: 0px; padding:0px;">
+    <ion-row>
+      <ion-col col-4
+               class="equi-button-ficha" (click)="open(0)">
+        <div class="equi-button-ficha-icon equi-button-ficha-datos"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_DAT" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha equi-button-ficha-border-left equi-button-ficha-border-right"
+               (click)="open(1)">
+        <div class="equi-button-ficha-icon equi-button-ficha-ubicacion"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_UBI" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha" (click)="open(2)">
+        <div class="equi-button-ficha-icon equi-button-ficha-veterinario"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_VET" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha equi-button-ficha-border-top equi-button-ficha-border-bottom"
+               (click)="open(3)">
+        <div class="equi-button-ficha-icon equi-button-ficha-eventos"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_EVETS" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha equi-button-ficha-border-top equi-button-ficha-border-bottom equi-button-ficha-border-left equi-button-ficha-border-right"
+               (click)="open(4)">
+        <div class="equi-button-ficha-icon equi-button-ficha-herraje"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_HERR" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha equi-button-ficha-border-top equi-button-ficha-border-bottom"
+               (click)="open(5)">
+        <div class="equi-button-ficha-icon equi-button-ficha-alimentacion"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_ALIM" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha" (click)="open(6)">
+        <div class="equi-button-ficha-icon equi-button-ficha-desparasitacion"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_DESP" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha equi-button-ficha-border-left equi-button-ficha-border-right"
+               (click)="open(7)">
+        <div class="equi-button-ficha-icon equi-button-ficha-dentista"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_DEN" | translate }}
+      </span>
+      </ion-col>
+
+      <ion-col col-4
+               class="equi-button-ficha" (click)="open(8)">
+        <div class="equi-button-ficha-icon equi-button-ficha-notas"></div>
+        <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
+        {{ "PANT003_BTN_NOT" | translate }}
+      </span>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>

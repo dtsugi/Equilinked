@@ -102,9 +102,13 @@ export class EdicionEventoCaballoPage implements OnInit {
     promise.then(() => {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
-        this.events.publish("notificacion:evento:caballo:refresh");
-        this.events.publish("notificaciones:caballo:refresh");
-        this.events.publish("notificaciones:refresh");
+        this.events.publish("notificacion:evento:caballo:refresh");//el detalle supongo
+        this.events.publish("notificaciones:caballo:refresh");//refrescar el calendar o la lista
+
+        this.events.publish("notificaciones:refresh");//para refrescar la lista de alertas de centro notificaciones
+        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla centro notificaciones
+        this.events.publish("calendario:refresh");//refrescar calendario
+        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada calendario
       });
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRGUA"]);

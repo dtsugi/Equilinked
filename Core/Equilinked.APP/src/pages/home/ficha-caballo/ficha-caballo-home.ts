@@ -4,16 +4,7 @@ import {CaballoService} from '../../../services/caballo.service';
 import {CommonService} from '../../../services/common.service';
 import {LanguageService} from '../../../services/language.service';
 import {Caballo} from '../../../model/caballo';
-import {DatosViewPage} from './datos/datos-view';
-import {AlimentacionPage} from './alimentacion/alimentacion';
-import {NotasPage} from './notas/notas';
-import {HerrajesPage} from './herrajes/herrajes';
-import {DentistaPage} from './dentista/dentista';
-import {DesparasitacionPage} from './desparasitacion/desparasitacion';
-import {EventosCaballoPage} from './eventos/eventos';
 import {OpcionesCaballoPopover} from "./opciones-caballo/opciones-caballo";
-import {UbicacionCaballoPage} from "./ubicacion/ubicacion";
-import {AsignacionUbicacionCaballoPage} from "./ubicacion/asignacion-ubicacion/asignacion-ubicacion";
 import {SegmentCalendarioCaballo} from './calendario/calendario-caballo';
 import {EquiPopoverFiltroCalendario} from '../../../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario';
 import {CaballoAlertasEditPage} from './calendario/alertas-edit/caballo-alertas-edit';
@@ -24,9 +15,11 @@ import {ConstantsConfig} from '../../../app/utils';
   providers: [CaballoService, CommonService, LanguageService]
 })
 export class FichaCaballoPage implements OnDestroy, OnInit {
+  public CALENDAR_STEP_YEAR: number = ConstantsConfig.CALENDAR_STEP_YEAR;
   public CALENDAR_STEP_MONTH: number = ConstantsConfig.CALENDAR_STEP_MONTH;
   public CALENDAR_STEP_WEEK: number = ConstantsConfig.CALENDAR_STEP_WEEK;
   public CALENDAR_STEP_ALERT: number = ConstantsConfig.CALENDAR_STEP_ALERT;
+  private HEIGHT_FOR_REMOVE: number = 98 + 64;//98barra 64superior barra inferior
   private slidesMap: Map<string, number>;
   private indexSlidesMap: Map<number, string>;
   private lastSlide: string;
@@ -49,10 +42,11 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
     this.slidesMap = new Map<string, number>();
     this.indexSlidesMap = new Map<number, string>();
     this.menu = "informacion";
-    this.calendarOptions = {step: 1, isAlertGroup: false};
+    this.calendarOptions = {step: ConstantsConfig.CALENDAR_STEP_YEAR, isAlertGroup: false};
   }
 
   ngOnInit(): void {
+    this.adjustHeightSlides();
     this.caballo = this.navParams.get("caballoSelected");
     this.lastSlide = "informacion";
     this.slidesMap.set("informacion", 0);
@@ -133,67 +127,11 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
     });
   }
 
-  GoTo(idOption) {
-    console.log(idOption);
-    switch (idOption) {
-      // DATOS
-      case 1:
-        this.navCtrl.push(DatosViewPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
-      //UBICACION
-      case 2:
-        let page;
-        if (this.caballo.Establo_ID) {
-          page = UbicacionCaballoPage;
-        } else {
-          page = AsignacionUbicacionCaballoPage;
-        }
-        this.navCtrl.push(page, {caballo: this.caballo});
-        break;
-      //EVENTOS
-      case 4:
-        this.navCtrl.push(EventosCaballoPage, {
-          caballo: this.caballo
-        });
-        break;
-      // HERRAJES
-      case 5:
-        this.navCtrl.push(HerrajesPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
-      // ALIMENTACION
-      case 6:
-        this.navCtrl.push(AlimentacionPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
-      // DENTISTA
-      case 7:
-        this.navCtrl.push(DentistaPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
-      // DESPARASITACION
-      case 8:
-        this.navCtrl.push(DesparasitacionPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
-      // NOTAS VARIAS
-      case 9:
-        this.navCtrl.push(NotasPage, {
-          idCaballoSelected: this.caballo.ID,
-          nombreCaballoSelected: this.caballo.Nombre
-        });
-        break;
+  private adjustHeightSlides(): void {
+    let slides = document.querySelectorAll(".ficha-caballo.equi-content-slide-scroll");
+    for (let i = 0; i < slides.length; i++) {
+      let element: any = slides[i];
+      element.style.height = (window.innerHeight - this.HEIGHT_FOR_REMOVE) + "px";
     }
   }
 

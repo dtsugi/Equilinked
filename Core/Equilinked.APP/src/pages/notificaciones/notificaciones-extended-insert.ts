@@ -122,11 +122,12 @@ export class NotificacionesExtendedInsertPage {
     promise.then(() => {
       this._commonService.hideLoading();
       this.navCtrl.pop().then(() => {
-        this.events.publish("notificaciones:refresh");
         this.events.publish("notificaciones:caballo:refresh"); //Refrescamos lista de notificaciones
-        if (this.alerta.ID != null && this.alerta.ID > 0) {
-          this.events.publish("notificacion:caballo:refresh");//refrescamos solo la del detalle!
-        }
+        this.events.publish("notificacion:caballo:refresh");//refrescamos solo la del detalle!
+        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+        this.events.publish("notificaciones:refresh");//refrescar
+        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
       });
     }).catch(error => {
       this._commonService.ShowErrorHttp(error, this.labels["PANT010_MSG_ERRGUA"]);

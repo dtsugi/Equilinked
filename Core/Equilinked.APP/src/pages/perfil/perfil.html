@@ -41,13 +41,17 @@
   </ion-segment>
 </ion-header>
 
-<ion-content>
+<ion-content padding class="equi-content-no-scroll">
   <ion-slides (ionSlideDidChange)="slideChanged($event)">
     <ion-slide class="equi-content-slide-start">
-      <segment-datos></segment-datos>
+      <div class="perfil equi-content-slide-scroll">
+        <segment-datos></segment-datos>
+      </div>
     </ion-slide>
     <ion-slide class="equi-content-slide-start">
-      <segment-establos [parametros]="parametrosEstablos"></segment-establos>
+      <div class="perfil equi-content-slide-scroll">
+        <segment-establos [parametros]="parametrosEstablos"></segment-establos>
+      </div>
     </ion-slide>
   </ion-slides>
 </ion-content>

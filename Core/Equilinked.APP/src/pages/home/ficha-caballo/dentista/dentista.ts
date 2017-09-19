@@ -130,6 +130,7 @@ export class DentistaPage implements OnDestroy, OnInit {
       .then(() => {
         this._commonService.hideLoading();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.getAlertasByCaballo();
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);

@@ -168,6 +168,7 @@ export class NotasPage implements OnInit, OnDestroy {
       .then(() => {
         this._commonService.hideLoading();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.getAllNotificacionesByCaballoId();
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);

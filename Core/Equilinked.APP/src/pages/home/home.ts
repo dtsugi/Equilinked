@@ -7,6 +7,7 @@ import {MenuSuperior} from "./subPages/menuSuperior/menuSuperior";
   templateUrl: 'home.html'
 })
 export class HomePage {
+  private HEIGHT_FOR_REMOVE: number = 84 + 64; //84barra superior 64 barra inferior
   private mapSlides: Map<string, number>;
   private lastSlide: string;
   @ViewChild("menuSuperior") menuSuperior: MenuSuperior;
@@ -17,7 +18,7 @@ export class HomePage {
   }
 
   ngOnInit(): void {
-    //this.slides.threshold = 120;
+    this.adjustHeightSlides();
     this.mapSlides = new Map<string, number>();
     this.mapSlides.set("caballos_ind", 0);
     this.mapSlides.set("caballos_gru", 1);
@@ -35,5 +36,13 @@ export class HomePage {
   menuChange(submenu: any) {
     let index: number = this.mapSlides.get(submenu.value);
     this.slides.slideTo(index, 500);
+  }
+
+  private adjustHeightSlides(): void {
+    let slides = document.querySelectorAll(".home.equi-content-slide-scroll");
+    for (let i = 0; i < slides.length; i++) {
+      let element: any = slides[i];
+      element.style.height = (window.innerHeight - this.HEIGHT_FOR_REMOVE) + "px";
+    }
   }
 }

@@ -45,6 +45,7 @@ import {NotificacionNotaDetalle} from "../pages/notificaciones/notificacion-nota
 import {NotificacionesEditPage} from "../pages/notificaciones/notificaciones-edit/notificaciones-edit";
 /* Caballos */
 import {FichaCaballoPage} from "../pages/home/ficha-caballo/ficha-caballo-home";
+import {SegmentFichaCaballo} from "../pages/home/ficha-caballo/ficha/ficha-caballos";
 import {OpcionesCaballoPopover} from "../pages/home/ficha-caballo/opciones-caballo/opciones-caballo";
 import {CambioNombreCaballoPage} from "../pages/home/ficha-caballo/cambio-nombre/cambio-nombre";
 import {AdminCaballosInsertPage} from "../pages/home/admin-caballos/admin-caballos-insert";
@@ -160,6 +161,7 @@ export function createTranslateLoader(http: Http) {
     NotificacionesEditPage,
     /* Caballos */
     FichaCaballoPage,
+    SegmentFichaCaballo,
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,

@@ -1,2 +1,7 @@
-<equi-calendar2 [options]="calendarOptions" (changeMonth)="changeMonth($event)"
+<span class="equi-bold-text" *ngIf="calendarOptions.step == CALENDAR_STEP_YEAR" (click)="calendar.back()">
+  {{selectedYear}}
+</span>
+<equi-calendar2 [options]="calendarOptions"
+                (changeYear)="changeYear($event)"
+                (changeMonth)="changeMonth($event)"
                 (viewAlert)="viewAlert($event)"></equi-calendar2>

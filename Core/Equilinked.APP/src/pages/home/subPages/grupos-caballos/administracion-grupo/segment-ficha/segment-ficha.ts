@@ -24,9 +24,9 @@ export class SegmentFichaGrupo implements OnInit {
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.options = new Array<any>();
+    this.loadOptions();
     languageService.loadLabels().then(labels => {
       this.labels = labels;
-      this.loadOptions();
     });
   }
 
@@ -34,41 +34,37 @@ export class SegmentFichaGrupo implements OnInit {
     this.session = this.securityService.getInitialConfigSession();
   }
 
-  loadOptions(): void {
+  open(index: number): void {
+    let option: any = this.options[index];
+    if(option && option.page) {
+      option.params.grupo = this.grupo;
+      this.navController.push(option.page, option.params);
+    }
+  }
+
+  private loadOptions(): void {
     this.options = [
       {
-        label: this.labels["PANT013_BTN_UBI"],
-        icon: "pin",
         page: UbicacionesGrupoPage,
         params: {}
       }, {
-        label: this.labels["PANT013_BTN_DEN"],
-        icon: "medical",
         page: AlertasFicha,
         params: {
           tipoAlerta: ConstantsConfig.ALERTA_TIPO_DENTISTA
         }
       }, {
-        label: this.labels["PANT013_BTN_VET"],
-        icon: "medkit",
         params: {}
       }, {
-        label: this.labels["PANT013_BTN_HERR"],
-        icon: "paw",
         page: AlertasFicha,
         params: {
           tipoAlerta: ConstantsConfig.ALERTA_TIPO_HERRAJE
         }
       }, {
-        label: this.labels["PANT013_BTN_DESP"],
-        icon: "nuclear",
         page: AlertasFicha,
         params: {
           tipoAlerta: ConstantsConfig.ALERTA_TIPO_DESPARACITACION
         }
       }, {
-        label: this.labels["PANT013_BTN_NOTS"],
-        icon: "paper",
         page: NotasFichaPage,
         params: {
           tipoAlerta: ConstantsConfig.ALERTA_TIPO_NOTASVARIAS

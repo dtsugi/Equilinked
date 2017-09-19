@@ -147,10 +147,11 @@ export class GrupoAlertasEditPage implements OnDestroy, OnInit {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
         this.events.publish("calendario:grupo:notificaciones");//refrescar notificaciones de calendario grupal
-        this.events.publish("notificaciones:refresh");
-        if (this.alerta.ID) {
-          this.events.publish("calendario:grupo:notificacion");//refrescar detalle de notificacion del calendario grupal
-        }
+        this.events.publish("calendario:grupo:notificacion");//refrescar detalle de notificacion del calendario grupal
+        this.events.publish("notificaciones:refresh");//para refrescar la lista de alertas de centro notificaciones
+        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla centro notificaciones
+        this.events.publish("calendario:refresh");//refrescar calendario
+        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada calendario
       });
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT037_MSG_ERRGU"]);

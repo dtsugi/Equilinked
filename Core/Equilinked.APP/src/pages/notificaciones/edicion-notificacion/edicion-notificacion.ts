@@ -158,10 +158,10 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
     promise.then(() => {
       this.commonService.hideLoading();
       this.navController.pop().then(() => {
-        if (this.alerta.ID) {
-          this.events.publish("notificacion:refresh");
-        }
-        this.events.publish("notificaciones:refresh");
+        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+        this.events.publish("notificaciones:refresh");//refrescar
+        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+        this.events.publish("calendario:refresh");//refrescar alertas calendario
       });
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERRGU"]);

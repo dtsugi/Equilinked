@@ -13,7 +13,6 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
- 
 
 $_EQUI_PRINCIPAL_COLOR: #42A6AC;
 $_EQUI_CONTENT_TABLE_COLOR: #D9F1F1;
@@ -25,7 +24,6 @@ $_EQUI_DANGER_COLOR: #f53d3d;
   font-family: 'NotoSans';
   src: local('NotoSans'), local('NotoSans'), url('../assets/fonts/NotoSans-Regular.ttf') format('opentype');
 }
-
 
 ion-app.ios {
   font-family: NotoSans !important;
@@ -409,4 +407,187 @@ ion-slides {
   border-color: gray;
   border-radius: 25px 25px;
   border-width: 1px;
+}
+
+.equi-button-ficha {
+  margin: 0px;
+  padding: 0px;
+  border-width: 1px;
+  border-color: $_EQUI_TEXT_EDITION_COLOR;
+  color: $_EQUI_TEXT_EDITION_COLOR;
+}
+
+.equi-button-ficha-border-left {
+  border-left-style: solid;
+}
+
+.equi-button-ficha-border-right {
+  border-right-style: solid;
+}
+
+.equi-button-ficha-border-top {
+  border-top-style: solid;
+}
+
+.equi-button-ficha-border-bottom {
+  border-bottom-style: solid;
+}
+
+.equi-button-ficha:active {
+  background-color: $_EQUI_PRINCIPAL_COLOR;
+  color: white;
+}
+
+.equi-button-ficha-icon {
+  margin: 0 auto;
+  width: 85px;
+  height: 85px;
+}
+
+.equi-button-ficha-datos {
+  background-image: url(../assets/img/fichas/Datos1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-datos:active {
+  background-image: url(../assets/img/fichas/Datos2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-ubicacion {
+  background-image: url(../assets/img/fichas/Ubicacion1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-ubicacion:active {
+  background-image: url(../assets/img/fichas/Ubicacion2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-veterinario {
+  background-image: url(../assets/img/fichas/Veterinario1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-veterinario:active {
+  background-image: url(../assets/img/fichas/Veterinario2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-eventos {
+  background-image: url(../assets/img/fichas/Eventos1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-eventos:active {
+  background-image: url(../assets/img/fichas/Eventos2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-herraje {
+  background-image: url(../assets/img/fichas/Herraje1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-herraje:active {
+  background-image: url(../assets/img/fichas/Herraje2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-alimentacion {
+  background-image: url(../assets/img/fichas/Alimentacion1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-alimentacion:active {
+  background-image: url(../assets/img/fichas/Alimentacion2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-desparasitacion {
+  background-image: url(../assets/img/fichas/Desparasitacion1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-desparasitacion:active {
+  background-image: url(../assets/img/fichas/Desparasitacion2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-dentista {
+  background-image: url(../assets/img/fichas/Dentista1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-dentista:active {
+  background-image: url(../assets/img/fichas/Dentista2.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-notas {
+  background-image: url(../assets/img/fichas/Notas1.png);
+  background-size: contain;
+}
+
+.equi-button-ficha-notas:active {
+  background-image: url(../assets/img/fichas/Notas2.png);
+  background-size: contain;
+}
+
+//sobrecargar el scroll content, no dejar muestre el scroll
+.equi-content-no-scroll .scroll-content {
+  overflow-y: hidden;
+}
+
+.equi-content-slide-scroll {
+  display: block;
+  overflow-y: auto;
+}
+
+.equi-calendar-space {
+  margin: 0px;
+  padding: 0px;
+}
+
+.equi-calendar-month-col {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+}
+
+.equi-calendar-days-month {
+  font-size: 9px !important;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.equi-calendar-title-month {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: capitalize;
+  border-bottom-style: solid !important;
+  border-bottom-color: #CCC6C8 !important;
+  border-width: 1px !important;
+}
+
+.equi-calendar-days {
+  font-size: 8px;
+  color: #CCC6C8;
+}
+
+.equi-calendar-today {
+  border-radius: 100%;
+  text-align: center;
+  background-color: $_EQUI_PRINCIPAL_COLOR;
+  color: #FFF;
+}
+
+.equi-calendar-number {
+  //width: 15px;
+  min-height: 15px;
+}
+
+.equi-icon-bottom-bar {
+  width: 40px;//70
+  height: 48px;//79
 }

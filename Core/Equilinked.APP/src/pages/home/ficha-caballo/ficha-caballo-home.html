@@ -8,12 +8,12 @@
       </button>
 
       <!-- calendario -->
-      <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_MONTH"
+      <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_YEAR"
               (click)="back()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
       <button ion-button icon-only class="equi-toolbar-btn"
-              *ngIf="menu == 'calendario' && (calendarOptions.step == CALENDAR_STEP_WEEK || calendarOptions.step == CALENDAR_STEP_ALERT)"
+              *ngIf="menu == 'calendario' && calendarOptions.step > CALENDAR_STEP_YEAR"
               (click)="backCalendar()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
@@ -60,115 +60,29 @@
   </ion-segment>
 </ion-header>
 
-<ion-content>
+<ion-content class="equi-content-no-scroll">
   <ion-slides (ionSlideDidChange)="slideChanged($event)">
     <!-- seccion de opciones del caballo -->
     <ion-slide class="equi-content-slide-start">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(1)">
-              <div>
-                <ion-icon name='albums'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_DAT" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(2)">
-              <div>
-                <ion-icon name='pin'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_UBI" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(3)">
-              <div>
-                <ion-icon name='medkit'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_VET" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-        </ion-row>
-
-
-        <ion-row>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(4)">
-              <div>
-                <ion-icon name='trophy'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_EVETS" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(5)">
-              <div>
-                <ion-icon name='paw'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_HERR" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(6)">
-              <div>
-                <ion-icon name='nutrition'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_ALIM" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-        </ion-row>
-
-
-        <ion-row>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(7)">
-              <div>
-                <ion-icon name='medical'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_DEN" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(8)">
-              <div>
-                <ion-icon name='nuclear'></ion-icon>
-                <br>
-                <label style="font-size: 12px">{{ "PANT003_BTN_DESP" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-          <ion-col col-4>
-            <button ion-button block (click)="GoTo(9)">
-              <div>
-                <ion-icon name='paper'></ion-icon>
-                <br>
-                <label>{{ "PANT003_BTN_NOT" | translate }}</label>
-              </div>
-            </button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <div class="ficha-caballo equi-content-slide-scroll">
+        <segment-ficha-caballo *ngIf="caballo" [caballo]="caballo"></segment-ficha-caballo>
+      </div>
     </ion-slide>
 
     <!-- seccion de fotos -->
     <ion-slide class="equi-content-slide-start">
-      {{ "PANT003_BTN_FOT" | translate }}
+      <div class="ficha-caballo equi-content-slide-scroll">
+        Fotos
+      </div>
     </ion-slide>
 
     <!-- seccion de calendario -->
     <ion-slide class="equi-content-slide-start">
-      <segment-calendario-caballo *ngIf="optionsTypeAlerts && calendarOptions" [caballo]="caballo"
-                                  [optionsAlertTypes]="optionsTypeAlerts"
-                                  [calendarOptions]="calendarOptions"></segment-calendario-caballo>
+      <div class="ficha-caballo equi-content-slide-scroll">
+        <segment-calendario-caballo *ngIf="optionsTypeAlerts && calendarOptions" [caballo]="caballo"
+                                    [optionsAlertTypes]="optionsTypeAlerts"
+                                    [calendarOptions]="calendarOptions"></segment-calendario-caballo>
+      </div>
     </ion-slide>
   </ion-slides>
 </ion-content>

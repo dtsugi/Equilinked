@@ -3,6 +3,8 @@ import moment from "moment";
 
 export class EquiCalYear {
   public id: string;
+  public startYear: string;
+  public endYear: string;
   public months: Array<EquiCalMonth>;
   public mapMonths: Map<string, EquiCalMonth>;
 
@@ -15,7 +17,8 @@ export class EquiCalYear {
   public static buildYear(year: number): EquiCalYear {
     let calYear: EquiCalYear = new EquiCalYear(year);
     let monthYear: any = moment([year]);
-    console.info(monthYear.format("DD-MM-YYYY"));
+    calYear.startYear = moment([year]).startOf("year").format("YYYY-MM-DD HH:mm:ss");
+    calYear.endYear = moment([year]).endOf("year").format("YYYY-MM-DD HH:mm:ss");
     do {
       let month = EquiCalMonth.buildMonth(monthYear.format("YYYY-MM-DD"), calYear);
       calYear.months.push(month);
