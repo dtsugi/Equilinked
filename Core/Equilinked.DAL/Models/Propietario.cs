@@ -32,6 +32,7 @@ namespace Equilinked.DAL.Models
         public System.DateTime FechaNacimiento { get; set; }
         public Nullable<int> EstadoProvincia_Id { get; set; }
         public Nullable<int> Usuario_ID { get; set; }
+        public string Image { get; set; }
     
         public virtual ICollection<Caballo> Caballo { get; set; }
         public virtual EstadoProvincia EstadoProvincia { get; set; }

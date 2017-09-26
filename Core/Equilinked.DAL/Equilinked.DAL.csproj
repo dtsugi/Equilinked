@@ -52,12 +52,15 @@
   <ItemGroup>
     <Compile Include="Dto\AlertaGrupoDto.cs" />
     <Compile Include="Dto\AlertaDto.cs" />
+    <Compile Include="Dto\CaballoAdjuntosDto.cs" />
     <Compile Include="Dto\CaballoDto.cs" />
     <Compile Include="Dto\CambioPassword.cs" />
     <Compile Include="Dto\ComboBoxDto.cs" />
     <Compile Include="Dto\CuentaEliminacion.cs" />
     <Compile Include="Dto\EntidadBase.cs" />
     <Compile Include="Dto\EstabloDto.cs" />
+    <Compile Include="Dto\FileDto.cs" />
+    <Compile Include="Dto\FtpDataConnection.cs" />
     <Compile Include="Dto\InfoUsuarioToken.cs" />
     <Compile Include="Dto\PropietarioDto.cs" />
     <Compile Include="Models\Alerta.cs">
@@ -76,6 +79,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Caballo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CaballoAdjunto.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ConfiguracionCorreo.cs">

@@ -19,10 +19,13 @@ export class SegmentFichaGrupo implements OnInit {
   grupo: any;
   labels: any = {};
   options: Array<any>;
+  photoBase64: string;
+  photoLoading: boolean;
 
   constructor(private navController: NavController,
               private securityService: SecurityService,
               private languageService: LanguageService) {
+    this.photoLoading = true;
     this.options = new Array<any>();
     this.loadOptions();
     languageService.loadLabels().then(labels => {
@@ -40,6 +43,15 @@ export class SegmentFichaGrupo implements OnInit {
       option.params.grupo = this.grupo;
       this.navController.push(option.page, option.params);
     }
+  }
+
+  setPhotoBase64(photoBase64: string): void {
+    this.photoBase64 = photoBase64;
+    this.photoLoading = false;
+  }
+
+  showFotoGrupo(): void {
+    this.photoLoading = false;
   }
 
   private loadOptions(): void {

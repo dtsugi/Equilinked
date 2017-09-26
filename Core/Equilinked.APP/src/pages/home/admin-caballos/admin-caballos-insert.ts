@@ -10,7 +10,7 @@ import {Caballo} from '../../../model/caballo';
 import {UserSessionEntity} from '../../../model/userSession';
 import moment from "moment";
 import {LanguageService} from '../../../services/language.service';
-import {SeleccionFotosModal} from "./seleccion-fotos/seleccion-fotos-modal";
+import {EquiSelectImageModal} from '../../../utils/equi-modal-select-image/select-image-modal';
 
 @Component({
   templateUrl: 'admin-caballos-insert.html',
@@ -27,6 +27,7 @@ export class AdminCaballosInsertPage {
   session: UserSessionEntity;
   isUpdate: boolean = false;
   age: string;
+  adjuntos: any;
 
   constructor(private events: Events,
               public navCtrl: NavController,
@@ -49,6 +50,7 @@ export class AdminCaballosInsertPage {
       this.labels = labels;
       if (this._commonService.IsValidParams(this.navParams, ["caballoEntity", "isUpdate"])) {
         this.caballoEntity = this.navParams.get("caballoEntity");
+        this.adjuntos = this.navParams.get("adjuntos");
         this.isUpdate = this.navParams.get("isUpdate");
         if (!this.isUpdate) {
           this.caballoEntity.FechaNacimiento = moment().format("YYYY-MM-DD")
@@ -110,8 +112,62 @@ export class AdminCaballosInsertPage {
     console.info(this.age);
   }
 
-  selectImage(): void {
-    this.modalController.create(SeleccionFotosModal).present();
+  selectPedigree(): void {
+    let photo: any = {};
+    if (this.adjuntos.Pedigree) {
+      photo.name = this.adjuntos.Pedigree.Name;
+      photo.base64 = "data:image/png;base64," + this.adjuntos.Pedigree.Base64;
+    }
+    let modal = this.modalController.create(EquiSelectImageModal, {photo: photo});
+    modal.onDidDismiss(() => {
+      if (photo.base64) {
+        if (this.adjuntos.Pedigree == null
+          || (photo.base64 && this.adjuntos.Pedigree && photo.name !== this.adjuntos.Pedigree.Name)) {
+          this.adjuntos.Pedigree = {Base64: photo.base64, Blob: photo.blob, Name: photo.name};
+        }
+      } else {
+        this.adjuntos.Pedigree = null;
+      }
+    });
+    modal.present();
+  }
+
+  addImageMarcas(): void {
+    //aqui abrir el diaglo
+    let i: number = 0;
+    let photo: any;
+    while (i < 3) {
+      photo = this.adjuntos.AdjuntosMarcas[i];
+      if (!photo.Base64)
+        break;
+      i++;
+    }
+    if (i < 3) {
+      this.addImage(i, photo);
+    }
+  }
+
+  addImage(index: number, image: any): void {
+    let photo: any = {};
+    if (image.Base64) {
+      photo.name = image.Name;
+      photo.base64 = image.Base64;
+    }
+    let modal = this.modalController.create(EquiSelectImageModal, {photo: photo});
+    modal.onDidDismiss(() => {
+      if (photo.base64) {
+        if (image == null
+          || (photo.base64 && photo.name !== image.Name)) {
+          image.Base64 = photo.base64;
+          image.Blob = photo.blob;
+          image.Name = photo.name;
+        }
+      } else {
+        this.adjuntos.AdjuntosMarcas.splice(index, 1);
+        this.adjuntos.AdjuntosMarcas.push({});
+      }
+    });
+    modal.present();
   }
 
   private getGeneroList() {
@@ -158,24 +214,27 @@ export class AdminCaballosInsertPage {
     this._commonService.showLoading(this.labels["PANT004_ALT_PRO"]);
     this.buildEntity(this.caballoEntity, this.form.value); //se pasan por referencia!
     this._caballoService.save(this.caballoEntity)
-      .subscribe(res => {
-        console.log(res);
-        this.events.publish("caballo:refresh");
-        this.events.publish("caballo-ficha:refresh");
-        this.events.publish("caballos:refresh");
-        this.events.publish("grupo-ubicaciones:refresh");//Cuando se llega desde esta pantalla
-        this.events.publish("caballos-grupo:refresh");//Lista de caballos del grupo
-        this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
-        this.events.publish("establo-caballos:refresh");//Lista de caballos del establo
-        this._commonService.hideLoading();
-        this.navCtrl.pop().then(() => {
-          this._commonService.ShowInfo(this.labels["PANT004_MSG_GUOK"]);
-        })
-      }, error => {
-        console.log(error);
-        this._commonService.hideLoading();
-        this._commonService.ShowInfo(this.labels["PANT004_MSG_GUERR"]);
+      .toPromise()
+      .then(res => {
+        console.info("Se mandaran tambieen los adjuntos...");
+        console.info(JSON.stringify(this.adjuntos.Pedigree));
+        return this._caballoService.updateAdjuntos(this.session.PropietarioId, this.caballoEntity.ID,
+          this.adjuntos.Pedigree, this.adjuntos.AdjuntosMarcas.filter(a => a.Base64));
+      }).then(() => {
+      this.events.publish("caballo:refresh");
+      this.events.publish("caballo-ficha:refresh");
+      this.events.publish("caballos:refresh");
+      this.events.publish("grupo-ubicaciones:refresh");//Cuando se llega desde esta pantalla
+      this.events.publish("caballos-grupo:refresh");//Lista de caballos del grupo
+      this.events.publish("grupo-caballos-sin-ubicacion:refresh");//Cuando viene de la lista de caballos sin ubicacion
+      this.events.publish("establo-caballos:refresh");//Lista de caballos del establo
+      this.navCtrl.pop().then(() => {
+        this._commonService.ShowInfo(this.labels["PANT004_MSG_GUOK"]);
       });
+    }).catch(error => {
+      console.log(error);
+      this._commonService.ShowInfo(this.labels["PANT004_MSG_GUERR"]);
+    });
   }
 
   goBack() {

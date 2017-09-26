@@ -3,6 +3,7 @@ import {AlertController, Events, NavParams, NavController, ViewController} from 
 import {CommonService} from "../../../../services/common.service";
 import {CaballoService} from "../../../../services/caballo.service";
 import {CambioNombreCaballoPage} from "../cambio-nombre/cambio-nombre";
+import {FotoCaballoPage} from '../foto-caballo/foto-caballo';
 
 @Component({
   templateUrl: "opciones-caballo.html",
@@ -11,6 +12,7 @@ import {CambioNombreCaballoPage} from "../cambio-nombre/cambio-nombre";
 export class OpcionesCaballoPopover {
   private navCtrlCaballo: NavController;
   private caballo: any;
+  private photoBase64: string;
 
   constructor(private alertController: AlertController,
               private events: Events,
@@ -24,6 +26,12 @@ export class OpcionesCaballoPopover {
   ngOnInit(): void {
     this.navCtrlCaballo = this.navParams.get("navCtrlCaballo");
     this.caballo = this.navParams.get("caballo");
+    this.photoBase64 = this.navParams.get("photoBase64");
+  }
+
+  changePhoto(): void {
+    this.viewController.dismiss();
+    this.navCtrlCaballo.push(FotoCaballoPage, {caballoId: this.caballo.ID, photoBase64: this.photoBase64});
   }
 
   editName(): void {

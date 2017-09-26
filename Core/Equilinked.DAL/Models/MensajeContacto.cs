@@ -19,6 +19,8 @@ namespace Equilinked.DAL.Models
         public string Mensaje { get; set; }
         public System.DateTime Fecha { get; set; }
         public int Propietario_ID { get; set; }
+        public string Image1 { get; set; }
+        public string Image2 { get; set; }
     
         public virtual MotivoContacto MotivoContacto { get; set; }
         public virtual Propietario Propietario { get; set; }

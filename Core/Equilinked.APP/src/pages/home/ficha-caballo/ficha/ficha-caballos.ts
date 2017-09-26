@@ -17,8 +17,11 @@ import {AsignacionUbicacionCaballoPage} from "../ubicacion/asignacion-ubicacion/
 export class SegmentFichaCaballo implements OnInit {
   @Input("caballo") caballo: any;
   opcionesFicha: Array<any>;
+  photoBase64: string;
+  photoLoading: boolean;
 
   constructor(private navController: NavController) {
+    this.photoLoading = true;
   }
 
   ngOnInit(): void {
@@ -30,6 +33,15 @@ export class SegmentFichaCaballo implements OnInit {
     if (option && option.page) {
       this.navController.push(option.page, option.params);
     }
+  }
+
+  setPhotoBase64(photoBase64: string): void {
+    this.photoBase64 = photoBase64;
+    this.photoLoading = false;
+  }
+
+  showFotoCaballo(): void {
+    this.photoLoading = false;
   }
 
   private loadOptions(): void {

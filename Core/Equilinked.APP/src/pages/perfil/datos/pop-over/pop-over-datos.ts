@@ -7,6 +7,8 @@ import {PerfilPage} from "../../perfil";
 import {OpcionesCuentaPage} from "../opciones-cuenta/opciones-cuenta";
 import {EdicionPerfilPage} from "../edicion-perfil/edicion-perfil";
 import {LanguageService} from '../../../../services/language.service';
+import {FotoPerfilPage} from '../foto-perfil/foto-perfil';
+import {SegmentDatos} from '../segment-datos';
 
 @Component({
   selector: 'pop-over-datos',
@@ -16,6 +18,7 @@ import {LanguageService} from '../../../../services/language.service';
 export class PopoverDatosPage {
   private navCtrlDatos: NavController;
   private perfilPage: PerfilPage;
+  private segmentDatos: SegmentDatos;
   labels: any = {};
 
   constructor(private app: App,
@@ -31,6 +34,8 @@ export class PopoverDatosPage {
   ngOnInit() {
     this.navCtrlDatos = this.navParams.get("navController");
     this.perfilPage = this.navParams.get("perfilPage");
+    this.segmentDatos = this.navParams.get("segmenDatos");
+    console.info(this.segmentDatos ? "segmentadots si tiene" : "segmen no tiene");
   }
 
   editAccount(): void {
@@ -41,6 +46,13 @@ export class PopoverDatosPage {
   showOptionsAccount(): void {
     this.viewController.dismiss();
     this.navCtrlDatos.push(OpcionesCuentaPage, {navCtrlMenu: this.navCtrl});
+  }
+
+  changePhoto(): void {
+    this.viewController.dismiss();
+    let photo: string = this.segmentDatos.getPhotoBase64();
+    console.info("El string que se enviara es:" + photo);
+    this.navCtrlDatos.push(FotoPerfilPage, {photoBase64: photo});
   }
 
   logout() {

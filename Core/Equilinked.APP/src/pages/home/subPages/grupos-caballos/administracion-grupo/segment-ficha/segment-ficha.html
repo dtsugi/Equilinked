@@ -1,5 +1,7 @@
-<div
-  style="background-image: url(assets/img/ficha-grupo.PNG); background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+<div *ngIf="!photoLoading && !photoBase64" style="background-image: url('assets/img/ficha-grupo.PNG'); background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+</div>
+
+<div *ngIf="!photoLoading && photoBase64" [ngStyle]="{ 'background-image': 'url(' + photoBase64 + ')'}" style="background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
 </div>
 
 

@@ -1,229 +1,280 @@
 <ion-header>
-    <ion-toolbar class="equi-toolbar">
-        <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="goBack()">{{ "PANT004_BTN_CAN" | translate }}</button>
-        </ion-buttons>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button class="equi-toolbar-btn" (click)="goBack()">{{ "PANT004_BTN_CAN" | translate }}</button>
+    </ion-buttons>
 
-        <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="form && !form.valid" (click)="save()">
-                {{ "PANT004_BTN_GUAR" | translate }}
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons right>
+      <button class="equi-toolbar-btn" [disabled]="form && !form.valid" (click)="save()">
+        {{ "PANT004_BTN_GUAR" | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
-    <form *ngIf="form"  [formGroup]="form">
-        <ion-grid>
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOM" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNO' | translate }}" formControlName="Nombre"></ion-input>
-                </ion-col>
-            </ion-row>
+  <form *ngIf="form" [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOM" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNO' | translate }}"
+                     formControlName="Nombre"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROP" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPO' | translate }}" formControlName="NombrePropietario"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROP" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPO' | translate }}"
+                     formControlName="NombrePropietario"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GEN" | translate }}</ion-col>
-                <ion-col col-5>
-                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="Genero_ID">
-                        <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
-                    </ion-select>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GEN" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      formControlName="Genero_ID">
+            <ion-option *ngFor="let item of generoList" [value]="item.Key">{{item.Value}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PEL" | translate }}</ion-col>
-                <ion-col col-5>
-                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="Pelaje_ID">
-                        <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
-                    </ion-select>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PEL" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      formControlName="Pelaje_ID">
+            <ion-option *ngFor="let item of pelajeList" [value]="item.Key">{{item.Value}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NAC" | translate }}</ion-col>
-                <ion-col col-5>
-                    <ion-datetime class="equi-input-normal-text" displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY" cancelText="{{ 'PANT004_BTN_CAN' | translate }}"
-                        doneText="{{ 'PANT004_BTN_ACEPT' | translate }}" formControlName="FechaNacimiento" max="2050" (ngModelChange)="calculateAge($event)"></ion-datetime>
-                </ion-col>
-                <ion-col col-4 class="equi-col-center">
-                    <span class="equi-input-normal-text equi-text-edit">{{age}}</span>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NAC" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-datetime class="equi-input-normal-text" displayFormat="DD/MM/YYYY" pickerFormat="D MMMM YYYY"
+                        cancelText="{{ 'PANT004_BTN_CAN' | translate }}"
+                        doneText="{{ 'PANT004_BTN_ACEPT' | translate }}" formControlName="FechaNacimiento" max="2050"
+                        (ngModelChange)="calculateAge($event)"></ion-datetime>
+        </ion-col>
+        <ion-col col-4 class="equi-col-center">
+          <span class="equi-input-normal-text equi-text-edit">{{age}}</span>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GENE" | translate }}</ion-col>
-                <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENPA" | translate }}</span></ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNPA' | translate }}" formControlName="NombrePadre"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GENE" | translate }}</ion-col>
+        <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENPA" | translate }}</span>
+        </ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNPA' | translate }}"
+                     formControlName="NombrePadre"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3></ion-col>
-                <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENMA" | translate }}</span></ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNMA' | translate }}" formControlName="NombreMadre"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3></ion-col>
+        <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENMA" | translate }}</span>
+        </ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNMA' | translate }}"
+                     formControlName="NombreMadre"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <!--<ion-row>
-                <ion-col col-3></ion-col>
-                <ion-col col-3>
-                    <span class="equi-input-normal-text equi-text-edit" (click)="selectImage()">
-                        <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>Adjuntar imagen
+      <ion-row>
+        <ion-col col-3></ion-col>
+        <ion-col>
+                    <span class="equi-input-normal-text equi-text-edit" (click)="selectPedigree()">
+                        <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>
+                      <span *ngIf="!adjuntos.Pedigree">Adjuntar imagen</span>
+                      <span *ngIf="adjuntos.Pedigree">Pedigree</span>
                     </span>
-                </ion-col>
-            </ion-row>-->
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_CRIA" | translate }}</ion-col>
-                <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNCRI' | translate }}" formControlName="NombreCriador"></ion-input>
-                </ion-col>
-                <ion-col col-4>
-                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_ASPACRI' | translate }}" formControlName="PaisCriador">
-                        <ion-option *ngFor="let pais of paises" [value]="pais.ID">{{pais.Descripcion}}</ion-option>
-                    </ion-select>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_CRIA" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASNCRI' | translate }}"
+                     formControlName="NombreCriador"></ion-input>
+        </ion-col>
+        <ion-col col-4>
+          <ion-select class="equi-input-normal-text equi-select-width"
+                      placeholder="{{ 'PANT004_TXT_ASPACRI' | translate }}" formControlName="PaisCriador">
+            <ion-option *ngFor="let pais of paises" [value]="pais.ID">{{pais.Descripcion}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_ADN" | translate }}</ion-col>
-                <ion-col>
-                    <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_ADN" | translate }}</ion-col>
+        <ion-col>
+          <ion-toggle checked="false" formControlName="ADN"></ion-toggle>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NCHI" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="NumeroChip"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NCHI" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                     formControlName="NumeroChip"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NID" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="NumeroId"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NID" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                     formControlName="NumeroId"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_OTRMA" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="Marcas"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_OTRMA" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                     formControlName="Marcas"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <hr>
-            </ion-row>
-            <ion-row>
-                <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_REFN" | translate }}</ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">Adjuntos</ion-col>
+        <ion-col>
+          <span class="equi-input-normal-text equi-text-edit"
+                (click)="addImageMarcas()">
+            <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>
+            <span>Adjuntar imágen</span>
+          </span>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
-                <ion-col col-4>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="NumeroFEN"></ion-input>
-                </ion-col>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
-                <ion-col col-2 class="equi-col-center">
-                    <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
-                </ion-col>
-            </ion-row>
+      <ion-row text-wrap>
+        <ion-col col-4 *ngFor="let adjuntoMarca of adjuntos.AdjuntosMarcas; let i = index">
+          <div *ngIf="!adjuntoMarca.Base64" class="equi-caballo-adjunto">
+            Foto
+          </div>
+          <div *ngIf="adjuntoMarca.Base64"
+               (click)="addImage(i, adjuntoMarca)"
+               [ngStyle]="{ 'background-image': 'url(' + adjuntoMarca.Base64 + ')'}"
+               style="background-size: cover; background-repeat: no-repeat; height: 150px; width: 100%;">
+          </div>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <hr>
-            </ion-row>
-            <ion-row>
-                <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_FEI" | translate }}</ion-col>
-            </ion-row>
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_REFN" | translate }}</ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
-                <ion-col col-4>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="NumeroFEI"></ion-input>
-                </ion-col>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
-                <ion-col col-2 class="equi-col-center">
-                    <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
+        <ion-col col-4>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                     formControlName="NumeroFEN"></ion-input>
+        </ion-col>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
+        <ion-col col-2 class="equi-col-center">
+          <ion-toggle checked="false" formControlName="EstadoFEN"></ion-toggle>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <hr>
-            </ion-row>
-            <ion-row>
-                <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DEYCU" | translate }}</ion-col>
-            </ion-row>
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_FEI" | translate }}</ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROT" | translate }}</ion-col>
-                <ion-col col-5>
-                    <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}" formControlName="Protector_ID">
-                        <ion-option *ngFor="let protector of protectores" [value]="protector.ID">{{protector.Descripcion}}</ion-option>
-                    </ion-select>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
+        <ion-col col-4>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                     formControlName="NumeroFEI"></ion-input>
+        </ion-col>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
+        <ion-col col-2 class="equi-col-center">
+          <ion-toggle checked="false" formControlName="EstadoFEI"></ion-toggle>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col class="equi-title-form">{{ "PANT004_LBL_OBSE" | translate }}</ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col>
-                    <ion-textarea class="equi-input-normal-text" rows="2" placeholder="{{ 'PANT004_TXT_ASOBS' | translate }}" autoresize formControlName="Observaciones"></ion-textarea>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DEYCU" | translate }}</ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EMBO" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASEMB' | translate }}" formControlName="Embocadura"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROT" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      formControlName="Protector_ID">
+            <ion-option *ngFor="let protector of protectores" [value]="protector.ID">{{protector.Descripcion}}
+            </ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EXTCA" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASEXCA' | translate }}" formControlName="ExtrasDeCabezada"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form">{{ "PANT004_LBL_OBSE" | translate }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-textarea class="equi-input-normal-text" rows="2" placeholder="{{ 'PANT004_TXT_ASOBS' | translate }}"
+                        autoresize formControlName="Observaciones"></ion-textarea>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <hr>
-            </ion-row>
-            <ion-row>
-                <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DAPCA" | translate }}</ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EMBO" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASEMB' | translate }}"
+                     formControlName="Embocadura"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCNO" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCNO' | translate }}" formControlName="NombreResponsable"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EXTCA" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASEXCA' | translate }}"
+                     formControlName="ExtrasDeCabezada"></ion-input>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCTE" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCTE' | translate }}" formControlName="TelefonoResponsable"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DAPCA" | translate }}</ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCCOE" | translate }}</ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCCO' | translate }}" formControlName="CorreoResponsable"></ion-input>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </form>
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCNO" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCNO' | translate }}"
+                     formControlName="NombreResponsable"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCTE" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCTE' | translate }}"
+                     formControlName="TelefonoResponsable"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCCOE" | translate }}</ion-col>
+        <ion-col>
+          <ion-input class="equi-input-normal-text" type="text" placeholder="{{ 'PANT004_TXT_ASPCCO' | translate }}"
+                     formControlName="CorreoResponsable"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

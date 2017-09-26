@@ -17,6 +17,7 @@ namespace Equilinked.DAL.Models
         public Caballo()
         {
             this.Alimentacion1 = new HashSet<Alimentacion>();
+            this.CaballoAdjunto = new HashSet<CaballoAdjunto>();
         }
     
         public int ID { get; set; }
@@ -46,6 +47,7 @@ namespace Equilinked.DAL.Models
         public string NombrePropietario { get; set; }
         public string Marcas { get; set; }
         public Nullable<int> Protector_ID { get; set; }
+        public string Image { get; set; }
     
         public virtual ICollection<Alimentacion> Alimentacion1 { get; set; }
         public virtual Genero Genero { get; set; }
@@ -57,5 +59,6 @@ namespace Equilinked.DAL.Models
         public virtual GenealogiaCaballo GenealogiaCaballo { get; set; }
         public virtual CriadorCaballo CriadorCaballo { get; set; }
         public virtual ResponsableCaballo ResponsableCaballo { get; set; }
+        public virtual ICollection<CaballoAdjunto> CaballoAdjunto { get; set; }
     }
 }

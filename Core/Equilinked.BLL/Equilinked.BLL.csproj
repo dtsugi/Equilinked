@@ -58,6 +58,7 @@
     <Compile Include="CriadorBLL.cs" />
     <Compile Include="EnvioCorreoInvitacionBLL.cs" />
     <Compile Include="EstabloBLL.cs" />
+    <Compile Include="FTPBLL.cs" />
     <Compile Include="GrupoCaballoBLL.cs" />
     <Compile Include="InvitacionBLL.cs" />
     <Compile Include="OtrasMarcasBLL.cs" />

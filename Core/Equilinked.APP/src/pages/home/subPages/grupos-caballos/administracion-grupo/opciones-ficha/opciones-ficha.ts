@@ -3,6 +3,7 @@ import {AlertController, Events, NavParams, NavController, ViewController} from 
 import {CommonService} from "../../../../../../services/common.service";
 import {GruposCaballosService} from "../../../../../../services/grupos-caballos.service";
 import {CambioNombrePage} from "../cambio-nombre/cambio-nombre";
+import {FotoGrupoPage} from '../foto-grupo/foto-grupo';
 import {LanguageService} from '../../../../../../services/language.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class OpcionesFichaGrupo {
   private navCtrlGrupo: NavController;
   private grupo: any;
   labels: any = {};
+  private photoBase64: string;
 
   constructor(private alertController: AlertController,
               private events: Events,
@@ -28,11 +30,17 @@ export class OpcionesFichaGrupo {
   ngOnInit() {
     this.navCtrlGrupo = this.navParams.get("navCtrlGrupo");
     this.grupo = this.navParams.get("grupo");
+    this.photoBase64 = this.navParams.get("photoBase64");
   }
 
   editName(): void {
     this.viewController.dismiss();
     this.navCtrlGrupo.push(CambioNombrePage, {grupo: this.grupo});
+  }
+
+  changePhoto(): void {
+    this.viewController.dismiss();
+    this.navCtrlGrupo.push(FotoGrupoPage, {grupoId: this.grupo.ID, photoBase64: this.photoBase64});
   }
 
   deleteGrupoHandler = () => {

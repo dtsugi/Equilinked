@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {Events, NavController, PopoverController, Slides} from "ionic-angular";
 import {PopoverDatosPage} from "./datos/pop-over/pop-over-datos";
-
+import {SegmentDatos} from './datos/segment-datos';
 @Component({
   templateUrl: "perfil.html"
 })
@@ -11,6 +11,7 @@ export class PerfilPage implements OnInit {
   private indexSlidesMap: Map<number, string>;
   private lastSlide: string;
   @ViewChild(Slides) slides: Slides;
+  @ViewChild(SegmentDatos) segmenDatos: SegmentDatos;
   currentSlide: string; //el tab seleleccionado
   parametrosEstablos: any;
 
@@ -51,7 +52,8 @@ export class PerfilPage implements OnInit {
   presentPopover(ev) {
     let popover = this.popoverCtrl.create(PopoverDatosPage, {
       navController: this.navCtrl,
-      perfilPage: this
+      perfilPage: this,
+      segmenDatos: this.segmenDatos
     });
     popover.present({
       ev: ev

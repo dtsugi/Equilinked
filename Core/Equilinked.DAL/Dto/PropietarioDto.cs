@@ -1,9 +1,6 @@
 ﻿using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.DAL.Dto
 {
@@ -23,6 +20,7 @@ namespace Equilinked.DAL.Dto
         public Nullable<int> Usuario_ID { get; set; }
         public List<PropietarioTelefono> PropietarioTelefono { get; set; }
         public Usuario Usuario { get; set; }
+        public string Image { get; set; }
 
         public PropietarioDto() { }
 
@@ -45,6 +43,7 @@ namespace Equilinked.DAL.Dto
             this.Usuario_ID = propietario.Usuario_ID;
             this.PropietarioTelefono = new List<PropietarioTelefono>(propietario.PropietarioTelefono);
             this.Usuario = propietario.Usuario;
+            this.Image = propietario.Image;
         }
     }
 }

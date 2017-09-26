@@ -16,6 +16,55 @@ export class CaballoService {
   constructor(private _http: Http) {
   }
 
+  getAdjuntos(propietarioId: number, caballoId: number): Promise<any> {
+    let url: string = this.urlCaballos + propietarioId + "/caballos/" + caballoId + "/adjuntos";
+    return this._http.get(url)
+      .timeout(this.requestTimeout)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  updateAdjuntos(propietarioId: number, caballoId: number, pedigree: any, adjuntos: Array<any>): Promise<any> {
+    let url: string = this.urlCaballos + propietarioId + "/caballos/" + caballoId + "/adjuntos";
+    let formData: FormData = new FormData();
+    if (pedigree) {
+      if (pedigree.Blob) {
+        formData.append("pedigree", pedigree.Blob, pedigree.Name);
+      } else {
+        formData.append("pedigree", pedigree.Name);
+      }
+    }
+    if (adjuntos && adjuntos.length > 0) {
+      adjuntos.forEach((adjunto, i) => {
+        if (adjunto.Blob) {
+          formData.append("adjunto" + i, adjunto.Blob, adjunto.Name);
+        } else {
+          formData.append("adjunto" + i, adjunto.Name);
+        }
+      });
+    }
+    return this._http.put(url, formData)
+      .timeout(this.requestTimeout)
+      .toPromise();
+  }
+
+  getPhoto(propietarioId: number, caballoId: number): Promise<any> {
+    let url: string = this.urlCaballos + propietarioId + "/caballos/" + caballoId + "/foto";
+    return this._http.get(url)
+      .timeout(this.requestTimeout)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  updatePhoto(propietarioId: number, caballoId: number, photoBlob: any, photoName: string): Promise<any> {
+    let url: string = this.urlCaballos + propietarioId + "/caballos/" + caballoId + "/foto";
+    let formData: FormData = new FormData();
+    formData.append("file", photoBlob, photoName);
+    return this._http.put(url, formData)
+      .timeout(this.requestTimeout)
+      .toPromise();
+  }
+
   getCaballosPorEstadoAsociacionEstablo(propietarioId: number, establo: boolean): Promise<Array<any>> {
     let url: string = this.urlCaballos + propietarioId + "/caballos?establo=" + establo;
     return this._http.get(url)

@@ -25,6 +25,7 @@ namespace Equilinked.DAL.Models
         public string Descripcion { get; set; }
         public Nullable<int> Propietario_ID { get; set; }
         public Nullable<bool> GrupoDefault { get; set; }
+        public string Image { get; set; }
     
         public virtual ICollection<Caballo> Caballo { get; set; }
         public virtual ICollection<GrupoCaballo> GrupoCaballo { get; set; }

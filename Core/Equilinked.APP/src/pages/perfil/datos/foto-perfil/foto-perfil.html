@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button class="equi-toolbar-btn" (click)="cancel()">
+        Cancelar
+      </button>
+    </ion-buttons>
+
+    <ion-buttons right>
+      <button *ngIf="!modeEdition && !photoChanged" ion-button class="equi-toolbar-btn" (click)="edit()">
+        Editar
+      </button>
+      <button *ngIf="!modeEdition && photoChanged" ion-button class="equi-toolbar-btn" (click)="update()">
+        Actualizar
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!modeEdition">
+    <img *ngIf="!photoBase64" src="assets/img/ficha-perfil.PNG"/>
+    <img *ngIf="photoBase64" [src]="photoBase64"/>
+  </div>
+
+  <equi-gallery [hidden]="!modeEdition" [options]="options" (selectImage)="selectPhoto($event)"></equi-gallery>
+</ion-content>
+
+

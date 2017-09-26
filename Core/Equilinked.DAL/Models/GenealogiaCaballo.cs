@@ -17,5 +17,6 @@ namespace Equilinked.DAL.Models
         public int Caballo_ID { get; set; }
         public string Madre { get; set; }
         public string Padre { get; set; }
+        public string ImagePedigree { get; set; }
     }
 }

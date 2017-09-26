@@ -9,6 +9,7 @@ import {GrupoAlertasEditPage} from "./segment-calendario/alertas-edit/grupo-aler
 import {LanguageService} from '../../../../../services/language.service';
 import {SegmentCaballosGrupo} from "./segment-caballos/segment-caballos";
 import {SegmentCalendarioGrupo} from './segment-calendario/calendario-grupo';
+import {SegmentFichaGrupo} from './segment-ficha/segment-ficha';
 import {EquiPopoverFiltroCalendario} from "../../../../../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
 import {ConstantsConfig} from "../../../../../app/utils";
 
@@ -30,12 +31,14 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
   @ViewChild(Slides) slides: Slides;
   @ViewChild(SegmentCaballosGrupo) caballosGrupo: SegmentCaballosGrupo;
   @ViewChild(SegmentCalendarioGrupo) segmentCalendar: SegmentCalendarioGrupo;
+  @ViewChild(SegmentFichaGrupo) fichaGrupo: SegmentFichaGrupo;
   labels: any = {};
   grupo: any;
   segmentSelection: string;
   parametrosCaballos: any;
   calendarOptions: any;
   optionsTypeAlerts: any;
+  photoBase64: string;
 
   constructor(private commonService: CommonService,
               private events: Events,
@@ -118,7 +121,8 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
   showOptionsFicha(ev: any): void {
     let popover = this.popoverController.create(OpcionesFichaGrupo, {
       navCtrlGrupo: this.navController,
-      grupo: JSON.parse(JSON.stringify(this.grupo))
+      grupo: JSON.parse(JSON.stringify(this.grupo)),
+      photoBase64: this.photoBase64
     });
     popover.present({
       ev: ev
@@ -155,6 +159,16 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
     });
   }
 
+  private getFotoGrupo(idPropietario: number, idGrupo: number): void {
+    this.gruposCaballosService.getPhoto(idPropietario, idGrupo)
+      .then(foto => {
+        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.fichaGrupo.setPhotoBase64(this.photoBase64);
+      }).catch(err => {
+      console.error(JSON.stringify(err));
+    });
+  }
+
   private adjustHeightSlides(): void {
     let slides = document.querySelectorAll(".ficha-grupo.equi-content-slide-scroll");
     for (let i = 0; i < slides.length; i++) {
@@ -178,6 +192,11 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
       .then(grupo => {
         this.grupo = grupo;
         this.parametrosCaballos.grupoDefault = grupo.GrupoDefault;
+        if (grupo.Image) {
+          this.getFotoGrupo(grupo.Propietario_ID, grupo.ID);
+        } else {
+          this.fichaGrupo.showFotoGrupo();
+        }
         if (showLoading)
           this.commonService.hideLoading();
       }).catch(err => {

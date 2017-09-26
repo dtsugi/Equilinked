@@ -32,6 +32,7 @@ namespace Equilinked.DAL.Dto
         public CriadorCaballo CriadorCaballo { get; set; }
         public ResponsableCaballo ResponsableCaballo { get; set; }
         public Establo Establo { get; set; }
+        public string Image { get; set; }
 
         public CaballoDto() { }
 
@@ -62,6 +63,7 @@ namespace Equilinked.DAL.Dto
             GenealogiaCaballo = caballo.GenealogiaCaballo;
             CriadorCaballo = caballo.CriadorCaballo;
             ResponsableCaballo = caballo.ResponsableCaballo;
+            Image = caballo.Image;
         }
     }
 }
@@ -97,6 +99,7 @@ namespace Equilinked.DAL.Models
             GenealogiaCaballo = caballoDto.GenealogiaCaballo;
             CriadorCaballo = caballoDto.CriadorCaballo;
             ResponsableCaballo = caballoDto.ResponsableCaballo;
+            Image = caballoDto.Image;
         }
     }
 }

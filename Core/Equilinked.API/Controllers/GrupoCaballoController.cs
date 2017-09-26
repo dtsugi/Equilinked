@@ -5,12 +5,60 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Equilinked.DAL.Models;
+using System.Web;
+using System.IO;
+using System.Drawing;
 
 namespace Equilinked.API.Controllers
 {
     public class GrupoCaballoController: EquilinkedBaseController
     {
         private GrupoCaballoBLL GrupoCaballoBLL = new GrupoCaballoBLL();
+
+        [HttpPut, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/foto")]
+        public IHttpActionResult UpdateFotoCaballo(int propietarioId, int grupoId)
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                if (httpRequest.Files.Count > 0)
+                {
+                    HttpPostedFile postedFile = httpRequest.Files["file"];
+                    GrupoCaballoBLL.UpdateStreamFotoGrupo(grupoId, postedFile.InputStream, postedFile.FileName, postedFile.ContentLength);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al actualizar la foto de perfil del grupo"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/foto")]
+        public HttpResponseMessage GetFotoCaballo(int propietarioId, int grupoId)
+        {
+            try
+            {
+                Stream stream = GrupoCaballoBLL.GetStreamFotoGrupo(grupoId);
+                string base64String = "";
+                using (Image image = Image.FromStream(stream))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        base64String = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+                stream.Close();
+                return Request.CreateResponse(HttpStatusCode.OK, new { FotoPerfil = base64String });
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener la foto perfil grupo"));
+            }
+        }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/caballos")]
         public IHttpActionResult GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, [FromUri] bool tieneEstablo)

@@ -22,8 +22,21 @@ export class ContactoService {
       .toPromise();
   }
 
-  saveMensajeContacto(reporte: any): Promise<any> {
-    return this.http.post(this.urlMensajeContacto, reporte)
+  saveMensajeContacto(reporte: any, file0: any, file1: any): Promise<any> {
+    let formData: FormData = new FormData();
+    //MotivoContacto_ID
+    //Mensaje
+    //Propietario_ID
+    formData.append("MotivoContacto_ID", reporte.MotivoContacto_ID);
+    formData.append("Mensaje", reporte.Mensaje);
+    formData.append("Propietario_ID", reporte.Propietario_ID);
+    if(file0) {
+      formData.append("file0", file0.blob, file0.name);
+    }
+    if(file1){
+      formData.append("file1", file1.blob, file1.name);
+    }
+    return this.http.post(this.urlMensajeContacto, formData)
       .timeout(this.requestTimeout)
       .toPromise();
   }

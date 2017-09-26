@@ -5,6 +5,7 @@ import {CommonService} from '../../../services/common.service';
 import {LanguageService} from '../../../services/language.service';
 import {Caballo} from '../../../model/caballo';
 import {OpcionesCaballoPopover} from "./opciones-caballo/opciones-caballo";
+import {SegmentFichaCaballo} from './ficha/ficha-caballos';
 import {SegmentCalendarioCaballo} from './calendario/calendario-caballo';
 import {EquiPopoverFiltroCalendario} from '../../../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario';
 import {CaballoAlertasEditPage} from './calendario/alertas-edit/caballo-alertas-edit';
@@ -24,12 +25,14 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
   private indexSlidesMap: Map<number, string>;
   private lastSlide: string;
   @ViewChild(Slides) slides: Slides;
+  @ViewChild(SegmentFichaCaballo) fichaCaballo: SegmentFichaCaballo;
   @ViewChild(SegmentCalendarioCaballo) calendarioCaballo: SegmentCalendarioCaballo;
   labels: any = {};
   menu: string;
   caballo: Caballo;
   calendarOptions: any;
   optionsTypeAlerts: any;
+  photoBase64: string;
 
   constructor(private caballoService: CaballoService,
               private events: Events,
@@ -108,7 +111,8 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
   openMenu(ev: any): void {
     let params: any = {
       navCtrlCaballo: this.navCtrl,
-      caballo: this.caballo
+      caballo: this.caballo,
+      photoBase64: this.photoBase64
     };
     this.popoverController.create(OpcionesCaballoPopover, params).present({
       ev: ev
@@ -147,10 +151,25 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
     this.caballoService.getSerializedById(this.caballo.ID).toPromise()
       .then(caballo => {
         this.caballo = caballo;
+        if (caballo.Image) {
+          this.getFotoCaballo(caballo.Propietario_ID, caballo.ID);
+        } else {
+          this.fichaCaballo.showFotoCaballo();
+        }
         if (loading)
           this._commonService.hideLoading();
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, "Error al cargar la información del caballo");
+    });
+  }
+
+  private getFotoCaballo(idPropietario: number, idCaballo: number): void {
+    this.caballoService.getPhoto(idPropietario, idCaballo)
+      .then(foto => {
+        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.fichaCaballo.setPhotoBase64(this.photoBase64);
+      }).catch(err => {
+      console.error(JSON.stringify(err));
     });
   }
 

@@ -3,12 +3,53 @@ using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 
 namespace Equilinked.BLL
 {
     public class PropietarioBLL : BLLBase, IBase<Propietario>
     {
+
+        private FTPBLL ftpBLL = new FTPBLL();
+
+        public void UpdateStreamFotoPerfilPropietario(int propietarioId, Stream foto, string name, long length)
+        {
+            string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(name);
+            ftpBLL.SaveStreamImage(foto, "/foto-perfil/usuario/" + newFileName, length);
+            string fotoEliminar;
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                Propietario propietario = db.Propietario.Where(p => p.ID == propietarioId).FirstOrDefault();
+                fotoEliminar = propietario.Image;
+                propietario.Image = newFileName;
+                db.SaveChanges();
+            }
+            if(fotoEliminar != null)
+            {
+                ftpBLL.DeleteStreamImage("/foto-perfil/usuario/" + fotoEliminar);
+            }
+        }
+
+        public Stream GetStreamFotoPerfilPropietario(int propietarioId)
+        {
+            Propietario propietario = null;
+            using(var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                propietario = db.Propietario.Where(p => p.ID == propietarioId).FirstOrDefault();
+            }
+            if(propietario != null)
+            {
+                string imagePath = "/foto-perfil/usuario/" + propietario.Image;//esta se debe sacar de base de datos
+                return ftpBLL.GetStreamImage(imagePath);
+            }
+            else
+            {
+                throw new Exception("No hay imagen para el propietario");
+            }
+        }
 
         public void SavePropietarioAndUsuario(Propietario propietario, out bool usernameValid, out bool emailValid)
         {

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button class="equi-toolbar-btn" (click)="back()">
+        Cerrar
+      </button>
+    </ion-buttons>
+
+    <ion-buttons right>
+      <button *ngIf="photo.base64 && !readonly" class="equi-toolbar-btn" (click)="remove()">
+        Remover
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!modeEdition">
+    <div *ngIf="!photo.base64" (click)="selectImage()" class="equi-modal-select-image">
+      <div>
+        <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon><br />
+        seleccionar foto
+      </div>
+    </div>
+    <img *ngIf="photo.base64" [src]="photo.base64"/>
+  </div>
+
+  <equi-gallery [hidden]="!modeEdition" [options]="options" (selectImage)="selectPhoto($event)"></equi-gallery>
+</ion-content>

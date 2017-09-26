@@ -15,6 +15,8 @@ import {EquiOpcionesTelefonoPopover} from "../../../utils/equi-opciones-telefono
 export class SegmentDatos implements OnInit, OnDestroy {
   session: UserSessionEntity;
   propietarioEntity: Propietario;
+  photoBase64: string;
+  photoLoading: boolean;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -23,6 +25,7 @@ export class SegmentDatos implements OnInit, OnDestroy {
               private commonService: CommonService,
               private securityService: SecurityService,
               private propietarioService: PropietarioService) {
+    this.photoLoading = true;
   }
 
   ngOnInit() {
@@ -48,13 +51,31 @@ export class SegmentDatos implements OnInit, OnDestroy {
       this.commonService.showLoading("Procesando..");
     this.propietarioService.getSerializedById(idPropietario)
       .subscribe(res => {
-        console.log(res);
+        if (res.Image) { //si tiene imagen vamos por ella
+          this.getFotoPerfil(idPropietario);//vamos por la foto!
+        } else {
+          this.photoLoading = false;
+        }
         this.propietarioEntity = res;
         if (showLoading)
           this.commonService.hideLoading();
       }, error => {
         this.commonService.ShowErrorHttp(error, "Error obteniendo el perfil del usuario");
       });
+  }
+
+  public getPhotoBase64(): string {
+    return this.photoBase64;
+  }
+
+  private getFotoPerfil(idPropietario: number): void {
+    this.propietarioService.getPhoto(idPropietario)
+      .then(foto => {
+        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.photoLoading = false;
+      }).catch(err => {
+      console.error(JSON.stringify(err));
+    });
   }
 
   private addEvents(): void {

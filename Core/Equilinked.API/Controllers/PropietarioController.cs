@@ -7,13 +7,60 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Threading.Tasks;
+using System.IO;
+using System.Drawing;
+using System.Web;
 
 namespace Equilinked.API.Controllers
 {
     public class PropietarioController : EquilinkedBaseController
     {
         private PropietarioBLL _propietarioBLL = new PropietarioBLL();
+
+        [HttpPut, Route("api/propietarios/{propietarioId}/foto")]
+        public IHttpActionResult UpdateFotoPerfil(int propietarioId)
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                if (httpRequest.Files.Count > 0)
+                {
+                    HttpPostedFile postedFile = httpRequest.Files["file"];
+                    _propietarioBLL.UpdateStreamFotoPerfilPropietario(propietarioId, postedFile.InputStream, postedFile.FileName, postedFile.ContentLength);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al actualizar la foto de perfil del propietario"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/foto")]
+        public HttpResponseMessage GetFotoPerfilPropietario(int propietarioId)
+        {
+            try
+            {
+                Stream stream = _propietarioBLL.GetStreamFotoPerfilPropietario(propietarioId);
+                string base64String = "";
+                using (Image image = Image.FromStream(stream))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        base64String = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+                stream.Close();
+                return Request.CreateResponse(HttpStatusCode.OK, new { FotoPerfil = base64String });
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener foto perfil propietario"));
+            }
+        }
 
         [HttpPost, Route("api/propietarios")]
         public IHttpActionResult SavePropietario([FromBody] Propietario propietario)

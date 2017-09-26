@@ -27,6 +27,8 @@ import {EquiOpcionesTelefonoPopover} from "../utils/equi-opciones-telefono/equi-
 import {EquiCalendar} from "../utils/equi-calendar/equi-calendar";
 import {EquiCalendar2} from "../utils/equi-calendar2/equi-calendar2";
 import {EquiPopoverFiltroCalendario} from "../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
+import {EquiGallery} from '../utils/equi-gallery/equi-gallery';
+import {EquiSelectImageModal} from '../utils/equi-modal-select-image/select-image-modal';
 /*Home*/
 import {HomePage} from '../pages/home/home';
 import {TabsPage} from '../pages/tabs/tabs';
@@ -53,6 +55,7 @@ import {SeleccionFotosModal} from "../pages/home/admin-caballos/seleccion-fotos/
 import {UbicacionCaballoPage} from "../pages/home/ficha-caballo/ubicacion/ubicacion";
 import {AsignacionUbicacionCaballoPage} from "../pages/home/ficha-caballo/ubicacion/asignacion-ubicacion/asignacion-ubicacion";
 import {OpcionesUbicacionModal} from "../pages/home/ficha-caballo/ubicacion/opciones-ubicacion/opciones-ubicacion";
+import {FotoCaballoPage} from '../pages/home/ficha-caballo/foto-caballo/foto-caballo';
 /* Caballos-Grupos */
 import {GruposCaballos} from "../pages/home/subPages/grupos-caballos/grupos-caballos";
 import {CreacionGrupoPage} from "../pages/home/subPages/grupos-caballos/creacion-grupo/creacion-grupo";
@@ -75,6 +78,7 @@ import {SegmentCaballosGrupo} from "../pages/home/subPages/grupos-caballos/admin
 import {EdicionCaballosGrupoPage} from "../pages/home/subPages/grupos-caballos/administracion-grupo/segment-caballos/edicion-caballos/edicion-caballos";
 import {SegmentCalendarioGrupo} from '../pages/home/subPages/grupos-caballos/administracion-grupo/segment-calendario/calendario-grupo';
 import {GrupoAlertasEditPage} from '../pages/home/subPages/grupos-caballos/administracion-grupo/segment-calendario/alertas-edit/grupo-alertas-edit';
+import {FotoGrupoPage} from '../pages/home/subPages/grupos-caballos/administracion-grupo/foto-grupo/foto-grupo';
 /* Caballos-ALimentacion */
 import {AlimentacionPage} from "../pages/home/ficha-caballo/alimentacion/alimentacion";
 import {AlimentacionEditPage} from "../pages/home/ficha-caballo/alimentacion/alimentacion-edit";
@@ -110,6 +114,7 @@ import {ContactoPage} from "../pages/perfil/datos/opciones-cuenta/contacto/conta
 import {RecomendacionPage} from "../pages/perfil/datos/opciones-cuenta/recomendacion/recomendacion";
 import {PreguntasFrecuentesPage} from "../pages/perfil/datos/opciones-cuenta/preguntas-frecuentes/preguntas-frecuentes";
 import {EliminacionCuentaPage} from "../pages/perfil/datos/opciones-cuenta/eliminacion-cuenta/eliminacion-cuenta";
+import {FotoPerfilPage} from '../pages/perfil/datos/foto-perfil/foto-perfil';
 /* Establos */
 import {SegmentEstablos} from "../pages/perfil/establos/segment-establos";
 import {AdminEstablosPage} from "../pages/perfil/establos/admin-establo/admin-establo";
@@ -150,6 +155,8 @@ export function createTranslateLoader(http: Http) {
     EquiCalendar,
     EquiCalendar2,
     EquiPopoverFiltroCalendario,
+    EquiGallery,
+    EquiSelectImageModal,
     /* Notificaciones */
     NotificacionesPage,
     EdicionNotificacionGeneralPage,
@@ -169,6 +176,7 @@ export function createTranslateLoader(http: Http) {
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
+    FotoCaballoPage,
     /* Caballos-Grupos */
     GruposCaballos,
     CreacionGrupoPage,
@@ -191,6 +199,7 @@ export function createTranslateLoader(http: Http) {
     SegmentCalendarioGrupo,
     EdicionCaballosGrupoPage,
     GrupoAlertasEditPage,
+    FotoGrupoPage,
     /* Caballos-ALimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -226,6 +235,7 @@ export function createTranslateLoader(http: Http) {
     RecomendacionPage,
     PreguntasFrecuentesPage,
     EliminacionCuentaPage,
+    FotoPerfilPage,
     /* Establos */
     SegmentEstablos,
     AdminEstablosPage,
@@ -285,6 +295,7 @@ export function createTranslateLoader(http: Http) {
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
+    FotoCaballoPage,
     /* Caballos-Grupos */
     CreacionGrupoPage,
     AdministracionGrupoPage,
@@ -303,6 +314,7 @@ export function createTranslateLoader(http: Http) {
     CambioNombrePage,
     EdicionCaballosGrupoPage,
     GrupoAlertasEditPage,
+    FotoGrupoPage,
     /* Caballos-Alimentacion */
     AlimentacionPage,
     AlimentacionEditPage,
@@ -333,6 +345,7 @@ export function createTranslateLoader(http: Http) {
     RecomendacionPage,
     PreguntasFrecuentesPage,
     EliminacionCuentaPage,
+    FotoPerfilPage,
     /* Establos */
     AdminEstablosPage,
     CaballosEstabloModal,
@@ -346,6 +359,7 @@ export function createTranslateLoader(http: Http) {
     EquiModalRecordatorio,
     EquiOpcionesTelefonoPopover,
     EquiPopoverFiltroCalendario,
+    EquiSelectImageModal,
     /*Calendario*/
     CalendarioPage,
     /*Camara*/

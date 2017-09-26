@@ -14,6 +14,23 @@ export class PropietarioService {
   constructor(private _http: Http) {
   }
 
+  getPhoto(propietarioId: number): Promise<any> {
+    let url: string = this.actionUrl + propietarioId + "/foto";
+    return this._http.get(url)
+      .timeout(this.requestTimeout)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  updatePhoto(propietarioId: number, photoBlob: any, photoName: string): Promise<any> {
+    let url: string = this.actionUrl + propietarioId + "/foto";
+    let formData: FormData = new FormData();
+    formData.append("file", photoBlob, photoName);
+    return this._http.put(url, formData)
+      .timeout(this.requestTimeout)
+      .toPromise();
+  }
+
   savePropietario(propietario: any): Promise<any> {
     let url = this.actionUrl;
     return this._http.post(url, propietario)

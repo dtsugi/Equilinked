@@ -15,6 +15,23 @@ export class GruposCaballosService {
   constructor(private http: Http) {
   }
 
+  getPhoto(propietarioId: number, grupoId: number): Promise<any> {
+    let url: string = this.urlGrupos + propietarioId + "/grupos/" + grupoId + "/foto";
+    return this.http.get(url)
+      .timeout(this.requestTimeout)
+      .map(response => response.json())
+      .toPromise();
+  }
+
+  updatePhoto(propietarioId: number, grupoId: number, photoBlob: any, photoName: string): Promise<any> {
+    let url: string = this.urlGrupos + propietarioId + "/grupos/" + grupoId + "/foto";
+    let formData: FormData = new FormData();
+    formData.append("file", photoBlob, photoName);
+    return this.http.put(url, formData)
+      .timeout(this.requestTimeout)
+      .toPromise();
+  }
+
   getCaballosByGrupoAndStatusEstablo(propietarioId: number, grupoId: number, tieneEstablo: boolean): Promise<Array<any>> {
     let url: string = this.urlGrupos + propietarioId + "/grupos/" + grupoId + "/caballos";
     let params = new URLSearchParams();

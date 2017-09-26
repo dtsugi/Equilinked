@@ -3,6 +3,7 @@ using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,46 @@ namespace Equilinked.BLL
 {
     public class GrupoCaballoBLL : BLLBase, IBase<Grupo>
     {
+
+        private FTPBLL ftpBLL = new FTPBLL();
+
+        public void UpdateStreamFotoGrupo(int grupoId, Stream foto, string name, long length)
+        {
+            string newFileName = Guid.NewGuid().ToString() + Path.GetExtension(name);
+            ftpBLL.SaveStreamImage(foto, "/foto-perfil/grupo/" + newFileName, length);
+            string fotoEliminar;
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                Grupo grupo = db.Grupo.Where(g => g.ID == grupoId).FirstOrDefault();
+                fotoEliminar = grupo.Image;
+                grupo.Image = newFileName;
+                db.SaveChanges();
+            }
+            if (fotoEliminar != null)
+            {
+                ftpBLL.DeleteStreamImage("/foto-perfil/grupo/" + fotoEliminar);
+            }
+        }
+
+        public Stream GetStreamFotoGrupo(int grupoId)
+        {
+            Grupo grupo = null;
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+                grupo = db.Grupo.Where(g => g.ID == grupoId).FirstOrDefault();
+            }
+            if (grupo != null)
+            {
+                string imagePath = "/foto-perfil/grupo/" + grupo.Image;
+                return ftpBLL.GetStreamImage(imagePath);
+            }
+            else
+            {
+                throw new Exception("No hay imagen para el grupo");
+            }
+        }
 
         public List<CaballoDto> GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, bool tieneEstablo)
         {

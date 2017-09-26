@@ -99,6 +99,15 @@
           <Property Name="NombrePropietario" Type="varchar" MaxLength="255" />
           <Property Name="Marcas" Type="varchar" MaxLength="255" />
           <Property Name="Protector_ID" Type="int" />
+          <Property Name="Image" Type="text" />
+        </EntityType>
+        <EntityType Name="CaballoAdjunto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Caballo_ID" Type="int" Nullable="false" />
+          <Property Name="Image" Type="text" Nullable="false" />
         </EntityType>
         <EntityType Name="ConfiguracionCorreo">
           <Key>
@@ -190,6 +199,7 @@
           <Property Name="Caballo_ID" Type="int" Nullable="false" />
           <Property Name="Madre" Type="varchar" MaxLength="255" />
           <Property Name="Padre" Type="varchar" MaxLength="255" />
+          <Property Name="ImagePedigree" Type="text" />
         </EntityType>
         <EntityType Name="Genero">
           <Key>
@@ -206,6 +216,7 @@
           <Property Name="Descripcion" Type="nvarchar(max)" />
           <Property Name="Propietario_ID" Type="int" />
           <Property Name="GrupoDefault" Type="bit" />
+          <Property Name="Image" Type="text" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
@@ -243,6 +254,8 @@
           <Property Name="Mensaje" Type="text" Nullable="false" />
           <Property Name="Fecha" Type="datetime" Nullable="false" />
           <Property Name="Propietario_ID" Type="int" Nullable="false" />
+          <Property Name="Image1" Type="text" />
+          <Property Name="Image2" Type="text" />
         </EntityType>
         <EntityType Name="MotivoContacto">
           <Key>
@@ -330,6 +343,7 @@
           <Property Name="FechaNacimiento" Type="datetime" Nullable="false" />
           <Property Name="EstadoProvincia_Id" Type="int" />
           <Property Name="Usuario_ID" Type="int" />
+          <Property Name="Image" Type="text" />
         </EntityType>
         <EntityType Name="PropietarioTelefono">
           <Key>
@@ -503,6 +517,18 @@
             </Principal>
             <Dependent Role="Caballo">
               <PropertyRef Name="Protector_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CaballoAdjunto_Caballo_ID">
+          <End Role="Caballo" Type="Self.Caballo" Multiplicity="1" />
+          <End Role="CaballoAdjunto" Type="Self.CaballoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CaballoAdjunto">
+              <PropertyRef Name="Caballo_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -889,6 +915,7 @@
           <EntitySet Name="AlertaRecordatorio" EntityType="Self.AlertaRecordatorio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Alimentacion" EntityType="Self.Alimentacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Caballo" EntityType="Self.Caballo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CaballoAdjunto" EntityType="Self.CaballoAdjunto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConfiguracionCorreo" EntityType="Self.ConfiguracionCorreo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Criador" EntityType="Self.Criador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CriadorCaballo" EntityType="Self.CriadorCaballo" Schema="dbo" store:Type="Tables" />
@@ -958,6 +985,10 @@
           <AssociationSet Name="FK_Caballo_Protector_ID" Association="Self.FK_Caballo_Protector_ID">
             <End Role="Protector" EntitySet="Protector" />
             <End Role="Caballo" EntitySet="Caballo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CaballoAdjunto_Caballo_ID" Association="Self.FK_CaballoAdjunto_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="CaballoAdjunto" EntitySet="CaballoAdjunto" />
           </AssociationSet>
           <AssociationSet Name="FK_CriadorCaballo_Caballo_ID" Association="Self.FK_CriadorCaballo_Caballo_ID">
             <End Role="Caballo" EntitySet="Caballo" />
@@ -1177,6 +1208,8 @@
           <NavigationProperty Name="GenealogiaCaballo" Relationship="EquilinkedModel.FK_GenealogiaCaballo_Caballo_ID" FromRole="Caballo" ToRole="GenealogiaCaballo" />
           <NavigationProperty Name="CriadorCaballo" Relationship="EquilinkedModel.FK_CriadorCaballo_Caballo_ID" FromRole="Caballo" ToRole="CriadorCaballo" />
           <NavigationProperty Name="ResponsableCaballo" Relationship="EquilinkedModel.FK_ResponsableCaballo_Caballo_ID" FromRole="Caballo" ToRole="ResponsableCaballo" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CaballoAdjunto" Relationship="EquilinkedModel.FK_CaballoAdjunto_Caballo_ID" FromRole="Caballo" ToRole="CaballoAdjunto" />
         </EntityType>
         <EntityType Name="Criador">
           <Key>
@@ -1239,6 +1272,7 @@
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_Grupo_Propietario_ID" FromRole="Grupo" ToRole="Propietario" />
           <Property Name="GrupoDefault" Type="Boolean" />
           <NavigationProperty Name="AlertaGrupo" Relationship="EquilinkedModel.FK_AlertaGrupo_Grupo_ID" FromRole="Grupo" ToRole="AlertaGrupo" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="GrupoCaballo">
           <Key>
@@ -1332,6 +1366,7 @@
           <NavigationProperty Name="MensajeContacto" Relationship="EquilinkedModel.FK_MensajeContacto_Propietario_ID" FromRole="Propietario" ToRole="MensajeContacto" />
           <NavigationProperty Name="InvitacionAmigo" Relationship="EquilinkedModel.FK_InvitacionAmigo_Propietario_ID" FromRole="Propietario" ToRole="InvitacionAmigo" />
           <NavigationProperty Name="PropietarioTelefono" Relationship="EquilinkedModel.FK_PropietarioTelefono_Propietario_ID" FromRole="Propietario" ToRole="PropietarioTelefono" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tipo_Mail">
           <Key>
@@ -1866,6 +1901,11 @@
             <End Role="Propietario" EntitySet="Propietario" />
             <End Role="Alerta" EntitySet="Alerta" />
           </AssociationSet>
+          <EntitySet Name="CaballoAdjunto" EntityType="EquilinkedModel.CaballoAdjunto" />
+          <AssociationSet Name="FK_CaballoAdjunto_Caballo_ID" Association="EquilinkedModel.FK_CaballoAdjunto_Caballo_ID">
+            <End Role="Caballo" EntitySet="Caballo" />
+            <End Role="CaballoAdjunto" EntitySet="CaballoAdjunto" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="sp_GetAlertasByPropietarioId_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -1983,6 +2023,8 @@
           <Property Name="Propietario_ID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="MotivoContacto" Relationship="EquilinkedModel.FK_MensajeContacto_MotivoContacto_ID" FromRole="MensajeContacto" ToRole="MotivoContacto" />
           <NavigationProperty Name="Propietario" Relationship="EquilinkedModel.FK_MensajeContacto_Propietario_ID" FromRole="MensajeContacto" ToRole="Propietario" />
+          <Property Name="Image1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Image2" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MotivoContacto">
           <Key>
@@ -2171,6 +2213,7 @@
           <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
           <Property Name="Madre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Padre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ImagePedigree" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Protector">
           <Key>
@@ -2333,6 +2376,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CaballoAdjunto">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Caballo_ID" Type="Int32" Nullable="false" />
+          <Property Name="Image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_CaballoAdjunto_Caballo_ID">
+          <End Type="EquilinkedModel.Caballo" Role="Caballo" Multiplicity="1" />
+          <End Type="EquilinkedModel.CaballoAdjunto" Role="CaballoAdjunto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Caballo">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CaballoAdjunto">
+              <PropertyRef Name="Caballo_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2391,6 +2454,7 @@
           <EntitySetMapping Name="Caballo">
             <EntityTypeMapping TypeName="EquilinkedModel.Caballo">
               <MappingFragment StoreEntitySet="Caballo">
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Protector_ID" ColumnName="Protector_ID" />
                 <ScalarProperty Name="Marcas" ColumnName="Marcas" />
                 <ScalarProperty Name="NombrePropietario" ColumnName="NombrePropietario" />
@@ -2470,6 +2534,7 @@
           <EntitySetMapping Name="Grupo">
             <EntityTypeMapping TypeName="EquilinkedModel.Grupo">
               <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="GrupoDefault" ColumnName="GrupoDefault" />
                 <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -2554,6 +2619,7 @@
           <EntitySetMapping Name="Propietario">
             <EntityTypeMapping TypeName="EquilinkedModel.Propietario">
               <MappingFragment StoreEntitySet="Propietario">
+                <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Apellido" ColumnName="Apellido" />
@@ -2642,6 +2708,8 @@
           <EntitySetMapping Name="MensajeContacto">
             <EntityTypeMapping TypeName="EquilinkedModel.MensajeContacto">
               <MappingFragment StoreEntitySet="MensajeContacto">
+                <ScalarProperty Name="Image2" ColumnName="Image2" />
+                <ScalarProperty Name="Image1" ColumnName="Image1" />
                 <ScalarProperty Name="Propietario_ID" ColumnName="Propietario_ID" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
@@ -2724,6 +2792,7 @@
           <EntitySetMapping Name="GenealogiaCaballo">
             <EntityTypeMapping TypeName="EquilinkedModel.GenealogiaCaballo">
               <MappingFragment StoreEntitySet="GenealogiaCaballo">
+                <ScalarProperty Name="ImagePedigree" ColumnName="ImagePedigree" />
                 <ScalarProperty Name="Padre" ColumnName="Padre" />
                 <ScalarProperty Name="Madre" ColumnName="Madre" />
                 <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
@@ -2782,6 +2851,15 @@
               <MappingFragment StoreEntitySet="UnidadTiempo">
                 <ScalarProperty Name="EquivalenciaMinutos" ColumnName="EquivalenciaMinutos" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CaballoAdjunto">
+            <EntityTypeMapping TypeName="EquilinkedModel.CaballoAdjunto">
+              <MappingFragment StoreEntitySet="CaballoAdjunto">
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Caballo_ID" ColumnName="Caballo_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

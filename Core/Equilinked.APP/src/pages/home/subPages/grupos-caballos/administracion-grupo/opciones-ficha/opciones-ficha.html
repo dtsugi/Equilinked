@@ -1,4 +1,5 @@
 <ion-list no-lines>
-    <button ion-item [disabled]="grupo.GrupoDefault" (click)="editName()">{{ 'PANT013_BTN_EDNOM' | translate }}</button>
-    <button ion-item [disabled]="grupo.GrupoDefault" (click)="delete()">{{ 'PANT013_BTN_ELGRU' | translate }}</button>
-</ion-list> 
+  <button ion-item [disabled]="grupo.GrupoDefault" (click)="changePhoto()">Cambiar foto</button>
+  <button ion-item [disabled]="grupo.GrupoDefault" (click)="editName()">{{ 'PANT013_BTN_EDNOM' | translate }}</button>
+  <button ion-item [disabled]="grupo.GrupoDefault" (click)="delete()">{{ 'PANT013_BTN_ELGRU' | translate }}</button>
+</ion-list>

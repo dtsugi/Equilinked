@@ -588,6 +588,42 @@ ion-slides {
 }
 
 .equi-icon-bottom-bar {
-  width: 40px;//70
-  height: 48px;//79
+  width: 40px; //70
+  height: 48px; //79
+}
+
+.equi-contacto-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 100%;
+  font-size: 22px;
+  color: white;
+  background-color: $_EQUI_TEXT_EDITION_COLOR;
+  text-align: center;
+}
+
+.equi-modal-select-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+  font-size: 22px;
+  color: white;
+  background-color: $_EQUI_TEXT_EDITION_COLOR;
+  text-align: center;
+}
+
+.equi-caballo-adjunto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 100%;
+  font-size: 16px;
+  color: white;
+  background-color: $_EQUI_TEXT_EDITION_COLOR;
+  text-align: center;
 }

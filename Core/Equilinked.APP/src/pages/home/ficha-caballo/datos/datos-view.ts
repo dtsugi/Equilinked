@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
-import {Events, NavController, NavParams} from 'ionic-angular';
+import {Events, ModalController, NavController, NavParams} from 'ionic-angular';
 import {CommonService} from '../../../../services/common.service';
 import {SecurityService} from '../../../../services/security.service';
 import {CaballoService} from '../../../../services/caballo.service';
@@ -9,6 +9,7 @@ import {Caballo} from '../../../../model/caballo';
 import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
 import moment from "moment";
 import {LanguageService} from '../../../../services/language.service';
+import {EquiSelectImageModal} from '../../../../utils/equi-modal-select-image/select-image-modal';
 
 @Component({
   templateUrl: 'datos-view.html',
@@ -25,8 +26,10 @@ export class DatosViewPage implements OnInit, OnDestroy {
   protectores = [];
   paises = [];
   age: string;
+  adjuntosCaballo: any;
 
   constructor(private events: Events,
+              private modalController: ModalController,
               public navCtrl: NavController,
               public navParams: NavParams,
               private _commonService: CommonService,
@@ -91,6 +94,25 @@ export class DatosViewPage implements OnInit, OnDestroy {
     this.calculateAge(this.caballoEntity.FechaNacimiento);//Ajustar la edad!
   }
 
+  //setReadOnly
+  viewPedigree(): void {
+    let photo: any = {};
+    photo.name = this.adjuntosCaballo.Pedigree.Name;
+    photo.base64 = "data:image/png;base64," + this.adjuntosCaballo.Pedigree.Base64;
+    let modal = this.modalController.create(EquiSelectImageModal, {photo: photo, readonly: true});
+    modal.present();
+  }
+
+  viewImageAdjunta(image: any): void {
+    let photo: any = {};
+    if (image.Base64) {
+      photo.name = image.Name;
+      photo.base64 = image.Base64;
+      let modal = this.modalController.create(EquiSelectImageModal, {photo: photo, readonly: true});
+      modal.present();
+    }
+  }
+
   private getCaballo(caballoId) {
     this._caballoService.getSerializedById(caballoId)
       .toPromise()
@@ -98,10 +120,26 @@ export class DatosViewPage implements OnInit, OnDestroy {
         console.log(caballo);
         this.caballoEntity = caballo;
         this.nombreCaballo = this.caballoEntity.Nombre;
-        this.initForm();
-      }).catch(err => {
+        return this._caballoService.getAdjuntos(this.caballoEntity.Propietario_ID, this.caballoEntity.ID);
+      }).then(adjuntos => {
+      this.adjuntosCaballo = adjuntos;
+      this.ajustAdjuntosMarcas();
+      this.initForm();
+    }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT004_MSG_CACAERR"]);
     });
+  }
+
+  private ajustAdjuntosMarcas(): void {
+    let count = this.adjuntosCaballo.AdjuntosMarcas.length;
+    this.adjuntosCaballo.AdjuntosMarcas.forEach(adj => {
+      if (adj.Base64 && adj.Base64 != "") {
+        adj.Base64 = "data:image/png;base64," + adj.Base64;
+      }
+    });
+    for (let i = count; i < 3; i++) {
+      this.adjuntosCaballo.AdjuntosMarcas.push({});
+    }
   }
 
   private calculateAge(dateSelected: string): void {
@@ -157,7 +195,8 @@ export class DatosViewPage implements OnInit, OnDestroy {
   edit() {
     this.navCtrl.push(AdminCaballosInsertPage, {
       caballoEntity: JSON.parse(JSON.stringify(this.caballoEntity)),
-      isUpdate: true
+      isUpdate: true,
+      adjuntos: JSON.parse(JSON.stringify(this.adjuntosCaballo))
     });
   }
 

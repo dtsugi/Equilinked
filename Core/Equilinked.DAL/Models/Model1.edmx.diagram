@@ -92,6 +92,8 @@
         <AssociationConnector Association="EquilinkedModel.FK_AlertaRecordatorio_UnidadTiempo_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_Recordatorio_UnidadTiempo_ID" />
         <AssociationConnector Association="EquilinkedModel.FK_Alerta_Propietario_ID" />
+        <EntityTypeShape EntityType="EquilinkedModel.CaballoAdjunto" Width="1.5" PointX="5.375" PointY="28.625" />
+        <AssociationConnector Association="EquilinkedModel.FK_CaballoAdjunto_Caballo_ID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

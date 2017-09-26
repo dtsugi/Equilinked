@@ -1,4 +1,11 @@
-<ion-list no-lines>
+<div *ngIf="!photoLoading && !photoBase64" style="background-image: url('assets/img/ficha-perfil.PNG'); background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+</div>
+
+<div *ngIf="!photoLoading && photoBase64" [ngStyle]="{ 'background-image': 'url(' + photoBase64 + ')'}" style="background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+</div>
+
+
+<ion-list no-lines padding>
   <ion-item *ngIf="propietarioEntity.Usuario">
     <ion-icon name="ios-finger-print" class="equi-principal-color" item-left></ion-icon>
     <span class="equi-bold-text">{{propietarioEntity.Usuario.Login}}</span>

@@ -4,7 +4,8 @@ using Equilinked.DAL.Dto;
 using Equilinked.DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,6 +18,136 @@ namespace Equilinked.API.Controllers
     public class CaballoController : EquilinkedBaseController
     {
         private CaballoBLL _caballoBLL = new CaballoBLL();
+
+        [HttpPut, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/adjuntos")]
+        public IHttpActionResult UpdateAdjuntosCaballo(int propietarioId, int caballoId)
+        {
+            CaballoAdjuntosDto caballoAdjuntos = new CaballoAdjuntosDto();
+            FileDto file = null;
+            List<string> parameterNames = new List<string>();
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                parameterNames.AddRange(httpRequest.Form.AllKeys);
+                parameterNames.AddRange(httpRequest.Files.AllKeys);
+
+                foreach (string parameterName in parameterNames)
+                {
+                    HttpPostedFile postedFile = httpRequest.Files[parameterName];
+                    if (postedFile != null)
+                    {
+                        file = new FileDto() { Name = postedFile.FileName, File = postedFile.InputStream, Length = postedFile.ContentLength };
+                    }
+                    else
+                    {
+                        file = new FileDto() { Name = httpRequest.Form[parameterName] };
+                    }
+                    if (parameterName == "pedigree")
+                    {
+                        caballoAdjuntos.Pedigree = file;
+                    }
+                    else
+                    {
+                        caballoAdjuntos.AdjuntosMarcas.Add(file);
+                    }
+                }
+                _caballoBLL.UpdateAdjuntosCaballo(caballoId, caballoAdjuntos);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al actualizar la foto de perfil del caballo"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/adjuntos")]
+        public IHttpActionResult GetAdjuntosCaballo(int propietarioId, int caballoId)
+        {
+            try
+            {
+                CaballoAdjuntosDto adjuntos = _caballoBLL.GetAdjuntosCaballo(caballoId);
+                if(adjuntos.Pedigree != null)
+                {
+                    adjuntos.Pedigree.Base64 = createBase64(adjuntos.Pedigree.File);
+                    adjuntos.Pedigree.File = null;
+                }
+                if(adjuntos.AdjuntosMarcas.Count > 0)
+                {
+                    foreach(FileDto file in adjuntos.AdjuntosMarcas)
+                    {
+                        file.Base64 = createBase64(file.File);
+                        file.File = null;
+                    }
+                }
+                return Ok(adjuntos);
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener los adjuntos del caballo"));
+            }
+        }
+
+        [HttpPut, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/foto")]
+        public IHttpActionResult UpdateFotoCaballo(int propietarioId, int caballoId)
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                if (httpRequest.Files.Count > 0)
+                {
+                    HttpPostedFile postedFile = httpRequest.Files["file"];
+                    _caballoBLL.UpdateStreamFotoCaballo(caballoId, postedFile.InputStream, postedFile.FileName, postedFile.ContentLength);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al actualizar la foto de perfil del caballo"));
+            }
+        }
+
+        private string createBase64(Stream stream)
+        {
+            string base64String = "";
+            using (Image image = Image.FromStream(stream))
+            {
+                using (MemoryStream m = new MemoryStream())
+                {
+                    image.Save(m, image.RawFormat);
+                    base64String = Convert.ToBase64String(m.ToArray());
+                }
+            }
+            stream.Close();
+            return base64String;
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/foto")]
+        public HttpResponseMessage GetFotoCaballo(int propietarioId, int caballoId)
+        {
+            try
+            {
+                Stream stream = _caballoBLL.GetStreamFotoCaballo(caballoId);
+                string base64String = "";
+                using (Image image = Image.FromStream(stream))
+                {
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        base64String = Convert.ToBase64String(m.ToArray());
+                    }
+                }
+                stream.Close();
+                return Request.CreateResponse(HttpStatusCode.OK, new { FotoPerfil = base64String });
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener la foto perfil caballo"));
+            }
+        }
 
         [HttpGet, Route("api/propietario/{propietarioId}/caballos")]
         public IHttpActionResult GetCaballosPorAsociacionEstablo(int propietarioId, [FromUri] bool establo)
