@@ -160,12 +160,14 @@ export class AdministracionGrupoPage implements OnInit, OnDestroy {
   }
 
   private getFotoGrupo(idPropietario: number, idGrupo: number): void {
+    this.fichaGrupo.setPhotoLoading(true);
     this.gruposCaballosService.getPhoto(idPropietario, idGrupo)
       .then(foto => {
-        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.photoBase64 = foto && foto.FotoPerfil ? "data:image/jpeg;base64," + foto.FotoPerfil : null;
         this.fichaGrupo.setPhotoBase64(this.photoBase64);
       }).catch(err => {
       console.error(JSON.stringify(err));
+      this.fichaGrupo.setPhotoLoading(false);
     });
   }
 

@@ -627,3 +627,37 @@ ion-slides {
   background-color: $_EQUI_TEXT_EDITION_COLOR;
   text-align: center;
 }
+
+.equi-col-input {
+  padding-left: 10px;
+  margin: auto 0;
+}
+
+.equi-input-text {
+  border: none;
+  width: 100%;
+}
+
+.equi-rows-form .row {
+  padding-bottom: 15px;
+}
+
+.equi-col-input-alert {
+  margin: auto 0;
+  padding-left: 20px;
+}
+
+.equi-photo-loading {
+  height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.equi-photo-segmemt {
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 200px;
+  width: 100%;
+}

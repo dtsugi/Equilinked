@@ -1,4 +1,4 @@
-<ion-header> 
+<ion-header>
     <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
             <button class="equi-toolbar-btn" (click)="goBack()">{{ 'PANT010_BTN_CAN' | translate }}</button>
@@ -15,9 +15,9 @@
 <ion-content>
     <form [formGroup]="formNotificaciones">
         <ion-grid>
-            <ion-row class="border-bottom">
-                <ion-col>
-                    <ion-input formControlName="Titulo" class="equi-input-title-note" type="text" placeholder="{{ 'PANT010_TXT_INTI' | translate }}"></ion-input>
+            <ion-row class="border-bottom" class="border-bottom" style="height: 60px">
+                <ion-col class="equi-col-input-alert">
+                    <input formControlName="Titulo" class="equi-input-text equi-input-title-note" type="text" placeholder="{{ 'PANT010_TXT_INTI' | translate }}" />
                 </ion-col>
             </ion-row>
 
@@ -43,18 +43,6 @@
 
             <ion-row class="border-bottom">
                 <ion-col col-2 class="col-center">
-                    <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-3 class="equi-col-center">
-                    <ion-toggle formControlName="Activa" style="margin-left: 15px;" checked="false"></ion-toggle>
-                </ion-col>
-                <ion-col class="equi-col-center equi-input-normal-text">
-                    <span>{{formNotificaciones.value.Activa ? labels['PANT010_TXT_NOTAC'] : labels['PANT010_TXT_NOTDES']}}</span>
-                </ion-col>
-            </ion-row>
-
-            <ion-row class="border-bottom">
-                <ion-col col-2 class="col-center">
                     <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-8 class="equi-col-center equi-input-normal-text">
@@ -69,7 +57,7 @@
 
             <ion-row>
                 <ion-col>
-                    <ion-textarea formControlName="Descripcion" class="equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT010_TXT_NOT' | translate }}"></ion-textarea>
+                    <textarea formControlName="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT010_TXT_NOT' | translate }}"></textarea>
                 </ion-col>
             </ion-row>
         </ion-grid>

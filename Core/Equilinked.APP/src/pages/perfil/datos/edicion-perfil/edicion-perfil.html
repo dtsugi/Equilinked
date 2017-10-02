@@ -1,84 +1,93 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-buttons left>
-            <button ion-button class="equi-toolbar-btn" (click)="goBack()">
-                {{ 'PANT027_BTN_CAN' | translate }}
-            </button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons left>
+      <button ion-button class="equi-toolbar-btn" (click)="goBack()">
+        {{ 'PANT027_BTN_CAN' | translate }}
+      </button>
+    </ion-buttons>
 
-        <ion-buttons right>
-            <button ion-button class="equi-toolbar-btn" [disabled]="perfil && perfilForm && !perfilForm.valid" (click)="save(perfilForm)">
-                {{ 'PANT027_BTN_GUA' | translate }}
-            </button>
-        </ion-buttons>
-    </ion-toolbar>
+    <ion-buttons right>
+      <button ion-button class="equi-toolbar-btn" [disabled]="perfil && perfilForm && !perfilForm.valid"
+              (click)="save(perfilForm)">
+        {{ 'PANT027_BTN_GUA' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <form #perfilForm="ngForm" *ngIf="perfil">
-        <ion-grid>
+  <form #perfilForm="ngForm" *ngIf="perfil">
+    <ion-grid>
 
-          <ion-row>
-            <ion-col col-2 class="col-center">
-              <ion-icon class="equi-icon-input" name="ios-finger-print"></ion-icon>
-            </ion-col>
-            <ion-col>
-              <p style="padding-left: 8px;" class="equi-bold-text">{{perfil.Usuario.Login}}</p>
-            </ion-col>
-          </ion-row>
+      <ion-row>
+        <ion-col col-2 class="col-center">
+          <ion-icon class="equi-icon-input" name="ios-finger-print"></ion-icon>
+        </ion-col>
+        <ion-col>
+          <p style="padding-left: 8px;" class="equi-bold-text">{{perfil.Usuario.Login}}</p>
+        </ion-col>
+      </ion-row>
 
-          <ion-row>
-                <ion-col col-2 class="col-center">
-                    <ion-icon class="equi-icon-input" name="person"></ion-icon>
-                </ion-col>
-                <ion-col>
-                    <ion-input class="equi-input-normal-text" type="text" name="nombre" placeholder="{{ 'PANT027_TXT_NOM' | translate }}" required="true" [(ngModel)]="perfil.Nombre"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-2 class="col-center">
+          <ion-icon class="equi-icon-input" name="person"></ion-icon>
+        </ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text" name="nombre"
+                     placeholder="{{ 'PANT027_TXT_NOM' | translate }}" required="true"
+                     [(ngModel)]="perfil.Nombre" />
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-2 class="col-center">
-                    <ion-icon class="equi-icon-input" name="mail"></ion-icon>
-                </ion-col>
-                <ion-col>
-                  <p style="padding-left: 8px;" class="equi-input-normal-text equi-text-edit">{{perfil.Mail}}</p>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-2 class="col-center">
+          <ion-icon class="equi-icon-input" name="mail"></ion-icon>
+        </ion-col>
+        <ion-col>
+          <p style="padding-left: 8px;" class="equi-input-normal-text equi-text-edit">{{perfil.Mail}}</p>
+        </ion-col>
+      </ion-row>
 
 
-            <ion-row *ngFor="let telefono of perfil.PropietarioTelefono; let i = index">
-                <ion-col col-2 class="col-center">
-                    <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="tel" name="telefono-{{i}}" required="true" [(ngModel)]="telefono.Numero"
-                        placeholder="{{ 'PANT027_TXT_TE' | translate }}"></ion-input>
-                </ion-col>
-                <ion-col col-3>
-                    <ion-input class="equi-input-normal-text" type="text" name="tipo-num-{{i}}" required="true" [(ngModel)]="telefono.TipoTelefono"
-                        (focus)="selectTipoTelefono($event, telefono)"></ion-input>
-                </ion-col>
-                <ion-col col-2 class="col-center">
-                    <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)" name="remove-circle"
-                        (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
-                    <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()" class="equi-icon-input"></ion-icon>
-                </ion-col>
-            </ion-row>
+      <ion-row *ngFor="let telefono of perfil.PropietarioTelefono; let i = index">
+        <ion-col col-2 class="col-center">
+          <ion-icon [ngClass]="{'icon-hidden': i > 0}" name="call" class="equi-icon-input"></ion-icon>
+        </ion-col>
+        <ion-col col-5 class="equi-col-input">
+          <input type="tel" class="equi-input-normal-text equi-input-text" name="telefono-{{i}}" required="true"
+                 [(ngModel)]="telefono.Numero"
+                 placeholder="{{ 'PANT027_TXT_TE' | translate }}" />
+        </ion-col>
+        <ion-col col-3>
+          <ion-input class="equi-input-normal-text" type="text" name="tipo-num-{{i}}" required="true"
+                     [(ngModel)]="telefono.TipoTelefono"
+                     (focus)="selectTipoTelefono($event, telefono)"></ion-input>
+        </ion-col>
+        <ion-col col-2 class="col-center">
+          <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)"
+                    name="remove-circle"
+                    (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
+          <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()"
+                    class="equi-icon-input"></ion-icon>
+        </ion-col>
+      </ion-row>
 
-            <ion-row>
-                <ion-col col-2 class="col-center">
-                    <ion-icon class="equi-icon-input" name="flag"></ion-icon>
-                </ion-col>
-                <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="text" name="pais" required="true" placeholder="{{ 'PANT027_TXT_PA' | translate }}" [(ngModel)]="perfil.Pais"
-                        [readonly]="true" (focus)="selectPais()"></ion-input>
-                </ion-col>
-                <ion-col col-5>
-                    <ion-input class="equi-input-normal-text" type="text" name="estado" required="true" placeholder="{{ 'PANT027_TXT_ESPR' | translate }}" [(ngModel)]="perfil.Estado"
-                        [readonly]="true" (focus)="selectEstadoProvincia()"></ion-input>
-                </ion-col>
-            </ion-row>
+      <ion-row>
+        <ion-col col-2 class="col-center">
+          <ion-icon class="equi-icon-input" name="flag"></ion-icon>
+        </ion-col>
+        <ion-col col-5>
+          <ion-input class="equi-input-normal-text" type="text" name="pais" required="true"
+                     placeholder="{{ 'PANT027_TXT_PA' | translate }}" [(ngModel)]="perfil.Pais"
+                     [readonly]="true" (focus)="selectPais()"></ion-input>
+        </ion-col>
+        <ion-col col-5>
+          <ion-input class="equi-input-normal-text" type="text" name="estado" required="true"
+                     placeholder="{{ 'PANT027_TXT_ESPR' | translate }}" [(ngModel)]="perfil.Estado"
+                     [readonly]="true" (focus)="selectEstadoProvincia()"></ion-input>
+        </ion-col>
+      </ion-row>
 
-        </ion-grid>
-    </form>
+    </ion-grid>
+  </form>
 </ion-content>

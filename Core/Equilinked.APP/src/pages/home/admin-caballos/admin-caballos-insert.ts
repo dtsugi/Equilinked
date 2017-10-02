@@ -45,12 +45,14 @@ export class AdminCaballosInsertPage {
 
   ngOnInit() {
     this.caballoEntity = new Caballo();
+    this.adjuntos = {AdjuntosMarcas: [{},{},{}]};
     this.session = this._securityService.getInitialConfigSession();
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
       if (this._commonService.IsValidParams(this.navParams, ["caballoEntity", "isUpdate"])) {
         this.caballoEntity = this.navParams.get("caballoEntity");
         this.adjuntos = this.navParams.get("adjuntos");
+        this.adjuntos = this.adjuntos ? this.adjuntos : {AdjuntosMarcas: [{},{},{}]};
         this.isUpdate = this.navParams.get("isUpdate");
         if (!this.isUpdate) {
           this.caballoEntity.FechaNacimiento = moment().format("YYYY-MM-DD")
@@ -215,11 +217,11 @@ export class AdminCaballosInsertPage {
     this.buildEntity(this.caballoEntity, this.form.value); //se pasan por referencia!
     this._caballoService.save(this.caballoEntity)
       .toPromise()
-      .then(res => {
-        console.info("Se mandaran tambieen los adjuntos...");
-        console.info(JSON.stringify(this.adjuntos.Pedigree));
-        return this._caballoService.updateAdjuntos(this.session.PropietarioId, this.caballoEntity.ID,
-          this.adjuntos.Pedigree, this.adjuntos.AdjuntosMarcas.filter(a => a.Base64));
+      .then(caballoId => {
+        let pedigree = this.adjuntos.Pedigree;
+        let marcas = this.adjuntos.AdjuntosMarcas.filter(a => a.Base64);
+        return this._caballoService.updateAdjuntos(this.session.PropietarioId, caballoId,
+          pedigree, marcas);
       }).then(() => {
       this.events.publish("caballo:refresh");
       this.events.publish("caballo-ficha:refresh");
@@ -232,7 +234,7 @@ export class AdminCaballosInsertPage {
         this._commonService.ShowInfo(this.labels["PANT004_MSG_GUOK"]);
       });
     }).catch(error => {
-      console.log(error);
+      console.log(JSON.stringify(error));
       this._commonService.ShowInfo(this.labels["PANT004_MSG_GUERR"]);
     });
   }

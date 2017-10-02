@@ -45,6 +45,10 @@ export class SegmentFichaGrupo implements OnInit {
     }
   }
 
+  setPhotoLoading(loading: boolean): void {
+    this.photoLoading = loading;
+  }
+
   setPhotoBase64(photoBase64: string): void {
     this.photoBase64 = photoBase64;
     this.photoLoading = false;

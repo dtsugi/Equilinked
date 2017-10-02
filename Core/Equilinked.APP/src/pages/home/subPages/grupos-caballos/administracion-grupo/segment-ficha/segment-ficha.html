@@ -1,9 +1,18 @@
-<div *ngIf="!photoLoading && !photoBase64" style="background-image: url('assets/img/ficha-grupo.PNG'); background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+<div *ngIf="photoLoading" class="equi-photo-loading">
+  <div>
+    <ion-spinner></ion-spinner>
+  </div>
 </div>
+<div *ngIf="!photoLoading">
+  <div *ngIf="!photoBase64"
+       class="equi-photo-segmemt"
+       style="background-image: url('assets/img/ficha-grupo.PNG');">
+  </div>
 
-<div *ngIf="!photoLoading && photoBase64" [ngStyle]="{ 'background-image': 'url(' + photoBase64 + ')'}" style="background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
+  <div *ngIf="photoBase64" [ngStyle]="{ 'background-image': 'url(' + photoBase64 + ')'}"
+       class="equi-photo-segmemt">
+  </div>
 </div>
-
 
 <ion-grid style="margin: 0px; padding:0px;">
   <ion-row>

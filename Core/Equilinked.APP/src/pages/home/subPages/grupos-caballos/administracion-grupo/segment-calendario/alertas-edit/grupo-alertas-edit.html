@@ -51,10 +51,10 @@
         <ion-col col-2 class="col-center">
           <ion-icon name="person" class="equi-icon-input"></ion-icon>
         </ion-col>
-        <ion-col>
-          <ion-input style="padding-left: 5px;" name="NombreProfesional" class="equi-input-normal-text" type="text"
+        <ion-col class="equi-col-input-alert">
+          <input name="NombreProfesional" class="equi-input-text equi-input-normal-text" type="text"
                      placeholder="{{ 'PANT037_LBL_ALGQUI' | translate }}"
-                     required="true" [(ngModel)]="alerta.NombreProfesional"></ion-input>
+                     required="true" [(ngModel)]="alerta.NombreProfesional">
         </ion-col>
       </ion-row>
 
@@ -82,18 +82,6 @@
                         pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
                         doneText="{{ 'PANT037_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraNotificacion" required="true"></ion-datetime>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="border-bottom">
-        <ion-col col-2 class="col-center">
-          <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-        </ion-col>
-        <ion-col col-3 class="equi-col-center">
-          <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
-        </ion-col>
-        <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
         </ion-col>
       </ion-row>
 
@@ -130,18 +118,18 @@
         <ion-col col-2 class="col-center">
           <ion-icon name="ios-pin" class="equi-icon-input"></ion-icon>
         </ion-col>
-        <ion-col>
-          <ion-input style="padding-left: 5px;" name="Ubicacion" class="equi-input-normal-text" type="text"
+        <ion-col class="equi-col-input-alert">
+          <input name="Ubicacion" class="equi-input-text equi-input-normal-text" type="text"
                      placeholder="{{ 'PANT037_TXT_UBI' | translate }}"
-                     [(ngModel)]="alerta.Ubicacion"></ion-input>
+                     [(ngModel)]="alerta.Ubicacion">
         </ion-col>
       </ion-row>
 
       <ion-row class="border-bottom">
         <ion-col>
-          <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
+          <textarea name="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3"
                         placeholder="{{ 'PANT037_TXT_NO' | translate }}"
-                        [(ngModel)]="alerta.Descripcion"></ion-textarea>
+                        [(ngModel)]="alerta.Descripcion"></textarea>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -161,19 +149,19 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="border-bottom">
-        <ion-col>
-          <ion-input name="Titulo" class="equi-input-title-note" type="text"
+      <ion-row class="border-bottom" style="height: 60px">
+        <ion-col class="equi-col-input-alert">
+          <input name="Titulo" class="equi-input-text equi-input-title-note" type="text"
                      placeholder="{{ 'PANT037_TXT_TI' | translate }}" required="true"
-                     [(ngModel)]="alerta.Titulo"></ion-input>
+                     [(ngModel)]="alerta.Titulo">
         </ion-col>
       </ion-row>
 
       <ion-row class="border-bottom">
         <ion-col>
-          <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
+          <textarea name="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3"
                         placeholder="{{ 'PANT037_TXT_NO' | translate }}"
-                        [(ngModel)]="alerta.Descripcion"></ion-textarea>
+                        [(ngModel)]="alerta.Descripcion"></textarea>
         </ion-col>
       </ion-row>
 
@@ -201,18 +189,6 @@
                         pickerFormat="h mm A" cancelText="{{ 'PANT037_BTN_CAN' | translate }}"
                         doneText="{{ 'PANT037_BTN_ACE' | translate }}"
                         [(ngModel)]="alerta.HoraNotificacion" required="true"></ion-datetime>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="border-bottom">
-        <ion-col col-2 class="col-center">
-          <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-        </ion-col>
-        <ion-col col-3 class="equi-col-center">
-          <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
-        </ion-col>
-        <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
         </ion-col>
       </ion-row>
 
@@ -265,19 +241,19 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="border-bottom">
-        <ion-col>
-          <ion-input name="Titulo" class="equi-input-title-note" type="text"
+      <ion-row class="border-bottom" style="height: 60px">
+        <ion-col class="equi-col-input-alert">
+          <input name="Titulo" class="equi-input-text equi-input-title-note" type="text"
                      placeholder="{{ 'PANT037_TXT_TI' | translate }}" required="true"
-                     [(ngModel)]="alerta.Titulo"></ion-input>
+                     [(ngModel)]="alerta.Titulo">
         </ion-col>
       </ion-row>
 
       <ion-row class="border-bottom">
         <ion-col>
-          <ion-textarea name="Descripcion" class="equi-input-normal-text" autoresize rows="3"
+          <textarea name="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3"
                         placeholder="{{ 'PANT037_TXT_NO' | translate }}"
-                        [(ngModel)]="alerta.Descripcion"></ion-textarea>
+                        [(ngModel)]="alerta.Descripcion"></textarea>
         </ion-col>
       </ion-row>
 
@@ -324,18 +300,6 @@
 
       <ion-row class="border-bottom">
         <ion-col col-2 class="col-center">
-          <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-        </ion-col>
-        <ion-col col-3 class="equi-col-center">
-          <ion-toggle style="margin-left: 15px;" name="Activa" checked="false" [(ngModel)]="alerta.Activa"></ion-toggle>
-        </ion-col>
-        <ion-col class="equi-col-center equi-input-normal-text">
-          <span>{{alerta.Activa ? labels['PANT037_LBL_ACT'] : labels['PANT037_LBL_DESC']}}</span>
-        </ion-col>
-      </ion-row>
-
-      <ion-row class="border-bottom">
-        <ion-col col-2 class="col-center">
           <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
         </ion-col>
         <ion-col col-8 class="equi-col-center equi-input-normal-text">
@@ -371,18 +335,18 @@
         <ion-col col-2 class="col-center">
           <ion-icon name="ios-pin" class="equi-icon-input"></ion-icon>
         </ion-col>
-        <ion-col>
-          <ion-input style="padding-left: 5px;" name="Ubicacion" class="equi-input-normal-text" type="text"
+        <ion-col class="equi-col-input-alert">
+          <input name="Ubicacion" class="equi-input-text equi-input-normal-text" type="text"
                      placeholder="{{ 'PANT037_TXT_UBI' | translate }}"
-                     [(ngModel)]="alerta.Ubicacion"></ion-input>
+                     [(ngModel)]="alerta.Ubicacion">
         </ion-col>
       </ion-row>
 
       <ion-row class="border-bottom">
         <ion-col>
-          <ion-textarea name="Resultado" class="equi-input-normal-text" autoresize rows="3"
+          <textarea name="Resultado" class="equi-input-text equi-input-normal-text" autoresize rows="3"
                         placeholder="{{ 'PANT037_TXT_EVRES' | translate }}"
-                        [(ngModel)]="alerta.Resultado"></ion-textarea>
+                        [(ngModel)]="alerta.Resultado"></textarea>
         </ion-col>
       </ion-row>
     </ion-grid>

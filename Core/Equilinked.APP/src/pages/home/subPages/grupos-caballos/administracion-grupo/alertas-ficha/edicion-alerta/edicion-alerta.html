@@ -21,8 +21,8 @@
                 <ion-col col-2 class="col-center">
                     <ion-icon name="person" class="equi-icon-input"></ion-icon>
                 </ion-col>
-                <ion-col>
-                    <ion-input style="padding-left: 5px;" formControlName="NombreProfesional" class="equi-input-normal-text" type="text" placeholder="{{ 'PANT020_TXT_QUI' | translate }}"></ion-input>
+                <ion-col class="equi-col-input-alert">
+                    <input formControlName="NombreProfesional" class="equi-input-text equi-input-normal-text" type="text" placeholder="{{ 'PANT020_TXT_QUI' | translate }}">
                 </ion-col>
             </ion-row>
 
@@ -47,20 +47,8 @@
             </ion-row>
 
             <ion-row class="border-bottom">
-                <ion-col col-2 class="col-center">
-                    <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-3 class="equi-col-center">
-                    <ion-toggle formControlName="Activa" style="margin-left: 15px;" checked="false"></ion-toggle>
-                </ion-col>
-                <ion-col class="equi-col-center equi-input-normal-text">
-                    <span>{{alertaForm.value.Activa ? labels['PANT020_LBL_ACT'] : labels['PANT020_LBL_DESC']}}</span>
-                </ion-col>
-            </ion-row>
-
-            <ion-row class="border-bottom">
                 <ion-col>
-                    <ion-textarea formControlName="Descripcion" class="equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT020_TXT_INNO' | translate }}"></ion-textarea>
+                    <textarea formControlName="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT020_TXT_INNO' | translate }}"></textarea>
                 </ion-col>
             </ion-row>
 
@@ -83,7 +71,7 @@
                     <ion-icon name="list" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-7 class="equi-col-center equi-input-normal-text">
-                    <span>{{alerta.AlertaCaballo.length + ' ' + labels['PANT020_LBL_CAB']}}</span>
+                    <span style="padding-left: 10px;">{{alerta.AlertaCaballo.length + ' ' + labels['PANT020_LBL_CAB']}}</span>
                 </ion-col>
                 <ion-col class="equi-col-center equi-input-normal-text">
                     <a class="equi-principal-color" (click)="selectCaballos()">{{ 'PANT020_BTN_EDIC' | translate }}</a>

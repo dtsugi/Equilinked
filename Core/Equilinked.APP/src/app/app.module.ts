@@ -9,9 +9,9 @@ import {FormsModule} from '@angular/forms';
 import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import {GoogleMaps} from "@ionic-native/google-maps";
-import {PhotoLibrary} from "@ionic-native/photo-library";
 import {Facebook} from "@ionic-native/facebook";
 import {GooglePlus} from "@ionic-native/google-plus";
+import {Camera} from '@ionic-native/camera';
 import {MyApp} from './app.component';
 /*Utils */
 import {TextareaAutoresize} from "../utils/equi-autoresize/autoresize.directive";
@@ -27,7 +27,6 @@ import {EquiOpcionesTelefonoPopover} from "../utils/equi-opciones-telefono/equi-
 import {EquiCalendar} from "../utils/equi-calendar/equi-calendar";
 import {EquiCalendar2} from "../utils/equi-calendar2/equi-calendar2";
 import {EquiPopoverFiltroCalendario} from "../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
-import {EquiGallery} from '../utils/equi-gallery/equi-gallery';
 import {EquiSelectImageModal} from '../utils/equi-modal-select-image/select-image-modal';
 /*Home*/
 import {HomePage} from '../pages/home/home';
@@ -51,7 +50,6 @@ import {SegmentFichaCaballo} from "../pages/home/ficha-caballo/ficha/ficha-cabal
 import {OpcionesCaballoPopover} from "../pages/home/ficha-caballo/opciones-caballo/opciones-caballo";
 import {CambioNombreCaballoPage} from "../pages/home/ficha-caballo/cambio-nombre/cambio-nombre";
 import {AdminCaballosInsertPage} from "../pages/home/admin-caballos/admin-caballos-insert";
-import {SeleccionFotosModal} from "../pages/home/admin-caballos/seleccion-fotos/seleccion-fotos-modal";
 import {UbicacionCaballoPage} from "../pages/home/ficha-caballo/ubicacion/ubicacion";
 import {AsignacionUbicacionCaballoPage} from "../pages/home/ficha-caballo/ubicacion/asignacion-ubicacion/asignacion-ubicacion";
 import {OpcionesUbicacionModal} from "../pages/home/ficha-caballo/ubicacion/opciones-ubicacion/opciones-ubicacion";
@@ -155,7 +153,6 @@ export function createTranslateLoader(http: Http) {
     EquiCalendar,
     EquiCalendar2,
     EquiPopoverFiltroCalendario,
-    EquiGallery,
     EquiSelectImageModal,
     /* Notificaciones */
     NotificacionesPage,
@@ -172,7 +169,6 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
-    SeleccionFotosModal,
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
@@ -291,7 +287,6 @@ export function createTranslateLoader(http: Http) {
     OpcionesCaballoPopover,
     CambioNombreCaballoPage,
     AdminCaballosInsertPage,
-    SeleccionFotosModal,
     UbicacionCaballoPage,
     AsignacionUbicacionCaballoPage,
     OpcionesUbicacionModal,
@@ -367,9 +362,9 @@ export function createTranslateLoader(http: Http) {
   ],
   providers: [
     GoogleMaps,
-    PhotoLibrary,
     Facebook,
     GooglePlus,
+    Camera,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

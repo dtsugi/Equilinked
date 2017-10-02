@@ -7,10 +7,10 @@
     </ion-buttons>
 
     <ion-buttons right>
-      <button *ngIf="!modeEdition && !photoChanged" ion-button class="equi-toolbar-btn" (click)="edit()">
+      <button *ngIf="!photoChanged" ion-button class="equi-toolbar-btn" (click)="edit()">
         Editar
       </button>
-      <button *ngIf="!modeEdition && photoChanged" ion-button class="equi-toolbar-btn" (click)="update()">
+      <button *ngIf="photoChanged" ion-button class="equi-toolbar-btn" (click)="update()">
         Actualizar
       </button>
     </ion-buttons>
@@ -18,12 +18,15 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="!modeEdition">
+  <div *ngIf="photoLoading" style="padding: 20px;text-align: center;">
+    <div>
+      <ion-spinner></ion-spinner>
+    </div>
+  </div>
+  <div *ngIf="!photoLoading">
     <img *ngIf="!photoBase64" src="assets/img/ficha-caballo.PNG"/>
     <img *ngIf="photoBase64" [src]="photoBase64"/>
   </div>
-
-  <equi-gallery [hidden]="!modeEdition" [options]="options" (selectImage)="selectPhoto($event)"></equi-gallery>
 </ion-content>
 
 

@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Events, NavController, NavParams} from 'ionic-angular';
 import {UserSessionEntity} from "../../../../../../model/userSession";
 import {GruposCaballosService} from '../../../../../../services/grupos-caballos.service';
 import {CommonService} from "../../../../../../services/common.service";
 import {SecurityService} from "../../../../../../services/security.service";
 import {LanguageService} from "../../../../../../services/language.service";
-import {EquiGallery} from '../../../../../../utils/equi-gallery/equi-gallery';
+import {Camera} from '@ionic-native/camera';
 
 @Component({
   templateUrl: "./foto-grupo.html",
@@ -14,65 +14,90 @@ import {EquiGallery} from '../../../../../../utils/equi-gallery/equi-gallery';
 export class FotoGrupoPage implements OnInit {
   private session: UserSessionEntity;
   private photoTemp: any;
-  @ViewChild(EquiGallery) equiGallery: EquiGallery;
   grupoId: number;
   photoBase64: string;
-  modeEdition: boolean;
   photoChanged: boolean;
-  options: any;
+  photoLoading: boolean;
   labels: any = {};
 
   constructor(private navController: NavController,
               private gruposCaballosService: GruposCaballosService,
               private commonService: CommonService,
               private events: Events,
+              private camera: Camera,
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
-    this.modeEdition = false;
     this.photoChanged = false;
+    this.photoLoading = true;
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.grupoId = this.navParams.get("grupoId");
-    this.photoBase64 = this.navParams.get("photoBase64");
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
+      this.getFoto(this.session.PropietarioId, this.grupoId);
     });
-    this.options = {};
   }
 
-  protected selectPhoto(photo: any) {
-    this.photoTemp = photo.image;
-    this.photoBase64 = photo.image.base64;
-    this.photoChanged = true;
-    this.modeEdition = false;
+  private getFoto(idPropietario: number, idGrupo: number): void {
+    this.photoLoading = true;
+    this.gruposCaballosService.getPhoto(idPropietario, idGrupo)
+      .then(foto => {
+        this.photoBase64 = foto && foto.FotoPerfil ? "data:image/jpeg;base64," + foto.FotoPerfil : null;
+        this.photoLoading = false;
+      }).catch(err => {
+      this.photoLoading = false;
+      this.commonService.ShowErrorHttp(err, "Error al cargar la foto");
+    });
   }
 
   public edit(): void {
-    this.equiGallery.ngOnInit();
-    this.modeEdition = true;
-  }
-
-  public update(): void {
-    this.commonService.showLoading("Procesando... ");
-    this.gruposCaballosService.updatePhoto(this.session.PropietarioId, this.grupoId, this.photoTemp.blob, this.photoTemp.name)
-      .then(() => {
-        this.commonService.ShowInfo("La foto del grupo fue actualizada");
-        this.navController.pop().then(() => {
-          this.events.publish("grupo:refresh");
-        })
-      }).catch(err => {
-      this.commonService.ShowErrorHttp(err, "Error al actualizar foto del grupo");
+    this.camera.getPicture({
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+    }).then(imageData => {
+      if (imageData) {
+        let base64: string = "data:image/jpeg;base64," + imageData;
+        this.photoTemp = {
+          name: new Date().getTime().toString() + ".jpeg",
+          base64: base64,
+          blob: this.base64toBlob(base64)
+        };
+        this.photoBase64 = base64;
+        this.photoChanged = true;
+      }
+    }).catch(err => {
+      console.error(JSON.stringify(err));
     });
   }
 
+  public update(): void {
+    this.gruposCaballosService.updatePhoto(this.session.PropietarioId, this.grupoId, this.photoTemp.blob, this.photoTemp.name)
+      .then(() => {
+        this.commonService.ShowInfo("La foto del grupo fue actualizada");
+        this.events.publish("grupo:refresh");
+      }).catch(err => {
+      this.commonService.ShowErrorHttp(err, "Error al actualizar foto del grupo");
+    });
+    this.navController.pop();
+  }
+
   public cancel(): void {
-    if (this.modeEdition) {
-      this.modeEdition = false;
-    } else {
-      this.navController.pop();
+    this.navController.pop();
+  }
+
+  private base64toBlob(base64: string) {
+    var byteString = atob(base64.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
+    return new Blob([ab]);
   }
 }

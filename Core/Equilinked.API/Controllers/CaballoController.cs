@@ -130,17 +130,23 @@ namespace Equilinked.API.Controllers
             try
             {
                 Stream stream = _caballoBLL.GetStreamFotoCaballo(caballoId);
-                string base64String = "";
-                using (Image image = Image.FromStream(stream))
+                if(stream != null)
                 {
-                    using (MemoryStream m = new MemoryStream())
+                    string base64String = "";
+                    using (Image image = Image.FromStream(stream))
                     {
-                        image.Save(m, image.RawFormat);
-                        base64String = Convert.ToBase64String(m.ToArray());
+                        using (MemoryStream m = new MemoryStream())
+                        {
+                            image.Save(m, image.RawFormat);
+                            base64String = Convert.ToBase64String(m.ToArray());
+                        }
                     }
+                    stream.Close();
+                    return Request.CreateResponse(HttpStatusCode.OK, new { FotoPerfil = base64String });
+                } else
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, new { });
                 }
-                stream.Close();
-                return Request.CreateResponse(HttpStatusCode.OK, new { FotoPerfil = base64String });
             }
             catch (Exception ex)
             {

@@ -40,14 +40,14 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
                 propietario = db.Propietario.Where(p => p.ID == propietarioId).FirstOrDefault();
             }
-            if(propietario != null)
+            if(propietario != null && propietario.Image != null)
             {
                 string imagePath = "/foto-perfil/usuario/" + propietario.Image;//esta se debe sacar de base de datos
                 return ftpBLL.GetStreamImage(imagePath);
             }
             else
             {
-                throw new Exception("No hay imagen para el propietario");
+                return null;
             }
         }
 

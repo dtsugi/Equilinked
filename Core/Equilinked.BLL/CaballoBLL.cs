@@ -144,14 +144,14 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
                 caballo = db.Caballo.Where(c => c.ID == caballoId).FirstOrDefault();
             }
-            if (caballo != null)
+            if (caballo != null && caballo.Image != null)
             {
                 string imagePath = "/foto-perfil/caballo/" + caballo.Image;
                 return ftpBLL.GetStreamImage(imagePath);
             }
             else
             {
-                throw new Exception("No hay imagen para el caballo");
+                return null;
             }
         }
 

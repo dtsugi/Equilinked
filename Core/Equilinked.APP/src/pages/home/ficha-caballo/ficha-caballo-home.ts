@@ -164,11 +164,13 @@ export class FichaCaballoPage implements OnDestroy, OnInit {
   }
 
   private getFotoCaballo(idPropietario: number, idCaballo: number): void {
+    this.fichaCaballo.setPhotoLoading(true);
     this.caballoService.getPhoto(idPropietario, idCaballo)
       .then(foto => {
-        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.photoBase64 = "data:image/jpeg;base64," + foto.FotoPerfil;
         this.fichaCaballo.setPhotoBase64(this.photoBase64);
       }).catch(err => {
+      this.fichaCaballo.setPhotoLoading(false);
       console.error(JSON.stringify(err));
     });
   }

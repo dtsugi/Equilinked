@@ -17,8 +17,8 @@
                 <ion-col col-2 class="col-center">
                     <ion-icon name="person" class="equi-icon-input"></ion-icon>
                 </ion-col>
-                <ion-col>
-                    <ion-input formControlName="NombreProfesional" style="padding-left: 5px;" class="equi-input-normal-text" type="text" placeholder="{{profesionalLabel}}"></ion-input>
+                <ion-col class="equi-col-input-alert">
+                    <input formControlName="NombreProfesional" class="equi-input-text equi-input-normal-text" type="text" placeholder="{{profesionalLabel}}">
                 </ion-col>
             </ion-row>
 
@@ -44,18 +44,6 @@
 
             <ion-row class="border-bottom">
                 <ion-col col-2 class="col-center">
-                    <ion-icon name="ios-alarm" class="equi-icon-input"></ion-icon>
-                </ion-col>
-                <ion-col col-3 class="equi-col-center">
-                    <ion-toggle formControlName="Activa" style="margin-left: 15px;" checked="false"></ion-toggle>
-                </ion-col>
-                <ion-col class="equi-col-center equi-input-normal-text">
-                    <span>{{form.value.Activa ? labels['PANT010_TXT_NOTAC'] : labels['PANT010_TXT_NOTDES']}}</span>
-                </ion-col>
-            </ion-row>
-
-            <ion-row class="border-bottom">
-                <ion-col col-2 class="col-center">
                     <ion-icon name="notifications" class="equi-icon-input"></ion-icon>
                 </ion-col>
                 <ion-col col-8 class="equi-col-center equi-input-normal-text">
@@ -70,7 +58,7 @@
 
             <ion-row>
                 <ion-col>
-                    <ion-textarea formControlName="Descripcion" class="equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT010_TXT_NOT' | translate }}"></ion-textarea>
+                    <textarea formControlName="Descripcion" class="equi-input-text equi-input-normal-text" autoresize rows="3" placeholder="{{ 'PANT010_TXT_NOT' | translate }}"></textarea>
                 </ion-col>
             </ion-row>
 

@@ -15,15 +15,11 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="!modeEdition">
-    <div *ngIf="!photo.base64" (click)="selectImage()" class="equi-modal-select-image">
-      <div>
-        <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon><br />
-        seleccionar foto
-      </div>
+  <div *ngIf="!photo.base64" (click)="selectImage()" class="equi-modal-select-image">
+    <div>
+      <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon><br />
+      seleccionar foto
     </div>
-    <img *ngIf="photo.base64" [src]="photo.base64"/>
   </div>
-
-  <equi-gallery [hidden]="!modeEdition" [options]="options" (selectImage)="selectPhoto($event)"></equi-gallery>
+  <img *ngIf="photo.base64" [src]="photo.base64"/>
 </ion-content>

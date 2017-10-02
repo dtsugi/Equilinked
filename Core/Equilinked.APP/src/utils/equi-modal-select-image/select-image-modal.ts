@@ -1,8 +1,8 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {NavParams, ViewController} from "ionic-angular";
 import {CommonService} from "../../services/common.service";
 import {LanguageService} from '../../services/language.service';
-import {EquiGallery} from '../equi-gallery/equi-gallery';
+import {Camera} from '@ionic-native/camera';
 
 @Component({
   templateUrl: "./select-image-modal.html",
@@ -10,44 +10,44 @@ import {EquiGallery} from '../equi-gallery/equi-gallery';
 })
 export class EquiSelectImageModal implements OnInit {
   private photo: any;//name, base64, blob
-  options: any;
-  modeEdition: boolean;
   readonly: boolean;
-  @ViewChild(EquiGallery) gallery: EquiGallery;
   labels: any = {};
 
-  constructor(private commonService: CommonService,
+  constructor(private camera: Camera,
               private languageService: LanguageService,
               public navParams: NavParams,
               public viewController: ViewController) {
-    this.modeEdition = false;
-    this.options = {};
   }
 
   ngOnInit(): void {
     this.photo = this.navParams.get("photo");
     this.readonly = this.navParams.get("readonly");
-    console.info(JSON.stringify(this.photo));
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
     });
   }
 
   back(): void {
-    if (this.modeEdition) {
-      this.modeEdition = false;
-    } else {
-      this.viewController.dismiss(null);
-    }
-  }
-
-  setReadOnly(readOnly: boolean): void {
-    this.readonly = readOnly;
+    this.viewController.dismiss(null);
   }
 
   selectImage(): void {
-    this.gallery.ngOnInit();
-    this.modeEdition = true;
+    this.camera.getPicture({
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+    }).then(imageData => {
+      if (imageData) {
+        let base64: string = "data:image/jpeg;base64," + imageData;
+        this.photo.name = new Date().getTime().toString() + ".jpeg";
+        this.photo.base64 = base64;
+        this.photo.blob = this.base64toBlob(base64);
+      }
+    }).catch(err => {
+      console.error(JSON.stringify(err));
+    });
   }
 
   remove(): void {
@@ -56,10 +56,13 @@ export class EquiSelectImageModal implements OnInit {
     this.photo.blob = null;
   }
 
-  protected selectPhoto(photo: any) {
-    this.photo.name = photo.image.name;
-    this.photo.base64 = photo.image.base64;
-    this.photo.blob = photo.image.blob;
-    this.modeEdition = false;//justar vista
+  private base64toBlob(base64: string) {
+    var byteString = atob(base64.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab]);
   }
 }

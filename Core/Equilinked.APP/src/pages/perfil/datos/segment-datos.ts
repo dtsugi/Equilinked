@@ -69,11 +69,13 @@ export class SegmentDatos implements OnInit, OnDestroy {
   }
 
   private getFotoPerfil(idPropietario: number): void {
+    this.photoLoading = true;
     this.propietarioService.getPhoto(idPropietario)
       .then(foto => {
-        this.photoBase64 = "data:image/png;base64," + foto.FotoPerfil;
+        this.photoBase64 = "data:image/jpeg;base64," + foto.FotoPerfil;
         this.photoLoading = false;
       }).catch(err => {
+      this.photoLoading = false;
       console.error(JSON.stringify(err));
     });
   }

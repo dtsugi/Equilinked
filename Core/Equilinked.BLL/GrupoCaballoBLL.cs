@@ -42,14 +42,14 @@ namespace Equilinked.BLL
                 db.Configuration.LazyLoadingEnabled = false;
                 grupo = db.Grupo.Where(g => g.ID == grupoId).FirstOrDefault();
             }
-            if (grupo != null)
+            if (grupo != null && grupo.Image != null)
             {
                 string imagePath = "/foto-perfil/grupo/" + grupo.Image;
                 return ftpBLL.GetStreamImage(imagePath);
             }
             else
             {
-                throw new Exception("No hay imagen para el grupo");
+                return null;
             }
         }
 
