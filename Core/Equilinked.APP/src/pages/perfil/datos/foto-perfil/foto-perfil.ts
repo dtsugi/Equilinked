@@ -6,6 +6,7 @@ import {SecurityService} from "../../../../services/security.service";
 import {PropietarioService} from "../../../../services/propietario.service";
 import {LanguageService} from "../../../../services/language.service";
 import {Camera} from '@ionic-native/camera';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   templateUrl: "./foto-perfil.html",
@@ -24,6 +25,7 @@ export class FotoPerfilPage implements OnInit {
               private commonService: CommonService,
               private events: Events,
               private camera: Camera,
+              public domSanitizer: DomSanitizer,
               private navParams: NavParams,
               private propietarioService: PropietarioService,
               private securityService: SecurityService,
@@ -70,6 +72,7 @@ export class FotoPerfilPage implements OnInit {
         this.photoChanged = true;
       }
     }).catch(err => {
+      //this.commonService.ShowInfo(JSON.stringify(err));
       console.error(JSON.stringify(err));
     });
   }
@@ -80,6 +83,7 @@ export class FotoPerfilPage implements OnInit {
         this.commonService.ShowInfo("La foto de perfil fue actualizada");
         this.events.publish("perfil:refresh");
       }).catch(err => {
+      //this.commonService.ShowInfo(JSON.stringify(err));
       this.commonService.ShowErrorHttp(err, "Error al actualizar foto de perfil");
     });
     this.navController.pop();

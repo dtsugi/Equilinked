@@ -3,6 +3,7 @@ import {NavParams, ViewController} from "ionic-angular";
 import {CommonService} from "../../services/common.service";
 import {LanguageService} from '../../services/language.service';
 import {Camera} from '@ionic-native/camera';
+import {DomSanitizer} from '@angular/platform-browser'; 
 
 @Component({
   templateUrl: "./select-image-modal.html",
@@ -16,6 +17,7 @@ export class EquiSelectImageModal implements OnInit {
   constructor(private camera: Camera,
               private languageService: LanguageService,
               public navParams: NavParams,
+              public domSanitizer: DomSanitizer,
               public viewController: ViewController) {
   }
 

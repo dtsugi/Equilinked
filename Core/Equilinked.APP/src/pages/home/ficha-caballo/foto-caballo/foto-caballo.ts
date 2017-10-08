@@ -6,6 +6,7 @@ import {CommonService} from "../../../../services/common.service";
 import {SecurityService} from "../../../../services/security.service";
 import {LanguageService} from "../../../../services/language.service";
 import {Camera} from '@ionic-native/camera';
+import {DomSanitizer} from '@angular/platform-browser'; 
 
 @Component({
   templateUrl: "./foto-caballo.html",
@@ -25,6 +26,7 @@ export class FotoCaballoPage implements OnInit {
               private camera: Camera,
               private commonService: CommonService,
               private events: Events,
+              public domSanitizer: DomSanitizer,
               private navParams: NavParams,
               private securityService: SecurityService,
               private languageService: LanguageService) {
