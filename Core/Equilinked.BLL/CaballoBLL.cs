@@ -6,8 +6,6 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Equilinked.BLL
 {
@@ -160,22 +158,23 @@ namespace Equilinked.BLL
             throw new NotImplementedException();
         }
 
-        public List<CaballoDto> GetCaballosPorEstadoAsociacionEstablo(int propietarioId, bool establo)
+        public List<CaballoDto> GetCaballosPorEstadoAsociacionEstablo(int propietarioId, bool establo, Dictionary<string, string> parameters)
         {
             List<CaballoDto> listSerialized = new List<CaballoDto>();
+            List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
             using (var db = this._dbContext)
             {
-
-                List<Caballo> caballos = db.Caballo
+                var query = db.Caballo
                     .Include("Protector")
                     .Include("GenealogiaCaballo")
                     .Include("CriadorCaballo")
                     .Include("ResponsableCaballo")
                     .Where(c => c.Propietario_ID == propietarioId)
-                    .Where(c => establo ? c.Establo_ID != null : c.Establo_ID == null)
+                    .Where(c => establo ? c.Establo_ID != null : c.Establo_ID == null);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                List<Caballo> caballos = query
                     .OrderBy(c => c.Nombre)
                     .ToList();
-
                 CaballoDto caballo;
                 foreach (Caballo item in caballos)
                 {
@@ -183,7 +182,6 @@ namespace Equilinked.BLL
                     listSerialized.Add(caballo);
                 }
             }
-
             return listSerialized;
         }
 
@@ -267,9 +265,9 @@ namespace Equilinked.BLL
             }
         }
 
-        public List<CaballoDto> GetAllSerializedByPropietarioId(int propietarioId)
+        public List<CaballoDto> GetAllSerializedByPropietarioId(int propietarioId, Dictionary<string, string> parameters)
         {
-            //List<Establo> establos = this._dbContext.Establo.
+            List<int> caballosIds = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
             List<CaballoDto> listSerialized = new List<CaballoDto>();
             using (var db = this._dbContext)
             {
@@ -278,14 +276,14 @@ namespace Equilinked.BLL
                     .Where(e => e.Propietario_ID == propietarioId)
                     .ToDictionary(e => e.ID);
 
-                List<Caballo> caballos = db.Caballo
+                var query = db.Caballo
                     .Include("Protector")
                     .Include("GenealogiaCaballo")
                     .Include("CriadorCaballo")
                     .Include("ResponsableCaballo")
-                    .Where(c => c.Propietario_ID == propietarioId)
-                    .OrderBy(c => c.Nombre)
-                    .ToList();
+                    .Where(c => c.Propietario_ID == propietarioId);
+                query = caballosIds != null ? query.Where(c => caballosIds.Contains(c.ID)) : query;//Poderosisisimo filtrado!
+                List<Caballo> caballos = query.OrderBy(c => c.Nombre).ToList();
 
                 CaballoDto caballo;
                 Establo establo;

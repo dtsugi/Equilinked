@@ -15,10 +15,18 @@ export class EstablosService {
   constructor(private http: Http) {
   }
 
-  getCaballosByEstabloAndGrupo(propietarioId: number, establoId: number, grupoId: number): Promise<Array<any>> {
+  getCaballosByEstabloAndGrupo(propietarioId: number, establoId: number, grupoId: number, parameters: Map<string, string>): Promise<Array<any>> {
     let url = this.urlPropietarios + "/" + propietarioId + "/establos/" + establoId + "/caballos";
     let params = new URLSearchParams();
     params.set("grupoId", grupoId.toString());
+    if(parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
     return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
@@ -43,20 +51,36 @@ export class EstablosService {
       .toPromise();
   }
 
-  getCaballosByEstablo(establoId: number, filtro: number): Promise<any> {
+  getCaballosByEstablo(establoId: number, filtro: number, parameters: Map<string, string>): Promise<any> {
     let url = this.urlEstablos + "/" + establoId + "/caballos";
     let params = new URLSearchParams();
     params.set("filtro", filtro.toString());
+    if(parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
     return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
 
-  getCaballosSinEstabloByPropietario(propietarioId): Promise<any> {
+  getCaballosSinEstabloByPropietario(propietarioId, parameters: Map<string, string>): Promise<any> {
     let url: string = this.urlPropietarios + "/" + propietarioId + "/caballos";
     let params = new URLSearchParams();
     params.set("establo", "false");
+    if(parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
     return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)

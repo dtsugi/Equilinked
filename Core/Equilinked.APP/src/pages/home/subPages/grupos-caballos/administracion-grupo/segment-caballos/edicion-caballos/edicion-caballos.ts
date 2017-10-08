@@ -1,26 +1,31 @@
 import {Component, OnInit} from "@angular/core";
-import {Events, NavController, NavParams} from "ionic-angular";
+import {Events, ModalController, NavController, NavParams} from "ionic-angular";
 import {CaballoService} from "../../../../../../../services/caballo.service";
 import {CommonService} from "../../../../../../../services/common.service";
 import {GruposCaballosService} from "../../../../../../../services/grupos-caballos.service";
 import {SecurityService} from "../../../../../../../services/security.service";
 import {UserSessionEntity} from "../../../../../../../model/userSession";
+import {LanguageService} from '../../../../../../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../../../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   templateUrl: "./edicion-caballos.html",
-  providers: [CaballoService, CommonService, GruposCaballosService, SecurityService]
+  providers: [CaballoService, CommonService, LanguageService, GruposCaballosService, SecurityService]
 })
 export class EdicionCaballosGrupoPage implements OnInit {
+  private mapCaballosGrupo: Map<number, any>;
   private grupo: any;
   private session: UserSessionEntity;
   private caballosGrupoRespaldo: Array<any>;
   caballosGrupo: Array<any>;
   loading: boolean;
   isFilter: boolean;
+  private parametersFilter: Map<string, string>;
 
   constructor(private caballoService: CaballoService,
               private commonService: CommonService,
               private events: Events,
+              private modalController: ModalController,
               private gruposCaballosService: GruposCaballosService,
               private navController: NavController,
               private navParams: NavParams,
@@ -29,11 +34,15 @@ export class EdicionCaballosGrupoPage implements OnInit {
     this.isFilter = false;
     this.caballosGrupoRespaldo = new Array<any>();
     this.caballosGrupo = new Array<any>();
+    this.mapCaballosGrupo = new Map();
   }
 
   ngOnInit(): void {
     this.session = this.securityService.getInitialConfigSession();
     this.grupo = this.navParams.get("grupo");
+    this.grupo.GrupoCaballo.forEach(cg => {
+      this.mapCaballosGrupo.set(cg.Caballo_ID, cg);
+    });
     this.getCaballosForGrupo();
   }
 
@@ -68,18 +77,53 @@ export class EdicionCaballosGrupoPage implements OnInit {
     }
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.getCaballosForGrupo();
+      }
+    });
+    modal.present();
+  }
+
+  selectCaballo(ca: any): void {
+    ca.seleccion = !ca.seleccion;
+    if (this.mapCaballosGrupo.has(ca.caballo.ID)) {
+      this.mapCaballosGrupo.delete(ca.caballo.ID);
+    } else {
+      this.mapCaballosGrupo.set(ca.caballo.ID, ca.grupoCaballo);
+    }
+  }
+
   selectAll(): void {
     let countSeleted = this.caballosGrupoRespaldo.filter(ec => ec.seleccion).length;
     let selectAll: boolean = countSeleted !== this.caballosGrupoRespaldo.length;
     this.caballosGrupoRespaldo.forEach(cg => {
-      cg.seleccion = selectAll
-    })
+      cg.seleccion = selectAll;
+      let hasMap = this.mapCaballosGrupo.has(cg.caballo.ID);
+      if (selectAll) {
+        if (!hasMap) {
+          this.mapCaballosGrupo.set(cg.caballo.ID, cg.grupoCaballo);
+        }
+      } else {
+        this.mapCaballosGrupo.delete(cg.caballo.ID);
+      }
+    });
   }
 
   save(): void {
-    this.grupo.GrupoCaballo = this.caballosGrupoRespaldo
-      .filter(cg => cg.seleccion)
-      .map(cg => cg.grupoCaballo);
+    this.grupo.GrupoCaballo.forEach(gc => {
+      if (this.mapCaballosGrupo.has(gc.Caballo_ID)) {
+        this.mapCaballosGrupo.get(gc.Caballo_ID).ID = gc.ID;
+      }
+    });
+    this.grupo.GrupoCaballo = Array.from(this.mapCaballosGrupo.values());
     this.commonService.showLoading("");
     this.gruposCaballosService.updateGrupo(this.grupo)
       .then(() => {
@@ -94,26 +138,23 @@ export class EdicionCaballosGrupoPage implements OnInit {
   }
 
   private getCaballosForGrupo(): void {
-    let mapCaballosGrupo: Map<number, any> = new Map<number, any>();
     this.loading = true;
-    this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId).toPromise()
+    this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId, this.parametersFilter)
+      .toPromise()
       .then(caballos => {
-        this.grupo.GrupoCaballo.forEach(cg => {
-          mapCaballosGrupo.set(cg.Caballo_ID, cg);
-        });
         this.caballosGrupoRespaldo = caballos.map(c => {
           return {
             caballo: c,
-            seleccion: mapCaballosGrupo.has(c.ID),
-            grupoCaballo: mapCaballosGrupo.has(c.ID) ?
-              mapCaballosGrupo.get(c.ID) : {Caballo_ID: c.ID}
+            seleccion: this.mapCaballosGrupo.has(c.ID),
+            grupoCaballo: this.mapCaballosGrupo.has(c.ID) ?
+              this.mapCaballosGrupo.get(c.ID) : {Caballo_ID: c.ID}
           }
         });
         this.filter(null);
         this.loading = false;
       }).catch(err => {
-        console.error(err);
-        this.loading = false;
+      console.error(err);
+      this.loading = false;
     });
   }
 }

@@ -16,8 +16,14 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
-                 [placeholder]="labels['PANT017_TXT_FILCA']"></ion-searchbar>
+  <div class="equi-container-input-search">
+    <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                   [placeholder]="labels['PANT017_TXT_FILCA']"></ion-searchbar>
+    <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+      <ion-icon name="ios-arrow-down"></ion-icon>
+    </button>
+  </div>
+
 
   <div *ngIf="loading" style="text-align: center;">
     <ion-spinner></ion-spinner>

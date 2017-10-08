@@ -53,24 +53,26 @@ namespace Equilinked.BLL
             }
         }
 
-        public List<CaballoDto> GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, bool tieneEstablo)
+        public List<CaballoDto> GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, bool tieneEstablo, Dictionary<string, string> parameters)
         {
             List<CaballoDto> listSerialized = new List<CaballoDto>();
+            List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
 
                 List<int> caballosIds = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId)
                     .Select(cg => cg.Caballo_ID).ToList();
-
-                List <Caballo> caballos = db.Caballo
+                var query = db.Caballo
                     .Include("Protector")
                     .Include("GenealogiaCaballo")
                     .Include("CriadorCaballo")
                     .Include("ResponsableCaballo")
                     .Where(c => c.Propietario_ID == propietarioId)
                     .Where(c => caballosIds.Contains(c.ID))
-                    .Where(c => tieneEstablo ? c.Establo_ID != null : c.Establo_ID == null)
+                    .Where(c => tieneEstablo ? c.Establo_ID != null : c.Establo_ID == null);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                List <Caballo> caballos = query
                     .OrderBy(c => c.Nombre)
                     .ToList();
 
@@ -100,8 +102,9 @@ namespace Equilinked.BLL
             }
         }
 
-        public List<CaballoDto> GetCaballosByGruposIds(int propietarioId, int[] gruposIds)
+        public List<CaballoDto> GetCaballosByGruposIds(int propietarioId, int[] gruposIds, Dictionary<string, string> parameters)
         {
+            List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
             List<CaballoDto> caballos = new List<CaballoDto>();
             using (var db = this._dbContext)
             {
@@ -114,8 +117,9 @@ namespace Equilinked.BLL
 
                 List<int> caballosIds = db.GrupoCaballo.Where(gc => gruposIds.Contains(gc.Grupo_ID))
                     .Select(gc => gc.Caballo_ID).Distinct().ToList();
-
-                List<Caballo> caballoos = db.Caballo.Where(c => caballosIds.Contains(c.ID)).ToList();
+                var query = db.Caballo.Where(c => caballosIds.Contains(c.ID));
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                List<Caballo> caballoos = query.ToList();
                 Establo establo;
                 foreach (Caballo caballo in caballoos)
                 {
@@ -184,29 +188,31 @@ namespace Equilinked.BLL
             return entity;
         }
 
-        public List<CaballoDto> GetGrupoCaballosByGrupoId(int GrupoID)
+        public List<CaballoDto> GetGrupoCaballosByGrupoId(int GrupoID, Dictionary<string, string> parameters)
         {
             List<CaballoDto> caballosDtos = new List<CaballoDto>();
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
+                Grupo grupo = db.Grupo.Where(g => g.ID == GrupoID).FirstOrDefault();
+                List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(grupo.Propietario_ID.Value, parameters) : null;
 
                 Dictionary<int, GrupoCaballo> mapGrupoCaballos = db.GrupoCaballo
                     .Where(gc => gc.Grupo_ID == GrupoID).ToDictionary(gc => gc.Caballo_ID);
                 List<int> caballosIds = new List<int>(mapGrupoCaballos.Keys);
-                Grupo grupo = db.Grupo.Where(g => g.ID == GrupoID).FirstOrDefault();
                 Dictionary<int, Establo> mapEstablos = db.Establo.Where(e => e.Propietario_ID == grupo.Propietario_ID)
                     .ToDictionary(e => e.ID);
 
-                List<Caballo> caballos = db.Caballo
+                var query = db.Caballo
                     .Include("GenealogiaCaballo")
                     .Include("CriadorCaballo")
                     .Include("ResponsableCaballo")
                     .Include("Genero")
                     .Include("Pelaje")
                     .Include("Protector")
-                    .Where(c => caballosIds.Contains(c.ID))
-                    .ToList();
+                    .Where(c => caballosIds.Contains(c.ID));
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                List < Caballo> caballos = query.ToList();
 
                 Establo est = null;
                 foreach(var c in caballos)

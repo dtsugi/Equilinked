@@ -1,5 +1,10 @@
-<ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"
-               [placeholder]="labels['PANT002_TXT_FICA']"></ion-searchbar>
+<div class="equi-container-input-search">
+  <ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"
+                 [placeholder]="labels['PANT002_TXT_FICA']"></ion-searchbar>
+  <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+    <ion-icon name="ios-arrow-down"></ion-icon>
+  </button>
+</div>
 
 <equi-button-add [label]="labels['PANT002_BTN_NUCA']" (action)="goInsertCaballo()"></equi-button-add>
 
@@ -13,7 +18,8 @@
       <img src="assets/img/caballo.jpg">
     </ion-avatar>
 
-    <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="caballo.NombreFilter"></span><br />
-    <span *ngIf="caballo.Establo" [ngClass]="{'equi-edit': isFilter}" class="equi-subtitle-form" [innerHTML]="caballo.EstabloFilter"></span>
+    <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form" [innerHTML]="caballo.NombreFilter"></span><br/>
+    <span *ngIf="caballo.Establo" [ngClass]="{'equi-edit': isFilter}" class="equi-subtitle-form"
+          [innerHTML]="caballo.EstabloFilter"></span>
   </ion-item>
 </ion-list>

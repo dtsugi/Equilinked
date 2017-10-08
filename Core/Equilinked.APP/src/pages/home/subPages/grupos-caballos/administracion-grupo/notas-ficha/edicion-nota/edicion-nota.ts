@@ -70,11 +70,14 @@ export class EdicionNotaPage implements OnInit {
   }
 
   selectCaballos(): void {
+    let self = this;
     let params: any = {
       caballosInput: this.alerta.AlertaCaballo.map(ac => {
         return {ID: ac.Caballo_ID};
       }),
-      funcionCaballos: this.gruposCaballosService.getCaballosByGroupId(this.grupoId)
+      functionFilter: function (parameters) {
+        return self.gruposCaballosService.getCaballosByGroupId(self.grupoId, parameters)
+      }
     };
     let modal = this.modalController.create(EquiModalCaballos, params);
     modal.onDidDismiss(this.callbackAddCaballos);
@@ -148,7 +151,7 @@ export class EdicionNotaPage implements OnInit {
   }
 
   private getCaballosDefaultGrupo(): void {
-    this.gruposCaballosService.getCaballosByGroupId(this.grupoId)
+    this.gruposCaballosService.getCaballosByGroupId(this.grupoId, null)
       .then(caballosGrupo => {
         this.alerta.AlertaCaballo = caballosGrupo.map(c => {
           return {

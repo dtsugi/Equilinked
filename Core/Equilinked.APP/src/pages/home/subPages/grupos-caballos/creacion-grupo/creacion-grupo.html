@@ -32,7 +32,12 @@
         <ion-row>
             <ion-col col-12 class="equi-title-form">{{ 'PANT012_LBL_AGCA' | translate }}</ion-col>
             <ion-col col-12>
+              <div class="equi-container-input-search">
                 <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT012_TXT_FICA']"></ion-searchbar>
+                <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+                  <ion-icon name="ios-arrow-down"></ion-icon>
+                </button>
+              </div>
             </ion-col>
             <ion-col col-12>
                 <button ion-button full (click)="selectAll()">{{ 'PANT012_BTN_SELT' | translate }}</button>
@@ -41,7 +46,7 @@
     </ion-grid>
 
     <ion-list no-lines>
-        <ion-item *ngFor="let c of caballos" (click)="c.seleccion = !c.seleccion">
+        <ion-item *ngFor="let c of caballos" (click)="selectCaballo(c)">
             <ion-avatar item-left>
                 <img src="assets/img/caballo.jpg">
             </ion-avatar>

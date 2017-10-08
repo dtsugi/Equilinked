@@ -1,33 +1,43 @@
 import {Component, OnInit} from "@angular/core";
-import {NavParams, ToastController, ViewController} from "ionic-angular";
+import {ModalController, NavParams, ViewController} from "ionic-angular";
 import {CommonService} from "../../services/common.service";
 import {LanguageService} from '../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   templateUrl: "./equi-modal-caballos.html",
   providers: [LanguageService, CommonService]
 })
 export class EquiModalCaballos implements OnInit {
-  labels: any = {};
-  caballos: Array<any>;
-  caballosRespaldo: Array<any>;
   private caballosInput: any;
-  private funcionCaballos: Promise<any>; //Esta la ejecutamos
+  private functionFilter: Function;
+  private parametersFilter: Map<string, string>;
+  private caballosIds: Array<number>;
   showSpinner: boolean;
   isFilter: boolean;
+  loadCaballosPromise: Promise<any>;
+  caballos: Array<any>;
+  caballosRespaldo: Array<any>;
+  labels: any = {};
 
   constructor(private commonService: CommonService,
+              private modalController: ModalController,
               public navParams: NavParams,
               public viewController: ViewController,
               private languageService: LanguageService) {
     this.caballos = [];
+    this.caballosIds = [];
     this.isFilter = false;
     this.showSpinner = true;
   }
 
   ngOnInit(): void {
     this.caballosInput = this.navParams.get("caballosInput");
-    this.funcionCaballos = this.navParams.get("funcionCaballos");
+    this.functionFilter = this.navParams.get("functionFilter");
+    this.caballosInput.forEach(c => {
+      this.caballosIds.push(c.ID);
+    });
+    this.loadCaballosPromise = this.functionFilter(this.parametersFilter);
     this.languageService.loadLabels().then(labels => {
       this.labels = labels;
       this.loadCaballos(); //Sacar los caballos
@@ -39,16 +49,22 @@ export class EquiModalCaballos implements OnInit {
   }
 
   accept(): void {
-    //con esto salvo a los caballos que se hayan seleccionado de la lista visualizada
+    /*
+    con esto salvo a los caballos que se hayan seleccionado de la lista visualizada
     let caballosOutput: Array<any> = this.caballosRespaldo
       .filter(c => c.seleccion)
       .map(c => c.caballo);
-    //Ahora tengo recuperar caballos que estaban seleccionados pero ni siquiera estaban visualizando (esto sucede cuando hay caballos de otros grupos)
+    Ahora tengo recuperar caballos que estaban seleccionados pero ni siquiera estaban visualizando (esto sucede cuando hay caballos de otros grupos)
     let caballosVisualizadosIds: Array<number> = this.caballosRespaldo.map(c => c.caballo.ID);
     this.caballosInput.forEach(ci => {
       if (caballosVisualizadosIds.indexOf(ci.ID) == -1) {
         caballosOutput.push(ci);
       }
+    });*/
+    let caballosOutput = this.caballosIds.map(id => {
+      return {
+        ID: id
+      };
     });
     this.viewController.dismiss(caballosOutput);
   }
@@ -80,24 +96,53 @@ export class EquiModalCaballos implements OnInit {
     }
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        console.info(result.parameters.size);
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.loadCaballosPromise = this.functionFilter(this.parametersFilter);
+        this.loadCaballos();
+      }
+    });
+    modal.present();
+  }
+
   selectAll(): void {
     let countSeleted = this.caballosRespaldo.filter(c => c.seleccion).length;
     let selectAll: boolean = countSeleted !== this.caballosRespaldo.length;
     this.caballosRespaldo.forEach(c => {
       c.seleccion = selectAll;
+      if (c.seleccion) {
+        if (this.caballosIds.indexOf(c.caballo.ID) == -1)
+          this.caballosIds.push(c.caballo.ID);
+      } else {
+        this.caballosIds.splice(this.caballosIds.indexOf(c.caballo.ID), 1);
+      }
     });
   }
 
+  selectCaballo(caballo: any): void {
+    let caballoId = caballo.caballo.ID;
+    caballo.seleccion = !caballo.seleccion;
+    if (caballo.seleccion) {
+      this.caballosIds.push(caballoId);
+    } else {
+      this.caballosIds.splice(this.caballosIds.indexOf(caballoId), 1);
+    }
+  }
+
   private loadCaballos(): void {
-    this.funcionCaballos
+    this.loadCaballosPromise
       .then(caballos => {
-        let mapCaballos: Map<number, any> = new Map<number, any>();
-        this.caballosInput.forEach(c => {
-          mapCaballos.set(c.ID, c);
-        });
         this.caballosRespaldo = caballos.map(caballo => {
           return {
-            seleccion: mapCaballos.has(caballo.ID),
+            seleccion: this.caballosIds.indexOf(caballo.ID) > -1,
             caballo: caballo
           }
         });

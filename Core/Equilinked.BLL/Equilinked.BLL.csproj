@@ -54,6 +54,7 @@
     <Compile Include="AlertaBLL.cs" />
     <Compile Include="AlimentacionBLL.cs" />
     <Compile Include="CaballoBLL.cs" />
+    <Compile Include="CaballoFilterBLL.cs" />
     <Compile Include="ContactoBLL.cs" />
     <Compile Include="CriadorBLL.cs" />
     <Compile Include="EnvioCorreoInvitacionBLL.cs" />

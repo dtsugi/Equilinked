@@ -1,10 +1,11 @@
 import {Component, OnInit} from "@angular/core";
-import {NavParams, ViewController} from "ionic-angular";
+import {ModalController, NavParams, ViewController} from "ionic-angular";
 import {CommonService} from "../../../../../services/common.service";
 import {CaballoService} from '../../../../../services/caballo.service';
 import {EstablosService} from "../../../../../services/establos.service";
 import {UserSessionEntity} from "../../../../../model/userSession";
 import {LanguageService} from '../../../../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   templateUrl: "./caballos-establo-modal.html",
@@ -19,13 +20,16 @@ export class CaballosEstabloModal implements OnInit {
   labels: any = {};
   showSpinner: boolean;
   isFilter: boolean;
+  private mapCaballos: Map<number, any>;
+  private parametersFilter: Map<string, string>;
 
   constructor(private commonService: CommonService,
               private establosService: EstablosService,
+              private modalController: ModalController,
               public navParams: NavParams,
               public viewController: ViewController,
               private languageService: LanguageService) {
-    languageService.loadLabels().then(labels => this.labels = labels);
+    this.mapCaballos = new Map();
     this.caballos = [];
     this.isFilter = false;
     this.showSpinner = true;
@@ -34,11 +38,13 @@ export class CaballosEstabloModal implements OnInit {
   ngOnInit(): void {
     this.session = this.navParams.get("session");
     this.establo = this.navParams.get("establo");
-    if (this.establo.ID) {
-      this.listCaballosWithWithoutEstabloById();//Libres con seleccionados
-    } else {
-      this.listFreeCaballosByPropietarioId();//Los libres del establo
-    }
+    this.establo.Caballo.forEach(c => {
+      this.mapCaballos.set(c.ID, c);
+    });
+    this.languageService.loadLabels().then(labels => {
+      this.labels = labels;
+      this.listCaballos();
+    });
   }
 
   close(): void {
@@ -72,25 +78,60 @@ export class CaballosEstabloModal implements OnInit {
     console.info(this.caballos);
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.listCaballos();
+      }
+    });
+    modal.present();
+  }
+
+  selectCaballo(c: any): void {
+    c.seleccion = !c.seleccion;
+    if (c.seleccion) {
+      this.mapCaballos.set(c.caballo.ID, c.caballo);
+    } else {
+      this.mapCaballos.delete(c.caballo.ID);
+    }
+  }
+
   selectAll(): void {
     let countSeleted = this.caballosRespaldo.filter(c => c.seleccion).length;
     let selectAll: boolean = countSeleted !== this.caballosRespaldo.length;
     this.caballosRespaldo.forEach(c => {
       c.seleccion = selectAll;
+      let hasCaballo = this.mapCaballos.has(c.caballo.ID);
+      if (selectAll) {
+        if (!hasCaballo)
+          this.mapCaballos.set(c.caballo.ID, c.caballo);
+      } else {
+        this.mapCaballos.delete(c.caballo.ID);
+      }
     });
   }
 
+  private listCaballos(): void {
+    if (this.establo.ID) {
+      this.listCaballosWithWithoutEstabloById();//Libres con seleccionados
+    } else {
+      this.listFreeCaballosByPropietarioId();//Los libres del establo
+    }
+  }
+
   private listFreeCaballosByPropietarioId(): void {
-    this.establosService.getCaballosSinEstabloByPropietario(this.session.PropietarioId)
+    this.establosService.getCaballosSinEstabloByPropietario(this.session.PropietarioId, this.parametersFilter)
       .then(caballos => {
-        let mapCaballos: Map<number, any> = new Map<number, any>();
-        this.establo.Caballo.forEach(ec => {
-          mapCaballos.set(ec.ID, ec);
-        });
         this.caballosRespaldo = caballos.map(c => {
           return {
-            seleccion: mapCaballos.has(c.ID),
-            caballo: mapCaballos.has(c.ID) ? mapCaballos.get(c.ID) : c
+            seleccion: this.mapCaballos.has(c.ID),
+            caballo: this.mapCaballos.has(c.ID) ? this.mapCaballos.get(c.ID) : c
           }
         });
         this.filter(null);
@@ -102,16 +143,12 @@ export class CaballosEstabloModal implements OnInit {
   }
 
   private listCaballosWithWithoutEstabloById(): void {
-    this.establosService.getCaballosByEstablo(this.establo.ID, 1)
+    this.establosService.getCaballosByEstablo(this.establo.ID, 1, this.parametersFilter)
       .then(caballos => {
-        let mapCaballos: Map<number, any> = new Map<number, any>();
-        this.establo.Caballo.forEach(c => {
-          mapCaballos.set(c.ID, c);
-        });
         this.caballosRespaldo = caballos.map(c => {
           return {
-            seleccion: mapCaballos.has(c.ID),
-            caballo: mapCaballos.has(c.ID) ? mapCaballos.get(c.ID) : c
+            seleccion: this.mapCaballos.has(c.ID),
+            caballo: this.mapCaballos.has(c.ID) ? this.mapCaballos.get(c.ID) : c
           }
         });
         this.filter(null);

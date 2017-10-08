@@ -661,3 +661,17 @@ ion-slides {
   height: 200px;
   width: 100%;
 }
+
+.equi-container-input-search {
+  display: inline-flex;
+  align-items: center;
+}
+
+.equi-button-filter {
+  height: 42px;
+  background-color: white;
+}
+
+.equi-container-input-search ion-searchbar {
+  padding-right: 0px;
+}

@@ -7,24 +7,26 @@ namespace Equilinked.BLL
 {
     public class EstabloBLL : BLLBase
     {
-        public List<CaballoDto> GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, int grupoId)
+        public List<CaballoDto> GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, int grupoId, Dictionary<string, string> parameters)
         {
+            //aquiii
+            List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
             List<CaballoDto> listSerialized = new List<CaballoDto>();
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-
                 List<int> caballosIds = db.GrupoCaballo.Where(gc => gc.Grupo_ID == grupoId)
                     .Select(cg => cg.Caballo_ID).ToList();
-
-                List<Caballo> caballos = db.Caballo
+                var query = db.Caballo
                     .Include("Protector")
                     .Include("GenealogiaCaballo")
                     .Include("CriadorCaballo")
                     .Include("ResponsableCaballo")
                     .Where(c => c.Propietario_ID == propietarioId)
                     .Where(c => caballosIds.Contains(c.ID))
-                    .Where(c => c.Establo_ID == establoId)
+                    .Where(c => c.Establo_ID == establoId);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                List<Caballo> caballos = query
                     .OrderBy(c => c.Nombre)
                     .ToList();
 
@@ -58,28 +60,33 @@ namespace Equilinked.BLL
         /*
          * Obtiene la lista de caballos asociados al establo 
          */
-        public List<Caballo> GetCaballosEstabloByEstabloId(int establoId)
+        public List<Caballo> GetCaballosEstabloByEstabloId(int establoId, Dictionary<string, string> parameters)
         {
             using(var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-
-                return db.Caballo
+                Establo est = db.Establo.Where(e => e.ID == establoId).FirstOrDefault();
+                List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(est.Propietario_ID, parameters) : null;
+                var query = db.Caballo
                     .Include("Establo")
-                    .Where(c => c.Establo_ID == establoId)
+                    .Where(c => c.Establo_ID == establoId);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                return query
                     .OrderBy(c => c.Nombre)
                     .ToList();
             }
         }
 
-        public List<Caballo> GetCaballosPropietarioWithoutEstablo(int propietarioId)
+        public List<Caballo> GetCaballosPropietarioWithoutEstablo(int propietarioId, Dictionary<string, string> parameters)
         {
-            using(var db = this._dbContext)
+            List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(propietarioId, parameters) : null;
+            using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
-                return db.Caballo
-                    .Where(c => c.Propietario_ID == propietarioId && c.Establo_ID == null)
-                    .ToList();
+                var query = db.Caballo
+                    .Where(c => c.Propietario_ID == propietarioId && c.Establo_ID == null);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                return query.OrderBy(c => c.Nombre).ToList();
             }
         }
 
@@ -87,16 +94,19 @@ namespace Equilinked.BLL
          * Obtiene la lista de caballos asociados a un establo y aquellos caballos
          * que no cuentan con una asociacion.
          */
-        public List<Caballo> GetCaballosEstabloSinEstabloByEstabloId(int establoId)
+        public List<Caballo> GetCaballosEstabloSinEstabloByEstabloId(int establoId, Dictionary<string, string> parameters)
         {
             using (var db = this._dbContext)
             {
                 db.Configuration.LazyLoadingEnabled = false;
                 Establo est = db.Establo.Where(e => e.ID == establoId).FirstOrDefault();
-                return db.Caballo
+                List<int> caballosIdsFilter = parameters != null ? new CaballoFilterBLL().GetIdsCaballosByFilter(est.Propietario_ID, parameters) : null;
+                var query = db.Caballo
                     .Include("Establo")
                     .Where(c => c.Propietario_ID == est.Propietario_ID)
-                    .Where(c => c.Establo_ID == establoId || c.Establo_ID == null)
+                    .Where(c => c.Establo_ID == establoId || c.Establo_ID == null);
+                query = caballosIdsFilter != null ? query.Where(c => caballosIdsFilter.Contains(c.ID)) : query;
+                return query
                     .OrderBy(c => c.Nombre)
                     .ToList();
             }

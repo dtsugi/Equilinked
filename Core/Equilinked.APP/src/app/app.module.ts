@@ -28,6 +28,7 @@ import {EquiCalendar} from "../utils/equi-calendar/equi-calendar";
 import {EquiCalendar2} from "../utils/equi-calendar2/equi-calendar2";
 import {EquiPopoverFiltroCalendario} from "../utils/equi-popover-filtro-calendario/equi-popover-filtro-calendario";
 import {EquiSelectImageModal} from '../utils/equi-modal-select-image/select-image-modal';
+import {EquiModalFiltroCaballos} from '../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 /*Home*/
 import {HomePage} from '../pages/home/home';
 import {TabsPage} from '../pages/tabs/tabs';
@@ -154,6 +155,7 @@ export function createTranslateLoader(http: Http) {
     EquiCalendar2,
     EquiPopoverFiltroCalendario,
     EquiSelectImageModal,
+    EquiModalFiltroCaballos,
     /* Notificaciones */
     NotificacionesPage,
     EdicionNotificacionGeneralPage,
@@ -355,6 +357,7 @@ export function createTranslateLoader(http: Http) {
     EquiOpcionesTelefonoPopover,
     EquiPopoverFiltroCalendario,
     EquiSelectImageModal,
+    EquiModalFiltroCaballos,
     /*Calendario*/
     CalendarioPage,
     /*Camara*/

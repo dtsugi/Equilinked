@@ -46,7 +46,7 @@ export class SeleccionCaballosPage implements OnInit {
       mapCaballos.set(alertaCaballo.Caballo_ID, alertaCaballo);
     });
     this.commonService.showLoading("Procesando...");
-    this.gruposCaballosService.getCaballosByGroupId(this.grupoId)
+    this.gruposCaballosService.getCaballosByGroupId(this.grupoId, null)
       .then(caballosGrupo => {
         console.info(caballosGrupo);
         this.caballosRespaldo = caballosGrupo.map(cg => {

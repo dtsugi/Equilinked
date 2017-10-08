@@ -17,6 +17,7 @@ namespace Equilinked.API.Controllers
 {
     public class CaballoController : EquilinkedBaseController
     {
+        private const string KEY_PARAMS = "QPC";
         private CaballoBLL _caballoBLL = new CaballoBLL();
 
         [HttpPut, Route("api/propietarios/{propietarioId}/caballos/{caballoId}/adjuntos")]
@@ -156,11 +157,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietario/{propietarioId}/caballos")]
-        public IHttpActionResult GetCaballosPorAsociacionEstablo(int propietarioId, [FromUri] bool establo)
+        public IHttpActionResult GetCaballosPorAsociacionEstablo(int propietarioId, [FromUri] bool establo, [FromUri] bool filter)
         {
             try
             {
-                return Ok(_caballoBLL.GetCaballosPorEstadoAsociacionEstablo(propietarioId, establo));
+                return Ok(_caballoBLL.GetCaballosPorEstadoAsociacionEstablo(propietarioId, establo, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -170,11 +171,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/Caballo/GetAllSerializedByPropietarioId/{propietarioId}")]
-        public IHttpActionResult GetAllSerializedByPropietarioId(int propietarioId)
+        public IHttpActionResult GetAllSerializedByPropietarioId(int propietarioId, [FromUri] bool filter)
         {
             try
             {
-                return Ok(_caballoBLL.GetAllSerializedByPropietarioId(propietarioId));
+                return Ok(_caballoBLL.GetAllSerializedByPropietarioId(propietarioId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -259,6 +260,19 @@ namespace Equilinked.API.Controllers
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, EquilinkedConstants.MSG_ERROR_SELECT));
             }
+        }
+
+        private Dictionary<string, string> ExtractParamtersFromRequest(HttpRequest request)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            foreach (string param in request.Params)
+            {
+                if (param.Contains(KEY_PARAMS))
+                {
+                    parameters.Add(param, request.Params[param]);
+                }
+            }
+            return parameters;
         }
     }
 }

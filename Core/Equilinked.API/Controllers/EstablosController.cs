@@ -6,20 +6,21 @@ using Equilinked.BLL;
 using Equilinked.DAL.Models;
 using System.Collections.Generic;
 using Equilinked.DAL.Dto;
+using System.Web;
 
 namespace Equilinked.API.Controllers
 {
     public class EstablosController : EquilinkedBaseController
     {
-
+        private const string KEY_PARAMS = "QPC";
         private EstabloBLL establosBll = new EstabloBLL();
 
         [HttpGet, Route("api/propietarios/{propietarioId}/establos/{establoId}/caballos")]
-        public IHttpActionResult GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, [FromUri] int grupoId)
+        public IHttpActionResult GetCaballosByEstabloAndGrupo(int propietarioId, int establoId, [FromUri] int grupoId, [FromUri] bool filter)
         {
             try
             {
-                List<CaballoDto> caballos = establosBll.GetCaballosByEstabloAndGrupo(propietarioId, establoId, grupoId);
+                List<CaballoDto> caballos = establosBll.GetCaballosByEstabloAndGrupo(propietarioId, establoId, grupoId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null);
                 return Ok(caballos);
             }
             catch (Exception ex)
@@ -30,11 +31,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/caballos")]
-        public IHttpActionResult GetEstablosPropietario(int propietarioId, [FromUri] bool establo)
+        public IHttpActionResult GetEstablosPropietario(int propietarioId, [FromUri] bool establo, [FromUri] bool filter)
         {
             try
             {
-                return Ok(establosBll.GetCaballosPropietarioWithoutEstablo(propietarioId));
+                return Ok(establosBll.GetCaballosPropietarioWithoutEstablo(propietarioId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -72,18 +73,18 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/establos/{establoId}/caballos")]
-        public IHttpActionResult GetCaballosEstablo(int establoId, [FromUri] int filtro)
+        public IHttpActionResult GetCaballosEstablo(int establoId, [FromUri] int filtro, [FromUri] bool filter)
         {
             try
             {
                 List<Caballo> caballos = new List<Caballo>();
                 if(filtro == 1)
                 {
-                    caballos = establosBll.GetCaballosEstabloSinEstabloByEstabloId(establoId);
+                    caballos = establosBll.GetCaballosEstabloSinEstabloByEstabloId(establoId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null);
                 }
                 else if(filtro == 2)
                 {
-                    caballos = establosBll.GetCaballosEstabloByEstabloId(establoId);
+                    caballos = establosBll.GetCaballosEstabloByEstabloId(establoId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null);
                 }
                 return Ok(caballos);
             }
@@ -153,6 +154,19 @@ namespace Equilinked.API.Controllers
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar los establos"));
             }
+        }
+
+        private Dictionary<string, string> ExtractParamtersFromRequest(HttpRequest request)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            foreach (string param in request.Params)
+            {
+                if (param.Contains(KEY_PARAMS))
+                {
+                    parameters.Add(param, request.Params[param]);
+                }
+            }
+            return parameters;
         }
     }
 }

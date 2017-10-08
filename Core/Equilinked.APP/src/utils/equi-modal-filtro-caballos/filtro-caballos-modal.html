@@ -1,0 +1,288 @@
+<ion-header>
+  <ion-toolbar class="equi-toolbar">
+    <ion-buttons left>
+      <button ion-button icon-only (click)="cancel()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title class="equi-toolbar-title-content">
+      <span class="equi-toolbar-title">Filtro avanzado</span>
+    </ion-title>
+
+    <ion-buttons right>
+      <button ion-button icon-only (click)="clear()">
+        <ion-icon name="ios-trash"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="search()">
+        <ion-icon name="ios-search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #formFilter="ngForm">
+    <ion-grid class="equi-rows-form">
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOM" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASNO' | translate }}"
+                 [(ngModel)]="parametersForm.QPCNombre"
+                 name="Nombre"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROP" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASPO' | translate }}"
+                 [(ngModel)]="parametersForm.QPCPropietario"
+                 name="NombrePropietario"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GEN" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      name="Genero_ID"
+                      [(ngModel)]="parametersForm.QPCGenero">
+            <ion-option *ngFor="let genero of generos" [value]="genero.Key">{{genero.Value}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PEL" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      name="Pelaje_ID"
+                      [(ngModel)]="parametersForm.QPCPelaje">
+            <ion-option *ngFor="let item of pelajes" [value]="item.Key">{{item.Value}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">Año de nacimiento</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="number"
+                 placeholder="{{ 'PANT004_TXT_ASPO' | translate }}"
+                 [(ngModel)]="parametersForm.QPCAnio"
+                 name="AnioNacimiento"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_GENE" | translate }}</ion-col>
+        <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENPA" | translate }}</span>
+        </ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASNPA' | translate }}"
+                 [(ngModel)]="parametersForm.QPCPadre"
+                 name="NombrePadre"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3></ion-col>
+        <ion-col col-2><span class="equi-input-normal-text equi-col-center">{{ "PANT004_LBL_GENMA" | translate }}</span>
+        </ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASNMA' | translate }}"
+                 [(ngModel)]="parametersForm.QPCMadre"
+                 name="NombreMadre"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_CRIA" | translate }}</ion-col>
+        <ion-col col-5 class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASNCRI' | translate }}"
+                 [(ngModel)]="parametersForm.QPCNombreCriador"
+                 name="NombreCriador"/>
+        </ion-col>
+        <ion-col col-4>
+          <ion-select class="equi-input-normal-text equi-select-width"
+                      placeholder="{{ 'PANT004_TXT_ASPACRI' | translate }}"
+                      [(ngModel)]="parametersForm.QPCPaisCriador"
+                      name="PaisCriador">
+            <ion-option *ngFor="let pais of paises" [value]="pais.ID">{{pais.Descripcion}}</ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_ADN" | translate }}</ion-col>
+        <ion-col>
+          <ion-toggle name="ADN" [(ngModel)]="parametersForm.QPCADN"></ion-toggle>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NCHI" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                 [(ngModel)]="parametersForm.QPCChip"
+                 name="NumeroChip"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NID" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                 [(ngModel)]="parametersForm.QPCNumeroID"
+                 name="NumeroId"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_OTRMA" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                 [(ngModel)]="parametersForm.QPCOtrasMarcas"
+                 name="Marcas"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_REFN" | translate }}</ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
+        <ion-col col-4 class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="number"
+                 placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                 [(ngModel)]="parametersForm.QPCRegistroRFN"
+                 name="NumeroFEN"/>
+        </ion-col>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
+        <ion-col col-2 class="equi-col-center">
+          <ion-toggle name="EstadoFEN" [(ngModel)]="parametersForm.QPCPagadoRFN"></ion-toggle>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_FEI" | translate }}</ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOREG" | translate }}</ion-col>
+        <ion-col col-4 class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="number"
+                 placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                 [(ngModel)]="parametersForm.QPCRegistroRFI"
+                 name="NumeroFEI"/>
+        </ion-col>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_NOPA" | translate }}</ion-col>
+        <ion-col col-2 class="equi-col-center">
+          <ion-toggle name="EstadoFEI" [(ngModel)]="parametersForm.QPCPagadoRFI"></ion-toggle>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DEYCU" | translate }}</ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PROT" | translate }}</ion-col>
+        <ion-col col-5>
+          <ion-select class="equi-input-normal-text equi-select-width" placeholder="{{ 'PANT004_TXT_AS' | translate }}"
+                      name="Protector_ID" [(ngModel)]="parametersForm.QPCProtectores">
+            <ion-option *ngFor="let protector of protectores" [value]="protector.ID">{{protector.Descripcion}}
+            </ion-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="equi-title-form">{{ "PANT004_LBL_OBSE" | translate }}</ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-col-input">
+          <textarea class="equi-input-normal-text equi-input-text" rows="2"
+                    placeholder="{{ 'PANT004_TXT_ASOBS' | translate }}"
+                    [(ngModel)]="parametersForm.QPCObservaciones"
+                    autoresize name="Observaciones"></textarea>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EMBO" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASEMB' | translate }}"
+                 [(ngModel)]="parametersForm.QPCEmbocadura"
+                 name="Embocadura"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_EXTCA" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASEXCA' | translate }}"
+                 [(ngModel)]="parametersForm.QPCExtCabezada"
+                 name="ExtrasDeCabezada"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <hr>
+      </ion-row>
+      <ion-row>
+        <ion-col class="equi-title-form center-text">{{ "PANT004_LBL_DAPCA" | translate }}</ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCNO" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASPCNO' | translate }}"
+                 [(ngModel)]="parametersForm.QPCNombreEncargado"
+                 name="NombreResponsable"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCTE" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-text equi-input-normal-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASPCTE' | translate }}"
+                 [(ngModel)]="parametersForm.QPCTelefonoEncargado"
+                 name="TelefonoResponsable"/>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-3 class="equi-title-form equi-col-center">{{ "PANT004_LBL_PCCOE" | translate }}</ion-col>
+        <ion-col class="equi-col-input">
+          <input class="equi-input-normal-text equi-input-text" type="text"
+                 placeholder="{{ 'PANT004_TXT_ASPCCO' | translate }}"
+                 [(ngModel)]="parametersForm.QPCEmailEncargado"
+                 name="CorreoResponsable"/>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

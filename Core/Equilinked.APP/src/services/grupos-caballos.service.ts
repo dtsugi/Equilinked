@@ -7,7 +7,6 @@ import {AppConfig} from "../app/app.config";
 
 @Injectable()
 export class GruposCaballosService {
-
   private requestTimeout: number = AppConfig.REQUEST_TIMEOUT;
   private endPointGruposCaballos: string = AppConfig.API_URL + "api/grupo";
   private urlGrupos: string = AppConfig.API_URL + "api/propietarios/";
@@ -32,22 +31,38 @@ export class GruposCaballosService {
       .toPromise();
   }
 
-  getCaballosByGrupoAndStatusEstablo(propietarioId: number, grupoId: number, tieneEstablo: boolean): Promise<Array<any>> {
+  getCaballosByGrupoAndStatusEstablo(propietarioId: number, grupoId: number, tieneEstablo: boolean, parameters: Map<string, string>): Promise<Array<any>> {
     let url: string = this.urlGrupos + propietarioId + "/grupos/" + grupoId + "/caballos";
     let params = new URLSearchParams();
     params.set("tieneEstablo", tieneEstablo ? "true" : "false");
+    if (parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
     return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
       .toPromise();
   }
 
-  getCaballosByGruposIds(propietarioId: number, gruposIds: number[]): Promise<any> {
+  getCaballosByGruposIds(propietarioId: number, gruposIds: number[], parameters: Map<string, string>): Promise<any> {
     let url: string = this.urlGrupos + propietarioId + "/grupos/caballos";
     let params = new URLSearchParams();
     gruposIds.forEach(id => {
       params.append("gruposIds", id.toString());
     });
+    if (parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
     return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as Array<any>)
@@ -89,9 +104,18 @@ export class GruposCaballosService {
       .toPromise();
   }
 
-  getCaballosByGroupId(groupId: number): Promise<any[]> {
+  getCaballosByGroupId(groupId: number, parameters: Map<string, string>): Promise<any[]> {
     let url = this.endPointGruposCaballos + "/GetAllGrupoCaballoByGrupoId/" + groupId;
-    return this.http.get(url)
+    let params = new URLSearchParams();
+    if (parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
+    return this.http.get(url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(caballos => caballos.json() as any[])
       .toPromise();

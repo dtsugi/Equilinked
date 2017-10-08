@@ -1,10 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {AlertController, Events, NavController} from "ionic-angular";
+import {AlertController, Events, ModalController, NavController} from "ionic-angular";
 import {CommonService} from "../../../../../../services/common.service";
 import {GruposCaballosService} from "../../../../../../services/grupos-caballos.service";
 import {FichaCaballoPage} from "../../../../ficha-caballo/ficha-caballo-home";
 import {EdicionCaballosGrupoPage} from "./edicion-caballos/edicion-caballos";
 import {LanguageService} from '../../../../../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   selector: "segment-caballos-grupo",
@@ -13,24 +14,27 @@ import {LanguageService} from '../../../../../../services/language.service';
 })
 export class SegmentCaballosGrupo implements OnDestroy, OnInit {
   private caballosGrupo: Array<any>;
+  caballosGrupoRespaldo: Array<any>;
   @Input("grupo")
   grupo: any;
   @Input("parametros")
   parametrosCaballos: any;
   labels: any = {};
-  caballosGrupoRespaldo: Array<any>;
   loading: boolean;
   isFilter: boolean;
+  private parametersFilter: Map<string, string>;
+  caballosIds: Array<number>;
 
   constructor(private alertController: AlertController,
               private commonService: CommonService,
               private events: Events,
+              private modalController: ModalController,
               private gruposCaballosService: GruposCaballosService,
               private navController: NavController,
               private languageService: LanguageService) {
     this.loading = true;
     this.isFilter = false;
-
+    this.caballosIds = new Array<number>();
     this.caballosGrupo = new Array<any>();
     this.caballosGrupoRespaldo = new Array<any>();
     languageService.loadLabels().then(labels => this.labels = labels);
@@ -73,6 +77,21 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     }
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.getAllCaballosGrupo();
+      }
+    });
+    modal.present();
+  }
+
   addCaballos(): void {
     this.navController.push(EdicionCaballosGrupoPage, {grupo: JSON.parse(JSON.stringify(this.grupo))});
   }
@@ -84,6 +103,11 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
       });
     } else {
       cg.seleccion = !cg.seleccion;
+      if (cg.seleccion) {
+        this.caballosIds.push(cg.caballo.ID);
+      } else {
+        this.caballosIds.splice(this.caballosIds.indexOf(cg.caballo.ID), 1);
+      }
     }
   }
 
@@ -95,17 +119,24 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     let selectAll: boolean = this.getCountSelected() !== this.caballosGrupoRespaldo.length;
     this.caballosGrupoRespaldo.forEach(n => {
       n.seleccion = selectAll;
+      let position = this.caballosIds.indexOf(n.caballo.ID);
+      if (selectAll) {
+        if (position == -1)
+          this.caballosIds.push(n.caballo.ID);
+      } else {
+        this.caballosIds.splice(position, 1);
+      }
     });
   }
 
   getAllCaballosGrupo(): void {
     this.loading = true;
-    this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID)
+    this.gruposCaballosService.getCaballosByGroupId(this.grupo.ID, this.parametersFilter)
       .then(caballos => {
         this.loading = false;
         this.caballosGrupoRespaldo = caballos.map(caballo => {
           return {
-            seleccion: false,
+            seleccion: this.caballosIds.indexOf(caballo.ID) > -1,
             caballo: caballo
           };
         });
@@ -120,6 +151,7 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
     this.caballosGrupoRespaldo.forEach(c => {
       c.seleccion = false;
     });
+    this.caballosIds = new Array<number>();
   }
 
   private confirmDeleteCaballos(): void {
@@ -135,15 +167,14 @@ export class SegmentCaballosGrupo implements OnDestroy, OnInit {
           text: this.labels["PANT013_BTN_ACEP"],
           handler: () => {
             this.commonService.showLoading(this.labels["PANT013_ALT_PRO"]);
-            this.gruposCaballosService.deleteAlertasByIds(
-              this.grupo.ID, this.caballosGrupoRespaldo.filter(c => c.seleccion).map(c => c.caballo.ID)
-            ).then(() => {
-              this.getAllCaballosGrupo();
-              this.events.publish("grupo:refresh");//Refrescamos el grupo seleccionado
-              this.events.publish("grupos:refresh");//Refrescamos la lista de caballos
-              this.commonService.hideLoading();
-              this.parametrosCaballos.modoEdicion = false;
-            }).catch(err => {
+            this.gruposCaballosService.deleteAlertasByIds(this.grupo.ID, this.caballosIds)
+              .then(() => {
+                this.getAllCaballosGrupo();
+                this.events.publish("grupo:refresh");//Refrescamos el grupo seleccionado
+                this.events.publish("grupos:refresh");//Refrescamos la lista de caballos
+                this.commonService.hideLoading();
+                this.parametrosCaballos.modoEdicion = false;
+              }).catch(err => {
               this.commonService.ShowErrorHttp(err, this.labels["PANT013_MSG_ERREL"]);
             });
           }

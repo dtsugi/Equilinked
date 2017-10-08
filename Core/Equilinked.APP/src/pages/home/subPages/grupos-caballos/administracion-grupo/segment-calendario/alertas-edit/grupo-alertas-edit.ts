@@ -107,11 +107,14 @@ export class GrupoAlertasEditPage implements OnDestroy, OnInit {
   }
 
   addCaballos(): void {
+    let self = this;
     let params: any = {
       caballosInput: this.alerta.AlertaCaballo.map(ac => {
         return {ID: ac.Caballo_ID};
       }),
-      funcionCaballos: this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID])
+      functionFilter: function (parameters) {
+        return self.gruposCaballosService.getCaballosByGruposIds(self.session.PropietarioId, [self.grupo.ID], parameters)
+      }
     };
     let modal = this.modalController.create(EquiModalCaballos, params);
     modal.onDidDismiss(this.callbackAddCaballos);
@@ -192,7 +195,7 @@ export class GrupoAlertasEditPage implements OnDestroy, OnInit {
   }
 
   private setCaballosToAlerta(): void {
-    this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID])
+    this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID], null)
       .then(caballos => { //Ahora hay que agregar los caballos que no están
         if (caballos) {
           caballos.forEach(caballo => {

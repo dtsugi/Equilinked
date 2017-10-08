@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions} from '@angular/http';
+import {Http, Headers, RequestOptions, URLSearchParams} from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/timeout';
 import {AppConfig} from '../app/app.config';
@@ -72,15 +72,24 @@ export class CaballoService {
       .map(response => response.json() as Array<any>).toPromise();
   }
 
-  getAllSerializedByPropietarioId(propietarioId: number) {
-    this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllSerializedByPropietarioId/", [propietarioId]);
-    console.log("URL" + this.url);
-    return this._http.get(this.url)
+  getAllSerializedByPropietarioId(propietarioId: number, parameters: Map<string, string>) {
+    this.url = this.actionUrl + "GetAllSerializedByPropietarioId/" + propietarioId;
+    let params = new URLSearchParams();
+    if(parameters) {
+      params.set("filter", "true");
+      parameters.forEach((value, key) => {
+        params.set(key, value);
+      });
+    } else {
+      params.set("filter", "false");
+    }
+    return this._http.get(this.url, new RequestOptions({search: params}))
       .timeout(this.requestTimeout)
       .map(response => response.json());
   }
 
   getAllComboBoxByPropietarioId(propietarioId: number) {
+    this.url =
     this.url = Utils.SetUrlApiGet(this.actionUrl + "GetAllComboBoxByPropietarioId/", [propietarioId]);
     console.log("URL" + this.url);
     return this._http.get(this.url)

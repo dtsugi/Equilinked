@@ -8,11 +8,13 @@ using Equilinked.DAL.Models;
 using System.Web;
 using System.IO;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace Equilinked.API.Controllers
 {
     public class GrupoCaballoController: EquilinkedBaseController
     {
+        private const string KEY_PARAMS = "QPC";
         private GrupoCaballoBLL GrupoCaballoBLL = new GrupoCaballoBLL();
 
         [HttpPut, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/foto")]
@@ -68,11 +70,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/grupos/{grupoId}/caballos")]
-        public IHttpActionResult GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, [FromUri] bool tieneEstablo)
+        public IHttpActionResult GetCaballosByGrupoAndStatusEstablo(int propietarioId, int grupoId, [FromUri] bool tieneEstablo, [FromUri]bool filter)
         {
             try
             {
-                return Ok(GrupoCaballoBLL.GetCaballosByGrupoAndStatusEstablo(propietarioId, grupoId, tieneEstablo));
+                return Ok(GrupoCaballoBLL.GetCaballosByGrupoAndStatusEstablo(propietarioId, grupoId, tieneEstablo, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -97,12 +99,11 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/propietarios/{propietarioId}/grupos/caballos")]
-        public IHttpActionResult GetAllCaballosFromGruposIds([FromUri] int[] gruposIds, int propietarioId)
+        public IHttpActionResult GetAllCaballosFromGruposIds(int propietarioId, [FromUri] int[] gruposIds, [FromUri] bool filter)
         {
             try
             {
-
-                return Ok(GrupoCaballoBLL.GetCaballosByGruposIds(propietarioId, gruposIds));
+                return Ok(GrupoCaballoBLL.GetCaballosByGruposIds(propietarioId, gruposIds, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -171,11 +172,12 @@ namespace Equilinked.API.Controllers
         }
 
         [HttpGet, Route("api/Grupo/GetAllGrupoCaballoByGrupoId/{GrupoId}")]
-        public IHttpActionResult GetAllGrupoCaballoByGrupoId(int GrupoId)
+        public IHttpActionResult GetAllGrupoCaballoByGrupoId(int GrupoId, [FromUri] bool filter)
         {
             try
             {
-                return Ok(GrupoCaballoBLL.GetGrupoCaballosByGrupoId(GrupoId));
+                //aqui modificar
+                return Ok(GrupoCaballoBLL.GetGrupoCaballosByGrupoId(GrupoId, filter ? ExtractParamtersFromRequest(HttpContext.Current.Request) : null));
             }
             catch (Exception ex)
             {
@@ -226,6 +228,19 @@ namespace Equilinked.API.Controllers
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No fue posible eliminar la asignación de caballos al grupo"));
             }
+        }
+
+        private Dictionary<string, string> ExtractParamtersFromRequest(HttpRequest request)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            foreach (string param in request.Params)
+            {
+                if (param.Contains(KEY_PARAMS))
+                {
+                    parameters.Add(param, request.Params[param]);
+                }
+            }
+            return parameters;
         }
     }
 }

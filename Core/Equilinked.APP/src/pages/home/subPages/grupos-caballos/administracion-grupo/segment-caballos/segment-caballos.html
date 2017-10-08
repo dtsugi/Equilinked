@@ -1,5 +1,10 @@
-<ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
-               [placeholder]="labels['PANT013_TXT_FICAB']"></ion-searchbar>
+<div class="equi-container-input-search">
+  <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                 [placeholder]="labels['PANT013_TXT_FICAB']"></ion-searchbar>
+  <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+    <ion-icon name="ios-arrow-down"></ion-icon>
+  </button>
+</div>
 
 <equi-button-add *ngIf="!parametrosCaballos.modoEdicion && !grupo.GrupoDefault" [label]="labels['PANT013_BTN_AGNU']"
                  (action)="addCaballos()"></equi-button-add>

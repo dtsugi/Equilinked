@@ -24,8 +24,13 @@
   <ion-grid>
     <ion-row>
       <ion-col col-12>
-        <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
-                       [placeholder]="'Filtrar caballos'"></ion-searchbar>
+        <div class="equi-container-input-search">
+          <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
+                         [placeholder]="'Filtrar caballos'"></ion-searchbar>
+          <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+            <ion-icon name="ios-arrow-down"></ion-icon>
+          </button>
+        </div>
       </ion-col>
       <ion-col col-12>
         <button ion-button full (click)="selectAll()">Seleccionar todos</button>
@@ -39,7 +44,7 @@
 
 
   <ion-list no-lines>
-    <ion-item *ngFor="let cg of caballosGrupo" (click)="cg.seleccion = !cg.seleccion">
+    <ion-item *ngFor="let cg of caballosGrupo" (click)="selectCaballo(cg)">
       <ion-avatar item-left>
         <img src="assets/img/caballo.jpg">
       </ion-avatar>

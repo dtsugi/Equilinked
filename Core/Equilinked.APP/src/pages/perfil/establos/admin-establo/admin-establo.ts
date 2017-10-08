@@ -172,8 +172,6 @@ export class AdminEstablosPage implements OnInit {
 
   private confirmSave(): void {
     let establo = this.establo;
-    console.info("Lo que se guardará es:");
-    console.info(JSON.stringify(establo));
     establo.Nombre = this.establoForm.get("Nombre").value;
     establo.Manager = this.establoForm.get("Manager").value;
     establo.Direccion = this.establoForm.get("Direccion").value;

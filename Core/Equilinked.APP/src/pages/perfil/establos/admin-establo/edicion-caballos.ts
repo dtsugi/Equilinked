@@ -1,17 +1,21 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {Events, NavController, NavParams} from "ionic-angular";
+import {Events, ModalController, NavController, NavParams} from "ionic-angular";
 import {FichaCaballoPage} from "../../../home/ficha-caballo/ficha-caballo-home";
 import {CommonService} from "../../../../services/common.service";
 import {EstablosService} from "../../../../services/establos.service";
 import {LanguageService} from '../../../../services/language.service';
 import {SecurityService} from "../../../../services/security.service";
 import {UserSessionEntity} from "../../../../model/userSession";
+import {EquiModalFiltroCaballos} from '../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   templateUrl: "./edicion-caballos.html",
   providers: [LanguageService, CommonService, EstablosService, SecurityService]
 })
 export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
+  private mapCaballos: Map<number, any>;
+  private parametersFilter: Map<string, string>;
+  private parametersEdicionFilter: Map<string, string>;
   private establoCaballosRespaldo: Array<any>;
   private establoCaballosEdicionResp: Array<any>;
   private session: UserSessionEntity;
@@ -28,6 +32,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   constructor(private commonService: CommonService,
               private establosService: EstablosService,
               private events: Events,
+              private modalController: ModalController,
               private navController: NavController,
               private navParams: NavParams,
               private languageService: LanguageService,
@@ -60,7 +65,21 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
 
   edit(): void {
     this.modoEdicion = true;
-    this.listCaballosByPropietario(); //Listamos los caballos disponibles
+    this.parametersEdicionFilter = null;
+    let promise: Promise<any> = this.grupo ?
+      this.establosService.getCaballosByEstabloAndGrupo(this.session.PropietarioId, this.establo.ID, this.grupo.ID, null)
+      : this.establosService.getCaballosByEstablo(this.establo.ID, 2, null);
+    promise.then(caballos => {
+      this.mapCaballos = new Map<number, any>();
+      if (caballos) {
+        caballos.forEach(ca => {
+          this.mapCaballos.set(ca.ID, ca);
+        });
+      }
+      this.listCaballosByPropietario(); //Listamos los caballos disponibles
+    }).catch(err => {
+      console.error(JSON.stringify(err));
+    });
   }
 
   viewDetail(caballo: any): void {
@@ -69,11 +88,57 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
     });
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.listCaballos();
+      }
+    });
+    modal.present();
+  }
+
+  openAvancedEdicionFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersEdicionFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersEdicionFilter = result.parameters;
+        } else {
+          this.parametersEdicionFilter = null;
+        }
+        this.listCaballosByPropietario();
+      }
+    });
+    modal.present();
+  }
+
+  selectCaballo(ca: any): void {
+    ca.seleccion = !ca.seleccion;
+    if (ca.seleccion) {
+      this.mapCaballos.set(ca.caballo.ID, ca.caballo);
+    } else {
+      this.mapCaballos.delete(ca.caballo.ID);
+    }
+  }
+
   selectAll(): void {
     let countSeleted = this.establoCaballosEdicion.filter(ec => ec.seleccion).length;
     let selectAll: boolean = countSeleted !== this.establoCaballosEdicionResp.length;
     this.establoCaballosEdicionResp.forEach(ec => {
       ec.seleccion = selectAll
+      let hasCaballo = this.mapCaballos.has(ec.caballo.ID);
+      if (selectAll) {
+        if (!hasCaballo)
+          this.mapCaballos.set(ec.caballo.ID, ec.caballo);
+      } else {
+        this.mapCaballos.delete(ec.caballo.ID);
+      }
     })
   }
 
@@ -132,9 +197,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   }
 
   save(): void {
-    this.establo.Caballo = this.establoCaballosEdicionResp
-      .filter(ec => ec.seleccion)
-      .map(ec => ec.caballo);
+    this.establo.Caballo = Array.from(this.mapCaballos.values());
     this.commonService.showLoading(this.labels["PANT035_ALT_PRO"]);
     this.establosService.updateEstablo(this.establo)
       .then(() => {
@@ -157,19 +220,15 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
   }
 
   private listCaballosByPropietario(): void {
-    let mapEstabloCaballos: Map<number, any> = new Map<number, any>();
-    this.establoCaballosRespaldo.forEach(ec => {
-      mapEstabloCaballos.set(ec.ID, ec);
-    });
     this.loading = true;
-    this.establosService.getCaballosByEstablo(this.establo.ID, 1)
+    this.establosService.getCaballosByEstablo(this.establo.ID, 1, this.parametersEdicionFilter)
       .then(caballos => {
         this.loading = false;
         this.establoCaballosEdicionResp = caballos.map(c => {
           return {
-            seleccion: mapEstabloCaballos.has(c.ID),
-            caballo: mapEstabloCaballos.has(c.ID) ?
-              mapEstabloCaballos.get(c.ID) : c
+            seleccion: this.mapCaballos.has(c.ID),
+            caballo: this.mapCaballos.has(c.ID) ?
+              this.mapCaballos.get(c.ID) : c
           };
         });
         this.filterCaballosForEdition(null);
@@ -190,7 +249,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
 
   private listCaballosByGrupo(): void {
     this.loading = true;
-    this.establosService.getCaballosByEstabloAndGrupo(this.session.PropietarioId, this.establo.ID, this.grupo.ID)
+    this.establosService.getCaballosByEstabloAndGrupo(this.session.PropietarioId, this.establo.ID, this.grupo.ID, this.parametersFilter)
       .then(caballos => {
         this.establoCaballosRespaldo = caballos;
         this.filterCaballos(null);
@@ -204,7 +263,7 @@ export class EdicionEstabloCaballosPage implements OnInit, OnDestroy {
 
   private listCaballosByEstabloId(): void {
     this.loading = true;
-    this.establosService.getCaballosByEstablo(this.establo.ID, 2)
+    this.establosService.getCaballosByEstablo(this.establo.ID, 2, this.parametersFilter)
       .then(establoCaballos => {
         this.establoCaballosRespaldo = establoCaballos;
         this.filterCaballos(null);

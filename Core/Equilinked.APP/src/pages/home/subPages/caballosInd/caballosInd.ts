@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Events, NavController, NavParams} from 'ionic-angular';
+import {Events, NavController, NavParams, ModalController} from 'ionic-angular';
 import {CommonService} from '../../../../services/common.service';
 import {CaballoService} from '../../../../services/caballo.service';
 import {SecurityService} from '../../../../services/security.service';
@@ -8,6 +8,7 @@ import {UserSessionEntity} from '../../../../model/userSession';
 import {FichaCaballoPage} from '../../ficha-caballo/ficha-caballo-home';
 import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
 import {LanguageService} from '../../../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   selector: 'caballos-ind',
@@ -16,6 +17,7 @@ import {LanguageService} from '../../../../services/language.service';
 })
 export class CaballosInd implements OnDestroy, OnInit {
   private caballoIdSelected: number;
+  private parametersFilter: Map<string, string>;
   loading: boolean;
   caballos: Array<Caballo>;
   caballosList: Array<Caballo>;
@@ -30,6 +32,7 @@ export class CaballosInd implements OnDestroy, OnInit {
               private _commonService: CommonService,
               private _caballoService: CaballoService,
               private _securityService: SecurityService,
+              private modalController: ModalController,
               private languageService: LanguageService) {
     this.loading = true;
     this.isFilter = false;
@@ -52,10 +55,9 @@ export class CaballosInd implements OnDestroy, OnInit {
   // CARGA DE CABALLOS
   loadcaballos(): void {
     this.loading = true;
-    this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
+    this._caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId, this.parametersFilter)
       .subscribe(res => {
         this.loading = false;
-        //this.caballosList = res;
         this.caballos = res;
         this.findCaballos(null);
       }, error => {
@@ -91,6 +93,23 @@ export class CaballosInd implements OnDestroy, OnInit {
     } else {
       this.caballosList = this.caballos;
     }
+  }
+
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      console.info(result);
+      if (result && result.parameters) {
+        console.info(result.parameters.size);
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.loadcaballos();//refrescamos
+      }
+    });
+    modal.present();
   }
 
   // NAVEGACIÓN A FICHA DE CABALLO

@@ -94,7 +94,7 @@ export class UbicacionesGrupoPage implements OnDestroy, OnInit {
     this.establosService.getEstablosByPropietarioId(this.session.PropietarioId)
       .then(establos => {
         establosPropietario = establos;
-        return this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID]);
+        return this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, [this.grupo.ID], null);
       }).then(caballos => {
       let mapEstablos: Map<number, any> = new Map<number, any>();
       for (let est of establosPropietario) {

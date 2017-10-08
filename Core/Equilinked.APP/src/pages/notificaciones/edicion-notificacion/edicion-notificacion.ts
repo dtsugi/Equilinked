@@ -104,13 +104,16 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
   }
 
   addCaballos(): void {
+    let self = this;
     let params: any = {
       caballosInput: this.alerta.AlertaCaballo.map(ac => {
         return {ID: ac.Caballo_ID};
       }),
-      funcionCaballos: this.caballoService
-        .getAllSerializedByPropietarioId(this.session.PropietarioId)
-        .toPromise()
+      functionFilter: function (parameters) {
+        return self.caballoService
+          .getAllSerializedByPropietarioId(self.session.PropietarioId, parameters)
+          .toPromise();
+      }
     };
     let modal = this.modalController.create(EquiModalCaballos, params);
     modal.onDidDismiss(this.callbackAddCaballos);
@@ -233,7 +236,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
       });
       //Ahora hay que asignar a la selección los caballos de los grupos que han sido seleccioandos
       if (gruposIds.length > 0) {
-        this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, gruposIds)
+        this.gruposCaballosService.getCaballosByGruposIds(this.session.PropietarioId, gruposIds, null)
           .then(caballos => { //Ahora hay que agregar los caballos que no están
             let idsCaballos: Array<any> = this.alerta.AlertaCaballo.map(ag => ag.Caballo_ID);
             let nuevosCaballos: Array<any> = caballos.filter(c => idsCaballos.indexOf(c.ID) == -1)

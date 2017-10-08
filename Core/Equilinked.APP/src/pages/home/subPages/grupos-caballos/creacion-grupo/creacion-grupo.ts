@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {Events, NavController} from "ionic-angular";
+import {Events, ModalController, NavController} from "ionic-angular";
 import {FormBuilder, Validators} from "@angular/forms";
 import {CommonService} from "../../../../../services/common.service";
 import {SecurityService} from "../../../../../services/security.service";
@@ -8,6 +8,7 @@ import {CaballoService} from "../../../../../services/caballo.service";
 import {Grupo} from "../../../../../model/grupo";
 import {UserSessionEntity} from "../../../../../model/userSession";
 import {LanguageService} from '../../../../../services/language.service';
+import {EquiModalFiltroCaballos} from '../../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
 
 @Component({
   templateUrl: "./creacion-grupo.html",
@@ -21,16 +22,20 @@ export class CreacionGrupoPage implements OnInit {
   grupoCaballosForm: any;
   session: UserSessionEntity;
   isFilter: boolean;
+  caballosIds: Array<number>;
+  private parametersFilter: Map<string, string>;
 
   constructor(private caballoService: CaballoService,
               private commonService: CommonService,
               private events: Events,
+              private modalController: ModalController,
               private formBuilder: FormBuilder,
               private gruposCaballosService: GruposCaballosService,
               public navController: NavController,
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.grupo = new Grupo();
+    this.caballosIds = new Array<number>();
     this.isFilter = false;
     languageService.loadLabels().then(labels => this.labels = labels);
   }
@@ -43,10 +48,27 @@ export class CreacionGrupoPage implements OnInit {
     this.getAllCaballosByPropietario();
   }
 
+  selectCaballo(c: any): void {
+    c.seleccion = !c.seleccion;
+    let position = this.caballosIds.indexOf(c.caballo.ID);
+    if(position == -1) {
+      this.caballosIds.push(c.caballo.ID);
+    } else {
+      this.caballosIds.splice(position, 1);
+    }
+  }
+
   selectAll(): void {
     let selectAll: boolean = this.countCaballos() !== this.caballosRespaldo.length;
     this.caballosRespaldo.forEach(c => {
       c.seleccion = selectAll;
+      let position = this.caballosIds.indexOf(c.caballo.ID);
+      if(selectAll) {
+        if(position == -1)
+          this.caballosIds.push(c.caballo.ID);
+      } else {
+        this.caballosIds.splice(position, 1);
+      }
     });
   }
 
@@ -77,10 +99,25 @@ export class CreacionGrupoPage implements OnInit {
     }
   }
 
+  openAvancedFilter(): void {
+    let modal = this.modalController.create(EquiModalFiltroCaballos, {parameters: this.parametersFilter});
+    modal.onDidDismiss(result => {
+      if (result && result.parameters) {
+        if (result.parameters.size > 0) {
+          this.parametersFilter = result.parameters;
+        } else {
+          this.parametersFilter = null;
+        }
+        this.getAllCaballosByPropietario();
+      }
+    });
+    modal.present();
+  }
+
   save(): void {
     let grupo = {
-      GrupoCaballo: this.caballos.filter(c => c.seleccion).map(c => {
-        return {Caballo_ID: c.caballo.ID};
+      GrupoCaballo: this.caballosIds.map(id => {
+        return {Caballo_ID: id};
       }),
       Descripcion: this.grupoCaballosForm.value.Descripcion,
       Propietario_ID: this.session.PropietarioId,
@@ -101,16 +138,14 @@ export class CreacionGrupoPage implements OnInit {
   }
 
   private getAllCaballosByPropietario(): void {
-    this.commonService.showLoading(this.labels["PANT012_ALT_PRO"]);
-    this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId)
+    this.caballoService.getAllSerializedByPropietarioId(this.session.PropietarioId, this.parametersFilter)
       .subscribe(caballos => {
-        this.commonService.hideLoading();
         this.caballosRespaldo = caballos.map(c => {
-          return {caballo: c, seleccion: false};
+          return {caballo: c, seleccion: this.caballosIds.indexOf(c.ID) > -1};
         });
         this.filter(null);
       }, error => {
-        console.error(error);
+        console.error(JSON.stringify(error));
       });
   }
 }
