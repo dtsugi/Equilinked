@@ -6,6 +6,7 @@ import {CommonService} from "../../../../../../services/common.service";
 import {SecurityService} from "../../../../../../services/security.service";
 import {LanguageService} from "../../../../../../services/language.service";
 import {Camera} from '@ionic-native/camera';
+import {DomSanitizer} from '@angular/platform-browser'; 
 
 @Component({
   templateUrl: "./foto-grupo.html",
@@ -24,6 +25,7 @@ export class FotoGrupoPage implements OnInit {
               private gruposCaballosService: GruposCaballosService,
               private commonService: CommonService,
               private events: Events,
+              public domSanitizer: DomSanitizer,
               private camera: Camera,
               private navParams: NavParams,
               private securityService: SecurityService,

@@ -21,5 +21,6 @@
       seleccionar foto
     </div>
   </div>
-  <img *ngIf="photo.base64" [src]="photo.base64"/>
+  <img *ngIf="photo.base64" [src]="domSanitizer.bypassSecurityTrustUrl(photo.base64)"/>
 </ion-content>
+ 

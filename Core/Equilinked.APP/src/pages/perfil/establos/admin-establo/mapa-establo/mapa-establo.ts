@@ -74,9 +74,9 @@ export class MapaEstabloPage implements OnDestroy, OnInit {
       "controls": {
         "myLocationButton": true,
       },
-      "preferences": {
-        "padding": {
-          "bottom": 64
+      'preferences': {
+        'padding': {
+          'bottom': 64
         }
       }
     };
