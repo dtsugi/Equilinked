@@ -37,8 +37,8 @@ namespace Equilinked.API.Controllers
         {
             try
             {
-                _alertaBLL.SaveAlerta(alerta);
-                return Ok();
+                alerta = _alertaBLL.SaveAlerta(alerta);
+                return Ok(alerta.ID);
             }
             catch (Exception ex)
             {
@@ -59,6 +59,21 @@ namespace Equilinked.API.Controllers
             {
                 this.LogException(ex);
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al guardar la alerta"));
+            }
+        }
+
+        [HttpGet, Route("api/propietarios/{propietarioId}/alertas/dia")]
+        public IHttpActionResult GetAllAlertasByPropietario(int propietarioId, [FromUri] string inicio = "")
+        {
+            try
+            {
+                List<AlertasDiaDto> alertasDia = _alertaBLL.GetAllAlertasByDia(propietarioId, inicio);
+                return Ok(alertasDia);
+            }
+            catch (Exception ex)
+            {
+                this.LogException(ex);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error al obtener todas las alertas por dia"));
             }
         }
 
