@@ -9,4 +9,5 @@ export class AppConfig {
   public static FACEBOOK_APP_ID: number = 667340546803671;
   public static REQUEST_TIMEOUT: number = 15000;//10 segundos
   public static MAX_ATTRIBUTES_ADVANCED_FILTER: number = 10;
+  public static DATABASE_NAME: string = 'equilinkedtest';
 }

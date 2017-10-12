@@ -1,6 +1,21 @@
 import {DateObject} from '../model/alerta';
+import moment from "moment";
 
 export class Utils {
+
+  static stringFormat(text: string, ...replacements: any[]) {
+    return text.replace(/{(\d+)}/g, function (match, number) {
+      return typeof replacements[number] != 'undefined'
+        ? replacements[number]
+        : match
+        ;
+    });
+  }
+
+  static getMomentFromAlertDate(alertDate: any): any {
+    return moment(moment(alertDate).format("YYYY-MM-DD HH:mm:ss"), "YYYY-MM-DD HH:mm:ss");
+  }
+
   static IsValidApiParameter(parameter) {
     if (parameter === undefined || parameter == "null") {
       parameter = null;
@@ -70,4 +85,6 @@ export class ConstantsConfig {
   public static CALENDAR_STEP_MONTH: number = 3;
   public static CALENDAR_STEP_WEEK: number = 4;
   public static CALENDAR_STEP_ALERT: number = 5;
+
+  public static KEY_BADGE_ALERTS: string = "KeyBadgeAlerts";
 }

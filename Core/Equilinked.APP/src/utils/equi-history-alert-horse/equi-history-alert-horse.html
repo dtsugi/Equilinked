@@ -1,6 +1,6 @@
 <div *ngIf="!alert.ShowDetail">
     <ion-item-sliding>
-        <ion-item class="equi-normal-text" (click)="displayDetail()">
+        <ion-item class="equi-normal-text" tappable (click)="displayDetail()">
             <ion-row>
                 <ion-col col-4>
                     {{alert.Fecha}}
@@ -15,8 +15,8 @@
         </ion-item>
 
         <ion-item-options *ngIf="labelDelete">
-            <button ion-button color="danger" icon-left (click)="executeActionDelete()">
-                <ion-icon name="trash"></ion-icon>       
+            <button ion-button color="danger" icon-left tappable (click)="executeActionDelete()">
+                <ion-icon name="trash"></ion-icon>
                 {{labelDelete}}
             </button>
         </ion-item-options>
@@ -24,13 +24,13 @@
 </div>
 
 <div *ngIf="alert.ShowDetail">
-    <ion-item text-wrap class="equi-normal-text" (click)="hideDetail()">
+    <ion-item text-wrap class="equi-normal-text" tappable (click)="hideDetail()">
         <ion-row class="equi-table-row-title">
             <ion-col col-8>
                 {{alert.Fecha}}
             </ion-col>
             <ion-col col-3>
-                <span (click)="executeActionEdit()">EDITAR</span>
+                <span tappable (click)="executeActionEdit()">EDITAR</span>
             </ion-col>
             <ion-col col-1>
                 <ion-icon name="ios-arrow-down"></ion-icon>

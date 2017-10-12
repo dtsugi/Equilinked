@@ -3,7 +3,7 @@
     <ion-title></ion-title>
     <ion-buttons end>
       <button ion-button class="equi-toolbar-btn" [disabled]="invitacionForm != null && !invitacionForm.valid"
-              (click)="sendInvitation()">
+              tappable (click)="sendInvitation()">
         {{ 'PANT030_BTN_ACE' | translate }}
       </button>
     </ion-buttons>

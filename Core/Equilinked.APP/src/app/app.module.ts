@@ -13,6 +13,11 @@ import {Facebook} from "@ionic-native/facebook";
 import {GooglePlus} from "@ionic-native/google-plus";
 import {Camera} from '@ionic-native/camera';
 import {MyApp} from './app.component';
+import {SQLite} from '@ionic-native/sqlite';
+import {Badge} from '@ionic-native/badge';
+import {LocalNotifications} from '@ionic-native/local-notifications';
+import {NotificacionLocalService} from '../services/notificacion-local.service';
+
 /*Utils */
 import {TextareaAutoresize} from "../utils/equi-autoresize/autoresize.directive";
 import {CDVPhotoLibraryPipe} from "../utils/equi-cdvphotolibrary/equi-cdvphotolibrary.pipe";
@@ -364,12 +369,16 @@ export function createTranslateLoader(http: Http) {
     CamaraPage
   ],
   providers: [
+    SQLite,
+    LocalNotifications,
+    Badge,
     GoogleMaps,
     Facebook,
     GooglePlus,
     Camera,
     StatusBar,
     SplashScreen,
+    NotificacionLocalService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

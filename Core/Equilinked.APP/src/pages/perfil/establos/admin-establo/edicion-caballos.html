@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
+      <button ion-button icon-only *ngIf="!modoEdicion" tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
-      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = !modoEdicion">
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" tappable (click)="modoEdicion = !modoEdicion">
         {{ 'PANT035_BTN_CAN' | translate }}
       </button>
     </ion-buttons>
@@ -21,10 +21,10 @@
     </ion-title>
 
     <ion-buttons *ngIf="!grupo" right>
-      <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" (click)="edit()">
+      <button ion-button class="equi-toolbar-btn" *ngIf="!modoEdicion" tappable (click)="edit()">
         {{ 'PANT035_BTN_EDI' | translate }}
       </button>
-      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="save()">
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" tappable (click)="save()">
         {{ 'PANT035_BTN_ACE' | translate }}
       </button>
     </ion-buttons>
@@ -36,7 +36,7 @@
     <div class="equi-container-input-search">
       <ion-searchbar (ionInput)="filterCaballos($event)" [autocomplete]="true"
                      [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
-      <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+      <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedFilter()">
         <ion-icon name="ios-arrow-down"></ion-icon>
       </button>
     </div>
@@ -46,7 +46,7 @@
     </div>
 
     <ion-list no-lines>
-      <ion-item *ngFor="let ec of establoCabllos" (click)="viewDetail(ec)">
+      <ion-item *ngFor="let ec of establoCabllos" tappable (click)="viewDetail(ec)">
         <ion-avatar item-left>
           <img src="assets/img/caballo.jpg">
         </ion-avatar>
@@ -65,13 +65,13 @@
           <div class="equi-container-input-search">
             <ion-searchbar (ionInput)="filterCaballosForEdition($event)" [autocomplete]="true"
                            [placeholder]="labels['PANT035_TXT_FICA']"></ion-searchbar>
-            <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedEdicionFilter()">
+            <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedEdicionFilter()">
               <ion-icon name="ios-arrow-down"></ion-icon>
             </button>
           </div>
         </ion-col>
         <ion-col col-12>
-          <button ion-button full (click)="selectAll()">{{ 'PANT035_BTN_SETO' | translate }}</button>
+          <button ion-button full tappable (click)="selectAll()">{{ 'PANT035_BTN_SETO' | translate }}</button>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -81,7 +81,7 @@
     </div>
 
     <ion-list no-lines>
-      <ion-item *ngFor="let ec of establoCaballosEdicion" (click)="selectCaballo(ec)">
+      <ion-item *ngFor="let ec of establoCaballosEdicion" tappable (click)="selectCaballo(ec)">
         <ion-avatar item-left>
           <img src="assets/img/caballo.jpg">
         </ion-avatar>

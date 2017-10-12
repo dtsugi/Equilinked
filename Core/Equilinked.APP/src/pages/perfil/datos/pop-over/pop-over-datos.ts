@@ -1,4 +1,4 @@
-import {App} from 'ionic-angular';
+import {App, Events} from 'ionic-angular';
 import {Component} from '@angular/core';
 import {AlertController, NavParams, NavController, ViewController} from 'ionic-angular';
 import {SecurityService} from '../../../../services/security.service';
@@ -9,6 +9,7 @@ import {EdicionPerfilPage} from "../edicion-perfil/edicion-perfil";
 import {LanguageService} from '../../../../services/language.service';
 import {FotoPerfilPage} from '../foto-perfil/foto-perfil';
 import {SegmentDatos} from '../segment-datos';
+import {NotificacionLocalService} from '../../../../services/notificacion-local.service';
 
 @Component({
   selector: 'pop-over-datos',
@@ -23,6 +24,8 @@ export class PopoverDatosPage {
 
   constructor(private app: App,
               private alertController: AlertController,
+              private events: Events,
+              private notificacionLocalService: NotificacionLocalService,
               public navCtrl: NavController,
               public navParams: NavParams,
               private _securityService: SecurityService,
@@ -67,8 +70,14 @@ export class PopoverDatosPage {
         {
           text: this.labels["PANT026_BTN_ACE"],
           handler: () => {
-            this._securityService.logout();
-            this.app.getRootNav().setRoot(LoginPage);
+            try {
+              this.events.publish("interval-badge:clear");
+              this.notificacionLocalService.removeAllLocalNotificacions();
+              this._securityService.logout();
+              this.app.getRootNav().setRoot(LoginPage);
+            } catch (ex) {
+              console.log("Error logout: " + JSON.stringify(ex));
+            }
           }
         }
       ]

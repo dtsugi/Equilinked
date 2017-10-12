@@ -5,10 +5,12 @@ import {TabsPage} from '../../tabs/tabs';
 import {PropietarioService} from "../../../services/propietario.service";
 import {UsuarioService} from '../../../services/usuario.service';
 import {SecurityService} from '../../../services/security.service';
+import {NotificacionLocalService} from '../../../services/notificacion-local.service';
 import {LanguageService} from '../../../services/language.service';
 import {Facebook} from "@ionic-native/facebook";
 import {GooglePlus} from "@ionic-native/google-plus";
 import {AppConfig} from "../../../app/app.config";
+import moment from "moment";
 
 @Component({
   templateUrl: 'registro.html',
@@ -21,6 +23,7 @@ export class RegistroPage {
   labels: any = {};
 
   constructor(public navCtrl: NavController,
+              private notificacionLocalService: NotificacionLocalService,
               public navParams: NavParams,
               public facebook: Facebook,
               public googlePlus: GooglePlus,
@@ -112,8 +115,15 @@ export class RegistroPage {
   }
 
   accessHome = response => {
-    this.securityService.setInitialConfigSession(response);
-    this.commonService.hideLoading();
-    this.navCtrl.setRoot(TabsPage);
+    let today = moment().startOf('day').format("YYYY-MM-DD HH:mm:ss");
+    this.notificacionLocalService.saveLocalNotifications(response.PropietarioId, today)
+      .then(() => {
+        this.securityService.setInitialConfigSession(response);
+        this.commonService.hideLoading();
+        this.navCtrl.setRoot(TabsPage);
+      }).catch(err => {
+      console.log("Error:" + JSON.stringify(err));
+      this.commonService.ShowErrorHttp(err, "Ocurrió un error");
+    });
   };
 }

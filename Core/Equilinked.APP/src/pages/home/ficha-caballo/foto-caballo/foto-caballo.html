@@ -1,16 +1,16 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button class="equi-toolbar-btn" (click)="cancel()">
+      <button ion-button class="equi-toolbar-btn" tappable (click)="cancel()">
         Cancelar
       </button>
     </ion-buttons>
 
     <ion-buttons right>
-      <button *ngIf="!photoChanged" ion-button class="equi-toolbar-btn" (click)="edit()">
+      <button *ngIf="!photoChanged" ion-button class="equi-toolbar-btn" tappable (click)="edit()">
         Editar
       </button>
-      <button *ngIf="photoChanged" ion-button class="equi-toolbar-btn" (click)="update()">
+      <button *ngIf="photoChanged" ion-button class="equi-toolbar-btn" tappable (click)="update()">
         Actualizar
       </button>
     </ion-buttons>
@@ -27,6 +27,6 @@
     <img *ngIf="!photoBase64" src="assets/img/ficha-caballo.PNG"/>
     <img *ngIf="photoBase64" [src]="domSanitizer.bypassSecurityTrustUrl(photoBase64)"/>
   </div>
-</ion-content> 
+</ion-content>
 
 

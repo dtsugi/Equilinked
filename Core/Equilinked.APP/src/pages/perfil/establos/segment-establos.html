@@ -9,14 +9,14 @@
 </div>
 
 <ion-list no-lines>
-  <ion-item *ngIf="parametrosEstablos.modoEdicion" (click)="selectAll()">
+  <ion-item *ngIf="parametrosEstablos.modoEdicion" tappable (click)="selectAll()">
     <h2 class="equi-title-form">{{ 'PANT026_LBL_SELTO' | translate }}</h2>
     <ion-icon class="equi-principal-color"
               name="{{getCountSelected() != establosRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
               item-right></ion-icon>
   </ion-item>
 
-  <ion-item *ngFor="let e of establos" (click)="selectEstablo(e)">
+  <ion-item *ngFor="let e of establos" tappable (click)="selectEstablo(e)">
     <ion-avatar item-left>
       <img src="assets/img/caballo.jpg">
     </ion-avatar>

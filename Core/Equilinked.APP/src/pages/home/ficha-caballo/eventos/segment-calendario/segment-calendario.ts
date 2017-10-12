@@ -5,10 +5,9 @@ import {AlertaCaballoService} from '../../../../../services/alerta.caballo.servi
 import {LanguageService} from '../../../../../services/language.service';
 import {SecurityService} from '../../../../../services/security.service';
 import {UserSessionEntity} from '../../../../../model/userSession';
-import {ConstantsConfig} from "../../../../../app/utils";
+import {ConstantsConfig, Utils} from "../../../../../app/utils";
 import {EquiCalendar2} from "../../../../../utils/equi-calendar2/equi-calendar2";
 import {DetalleEventoCaballoPage} from "../detalle-evento/detalle-evento";
-import moment from "moment";
 import "moment/locale/es";
 
 @Component({
@@ -55,8 +54,8 @@ export class SegmentCalendarioEventos implements OnInit {
       [ConstantsConfig.ALERTA_TIPO_EVENTOS], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(alertas => {
       alertas.forEach(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Hora = d.format("hh:mm A").toUpperCase();
       });
       this.calendar.setAlerts(alertas);
     }).catch(err => {

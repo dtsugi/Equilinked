@@ -4,6 +4,7 @@
     <ion-buttons left>
       <button ion-button icon-only class="equi-toolbar-btn"
               *ngIf="calendarOptions && (calendarOptions.step == CALENDAR_STEP_WEEK || calendarOptions.step == CALENDAR_STEP_ALERT)"
+              tappable
               (click)="backCalendar()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
@@ -11,6 +12,7 @@
 
     <ion-title class="equi-toolbar-title-content">
       <span class="equi-toolbar-title" *ngIf="calendarOptions && calendarOptions.step == CALENDAR_STEP_YEAR"
+            tappable
             (click)="calendar.back()">
         {{selectedYear}}
       </span>
@@ -19,16 +21,19 @@
     <ion-buttons right>
       <button ion-button icon-only
               *ngIf="calendarOptions && calendarOptions.step < CALENDAR_STEP_ALERT"
+              tappable
               (click)="newAlert()">
         <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
       </button>
       <button ion-button class="equi-toolbar-btn"
               *ngIf="calendarOptions && calendarOptions.step != CALENDAR_STEP_ALERT"
+              tappable
               (click)="showFilterAlertTypes($event)">
         {{ "PANT003_BTN_VER" | translate }}
       </button>
       <button ion-button class="equi-toolbar-btn"
               *ngIf="calendarOptions && calendarOptions.step == CALENDAR_STEP_ALERT"
+              tappable
               (click)="editAlert()">
         {{ "PANT003_BTN_EDIT" | translate }}
       </button>

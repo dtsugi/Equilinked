@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button ion-button icon-only (click)="goBack()">
+      <button ion-button icon-only tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -11,7 +11,7 @@
       <span class="equi-toolbar-subtitle">{{ "PANT004_LBL_SUBT" | translate }}</span>
     </ion-title>
     <ion-buttons right>
-      <button class="equi-toolbar-btn" (click)="edit()" [disabled]="!caballoEntity || !adjuntosCaballo">
+      <button class="equi-toolbar-btn" tappable (click)="edit()" [disabled]="!caballoEntity || !adjuntosCaballo">
         {{ "PANT004_BTN_EDT" | translate }}
       </button>
     </ion-buttons>
@@ -98,7 +98,7 @@
       <ion-row *ngIf="adjuntosCaballo.Pedigree">
         <ion-col col-3></ion-col>
         <ion-col>
-          <span class="equi-input-normal-text equi-text-edit" (click)="viewPedigree()">
+          <span class="equi-input-normal-text equi-text-edit" tappable (click)="viewPedigree()">
               <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>
             <span>Pedigree</span>
           </span>
@@ -165,6 +165,7 @@
             Foto
           </div>
           <div *ngIf="adjuntoMarca.Base64"
+               tappable
                (click)="viewImageAdjunta(adjuntoMarca)"
                [ngStyle]="{ 'background-image': 'url(' + adjuntoMarca.Base64 + ')'}"
                style="background-size: cover; background-repeat: no-repeat; height: 150px; width: 100%;">

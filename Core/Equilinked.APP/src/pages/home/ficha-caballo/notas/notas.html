@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button ion-button icon-only (click)="goBack()">
+      <button ion-button icon-only tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -27,7 +27,7 @@
   <ion-list *ngIf="notasCaballo.length > 0">
     <ion-grid>
       <ion-item-sliding *ngFor="let notificacion of notasCaballo">
-        <ion-item text-wrap (click)="goViewNotificacion(notificacion)">
+        <ion-item text-wrap tappable (click)="goViewNotificacion(notificacion)">
           <ion-row>
             <ion-col col-10 class="equi-title-note">
               <span [ngClass]="{'equi-edit': isFilter}" class="equi-title-form"
@@ -49,7 +49,7 @@
         </ion-item>
 
         <ion-item-options>
-          <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
+          <button ion-button color="danger" icon-left tappable (click)="deleteNotification(notificacion)">
             <ion-icon name="trash"></ion-icon>
             {{ "PANT007_BTN_ELI" | translate }}
           </button>
@@ -68,7 +68,7 @@
       </ion-row>
 
       <ion-item-sliding *ngFor="let notificacion of notasGrupos">
-        <ion-item text-wrap (click)="goViewNotificacion(notificacion)">
+        <ion-item text-wrap tappable (click)="goViewNotificacion(notificacion)">
           <ion-row *ngIf="notificacion.showLabelGrupal">
             <ion-col class="equi-table-row-title">
               {{ "PANT007_LBL_NOGU" | translate }}
@@ -95,7 +95,7 @@
         </ion-item>
 
         <ion-item-options>
-          <button ion-button color="danger" icon-left (click)="deleteNotification(notificacion)">
+          <button ion-button color="danger" icon-left tappable (click)="deleteNotification(notificacion)">
             <ion-icon name="trash"></ion-icon>
             {{ "PANT007_BTN_ELI" | translate }}
           </button>

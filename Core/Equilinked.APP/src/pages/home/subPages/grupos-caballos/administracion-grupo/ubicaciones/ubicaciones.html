@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button icon-only (click)="goBack()">
+      <button ion-button icon-only tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -23,8 +23,9 @@
   <ion-list>
     <ion-item *ngFor="let ubicacion of ubicaciones">
       <h2 class="equi-bold-text" [ngClass]="{'equi-principal-color': !ubicacion.establo.ID}"
+          tappable
           (click)="selectUbicacion(ubicacion)">{{ubicacion.establo.Nombre}}</h2>
-      <p class="equi-normal-text equi-principal-color" item-right (click)="selectCaballos(ubicacion)">
+      <p class="equi-normal-text equi-principal-color" item-right tappable (click)="selectCaballos(ubicacion)">
         {{ubicacion.caballos}} {{ 'PANT015_LBL_CAB' | translate }}
       </p>
     </ion-item>

@@ -7,17 +7,19 @@ import {CaballoService} from '../../services/caballo.service';
 import {SecurityService} from '../../services/security.service';
 import {RecordatorioService} from '../../services/recordatorio.service';
 import {AlertaCaballoService} from '../../services/alerta.caballo.service';
+import {NotificacionLocalService} from '../../services/notificacion-local.service';
 import {Alerta} from '../../model/alerta';
 import {UserSessionEntity} from '../../model/userSession';
 import {EquiModalRecordatorio} from "../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
-import moment from "moment";
 import {LanguageService} from '../../services/language.service';
+import {Utils} from '../../app/utils';
 
 @Component({
   templateUrl: 'notificaciones-insert.html',
   providers: [LanguageService, CommonService, AlertaService, CaballoService, SecurityService, AlertaCaballoService, RecordatorioService]
 })
 export class NotificacionesInsertPage {
+  private alertaResp: any;
   labels: any = {};
   alerta: Alerta;
   formNotificaciones: any;
@@ -30,6 +32,7 @@ export class NotificacionesInsertPage {
               private modalController: ModalController,
               public navCtrl: NavController,
               public navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private formBuilder: FormBuilder,
               private _commonService: CommonService,
               private _alertaService: AlertaService,
@@ -45,8 +48,9 @@ export class NotificacionesInsertPage {
     this.getRecordatorios();
     if (this._commonService.IsValidParams(this.navParams, ["alertaEntity"])) {
       this.alerta = this.navParams.get("alertaEntity");
-      this.alerta.FechaNotificacion = moment(this.alerta.FechaNotificacion).format("YYYY-MM-DD");
+      this.alerta.FechaNotificacion = Utils.getMomentFromAlertDate(this.alerta.FechaNotificacion).format("YYYY-MM-DD");
       if (this.alerta.ID) {
+        this.alertaResp = JSON.parse(JSON.stringify(this.alerta));
         if (this.alerta.AlertaRecordatorio) {
           this.alerta.AlertaRecordatorio.forEach(a => {
             this.buildLabelRecordatorio(a);
@@ -97,15 +101,30 @@ export class NotificacionesInsertPage {
     } else {
       promise = this._alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
-    promise.then(() => {
-      this._commonService.hideLoading();
-      this.events.publish("notificaciones:notas:caballo:refresh");
-      this.events.publish("notificacion:nota:caballo:refresh");
-      this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
-      this.events.publish("notificaciones:refresh");//refrescar
-      this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
-      this.events.publish("calendario:refresh");//refrescar alertas calendario
-      this.navCtrl.pop();
+    promise.then((idnotificacion) => {
+      let alertaAct = null, alertaAnt = null;
+      if (this.alerta.ID) {
+        alertaAct = this.alerta;
+        alertaAnt = this.alertaResp;
+      } else {
+        this.alerta.ID = idnotificacion;
+        alertaAct = this.alerta;
+      }
+      try {
+        this.notificacionLocalService.saveLocalNotificacionAlert(alertaAct, alertaAnt);
+        this._commonService.hideLoading();
+        this.navCtrl.pop().then(() => {
+          this.events.publish("notificaciones:notas:caballo:refresh");
+          this.events.publish("notificacion:nota:caballo:refresh");
+          this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+          this.events.publish("notificaciones:refresh");//refrescar
+          this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+          this.events.publish("calendario:refresh");//refrescar alertas calendario
+        });
+      } catch (err) {
+        console.log("Error al guardar notificacion local:" + JSON.stringify(err));
+        this._commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRGUA"]);
+      }
     }).catch(ex => {
       this._commonService.ShowErrorHttp(ex, this.labels["PANT010_MSG_ERRGUA"]);
     });
@@ -162,7 +181,7 @@ export class NotificacionesInsertPage {
 
   private buildLabelRecordatorio(recordatorio: any): void {
     recordatorio.Descripcion = recordatorio.ValorTiempo + " " + recordatorio.UnidadTiempo.Descripcion;
-    recordatorio.UnidadTiempo = null;
+    //recordatorio.UnidadTiempo = null;
   }
 }
 

@@ -11,6 +11,7 @@ import {EdicionNotificacionGeneralPage} from '../../pages/notificaciones/edicion
 import {ConstantsConfig} from "../../app/utils";
 import moment from "moment";
 import "moment/locale/es";
+import {Utils} from '../../app/utils';
 
 @Component({
   templateUrl: "calendario.html",
@@ -91,8 +92,8 @@ export class CalendarioPage implements OnInit, OnDestroy {
       alertTypes, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, false)
       .then(alertas => {
         alertas.forEach(alerta => {
-          let d = new Date(alerta.FechaNotificacion);
-          alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+          let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+          alerta.Hora = d.format("hh:mm A").toUpperCase();
         });
         this.calendar.setAlerts(alertas);
       }).catch(err => {
@@ -105,11 +106,11 @@ export class CalendarioPage implements OnInit, OnDestroy {
     this.alertaService.getAlertaById(this.session.PropietarioId, evt.alert.ID)
       .then(alert => {
         if (alert != null) {
-          let d = new Date(alert.FechaNotificacion);
-          alert.Fecha = moment(d).format("dddd, D [de] MMMM [de] YYYY");
+          let d = Utils.getMomentFromAlertDate(alert.FechaNotificacion);
+          alert.Fecha = d.format("dddd, D [de] MMMM [de] YYYY");
           alert.Fecha = alert.Fecha.charAt(0).toUpperCase() + alert.Fecha.slice(1);
-          alert.Hora = moment(d).format("hh:mm");
-          alert.Meridiano = moment(d).format("a").toUpperCase();
+          alert.Hora = d.format("hh:mm");
+          alert.Meridiano = d.format("a").toUpperCase();
         }
         this.calendar.setAlert(alert);
       }).catch(err => {
@@ -127,8 +128,8 @@ export class CalendarioPage implements OnInit, OnDestroy {
       alertTypes, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, false)
       .then(alertas => {
         alertas.forEach(alerta => {
-          let d = new Date(alerta.FechaNotificacion);
-          alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+          let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+          alerta.Hora = d.format("hh:mm A").toUpperCase();
         });
         this.calendar.setAlertsYear(alertas);
       }).catch(err => {

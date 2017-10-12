@@ -1,11 +1,11 @@
 <ion-header>
     <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="goBack()">{{ 'PANT010_BTN_CAN' | translate }}</button>
+            <button class="equi-toolbar-btn" tappable (click)="goBack()">{{ 'PANT010_BTN_CAN' | translate }}</button>
         </ion-buttons>
 
         <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">
+            <button class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" tappable (click)="saveNotificacion()">
                 {{ 'PANT010_BTN_GUA' | translate }}
             </button>
         </ion-buttons>
@@ -50,8 +50,8 @@
                     <span *ngIf="alerta.AlertaRecordatorio.length == 0" class="equi-text-edit">&nbsp;&nbsp;&nbsp;&nbsp;{{ 'PANT010_TXT_REC' | translate }}</span>
                 </ion-col>
                 <ion-col col-2 class="col-center">
-                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" (click)="removeRecordatorio()" class="equi-icon-input equi-icon-delete"></ion-icon>
-                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length == 0" name="add-circle" (click)="viewRecordatorios()" class="equi-icon-input"></ion-icon>
+                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length > 0" name="remove-circle" tappable (click)="removeRecordatorio()" class="equi-icon-input equi-icon-delete"></ion-icon>
+                    <ion-icon *ngIf="alerta.AlertaRecordatorio.length == 0" name="add-circle" tappable (click)="viewRecordatorios()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
 

@@ -9,6 +9,7 @@ import {FichaCaballoPage} from '../../ficha-caballo/ficha-caballo-home';
 import {AdminCaballosInsertPage} from '../../admin-caballos/admin-caballos-insert';
 import {LanguageService} from '../../../../services/language.service';
 import {EquiModalFiltroCaballos} from '../../../../utils/equi-modal-filtro-caballos/filtro-caballos-modal';
+import {Utils} from '../../../../app/utils';
 
 @Component({
   selector: 'caballos-ind',

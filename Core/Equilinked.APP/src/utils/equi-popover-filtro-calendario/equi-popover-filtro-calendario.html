@@ -1,5 +1,5 @@
 <ion-list no-lines>
-  <ion-item *ngFor="let alertType of options.alertTypes" (click)="selectType(alertType)">
+  <ion-item *ngFor="let alertType of options.alertTypes" tappable (click)="selectType(alertType)">
     <span class="equi-normal-text">{{alertType.name}}</span>
     <ion-icon item-end name="{{alertType.checked ? 'ios-checkbox-outline' : 'ios-square-outline'}}"></ion-icon>
   </ion-item>

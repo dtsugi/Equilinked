@@ -5,8 +5,9 @@ import {CommonService} from "../../../../../services/common.service";
 import {LanguageService} from '../../../../../services/language.service';
 import {RecordatorioService} from "../../../../../services/recordatorio.service";
 import {SecurityService} from "../../../../../services/security.service";
+import {NotificacionLocalService} from '../../../../../services/notificacion-local.service';
 import {UserSessionEntity} from "../../../../../model/userSession";
-import {ConstantsConfig} from "../../../../../app/utils";
+import {ConstantsConfig, Utils} from "../../../../../app/utils";
 import {EquiModalRecordatorio} from "../../../../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import moment from "moment";
 
@@ -17,6 +18,7 @@ import moment from "moment";
 export class EdicionEventoCaballoPage implements OnInit {
   private session: UserSessionEntity;
   private caballo: any;
+  private alertaResp: any;
   alerta: any;
   recordatorios: Array<any>;
   labels: any = {};
@@ -25,6 +27,7 @@ export class EdicionEventoCaballoPage implements OnInit {
               private alertaService: AlertaService,
               private events: Events,
               private commonService: CommonService,
+              private notificacionLocalService: NotificacionLocalService,
               private modalController: ModalController,
               public navController: NavController,
               public navParams: NavParams,
@@ -50,12 +53,13 @@ export class EdicionEventoCaballoPage implements OnInit {
         this.alerta.FechaFinal = moment().format("YYYY-MM-DD");
         this.alerta.HoraFinal = moment().format("HH:mm:ss");
       } else {
-        let di = new Date(this.alerta.FechaNotificacion);
-        this.alerta.FechaNotificacion = moment(di).format("YYYY-MM-DD");
+        this.alertaResp = JSON.parse(JSON.stringify(this.alerta));
+        let di = Utils.getMomentFromAlertDate(this.alerta.FechaNotificacion);
+        this.alerta.FechaNotificacion = di.format("YYYY-MM-DD");
         if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
-          let df = new Date(this.alerta.FechaFinal);
-          this.alerta.FechaFinal = moment(df).format("YYYY-MM-DD");
-          this.alerta.HoraFinal = moment(df).format("HH:mm:ss");
+          let df = Utils.getMomentFromAlertDate(this.alerta.FechaFinal);
+          this.alerta.FechaFinal = df.format("YYYY-MM-DD");
+          this.alerta.HoraFinal = df.format("HH:mm:ss");
         }
         if (this.alerta.AlertaRecordatorio) {
           this.alerta.AlertaRecordatorio.forEach(a => {
@@ -89,7 +93,6 @@ export class EdicionEventoCaballoPage implements OnInit {
   }
 
   save(): void {
-    console.log(this.alerta);
     this.alerta.FechaNotificacion = this.alerta.FechaNotificacion + " " + this.alerta.HoraNotificacion;
     this.alerta.FechaFinal = this.alerta.FechaFinal + " " + this.alerta.HoraFinal;
     let promise;
@@ -99,17 +102,30 @@ export class EdicionEventoCaballoPage implements OnInit {
       promise = this.alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
     this.commonService.showLoading(this.labels["PANT010_ALT_PRO"]);
-    promise.then(() => {
-      this.commonService.hideLoading();
-      this.navController.pop().then(() => {
-        this.events.publish("notificacion:evento:caballo:refresh");//el detalle supongo
-        this.events.publish("notificaciones:caballo:refresh");//refrescar el calendar o la lista
-
-        this.events.publish("notificaciones:refresh");//para refrescar la lista de alertas de centro notificaciones
-        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla centro notificaciones
-        this.events.publish("calendario:refresh");//refrescar calendario
-        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada calendario
-      });
+    promise.then((idnotificacion) => {
+      let alertaAct = null, alertaAnt = null;
+      if (this.alerta.ID) {
+        alertaAct = this.alerta;
+        alertaAnt = this.alertaResp;
+      } else {
+        this.alerta.ID = idnotificacion;
+        alertaAct = this.alerta;
+      }
+      try {
+        this.notificacionLocalService.saveLocalNotificacionAlert(alertaAct, alertaAnt);
+        this.commonService.hideLoading();
+        this.navController.pop().then(() => {
+          this.events.publish("notificacion:evento:caballo:refresh");//el detalle supongo
+          this.events.publish("notificaciones:caballo:refresh");//refrescar el calendar o la lista
+          this.events.publish("notificaciones:refresh");//para refrescar la lista de alertas de centro notificaciones
+          this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla centro notificaciones
+          this.events.publish("calendario:refresh");//refrescar calendario
+          this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada calendario
+        });
+      } catch (err) {
+        console.log("Error al guardar notificacion local:" + JSON.stringify(err));
+        this.commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRGUA"]);
+      }
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT010_MSG_ERRGUA"]);
     });
@@ -145,7 +161,7 @@ export class EdicionEventoCaballoPage implements OnInit {
 
   private buildLabelRecordatorio(recordatorio: any): void {
     recordatorio.Descripcion = recordatorio.ValorTiempo + " " + recordatorio.UnidadTiempo.Descripcion;
-    recordatorio.UnidadTiempo = null;
+    //recordatorio.UnidadTiempo = null;
   }
 
   private loadPage(): void {

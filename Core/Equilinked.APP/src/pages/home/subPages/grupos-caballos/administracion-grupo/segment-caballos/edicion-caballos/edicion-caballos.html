@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button icon-only (click)="goBack()">
+      <button ion-button icon-only tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -13,7 +13,7 @@
     </ion-title>
 
     <ion-buttons right>
-      <button ion-button class="equi-toolbar-btn" (click)="save()">
+      <button ion-button class="equi-toolbar-btn" tappable (click)="save()">
         Aceptar
       </button>
     </ion-buttons>
@@ -27,13 +27,13 @@
         <div class="equi-container-input-search">
           <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
                          [placeholder]="'Filtrar caballos'"></ion-searchbar>
-          <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+          <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedFilter()">
             <ion-icon name="ios-arrow-down"></ion-icon>
           </button>
         </div>
       </ion-col>
       <ion-col col-12>
-        <button ion-button full (click)="selectAll()">Seleccionar todos</button>
+        <button ion-button full tappable (click)="selectAll()">Seleccionar todos</button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -44,7 +44,7 @@
 
 
   <ion-list no-lines>
-    <ion-item *ngFor="let cg of caballosGrupo" (click)="selectCaballo(cg)">
+    <ion-item *ngFor="let cg of caballosGrupo" tappable (click)="selectCaballo(cg)">
       <ion-avatar item-left>
         <img src="assets/img/caballo.jpg">
       </ion-avatar>

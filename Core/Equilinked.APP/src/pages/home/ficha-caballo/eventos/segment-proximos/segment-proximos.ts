@@ -5,7 +5,7 @@ import {AlertaCaballoService} from '../../../../../services/alerta.caballo.servi
 import {LanguageService} from '../../../../../services/language.service';
 import {SecurityService} from '../../../../../services/security.service';
 import {UserSessionEntity} from '../../../../../model/userSession';
-import {ConstantsConfig} from "../../../../../app/utils";
+import {ConstantsConfig, Utils} from "../../../../../app/utils";
 import {DetalleEventoCaballoPage} from "../detalle-evento/detalle-evento";
 import moment from "moment";
 import "moment/locale/es";
@@ -133,16 +133,16 @@ export class SegmentEventosProximos implements OnInit {
   loadEventos(): void {
     this.loading = true;
     this.dateMillis = new Date().getTime();
-    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+    let fecha: string = moment().format("YYYY-MM-DD HH:mm:ss");
     this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID, fecha, null,
       [ConstantsConfig.ALERTA_TIPO_EVENTOS], null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE
     ).then(alertas => {
       let mapDates: Map<string, any> = new Map<string, any>();
       let day: any;
       alertas.forEach(nn => {
-        let d = new Date(nn.FechaNotificacion);
-        nn.Hora = moment(d).format("hh:mm A").toUpperCase();
-        let date: string = moment(d).format("dddd-DD MMMM");
+        let d = Utils.getMomentFromAlertDate(nn.FechaNotificacion);
+        nn.Hora = d.format("hh:mm A").toUpperCase();
+        let date: string = d.format("dddd-DD MMMM");
         if (!mapDates.has(date)) {
           let partsDate: any = date.split("-");
           day = {

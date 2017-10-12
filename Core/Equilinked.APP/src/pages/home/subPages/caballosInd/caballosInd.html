@@ -1,7 +1,7 @@
 <div class="equi-container-input-search">
   <ion-searchbar (ionInput)="findCaballos($event)" [autocomplete]="true"
                  [placeholder]="labels['PANT002_TXT_FICA']"></ion-searchbar>
-  <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+  <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedFilter()">
     <ion-icon name="ios-arrow-down"></ion-icon>
   </button>
 </div>
@@ -13,7 +13,7 @@
 </div>
 
 <ion-list no-lines>
-  <ion-item *ngFor="let caballo of caballosList" (click)="goToFicha(caballo)">
+  <ion-item *ngFor="let caballo of caballosList" tappable (click)="goToFicha(caballo)">
     <ion-avatar item-left>
       <img src="assets/img/caballo.jpg">
     </ion-avatar>

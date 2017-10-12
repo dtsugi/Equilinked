@@ -18,7 +18,7 @@
   <ion-row>
     <ion-col col-4
              class="equi-button-ficha"
-             (click)="open(0)">
+             tappable (click)="open(0)">
       <div class="equi-button-ficha-icon equi-button-ficha-ubicacion"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_UBI" | translate }}
@@ -27,7 +27,7 @@
 
     <ion-col col-4
              class="equi-button-ficha equi-button-ficha-border-left equi-button-ficha-border-right"
-             (click)="open(1)">
+             tappable (click)="open(1)">
       <div class="equi-button-ficha-icon equi-button-ficha-dentista"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_DEN" | translate }}
@@ -35,7 +35,7 @@
     </ion-col>
 
     <ion-col col-4
-             class="equi-button-ficha" (click)="open(2)">
+             class="equi-button-ficha" tappable (click)="open(2)">
       <div class="equi-button-ficha-icon equi-button-ficha-veterinario"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_VET" | translate }}
@@ -44,7 +44,7 @@
 
     <ion-col col-4
              class="equi-button-ficha equi-button-ficha-border-top"
-             (click)="open(3)">
+             tappable (click)="open(3)">
       <div class="equi-button-ficha-icon equi-button-ficha-herraje"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_HERR" | translate }}
@@ -52,7 +52,8 @@
     </ion-col>
 
     <ion-col col-4
-             class="equi-button-ficha equi-button-ficha-border-top equi-button-ficha-border-left equi-button-ficha-border-right" (click)="open(4)">
+             class="equi-button-ficha equi-button-ficha-border-top equi-button-ficha-border-left equi-button-ficha-border-right"
+             tappable (click)="open(4)">
       <div class="equi-button-ficha-icon equi-button-ficha-desparasitacion"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_DESP" | translate }}
@@ -60,7 +61,7 @@
     </ion-col>
 
     <ion-col col-4
-             class="equi-button-ficha equi-button-ficha-border-top" (click)="open(5)">
+             class="equi-button-ficha equi-button-ficha-border-top" tappable (click)="open(5)">
       <div class="equi-button-ficha-icon equi-button-ficha-notas"></div>
       <span class="equi-input-normal-text" style="position: inherit; top: -20px;">
         {{ "PANT013_BTN_NOTS" | translate }}
@@ -68,24 +69,3 @@
     </ion-col>
   </ion-row>
 </ion-grid>
-
-<!--
-<ion-grid>
-    <ion-row>
-        <ion-col>
-            <img src="assets/img/ficha-grupo.PNG" />
-        </ion-col>
-    </ion-row>
-    <ion-row>
-        <ion-col col-4 *ngFor="let option of options">
-            <button ion-button block (click)="selectOption(option)">
-                <div>
-                    <ion-icon name="{{option.icon}}"></ion-icon>
-                    <br />
-                    <label>{{option.label}}</label>
-                </div>
-            </button>
-        </ion-col>
-    </ion-row>
-</ion-grid>
--->

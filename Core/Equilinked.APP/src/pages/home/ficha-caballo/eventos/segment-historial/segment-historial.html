@@ -4,7 +4,7 @@
 
 <ion-list no-lines *ngIf="eventos">
   <ion-item-sliding *ngFor="let e of eventos">
-    <ion-item class="equi-normal-text" (click)="view(e)">
+    <ion-item class="equi-normal-text" tappable (click)="view(e)">
       <ion-row>
         <ion-col col-3>
           {{e.Fecha}}
@@ -19,7 +19,7 @@
     </ion-item>
 
     <ion-item-options>
-      <button ion-button color="danger" icon-left (click)="delete(e)">
+      <button ion-button color="danger" icon-left tappable (click)="delete(e)">
         <ion-icon name="trash"></ion-icon>
         {{ "PANT007_BTN_ELI" | translate }}
       </button>

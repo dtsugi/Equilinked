@@ -3,6 +3,7 @@
     <ion-buttons left>
       <!-- Se visualizada en seleccion de  "ESTABLOS" -->
       <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && parametrosEstablos.modoEdicion"
+              tappable
               (click)="disabledDeleteCaballos()">
         {{ 'PANT026_BTN_CAN' | translate }}
       </button>
@@ -14,18 +15,18 @@
 
     <ion-buttons right>
       <!-- Se visualizada en seleccion de  "DATOS" -->
-      <button ion-button icon-only *ngIf="currentSlide == 'datos'" (click)="presentPopover($event) ">
+      <button ion-button icon-only *ngIf="currentSlide == 'datos'" tappable (click)="presentPopover($event) ">
         <ion-icon name="more"></ion-icon>
       </button>
 
       <!-- Se visualizadan en seleccion de  "ESTABLOS"... -->
       <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && !parametrosEstablos.modoEdicion"
-              (click)="enabledDeleteEstablos()">
+              tappable (click)="enabledDeleteEstablos()">
         {{ 'PANT026_BTN_EDI' | translate }}
       </button>
       <button ion-button class="equi-toolbar-btn" *ngIf="currentSlide == 'establos' && parametrosEstablos.modoEdicion"
               [disabled]="parametrosEstablos.getCountSelected() == 0"
-              (click)="deleteEstablos()">
+              tappable (click)="deleteEstablos()">
         {{ 'PANT026_BTN_ELI' | translate }}
       </button>
     </ion-buttons>

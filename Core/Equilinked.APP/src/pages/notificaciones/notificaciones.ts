@@ -10,6 +10,7 @@ import {EdicionNotificacionGeneralPage} from "./edicion-notificacion/edicion-not
 import moment from "moment";
 import "moment/locale/es";
 import {LanguageService} from '../../services/language.service';
+import {Utils} from '../../app/utils';
 
 @Component({
   selector: 'page-notificaciones',
@@ -196,17 +197,17 @@ export class NotificacionesPage implements OnInit, OnDestroy {
 
   private loadNotificacionesToday(): void {
     let inicio: string = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss");
-    let fin: string = moment(new Date()).endOf("day").format("YYYY-MM-DD HH:mm:ss");
-    this.today = moment(new Date()).format("dddd, D [de] MMMM [de] YYYY");
+    let fin: string = moment().endOf("day").format("YYYY-MM-DD HH:mm:ss");
+    this.today = moment().format("dddd, D [de] MMMM [de] YYYY");
     this.today = this.today.charAt(0).toUpperCase() + this.today.slice(1);
     this.loadingToday = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, inicio, fin,
       null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, true
     ).then(alertas => {
       this.notificacionesHoy = alertas.map(a => {
-        let d = new Date(a.FechaNotificacion);
-        a.Expired = d.getTime() <= this.dateMillis;
-        a.Hora = moment(d).format("hh:mm A").toUpperCase();
+        let d = Utils.getMomentFromAlertDate(a.FechaNotificacion);
+        a.Expired = d.toDate().getTime() <= this.dateMillis;
+        a.Hora = d.format("hh:mm A").toUpperCase();
         return a;
       });
       this.loadingToday = false;
@@ -218,7 +219,7 @@ export class NotificacionesPage implements OnInit, OnDestroy {
   }
 
   private loadNextNotificaciones(): void {
-    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+    let fecha: string = moment().startOf("day").add(1, "day").format("YYYY-MM-DD HH:mm:ss");
     this.loadingNext = true;
     this._alertaService.getAlertasByPropietario(this.session.PropietarioId, fecha, null,
       null, null, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE, true
@@ -226,9 +227,9 @@ export class NotificacionesPage implements OnInit, OnDestroy {
       let mapDates: Map<string, any> = new Map<string, any>();
       let day: any;
       alertas.forEach(nn => {
-        let d = new Date(nn.FechaNotificacion);
-        nn.Hora = moment(d).format("hh:mm A").toUpperCase();
-        let date: string = moment(d).format("dddd-DD MMMM");
+        let d =  Utils.getMomentFromAlertDate(nn.FechaNotificacion);
+        nn.Hora = d.format("hh:mm A").toUpperCase();
+        let date: string = d.format("dddd-DD MMMM");
         if (!mapDates.has(date)) {
           let partsDate: any = date.split("-");
           day = {

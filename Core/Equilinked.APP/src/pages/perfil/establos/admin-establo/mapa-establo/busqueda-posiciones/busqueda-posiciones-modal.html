@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button class="equi-toolbar-btn" (click)="cancel()">
+      <button class="equi-toolbar-btn" tappable (click)="cancel()">
         {{ 'PANT034_BTN_CAN' | translate }}
       </button>
     </ion-buttons>
@@ -16,7 +16,7 @@
   </div>
 
   <ion-list>
-    <ion-item *ngFor="let place of places" (click)="selectPlace(place)">
+    <ion-item *ngFor="let place of places" tappable (click)="selectPlace(place)">
       {{place.name}}
     </ion-item>
   </ion-list>

@@ -1,12 +1,13 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Events, NavController, NavParams} from 'ionic-angular';
-import {ConstantsConfig} from '../../../../app/utils'
+import {ConstantsConfig, Utils} from '../../../../app/utils'
 import {CommonService} from '../../../../services/common.service';
 import {AlertaService} from '../../../../services/alerta.service';
 import {AlertaCaballoService} from '../../../../services/alerta.caballo.service';
 import {Alerta} from '../../../../model/alerta';
 import {UserSessionEntity} from '../../../../model/userSession';
 import {SecurityService} from '../../../../services/security.service';
+import {NotificacionLocalService} from '../../../../services/notificacion-local.service';
 import {NotificacionesExtendedInsertPage} from '../../../notificaciones/notificaciones-extended-insert';
 import {NotificacionGeneralDetalle} from "../../../notificaciones/notificacion-general-detalle/notificacion-general-detalle";
 import moment from "moment";
@@ -31,6 +32,7 @@ export class DentistaPage implements OnDestroy, OnInit {
   constructor(private events: Events,
               public navCtrl: NavController,
               public navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private _commonService: CommonService,
               private _alertaService: AlertaService,
               private alertaCaballoService: AlertaCaballoService,
@@ -66,8 +68,8 @@ export class DentistaPage implements OnDestroy, OnInit {
       [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(res => {
       this.historyNotificacionList = res.map(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Fecha = moment(d).format("DD/MM/YY");
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Fecha = d.format("DD/MM/YY");
         return alerta;
       });
       this.loadingHistory = false;
@@ -75,10 +77,10 @@ export class DentistaPage implements OnDestroy, OnInit {
         .getAlertasByCaballoId(this.session.PropietarioId, this.idCaballo, fecha, null,
           [this.tipoAlerta], 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE);
     }).then(res => {
-      this.nextNotificacionList = res.map(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Fecha = moment(d).format("D [de] MMMM [de] YYYY");
-        alerta.Hora = moment(d).format("hh:mm a");
+      this.nextNotificacionList = res.map((alerta: any) => {
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Fecha = d.format("D [de] MMMM [de] YYYY");
+        alerta.Hora = d.format("hh:mm a");
         return alerta;
       });
       this.loadingNext = false;
@@ -132,6 +134,12 @@ export class DentistaPage implements OnDestroy, OnInit {
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
         this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.getAlertasByCaballo();
+        try {
+          this.notificacionLocalService.deleteLocalNotificationAlert([notificacion.ID]);
+        } catch (err) {
+          console.log("Error al eliminar not local");
+          console.log(JSON.stringify(err));
+        }
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
     });

@@ -1,7 +1,7 @@
 <div class="equi-container-input-search">
   <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true"
                  [placeholder]="labels['PANT013_TXT_FICAB']"></ion-searchbar>
-  <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+  <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedFilter()">
     <ion-icon name="ios-arrow-down"></ion-icon>
   </button>
 </div>
@@ -9,7 +9,7 @@
 <equi-button-add *ngIf="!parametrosCaballos.modoEdicion && !grupo.GrupoDefault" [label]="labels['PANT013_BTN_AGNU']"
                  (action)="addCaballos()"></equi-button-add>
 
-<ion-item (click)="selectAll()" *ngIf="parametrosCaballos.modoEdicion">
+<ion-item tappable (click)="selectAll()" *ngIf="parametrosCaballos.modoEdicion">
   <h2 class="equi-title-form">{{ 'PANT013_LBL_SELTO' | translate }}</h2>
   <ion-icon class="equi-principal-color"
             name="{{getCountSelected() != caballosGrupoRespaldo.length ? 'ios-square-outline' : 'ios-checkbox'}}"
@@ -21,7 +21,7 @@
 </div>
 
 <ion-list no-lines>
-  <ion-item *ngFor="let c of caballosGrupo" (click)="select(c)">
+  <ion-item *ngFor="let c of caballosGrupo" tappable (click)="select(c)">
     <ion-avatar item-left>
       <img src="assets/img/caballo.jpg">
     </ion-avatar>

@@ -31,6 +31,7 @@ export class AlertaService {
     let url: string = this.alertaUrl + propietarioId + "/alertas"
     return this._http.post(url, alerta)
       .timeout(this.requestTimeout)
+      .map(data => data.json())
       .toPromise();
   }
 

@@ -9,6 +9,7 @@ import {EdicionAlertaPage} from "../edicion-alerta/edicion-alerta";
 import moment from "moment";
 import "moment/locale/es";
 import {LanguageService} from '../../../../../../../services/language.service';
+import {Utils} from '../../../../../../../app/utils';
 
 @Component({
   templateUrl: "detalle-alerta.html",
@@ -54,13 +55,12 @@ export class DetalleAlertaPage implements OnInit, OnDestroy {
       this.commonService.showLoading(this.labels["PANT019_ALT_PRO"]);
     this.alertaService.getAlertaById(this.session.PropietarioId, this.alertaId)
       .then(alerta => {
-        console.info("Alerta consultada");
         if (alerta != null) {
-          let d = new Date(alerta.FechaNotificacion);
-          alerta.Fecha = moment(d).format("dddd, D [de] MMMM [de] YYYY");
+          let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+          alerta.Fecha = d.format("dddd, D [de] MMMM [de] YYYY");
           alerta.Fecha = alerta.Fecha.charAt(0).toUpperCase() + alerta.Fecha.slice(1);
-          alerta.Hora = moment(d).format("hh:mm");
-          alerta.Meridiano = moment(d).format("a").toUpperCase();
+          alerta.Hora = d.format("hh:mm");
+          alerta.Meridiano = d.format("a").toUpperCase();
           this.alertaGrupo = alerta;
           console.info(alerta);
         }

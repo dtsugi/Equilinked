@@ -3,11 +3,12 @@ import {Events, NavController, NavParams} from "ionic-angular";
 import {AlertaService} from "../../../../../../services/alerta.service";
 import {AlertaGrupoService} from "../../../../../../services/alerta-grupo.service";
 import {CommonService} from "../../../../../../services/common.service";
+import {NotificacionLocalService} from '../../../../../../services/notificacion-local.service';
 import {SecurityService} from "../../../../../../services/security.service";
 import {UserSessionEntity} from "../../../../../../model/userSession";
 import {EdicionAlertaPage} from "./edicion-alerta/edicion-alerta";
 import {DetalleAlertaPage} from "./detalle-alerta/detalle-alerta";
-import {ConstantsConfig} from "../../../../../../app/utils"
+import {ConstantsConfig, Utils} from "../../../../../../app/utils"
 import moment from "moment";
 import "moment/locale/es";
 import {LanguageService} from '../../../../../../services/language.service';
@@ -48,6 +49,7 @@ export class AlertasFicha implements OnInit, OnDestroy {
               private events: Events,
               private navController: NavController,
               private navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loadingNext = true;
@@ -141,10 +143,16 @@ export class AlertasFicha implements OnInit, OnDestroy {
     this.commonService.showLoading(this.labelsX["PANT018_ALT_PRO"]);
     this.alertaGrupoService.deleteAlertasGrupoByIds(this.session.PropietarioId, this.grupo.ID, [notificacion.ID])
       .then(() => {
+        this.commonService.hideLoading();
         this.getAlertasByGrupo();
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
         this.events.publish("calendario:refresh");//refrescar alertas calendario
-        this.commonService.hideLoading();
+        try {
+          this.notificacionLocalService.deleteLocalNotificationAlert([notificacion.ID]);
+        } catch (err) {
+          console.log("Error al eliminar not local");
+          console.log(JSON.stringify(err));
+        }
       }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labelsX["PANT018_MSG_ERRELI"]);
     });
@@ -181,17 +189,17 @@ export class AlertasFicha implements OnInit, OnDestroy {
       [this.tipoAlerta], 3, ConstantsConfig.ALERTA_ORDEN_ASCENDENTE)
       .then(alertas => { //Primero las proximas!
         this.proximasAlertas = alertas.map(a => {
-          let d = new Date(a.FechaNotificacion);
-          a.Fecha = moment(d).format("D [de] MMMM [de] YYYY");
-          a.Hora = moment(d).format("hh:mm a");
+          let d = Utils.getMomentFromAlertDate(a.FechaNotificacion);
+          a.Fecha = d.format("D [de] MMMM [de] YYYY");
+          a.Hora = d.format("hh:mm a");
           return a;
         });
         this.loadingNext = false;
         return this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, null, fecha,
           [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE);
       }).then(alertas => {
-      this.historicoAlertas = alertas.map(a => {
-        a.Fecha = moment(new Date(a.FechaNotificacion)).format("DD/MM/YY");
+      this.historicoAlertas = alertas.map((a: any) => {
+        a.Fecha = Utils.getMomentFromAlertDate(a.FechaNotificacion).format("DD/MM/YY");
         return a;
       });
       this.loadingHistory = false;

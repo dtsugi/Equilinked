@@ -25,7 +25,7 @@
     <ion-col col-8>
       <ion-list no-lines>
         <ion-item-sliding *ngFor="let e of ec.Notificaciones; let i = index">
-          <ion-item text-wrap (click)="view(e)">
+          <ion-item text-wrap tappable (click)="view(e)">
             <ion-row [ngClass]="{'border-bottom': i < (ec.Notificaciones.length-1)}">
               <ion-col col-12 class="equi-title-note">
                 <span [ngClass]="{'equi-edit': isFilter}" class="equi-bold-text" [innerHTML]="e.TituloFilter"></span>
@@ -43,7 +43,7 @@
             </ion-row>
           </ion-item>
           <ion-item-options>
-            <button ion-button color="danger" icon-left (click)="delete(e)">
+            <button ion-button color="danger" icon-left tappable (click)="delete(e)">
               <ion-icon name="trash"></ion-icon>
               Eliminar
             </button>

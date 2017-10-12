@@ -8,8 +8,9 @@ import {EdicionNotaPage} from "./edicion-nota/edicion-nota";
 import {DetalleNotaPage} from "./detalle-nota/detalle-nota";
 import {UserSessionEntity} from "../../../../../../model/userSession";
 import {ConstantsConfig} from "../../../../../../app/utils"
-import moment from "moment";
 import {LanguageService} from '../../../../../../services/language.service';
+import {NotificacionLocalService} from '../../../../../../services/notificacion-local.service';
+import {Utils} from '../../../../../../app/utils';
 
 @Component({
   templateUrl: "./notas-ficha.html",
@@ -34,6 +35,7 @@ export class NotasFichaPage implements OnInit, OnDestroy {
               private events: Events,
               private navController: NavController,
               private navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
     this.loading = true;
@@ -166,11 +168,17 @@ export class NotasFichaPage implements OnInit, OnDestroy {
             this.alertaGrupoService.deleteAlertasGrupoByIds(this.session.PropietarioId,
               this.grupo.ID, this.notasRespaldo.filter(e => e.seleccion).map(e => e.nota.ID)
             ).then(() => {
+              this.commonService.hideLoading();
               this.getNotasByGrupo();//
               this.events.publish("notificaciones:refresh");//Actualimamos area de ontificacionesario
               this.events.publish("calendario:refresh");//refrescar alertas calendario
-              this.commonService.hideLoading();
               this.modoEdicion = false;
+              try {
+                this.notificacionLocalService.deleteLocalNotificationAlert(this.notasRespaldo.filter(e => e.seleccion).map(e => e.nota.ID));
+              } catch (err) {
+                console.log("Error al eliminar not local");
+                console.log(JSON.stringify(err));
+              }
             }).catch(err => {
               this.commonService.ShowErrorHttp(err, this.labels["PANT018_MSG_ERRELI"]);
             });
@@ -208,14 +216,13 @@ export class NotasFichaPage implements OnInit, OnDestroy {
   }
 
   private getNotasByGrupo(): void {
-    let fecha: string = moment().format("YYYY-MM-DD");
     this.loading = true;
     this.alertaGrupoService.getAlertasByGrupoId(this.session.PropietarioId, this.grupo.ID, null, null,
       [this.tipoAlerta], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE)
       .then(notas => {
         this.loading = false;
         this.notasRespaldo = notas.map(nota => {
-          nota.Fecha = moment(new Date(nota.FechaNotificacion)).format("DD/MM/YYYY");
+          nota.Fecha = Utils.getMomentFromAlertDate(nota.FechaNotificacion).format("DD/MM/YYYY");
           return {seleccion: false, nota: nota};
         });
         this.filter(null);

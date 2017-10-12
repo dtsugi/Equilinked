@@ -1,7 +1,7 @@
 <div *ngIf="options.step == CALENDAR_STEP_YEAR">
   <ion-grid class="equi-calendar-space">
     <ion-row class="equi-calendar-space">
-      <ion-col col-4 *ngFor="let month of selectedYear.months"
+      <ion-col tappable col-4 *ngFor="let month of selectedYear.months"
                class="equi-calendar-space equi-calendar-month-col"
                (click)="selectMonth(month)">
 
@@ -43,13 +43,13 @@
 
 <ion-grid *ngIf="(options.step == CALENDAR_STEP_MONTH || options.step == CALENDAR_STEP_WEEK) && selectedYear">
   <ion-row>
-    <ion-col col-2 (click)="lastMonth()" style="font-size: 40px;">
+    <ion-col col-2 tappable (click)="lastMonth()" style="font-size: 40px;">
       <span><ion-icon name="ios-arrow-back"></ion-icon></span>
     </ion-col>
     <ion-col style="margin: auto;">
-      <span class="equi-bold-text" (click)="showYear()">{{selectedMonth.nameMonth}} {{selectedMonth.year.id}}</span>
+      <span class="equi-bold-text" tappable (click)="showYear()">{{selectedMonth.nameMonth}} {{selectedMonth.year.id}}</span>
     </ion-col>
-    <ion-col col-2 (click)="nextMonth()" style="font-size: 40px;">
+    <ion-col col-2 tappable (click)="nextMonth()" style="font-size: 40px;">
       <span><ion-icon name="ios-arrow-forward"></ion-icon></span>
     </ion-col>
   </ion-row>
@@ -71,6 +71,7 @@
         <ion-col *ngFor="let day of week.days" class="equi-col-calendar">
           <div class="equi-container-day equi-normal-text"
                [ngClass]="{'equi-selected-day': day && day.id == selectedDate.id}"
+               tappable
                (click)="selectDate(week, day)"><!-- day -->
             <span style="display: block">{{day ? day.numberDay : ' '}}</span>
           </div>
@@ -84,7 +85,7 @@
       <ion-row *ngIf="selectedWeek.id == week.id && selectedDate.showAlerts && selectedDate.alerts.length > 0">
         <ion-col>
           <ion-list no-lines>
-            <ion-item text-wrap *ngFor="let alert of selectedDate.alerts" (click)="view(alert)">
+            <ion-item text-wrap *ngFor="let alert of selectedDate.alerts" tappable (click)="view(alert)">
               <ion-row>
                 <ion-col col-4 class="col-center">
                   <span clas="equi-normal-text">{{alert.Hora}}</span>

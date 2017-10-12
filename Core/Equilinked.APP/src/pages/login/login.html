@@ -31,12 +31,12 @@
       </ion-row>
       <ion-row>
         <ion-col col-6>
-          <button type="button" ion-button full style="background-color:#3B5998" (click)="loginWithFacebook()">{{
+          <button type="button" ion-button full style="background-color:#3B5998" tappable (click)="loginWithFacebook()">{{
             "PANT001_BTN_FAC" | translate }}
           </button>
         </ion-col>
         <ion-col col-6>
-          <button type="button" ion-button full color="danger" (click)="loginWithGoogle()">{{ "PANT001_BTN_GOO" |
+          <button type="button" ion-button full color="danger" tappable (click)="loginWithGoogle()">{{ "PANT001_BTN_GOO" |
             translate }}
           </button>
         </ion-col>
@@ -49,7 +49,7 @@
       </ion-row>
       <ion-row>
         <ion-col col-12>
-          <button ion-button full style="background-color:#00A7A5" type="button" (click)="createAccount()">{{ "PANT001_BTN_REG" | translate }}</button>
+          <button ion-button full style="background-color:#00A7A5" type="button" tappable (click)="createAccount()">{{ "PANT001_BTN_REG" | translate }}</button>
         </ion-col>
       </ion-row>
     </ion-grid>

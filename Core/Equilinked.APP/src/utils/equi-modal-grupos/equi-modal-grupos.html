@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button class="equi-toolbar-btn" (click)="cancel()">
+      <button class="equi-toolbar-btn" tappable (click)="cancel()">
         {{ 'PANT025_BTN_CAN' | translate }}
       </button>
     </ion-buttons>
 
     <ion-buttons right>
-      <button class="equi-toolbar-btn" (click)="accept()">
+      <button class="equi-toolbar-btn" tappable (click)="accept()">
         {{ 'PANT025_BTN_ACE' | translate }}
       </button>
     </ion-buttons>
@@ -22,7 +22,7 @@
                        [placeholder]="labels['PANT025_TXT_FIGR']"></ion-searchbar>
       </ion-col>
       <ion-col col-12>
-        <button (click)="selectAll()" ion-button full>{{ 'PANT025_BTN_SETO' | translate }}</button>
+        <button tappable (click)="selectAll()" ion-button full>{{ 'PANT025_BTN_SETO' | translate }}</button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -32,7 +32,7 @@
   </div>
 
   <ion-list no-lines>
-    <ion-item *ngFor="let g of grupos" (click)="g.seleccion = !g.seleccion">
+    <ion-item *ngFor="let g of grupos" tappable (click)="g.seleccion = !g.seleccion">
       <ion-avatar item-left>
         <img src="assets/img/caballo.jpg">
       </ion-avatar>

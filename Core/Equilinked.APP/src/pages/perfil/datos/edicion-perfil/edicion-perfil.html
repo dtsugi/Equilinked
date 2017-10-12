@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons left>
-      <button ion-button class="equi-toolbar-btn" (click)="goBack()">
+      <button ion-button class="equi-toolbar-btn" tappable (click)="goBack()">
         {{ 'PANT027_BTN_CAN' | translate }}
       </button>
     </ion-buttons>
 
     <ion-buttons right>
       <button ion-button class="equi-toolbar-btn" [disabled]="perfil && perfilForm && !perfilForm.valid"
-              (click)="save(perfilForm)">
+              tappable (click)="save(perfilForm)">
         {{ 'PANT027_BTN_GUA' | translate }}
       </button>
     </ion-buttons>
@@ -66,8 +66,8 @@
         <ion-col col-2 class="col-center">
           <ion-icon *ngIf="i != (perfil.PropietarioTelefono.length - 1) && i < (perfil.PropietarioTelefono.length)"
                     name="remove-circle"
-                    (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
-          <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" (click)="addOtherTelefono()"
+                    tappable (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
+          <ion-icon *ngIf="(perfil.PropietarioTelefono.length - 1) == i" name="add-circle" tappable (click)="addOtherTelefono()"
                     class="equi-icon-input"></ion-icon>
         </ion-col>
       </ion-row>

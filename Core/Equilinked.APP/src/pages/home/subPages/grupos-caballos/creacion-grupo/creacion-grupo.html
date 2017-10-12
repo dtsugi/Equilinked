@@ -1,13 +1,13 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button class="equi-toolbar-btn" (click)="navController.pop()">
+            <button ion-button class="equi-toolbar-btn" tappable (click)="navController.pop()">
                 {{ 'PANT012_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
-            <button ion-button class="equi-toolbar-btn" [disabled]="!grupoCaballosForm.valid" (click)="save()">
+            <button ion-button class="equi-toolbar-btn" [disabled]="!grupoCaballosForm.valid" tappable (click)="save()">
                 {{ 'PANT012_BTN_GU' | translate }}
             </button>
         </ion-buttons>
@@ -34,19 +34,19 @@
             <ion-col col-12>
               <div class="equi-container-input-search">
                 <ion-searchbar (ionInput)="filter($event)" [autocomplete]="true" [placeholder]="labels['PANT012_TXT_FICA']"></ion-searchbar>
-                <button ion-button icon-only color="light" class="equi-button-filter" (click)="openAvancedFilter()">
+                <button ion-button icon-only color="light" class="equi-button-filter" tappable (click)="openAvancedFilter()">
                   <ion-icon name="ios-arrow-down"></ion-icon>
                 </button>
               </div>
             </ion-col>
             <ion-col col-12>
-                <button ion-button full (click)="selectAll()">{{ 'PANT012_BTN_SELT' | translate }}</button>
+                <button ion-button full tappable (click)="selectAll()">{{ 'PANT012_BTN_SELT' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>
 
     <ion-list no-lines>
-        <ion-item *ngFor="let c of caballos" (click)="selectCaballo(c)">
+        <ion-item *ngFor="let c of caballos" tappable (click)="selectCaballo(c)">
             <ion-avatar item-left>
                 <img src="assets/img/caballo.jpg">
             </ion-avatar>

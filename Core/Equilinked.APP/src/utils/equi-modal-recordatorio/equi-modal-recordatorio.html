@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar class="equi-toolbar">
         <ion-buttons left>
-            <button class="equi-toolbar-btn" (click)="cancel()">{{ 'PANT023_BTN_CAN' | translate }}</button>
+            <button class="equi-toolbar-btn" tappable (click)="cancel()">{{ 'PANT023_BTN_CAN' | translate }}</button>
         </ion-buttons>
 
         <ion-title class="equi-toolbar-title-content">
@@ -11,7 +11,7 @@
         </ion-title>
 
         <ion-buttons right>
-            <button class="equi-toolbar-btn" [disabled]="!isValid()" (click)="accept()">{{ 'PANT023_BTN_GUA' | translate }}</button>
+            <button class="equi-toolbar-btn" [disabled]="!isValid()" tappable (click)="accept()">{{ 'PANT023_BTN_GUA' | translate }}</button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>

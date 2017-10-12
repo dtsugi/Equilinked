@@ -1,15 +1,15 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Events, NavController, NavParams} from 'ionic-angular';
-import {ConstantsConfig} from '../../../../app/utils'
+import {ConstantsConfig, Utils} from '../../../../app/utils'
 import {CommonService} from '../../../../services/common.service';
 import {AlertaService} from '../../../../services/alerta.service';
 import {AlertaCaballoService} from '../../../../services/alerta.caballo.service';
+import {NotificacionLocalService} from '../../../../services/notificacion-local.service';
 import {Alerta} from '../../../../model/alerta';
 import {UserSessionEntity} from '../../../../model/userSession';
 import {SecurityService} from '../../../../services/security.service';
 import {NotificacionNotaDetalle} from "../../../notificaciones/notificacion-nota-detalle/notificacion-nota-detalle";
 import {NotificacionesInsertPage} from '../../../notificaciones/notificaciones-insert';
-import moment from "moment";
 import "moment/locale/es";
 import {LanguageService} from '../../../../services/language.service';
 
@@ -37,6 +37,7 @@ export class NotasPage implements OnInit, OnDestroy {
               public navCtrl: NavController,
               public navParams: NavParams,
               private _commonService: CommonService,
+              private notificacionLocalService: NotificacionLocalService,
               private alertaCaballoService: AlertaCaballoService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
@@ -93,9 +94,9 @@ export class NotasPage implements OnInit, OnDestroy {
           nota.TituloFilter = nota.TituloFilter.replace(textReplace, '<span class="equi-text-black">' + textReplace + '</span>');
         }
         if (indexDescripcion > -1) {
-          if(indexDescripcion > this.MAX_INDEX_FOR_CUT) {
+          if (indexDescripcion > this.MAX_INDEX_FOR_CUT) {
             let indices = this.getIndicesOf(" ", nota.Descripcion, true, indexDescripcion);
-            if(indices.length > this.SIZE_WORDS_BEFORE_CUT) {
+            if (indices.length > this.SIZE_WORDS_BEFORE_CUT) {
               nota.DescripcionFilter = "... " + nota.DescripcionFilter.substring(indices[indices.length - (this.SIZE_WORDS_BEFORE_CUT + 1)]);
               indexDescripcion = nota.DescripcionFilter.toUpperCase().indexOf(value.toUpperCase());
             }
@@ -118,17 +119,15 @@ export class NotasPage implements OnInit, OnDestroy {
   }
 
   getAllNotificacionesByCaballoId() {
-    let fecha: string = moment().format("YYYY-MM-DD HH:mm:ss");
     this.loading = true;
     this.alertaCaballoService.getAlertasByCaballoId(
       this.session.PropietarioId, this.idCaballo, null, null, [this.tipoAlerta],
       null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(res => {
-      console.info("Cantidad de alertas: " + res.length);
       this.notasCaballoResp = new Array<any>();
       this.notasGruposResp = new Array<any>();
       res.forEach(alerta => {
-        alerta.Fecha = moment(new Date(alerta.FechaNotificacion)).format("DD/MM/YY");
+        alerta.Fecha = Utils.getMomentFromAlertDate(alerta.FechaNotificacion).format("DD/MM/YY");
         if (!alerta.AlertaGrupal) {
           this.notasCaballoResp.push(alerta);
         }
@@ -170,6 +169,12 @@ export class NotasPage implements OnInit, OnDestroy {
         this.events.publish("notificaciones:refresh");//Actualimamos area de ontificaciones
         this.events.publish("calendario:refresh");//refrescar alertas calendario
         this.getAllNotificacionesByCaballoId();
+        try {
+          this.notificacionLocalService.deleteLocalNotificationAlert([notificacion.ID]);
+        } catch (err) {
+          console.log("Error al eliminar not local");
+          console.log(JSON.stringify(err));
+        }
       }).catch(err => {
       this._commonService.ShowErrorHttp(err, this.labels["PANT007_MSG_ERRELI"]);
     });

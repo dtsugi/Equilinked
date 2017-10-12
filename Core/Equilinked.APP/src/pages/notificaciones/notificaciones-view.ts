@@ -8,6 +8,7 @@ import {EdicionNotificacionGeneralPage} from "./edicion-notificacion/edicion-not
 import moment from "moment";
 import "moment/locale/es";
 import {LanguageService} from '../../services/language.service';
+import {Utils} from '../../app/utils';
 
 @Component({
   templateUrl: 'notificaciones-view.html',
@@ -54,11 +55,11 @@ export class NotificacionesViewPage implements OnDestroy, OnInit {
       this._commonService.showLoading(this.labels["PANT022_ALT_PRO"]);
     this._alertaService.getAlertaById(this.session.PropietarioId, this.alertaId)
       .then(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Fecha = moment(d).format("dddd, D [de] MMMM [de] YYYY");
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Fecha = d.format("dddd, D [de] MMMM [de] YYYY");
         alerta.Fecha = alerta.Fecha.charAt(0).toUpperCase() + alerta.Fecha.slice(1);
-        alerta.Hora = moment(d).format("hh:mm");
-        alerta.Meridiano = moment(d).format("a").toUpperCase();
+        alerta.Hora = d.format("hh:mm");
+        alerta.Meridiano = d.format("a").toUpperCase();
         this.alertaEntity = alerta;
         if (loading)
           this._commonService.hideLoading();

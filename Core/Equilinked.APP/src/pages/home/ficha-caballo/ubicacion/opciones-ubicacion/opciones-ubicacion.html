@@ -1,14 +1,14 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button class="equi-toolbar-btn" (click)="cancel()">{{ 'PANT011_BTN_CAN' | translate }}</button>
+            <button ion-button class="equi-toolbar-btn" tappable (click)="cancel()">{{ 'PANT011_BTN_CAN' | translate }}</button>
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-list>
-        <ion-item *ngFor="let opcion of opciones" (click)="selectOption(opcion)">
+        <ion-item *ngFor="let opcion of opciones" tappable (click)="selectOption(opcion)">
             <ion-icon name="{{opcion.icon}}" class="equi-icon-input equi-principal-color" item-left></ion-icon>
             <span class="equi-bold-text">{{opcion.texto}}</span>
         </ion-item>

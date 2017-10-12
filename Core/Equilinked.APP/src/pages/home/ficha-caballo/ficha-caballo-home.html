@@ -3,17 +3,20 @@
     <ion-buttons left>
       <!-- opciones y fotos -->
       <button ion-button icon-only *ngIf="menu == 'informacion'"
+              tappable
               (click)="back()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
 
       <!-- calendario -->
       <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_YEAR"
+              tappable
               (click)="back()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
       <button ion-button icon-only class="equi-toolbar-btn"
               *ngIf="menu == 'calendario' && calendarOptions.step > CALENDAR_STEP_YEAR"
+              tappable
               (click)="backCalendar()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
@@ -25,22 +28,25 @@
 
     <ion-buttons right>
       <!-- opciones caballo -->
-      <button ion-button icon-only *ngIf="menu == 'informacion'" (click)="openMenu($event)">
+      <button ion-button icon-only *ngIf="menu == 'informacion'" tappable (click)="openMenu($event)">
         <ion-icon name="more"></ion-icon>
       </button>
 
       <!-- calendario -->
       <button ion-button class="equi-toolbar-btn"
               *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
+              tappable
               (click)="showFilterAlertTypes($event)">
         {{ "PANT003_BTN_VER" | translate }}
       </button>
       <button ion-button icon-only *ngIf="menu == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
+              tappable
               (click)="newAlert()">
         <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
       </button>
       <button ion-button class="equi-toolbar-btn"
               *ngIf="menu == 'calendario' && calendarOptions.step == CALENDAR_STEP_ALERT"
+              tappable
               (click)="editAlert()">
         {{ "PANT003_BTN_EDIT" | translate }}
       </button>

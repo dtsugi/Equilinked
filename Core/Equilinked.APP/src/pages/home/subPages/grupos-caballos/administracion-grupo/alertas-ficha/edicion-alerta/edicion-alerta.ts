@@ -7,11 +7,13 @@ import {GruposCaballosService} from "../../../../../../../services/grupos-caball
 import {SecurityService} from "../../../../../../../services/security.service";
 import {CommonService} from "../../../../../../../services/common.service";
 import {RecordatorioService} from '../../../../../../../services/recordatorio.service';
+import {NotificacionLocalService} from '../../../../../../../services/notificacion-local.service';
 import {UserSessionEntity} from "../../../../../../../model/userSession";
 import {EquiModalCaballos} from "../../../../../../../utils/equi-modal-caballos/equi-modal-caballos";
 import {EquiModalRecordatorio} from "../../../../../../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import moment from "moment";
 import {LanguageService} from '../../../../../../../services/language.service';
+import {Utils} from '../../../../../../../app/utils';
 
 @Component({
   templateUrl: "edicion-alerta.html",
@@ -21,6 +23,7 @@ export class EdicionAlertaPage implements OnInit {
   private session: UserSessionEntity;
   private grupoId: number;
   private tipoAlerta: number;
+  private alertaResp: any;
   labels: any = {};
   alerta: any;
   recordatorios: Array<any>;
@@ -32,6 +35,7 @@ export class EdicionAlertaPage implements OnInit {
               private commonService: CommonService,
               private events: Events,
               private modalController: ModalController,
+              private notificacionLocalService: NotificacionLocalService,
               private navController: NavController,
               private navParams: NavParams,
               private recordatorioService: RecordatorioService,
@@ -102,15 +106,30 @@ export class EdicionAlertaPage implements OnInit {
     } else {
       res = this.alertaService.updateAlerta(this.session.PropietarioId, this.alerta);
     }
-    res.then(() => {
-      this.commonService.hideLoading();
-      this.events.publish("alerta:refresh"); //Refrescamos el detalle de la alerta seleccionada
-      this.events.publish("alertas:refresh"); //Refrescamos la lista de alertas
-      this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
-      this.events.publish("notificaciones:refresh");//refrescar
-      this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
-      this.events.publish("calendario:refresh");//refrescar alertas calendario
-      this.navController.pop(); //pa atras!
+    res.then((idnotificacion) => {
+      let alertaAct = null, alertaAnt = null;
+      if (this.alerta.ID) {
+        alertaAct = this.alerta;
+        alertaAnt = this.alertaResp;
+      } else {
+        this.alerta.ID = idnotificacion;
+        alertaAct = this.alerta;
+      }
+      try {
+        this.notificacionLocalService.saveLocalNotificacionAlert(alertaAct, alertaAnt);
+        this.commonService.hideLoading();
+        this.navController.pop().then(() => {
+          this.events.publish("alerta:refresh"); //Refrescamos el detalle de la alerta seleccionada
+          this.events.publish("alertas:refresh"); //Refrescamos la lista de alertas
+          this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+          this.events.publish("notificaciones:refresh");//refrescar
+          this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+          this.events.publish("calendario:refresh");//refrescar alertas calendario
+        });
+      } catch (err) {
+        console.log("Error al guardar notificacion local:" + JSON.stringify(err));
+        this.commonService.ShowErrorHttp(err, this.labels["PANT038_MSG_ERRGU"]);
+      }
     }).catch(err => {
       this.commonService.ShowErrorHttp(err, this.labels["PANT020_MSG_ERRGU"]);
     });
@@ -118,13 +137,14 @@ export class EdicionAlertaPage implements OnInit {
 
   private initForm(): void {
     if (this.alerta.ID) {
+      this.alertaResp = JSON.parse(JSON.stringify(this.alerta));
       if (this.alerta.AlertaRecordatorio) {
         this.alerta.AlertaRecordatorio.forEach(a => {
           this.buildLabelRecordatorio(a);
         });
       }
     }
-    let fecha: any = !this.alerta.ID ? moment() : moment(new Date(this.alerta.FechaNotificacion));
+    let fecha: any = !this.alerta.ID ? moment() : Utils.getMomentFromAlertDate(this.alerta.FechaNotificacion);
     this.alerta.FechaNotificacion = fecha.format("YYYY-MM-DD");
     this.alerta.HoraNotificacion = fecha.format("HH:mm");
     this.alertaForm = new FormGroup({
@@ -210,6 +230,6 @@ export class EdicionAlertaPage implements OnInit {
 
   private buildLabelRecordatorio(recordatorio: any): void {
     recordatorio.Descripcion = recordatorio.ValorTiempo + " " + recordatorio.UnidadTiempo.Descripcion;
-    recordatorio.UnidadTiempo = null;
+    //recordatorio.UnidadTiempo = null;
   }
 }

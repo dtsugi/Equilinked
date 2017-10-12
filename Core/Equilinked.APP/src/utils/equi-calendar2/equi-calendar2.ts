@@ -7,7 +7,7 @@ import {EquiCalWeek} from "./equi-cal-week";
 import {EquiCalDay} from "./equi-cal-day";
 import moment from "moment";
 import "moment/locale/es";
-import {ConstantsConfig} from "../../app/utils";
+import {ConstantsConfig, Utils} from "../../app/utils";
 
 @Component({
   selector: "equi-calendar2",
@@ -76,7 +76,8 @@ export class EquiCalendar2 implements OnInit {
     });
     if (alerts != null) {
       alerts.forEach(alert => {
-        let date = moment(new Date(alert.FechaNotificacion));
+        let date = Utils.getMomentFromAlertDate(alert.FechaNotificacion);
+        //let date = moment(new Date(alert.FechaNotificacion));
         let dayId = date.format("YYYY-MM-DD");
         let weekId = date.startOf("week").format("YYYY-MM-DD");
         let week = this.selectedMonth.mapWeeks.get(weekId);
@@ -101,7 +102,8 @@ export class EquiCalendar2 implements OnInit {
     if (alerts != null) {
       let monthSelected: EquiCalMonth;
       alerts.forEach(alert => {
-        let date = moment(new Date(alert.FechaNotificacion));
+        //let date = moment(new Date(alert.FechaNotificacion));
+        let date = Utils.getMomentFromAlertDate(alert.FechaNotificacion);
         let dayId = date.format("YYYY-MM-DD");
         let monthId = date.format("YYYY-MM");
         let weekId = date.startOf("week").format("YYYY-MM-DD");

@@ -5,7 +5,7 @@
     </ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="newNotification()">
+      <button ion-button icon-only tappable (click)="newNotification()">
         <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
       </button>
     </ion-buttons>
@@ -39,7 +39,7 @@
 
         <ion-grid>
           <ion-list no-lines *ngFor="let nh of notificacionesHoy">
-            <ion-item text-wrap (click)="viewNotification(nh)">
+            <ion-item text-wrap tappable (click)="viewNotification(nh)">
               <ion-row>
                 <ion-col col-4 class="col-center">
                   <span [ngClass]="{'equi-expired-alert-normal': nh.Expired, 'equi-normal-text': !nh.Expired}">{{nh.Hora}}</span>
@@ -97,7 +97,7 @@
 
             <ion-col col-8>
               <ion-list no-lines>
-                <ion-item text-wrap (click)="viewNotification(n)" *ngFor="let n of nh.Notificaciones; let i = index">
+                <ion-item text-wrap tappable (click)="viewNotification(n)" *ngFor="let n of nh.Notificaciones; let i = index">
                   <ion-row [ngClass]="{'border-bottom': i < (nh.Notificaciones.length-1)}">
                     <ion-col col-12 class="equi-title-note">
                       <span [ngClass]="{'equi-edit': isFilter}" class="equi-bold-text"

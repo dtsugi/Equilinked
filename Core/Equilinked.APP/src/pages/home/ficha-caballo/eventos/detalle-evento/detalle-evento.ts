@@ -8,6 +8,7 @@ import {UserSessionEntity} from "../../../../../model/userSession";
 import {EdicionEventoCaballoPage} from '../edicion-evento/edicion-evento';
 import moment from "moment";
 import "moment/locale/es";
+import {Utils} from '../../../../../app/utils';
 
 @Component({
   templateUrl: "detalle-evento.html",
@@ -60,8 +61,8 @@ export class DetalleEventoCaballoPage implements OnDestroy, OnInit {
     this.alertaService.getAlertaById(this.session.PropietarioId, this.alertaId)
       .then(alerta => {
         if (alerta != null) {
-          alerta.FechaInicio = moment(new Date(alerta.FechaNotificacion)).format("D MMMM YYYY hh:mm a");
-          alerta.FechaFin = moment(new Date(alerta.FechaFinal)).format("D MMMM YYYY hh:mm a");
+          alerta.FechaInicio = Utils.getMomentFromAlertDate(alerta.FechaNotificacion).format("D MMMM YYYY hh:mm a");
+          alerta.FechaFin = Utils.getMomentFromAlertDate(alerta.FechaFinal).format("D MMMM YYYY hh:mm a");
         }
         this.evento = alerta;
         if (loading)

@@ -1,15 +1,15 @@
 import {Component} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AlertController, ModalController, NavController, NavParams, Events} from 'ionic-angular';
-import {ConstantsConfig} from '../../app/utils'
+import {ConstantsConfig, Utils} from '../../app/utils'
 import {CommonService} from '../../services/common.service';
 import {AlertaService} from '../../services/alerta.service';
 import {SecurityService} from '../../services/security.service';
 import {RecordatorioService} from '../../services/recordatorio.service';
+import {NotificacionLocalService} from '../../services/notificacion-local.service';
 import {Alerta} from '../../model/alerta';
 import {UserSessionEntity} from '../../model/userSession';
 import {EquiModalRecordatorio} from "../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
-import moment from "moment";
 import {LanguageService} from '../../services/language.service';
 
 @Component({
@@ -19,6 +19,7 @@ import {LanguageService} from '../../services/language.service';
 export class NotificacionesExtendedInsertPage {
   private session: UserSessionEntity;
   private tipoAlerta: number;
+  private alertaResp: any;
   labels: any = {};
   alerta: Alerta;
   form: any;
@@ -30,6 +31,7 @@ export class NotificacionesExtendedInsertPage {
               private modalController: ModalController,
               public navCtrl: NavController,
               public navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private formBuilder: FormBuilder,
               private _commonService: CommonService,
               private _alertaService: AlertaService,
@@ -45,9 +47,10 @@ export class NotificacionesExtendedInsertPage {
       this.labels = labels;
       if (this._commonService.IsValidParams(this.navParams, ["alertaEntity"])) {
         this.alerta = this.navParams.get("alertaEntity");
-        this.alerta.FechaNotificacion = moment(this.alerta.FechaNotificacion).format("YYYY-MM-DD");
+        this.alerta.FechaNotificacion = Utils.getMomentFromAlertDate(this.alerta.FechaNotificacion).format("YYYY-MM-DD");
         this.tipoAlerta = this.alerta.Tipo;
         if (this.alerta.ID) {
+          this.alertaResp = JSON.parse(JSON.stringify(this.alerta));
           if (this.alerta.AlertaRecordatorio) {
             this.alerta.AlertaRecordatorio.forEach(a => {
               this.buildLabelRecordatorio(a);
@@ -119,16 +122,30 @@ export class NotificacionesExtendedInsertPage {
     } else {
       promise = this._alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
-    promise.then(() => {
-      this._commonService.hideLoading();
-      this.navCtrl.pop().then(() => {
-        this.events.publish("notificaciones:caballo:refresh"); //Refrescamos lista de notificaciones
-        this.events.publish("notificacion:caballo:refresh");//refrescamos solo la del detalle!
-        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
-        this.events.publish("notificaciones:refresh");//refrescar
-        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
-        this.events.publish("calendario:refresh");//refrescar alertas calendario
-      });
+    promise.then((idnotificacion) => {
+      let alertaAct = null, alertaAnt = null;
+      if (this.alerta.ID) {
+        alertaAct = this.alerta;
+        alertaAnt = this.alertaResp;
+      } else {
+        this.alerta.ID = idnotificacion;
+        alertaAct = this.alerta;
+      }
+      try {
+        this.notificacionLocalService.saveLocalNotificacionAlert(alertaAct, alertaAnt);
+        this._commonService.hideLoading();
+        this.navCtrl.pop().then(() => {
+          this.events.publish("notificaciones:caballo:refresh"); //Refrescamos lista de notificaciones
+          this.events.publish("notificacion:caballo:refresh");//refrescamos solo la del detalle!
+          this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+          this.events.publish("notificaciones:refresh");//refrescar
+          this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+          this.events.publish("calendario:refresh");//refrescar alertas calendario
+        });
+      } catch (err) {
+        console.log("Error al guardar notificacion local:" + JSON.stringify(err));
+        this._commonService.ShowErrorHttp(err, this.labels["PANT038_MSG_ERRGU"]);
+      }
     }).catch(error => {
       this._commonService.ShowErrorHttp(error, this.labels["PANT010_MSG_ERRGUA"]);
     });
@@ -177,7 +194,7 @@ export class NotificacionesExtendedInsertPage {
 
   private buildLabelRecordatorio(recordatorio: any): void {
     recordatorio.Descripcion = recordatorio.ValorTiempo + " " + recordatorio.UnidadTiempo.Descripcion;
-    recordatorio.UnidadTiempo = null;
+    //recordatorio.UnidadTiempo = null;
   }
 }
 

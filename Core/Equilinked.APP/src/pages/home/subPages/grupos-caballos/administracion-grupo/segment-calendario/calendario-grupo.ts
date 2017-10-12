@@ -6,9 +6,8 @@ import {AlertaGrupoService} from '../../../../../../services/alerta-grupo.servic
 import {LanguageService} from '../../../../../../services/language.service';
 import {SecurityService} from '../../../../../../services/security.service';
 import {UserSessionEntity} from '../../../../../../model/userSession';
-import {ConstantsConfig} from "../../../../../../app/utils";
+import {ConstantsConfig, Utils} from "../../../../../../app/utils";
 import {EquiCalendar2} from "../../../../../../utils/equi-calendar2/equi-calendar2";
-import moment from "moment";
 import "moment/locale/es";
 
 @Component({
@@ -74,8 +73,8 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
       this.optionsAlertTypes.alertTypes[0].checked
     ).then(alertas => {
       alertas.forEach(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Hora = d.format("hh:mm A").toUpperCase();
       });
       this.calendar.setAlerts(alertas);
     }).catch(err => {
@@ -94,8 +93,8 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
       this.optionsAlertTypes.alertTypes[0].checked
     ).then(alertas => {
       alertas.forEach(alerta => {
-        let d = new Date(alerta.FechaNotificacion);
-        alerta.Hora = moment(d).format("hh:mm A").toUpperCase();
+        let d = Utils.getMomentFromAlertDate(alerta.FechaNotificacion);
+        alerta.Hora = d.format("hh:mm A").toUpperCase();
       });
       this.calendar.setAlertsYear(alertas);
     }).catch(err => {
@@ -108,11 +107,11 @@ export class SegmentCalendarioGrupo implements OnInit, OnDestroy {
     this.alertaService.getAlertaById(this.session.PropietarioId, evt.alert.ID)
       .then(alert => {
         if (alert != null) {
-          let d = new Date(alert.FechaNotificacion);
-          alert.Fecha = moment(d).format("dddd, D [de] MMMM [de] YYYY");
+          let d = Utils.getMomentFromAlertDate(alert.FechaNotificacion);
+          alert.Fecha = d.format("dddd, D [de] MMMM [de] YYYY");
           alert.Fecha = alert.Fecha.charAt(0).toUpperCase() + alert.Fecha.slice(1);
-          alert.Hora = moment(d).format("hh:mm");
-          alert.Meridiano = moment(d).format("a").toUpperCase();
+          alert.Hora = d.format("hh:mm");
+          alert.Meridiano = d.format("a").toUpperCase();
         }
         this.calendar.setAlert(alert); //Asignamos la alerta para que se visualice en pantalla...
       }).catch(err => {

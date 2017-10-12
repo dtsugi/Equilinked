@@ -14,6 +14,8 @@ import {EquiModalGrupos} from "../../../utils/equi-modal-grupos/equi-modal-grupo
 import {EquiModalRecordatorio} from "../../../utils/equi-modal-recordatorio/equi-modal-recordatorio";
 import moment from "moment";
 import {LanguageService} from '../../../services/language.service';
+import {NotificacionLocalService} from '../../../services/notificacion-local.service';
+import {Utils} from '../../../app/utils';
 
 @Component({
   templateUrl: "edicion-notificacion.html",
@@ -21,6 +23,7 @@ import {LanguageService} from '../../../services/language.service';
 })
 export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
   private session: UserSessionEntity;
+  private alertaResp: any;
   alerta: Alerta;
   tiposAlerta: Array<any>;
   recordatorios: Array<any>;
@@ -35,6 +38,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
               private modalController: ModalController,
               public navController: NavController,
               public navParams: NavParams,
+              private notificacionLocalService: NotificacionLocalService,
               private recordatorioService: RecordatorioService,
               private securityService: SecurityService,
               private languageService: LanguageService) {
@@ -50,12 +54,13 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
       if (!this.alerta) {
         this.alerta = new Alerta();
       } else {
-        let di = new Date(this.alerta.FechaNotificacion);
-        this.alerta.FechaNotificacion = moment(di).format("YYYY-MM-DD");
+        this.alertaResp = JSON.parse(JSON.stringify(this.alerta));
+        let di = Utils.getMomentFromAlertDate(this.alerta.FechaNotificacion);
+        this.alerta.FechaNotificacion = di.format("YYYY-MM-DD");
         if (this.alerta.Tipo == ConstantsConfig.ALERTA_TIPO_EVENTOS) {
-          let df = new Date(this.alerta.FechaFinal);
-          this.alerta.FechaFinal = moment(df).format("YYYY-MM-DD");
-          this.alerta.HoraFinal = moment(df).format("HH:mm:ss");
+          let df = Utils.getMomentFromAlertDate(this.alerta.FechaFinal);
+          this.alerta.FechaFinal = df.format("YYYY-MM-DD");
+          this.alerta.HoraFinal = df.format("HH:mm:ss");
         }
         if (this.alerta.AlertaRecordatorio) {
           this.alerta.AlertaRecordatorio.forEach(a => {
@@ -158,15 +163,31 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
       promise = this.alertaService.saveAlerta(this.session.PropietarioId, this.alerta);
     }
     this.commonService.showLoading(this.labels["PANT023_ALT_PRO"]);
-    promise.then(() => {
-      this.commonService.hideLoading();
-      this.navController.pop().then(() => {
-        this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
-        this.events.publish("notificaciones:refresh");//refrescar
-        this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
-        this.events.publish("calendario:refresh");//refrescar alertas calendario
-      });
+    promise.then((idnotificacion) => {
+      let alertaAct = null, alertaAnt = null;
+      if (this.alerta.ID) {
+        alertaAct = this.alerta;
+        alertaAnt = this.alertaResp;
+      } else {
+        this.alerta.ID = idnotificacion;
+        alertaAct = this.alerta;
+      }
+      try {
+        this.notificacionLocalService.saveLocalNotificacionAlert(alertaAct, alertaAnt);
+        console.log("En caso de guardar el valor retornado es: " + idnotificacion);
+        this.commonService.hideLoading();
+        this.navController.pop().then(() => {
+          this.events.publish("notificacion:refresh");//para refrescar el detalle de la pantalla alertas
+          this.events.publish("notificaciones:refresh");//refrescar
+          this.events.publish("calendario:alerta:refresh");//refrescar alerta seleccionada en calendario
+          this.events.publish("calendario:refresh");//refrescar alertas calendario
+        });
+      } catch (err) {
+        console.log("Error al guardar notificacion local:" + JSON.stringify(err));
+        this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERRGU"]);
+      }
     }).catch(err => {
+      console.log("Error al guardar en api:" + JSON.stringify(err));
       this.commonService.ShowErrorHttp(err, this.labels["PANT023_MSG_ERRGU"]);
     });
   }
@@ -201,7 +222,7 @@ export class EdicionNotificacionGeneralPage implements OnDestroy, OnInit {
 
   private buildLabelRecordatorio(recordatorio: any): void {
     recordatorio.Descripcion = recordatorio.ValorTiempo + " " + recordatorio.UnidadTiempo.Descripcion;
-    recordatorio.UnidadTiempo = null;
+    //recordatorio.UnidadTiempo = null;
   }
 
   callbackAddCaballos = (caballos) => {

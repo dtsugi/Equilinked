@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons end>
-      <button ion-button class="equi-toolbar-btn" [disabled]="!mensaje.Descripcion" (click)="sendMessage()">
+      <button ion-button class="equi-toolbar-btn" [disabled]="!mensaje.Descripcion" tappable (click)="sendMessage()">
         {{ 'PANT031_BTN_EV' | translate }}
       </button>
     </ion-buttons>
@@ -34,7 +34,7 @@
       <ion-item text-wrap>
         <ion-grid>
           <ion-row>
-            <ion-col (click)="selectPhoto(images[0])">
+            <ion-col tappable (click)="selectPhoto(images[0])">
               <div *ngIf="!images[0].base64" class="equi-contacto-select">
                 <div>
                   <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon>
@@ -46,7 +46,7 @@
                    style="background-size: cover; background-repeat: no-repeat; height: 200px; width: 100%;">
               </div>
             </ion-col>
-            <ion-col (click)="selectPhoto(images[1])">
+            <ion-col tappable (click)="selectPhoto(images[1])">
               <div *ngIf="!images[1].base64" class="equi-contacto-select">
                 <div>
                   <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon>

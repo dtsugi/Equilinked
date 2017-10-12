@@ -9,7 +9,7 @@
     <h2 class="equi-bold-text">Preguntas frecuentes</h2>
     <hr />
     <ion-row *ngFor="let pregunta of preguntas">
-        <ion-col col-12 (click)="pregunta.RespuestaVisible = !pregunta.RespuestaVisible">
+        <ion-col col-12 tappable (click)="pregunta.RespuestaVisible = !pregunta.RespuestaVisible">
             <p class="equi-normal-text">{{pregunta.Pregunta}}</p>
             <hr />
         </ion-col>

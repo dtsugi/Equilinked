@@ -5,7 +5,7 @@ import {AlertaCaballoService} from '../../../../../services/alerta.caballo.servi
 import {LanguageService} from '../../../../../services/language.service';
 import {SecurityService} from '../../../../../services/security.service';
 import {UserSessionEntity} from '../../../../../model/userSession';
-import {ConstantsConfig} from "../../../../../app/utils";
+import {ConstantsConfig, Utils} from "../../../../../app/utils";
 import {DetalleEventoCaballoPage} from "../detalle-evento/detalle-evento";
 import moment from "moment";
 import "moment/locale/es";
@@ -58,12 +58,12 @@ export class SegmentEventosHistorial implements OnInit {
 
   loadEventos(): void {
     this.loading = true;
-    let fecha: string = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+    let fecha: string = moment().format("YYYY-MM-DD HH:mm:ss");
     this.alertaCaballoService.getAlertasByCaballoId(this.session.PropietarioId, this.caballo.ID, null, fecha,
       [ConstantsConfig.ALERTA_TIPO_EVENTOS], null, ConstantsConfig.ALERTA_ORDEN_DESCENDENTE
     ).then(alertas => {
       alertas.forEach(a => {
-        a.Fecha = moment(new Date(a.FechaNotificacion)).format("DD/MM/YY");
+        a.Fecha = Utils.getMomentFromAlertDate(a.FechaNotificacion).format("DD/MM/YY");
       });
       this.eventos = alertas;
       this.loading = false;

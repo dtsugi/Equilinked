@@ -52,7 +52,7 @@
     <div *ngFor="let alerta of historicoAlertas">
       <div *ngIf="!alerta.ShowDetail">
         <ion-item-sliding>
-          <ion-item (click)="viewDetailHistoryAlert(alerta)">
+          <ion-item tappable (click)="viewDetailHistoryAlert(alerta)">
             <ion-row>
               <ion-col col-4>
                 {{alerta.Fecha}}
@@ -67,7 +67,7 @@
           </ion-item>
 
           <ion-item-options>
-            <button ion-button color="danger" icon-left (click)="delete(alerta)">
+            <button ion-button color="danger" icon-left tappable (click)="delete(alerta)">
               <ion-icon name="trash"></ion-icon>
               {{ 'PANT018_BTN_ELI' | translate }}
             </button>
@@ -75,14 +75,14 @@
         </ion-item-sliding>
       </div>
 
-      <div *ngIf="alerta.ShowDetail" (click)="alerta.ShowDetail = !alerta.ShowDetail">
+      <div *ngIf="alerta.ShowDetail" tappable (click)="alerta.ShowDetail = !alerta.ShowDetail">
         <ion-item text-wrap no-lines>
           <ion-row class="equi-table-row-title">
             <ion-col col-8>
               {{alerta.FechaNotificacion | amDateFormat: 'DD/MM/YYYY' }}
             </ion-col>
             <ion-col col-3>
-              <span (click)="editAlert(alerta)">{{ 'PANT018_BTN_EDI' | translate }}</span>
+              <span tappable (click)="editAlert(alerta)">{{ 'PANT018_BTN_EDI' | translate }}</span>
             </ion-col>
             <ion-col col-1>
               <ion-icon name="ios-arrow-down"></ion-icon>

@@ -6,8 +6,8 @@
             <span *ngIf="isUpdate" class="equi-toolbar-subtitle">Editar notificacion</span>
         </ion-title>
         <ion-buttons right>
-            <button *ngIf="!isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Guardar</button>
-            <button *ngIf="isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" (click)="saveNotificacion()">Modificar</button>
+            <button *ngIf="!isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" tappable (click)="saveNotificacion()">Guardar</button>
+            <button *ngIf="isUpdate" class="equi-toolbar-btn" [disabled]="!formNotificaciones.valid" tappable (click)="saveNotificacion()">Modificar</button>
         </ion-buttons>
     </ion-navbar>
 </ion-header>

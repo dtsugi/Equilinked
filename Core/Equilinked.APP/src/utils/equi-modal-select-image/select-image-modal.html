@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button class="equi-toolbar-btn" (click)="back()">
+      <button class="equi-toolbar-btn" tappable (click)="back()">
         Cerrar
       </button>
     </ion-buttons>
 
     <ion-buttons right>
-      <button *ngIf="photo.base64 && !readonly" class="equi-toolbar-btn" (click)="remove()">
+      <button *ngIf="photo.base64 && !readonly" class="equi-toolbar-btn" tappable (click)="remove()">
         Remover
       </button>
     </ion-buttons>
@@ -15,7 +15,7 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="!photo.base64" (click)="selectImage()" class="equi-modal-select-image">
+  <div *ngIf="!photo.base64" tappable (click)="selectImage()" class="equi-modal-select-image">
     <div>
       <ion-icon name="ios-add-circle" style="font-size: 35px;"></ion-icon><br />
       seleccionar foto
@@ -23,4 +23,3 @@
   </div>
   <img *ngIf="photo.base64" [src]="domSanitizer.bypassSecurityTrustUrl(photo.base64)"/>
 </ion-content>
- 

@@ -1,5 +1,5 @@
-<ion-item-sliding> 
-    <ion-item class="equi-normal-text" (click)="executeClickAction()">
+<ion-item-sliding>
+    <ion-item class="equi-normal-text" tappable (click)="executeClickAction()">
         <ion-row>
             <ion-col col-8 class="equi-principal-color">
                 {{alert.Fecha}}
@@ -14,8 +14,8 @@
         </ion-row>
     </ion-item>
     <ion-item-options *ngIf="labelDelete">
-        <button ion-button color="danger" icon-left (click)="executeDeleteAction(notificacion)">
-            <ion-icon name="trash"></ion-icon>       
+        <button ion-button color="danger" icon-left tappable (click)="executeDeleteAction(notificacion)">
+            <ion-icon name="trash"></ion-icon>
             {{labelDelete}}
         </button>
     </ion-item-options>

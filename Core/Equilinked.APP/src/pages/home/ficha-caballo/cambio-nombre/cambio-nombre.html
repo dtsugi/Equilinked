@@ -1,13 +1,13 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button class="equi-toolbar-btn" (click)="goBack()">
+            <button ion-button class="equi-toolbar-btn" tappable (click)="goBack()">
                 {{ "PANT005_BTN_CAN" | translate }}
             </button>
         </ion-buttons>
 
         <ion-buttons right>
-            <button ion-button class="equi-toolbar-btn" [disabled]="!grupoForm.valid" (click)="save()">
+            <button ion-button class="equi-toolbar-btn" [disabled]="!grupoForm.valid" tappable (click)="save()">
                 {{ "PANT005_BTN_GUA" | translate }}
             </button>
         </ion-buttons>

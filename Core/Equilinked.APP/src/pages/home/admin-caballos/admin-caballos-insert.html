@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button class="equi-toolbar-btn" (click)="goBack()">{{ "PANT004_BTN_CAN" | translate }}</button>
+      <button class="equi-toolbar-btn" tappable (click)="goBack()">{{ "PANT004_BTN_CAN" | translate }}</button>
     </ion-buttons>
 
     <ion-buttons right>
-      <button class="equi-toolbar-btn" [disabled]="form && !form.valid" (click)="save()">
+      <button class="equi-toolbar-btn" [disabled]="form && !form.valid" tappable (click)="save()">
         {{ "PANT004_BTN_GUAR" | translate }}
       </button>
     </ion-buttons>
@@ -86,7 +86,7 @@
       <ion-row>
         <ion-col col-3></ion-col>
         <ion-col>
-                    <span class="equi-input-normal-text equi-text-edit" (click)="selectPedigree()">
+                    <span class="equi-input-normal-text equi-text-edit" tappable (click)="selectPedigree()">
                         <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>
                       <span *ngIf="!adjuntos.Pedigree">Adjuntar imagen</span>
                       <span *ngIf="adjuntos.Pedigree">Pedigree</span>
@@ -143,6 +143,7 @@
         <ion-col col-3 class="equi-title-form equi-col-center">Adjuntos</ion-col>
         <ion-col>
           <span class="equi-input-normal-text equi-text-edit"
+                tappable
                 (click)="addImageMarcas()">
             <ion-icon name="ios-link" class="equi-principal-color"></ion-icon>
             <span>Adjuntar imágen</span>
@@ -156,6 +157,7 @@
             Foto
           </div>
           <div *ngIf="adjuntoMarca.Base64"
+               tappable
                (click)="addImage(i, adjuntoMarca)"
                [ngStyle]="{ 'background-image': 'url(' + adjuntoMarca.Base64 + ')'}"
                style="background-size: cover; background-repeat: no-repeat; height: 150px; width: 100%;">

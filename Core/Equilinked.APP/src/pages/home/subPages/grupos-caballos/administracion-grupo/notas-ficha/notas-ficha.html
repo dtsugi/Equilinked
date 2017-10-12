@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar class="equi-toolbar">
     <ion-buttons left>
-      <button ion-button icon-only *ngIf="!modoEdicion" (click)="goBack()">
+      <button ion-button icon-only *ngIf="!modoEdicion" tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
-      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" (click)="modoEdicion = false">
+      <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" tappable (click)="modoEdicion = false">
         {{ 'PANT018_BTN_CAN' | translate }}
       </button>
     </ion-buttons>
@@ -16,11 +16,11 @@
     </ion-title>
 
     <ion-buttons right>
-      <button ion-button icon-only *ngIf="!modoEdicion" (click)="activeDelete()">
+      <button ion-button icon-only *ngIf="!modoEdicion" tappable (click)="activeDelete()">
         <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
       </button>
       <button ion-button class="equi-toolbar-btn" *ngIf="modoEdicion" [disabled]="getCountSelected() == 0"
-              (click)="confirmDelete()">
+              tappable (click)="confirmDelete()">
         {{ 'PANT018_BTN_ELI' | translate }}
       </button>
     </ion-buttons>

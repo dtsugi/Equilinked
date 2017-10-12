@@ -4,26 +4,26 @@
     <ion-buttons left>
       <!-- Se visualiza en "FICHA" y "CABALLOS" -->
       <button ion-button icon-only *ngIf="!parametrosCaballos.modoEdicion && segmentSelection != 'calendario'"
-              (click)="goBack()">
+              tappable (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
 
       <!-- Se visualiza en la ficha "CABALLOS" cuando esta activa la edicion -->
       <button ion-button class="equi-toolbar-btn"
               *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion"
-              (click)="disabledDeleteCaballos()">
+              tappable (click)="disabledDeleteCaballos()">
         {{ 'PANT013_BTN_CAN' | translate }}
       </button>
 
       <!-- se visualizan en la vista de calendario -->
       <button ion-button icon-only
               *ngIf="segmentSelection == 'calendario' && calendarOptions.step == CALENDAR_STEP_YEAR"
-              (click)="goBack()">
+              tappable (click)="goBack()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
       <button ion-button icon-only class="equi-toolbar-btn"
               *ngIf="segmentSelection == 'calendario' && calendarOptions.step > CALENDAR_STEP_YEAR"
-              (click)="backCalendar()">
+              tappable (click)="backCalendar()">
         <ion-icon class="equi-principal-color" name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -34,19 +34,19 @@
 
     <ion-buttons right>
       <!-- Se visualiza cuando está la pestana "FICHA" -->
-      <button ion-button icon-only *ngIf="segmentSelection == 'ficha'" (click)="showOptionsFicha($event)">
+      <button ion-button icon-only *ngIf="segmentSelection == 'ficha'" tappable (click)="showOptionsFicha($event)">
         <ion-icon name="more"></ion-icon>
       </button>
 
       <!-- Se visualizan cuando está la pestana "CABALLOS" -->
       <button ion-button class="equi-toolbar-btn"
               *ngIf="segmentSelection == 'caballos' && !parametrosCaballos.modoEdicion && !parametrosCaballos.grupoDefault"
-              (click)="enabledDeleteCaballos()">
+              tappable (click)="enabledDeleteCaballos()">
         {{ 'PANT013_BTN_EDI' | translate }}
       </button>
       <button ion-button icon-only *ngIf="segmentSelection == 'caballos' && parametrosCaballos.modoEdicion"
               [disabled]="parametrosCaballos.getCountSelected() == 0"
-              (click)="delete()">
+              tappable (click)="delete()">
         <div>
           <ion-icon class="equi-principal-color" name="ios-trash"></ion-icon>
           <div class="equi-principal-color" style="font-size: 9px;">{{ 'PANT013_BTN_ELIM' | translate }}</div>
@@ -56,17 +56,17 @@
       <!-- se visualizan cuando esta seleccionada "CALENDARIO"-->
       <button ion-button class="equi-toolbar-btn"
               *ngIf="segmentSelection == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
-              (click)="showFilterAlertTypes($event)">
+              tappable (click)="showFilterAlertTypes($event)">
         {{ 'PANT013_BTN_VER' | translate }}
       </button>
       <button ion-button icon-only
               *ngIf="segmentSelection == 'calendario' && calendarOptions.step < CALENDAR_STEP_ALERT"
-              (click)="newAlert()">
+              tappable (click)="newAlert()">
         <ion-icon class="equi-principal-color" name="add-circle"></ion-icon>
       </button>
       <button ion-button class="equi-toolbar-btn"
               *ngIf="segmentSelection == 'calendario' && calendarOptions.step == CALENDAR_STEP_ALERT"
-              (click)="editAlert()">
+              tappable (click)="editAlert()">
         {{ 'PANT013_BTN_EDI' | translate }}
       </button>
     </ion-buttons>

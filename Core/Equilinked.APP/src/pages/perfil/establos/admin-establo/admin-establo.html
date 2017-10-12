@@ -1,12 +1,12 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons left>
-            <button ion-button class="equi-toolbar-btn" (click)="goBack()">
+            <button ion-button class="equi-toolbar-btn" tappable (click)="goBack()">
                 {{ 'PANT034_BTN_CAN' | translate }}
             </button>
         </ion-buttons>
         <ion-buttons right>
-            <button ion-button class="equi-toolbar-btn" [disabled]="!establoForm.valid" (click)="save()">
+            <button ion-button class="equi-toolbar-btn" [disabled]="!establoForm.valid" tappable (click)="save()">
                 {{ 'PANT034_BTN_GUA' | translate }}
             </button>
         </ion-buttons>
@@ -49,8 +49,8 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Correos').controls.length - 1) && i < (establoForm.get('Correos').controls.length)"
-                        name="remove-circle" (click)="removeCorreo(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
-                    <ion-icon *ngIf="(establoForm.get('Correos').controls.length - 1) == i" name="add-circle" (click)="addOtherCorreo()" class="equi-icon-input"></ion-icon>
+                        name="remove-circle" tappable (click)="removeCorreo(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
+                    <ion-icon *ngIf="(establoForm.get('Correos').controls.length - 1) == i" name="add-circle" tappable (click)="addOtherCorreo()" class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
         </div>
@@ -73,8 +73,8 @@
                 </ion-col>
                 <ion-col col-2 class="col-center">
                     <ion-icon *ngIf="i != (establoForm.get('Telefonos').controls.length - 1) && i < (establoForm.get('Telefonos').controls.length)"
-                        name="remove-circle" (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
-                    <ion-icon *ngIf="(establoForm.get('Telefonos').controls.length - 1) == i" name="add-circle" (click)="addOtherTelefono()"
+                        name="remove-circle" tappable (click)="removeTelefono(i)" class="equi-icon-input equi-icon-delete"></ion-icon>
+                    <ion-icon *ngIf="(establoForm.get('Telefonos').controls.length - 1) == i" name="add-circle" tappable (click)="addOtherTelefono()"
                         class="equi-icon-input"></ion-icon>
                 </ion-col>
             </ion-row>
@@ -91,7 +91,7 @@
 
             </ion-col>
             <ion-col col-2 class="col-center">
-                <ion-icon name="ios-map" class="equi-icon-input" (click)="openMap()"></ion-icon>
+                <ion-icon name="ios-map" class="equi-icon-input" tappable (click)="openMap()"></ion-icon>
             </ion-col>
         </ion-row>
         <ion-row>
@@ -104,7 +104,7 @@
                 </ion-item>
             </ion-col>
             <ion-col col-2 class="col-center">
-                <ion-icon name="add-circle" class="equi-icon-input" (click)="showSelectionModal()"></ion-icon>
+                <ion-icon name="add-circle" class="equi-icon-input" tappable (click)="showSelectionModal()"></ion-icon>
             </ion-col>
         </ion-row>
     </form>

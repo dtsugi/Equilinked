@@ -7,7 +7,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   template: `
     <ion-grid>
       <ion-row>
-        <ion-col class="col-center equi-normal-text" *ngFor="let option of options" (click)="execute(option)">
+        <ion-col class="col-center equi-normal-text" *ngFor="let option of options" tappable (click)="execute(option)">
           <a class="equi-no-link" [href]="sanitize(option.type + telephone)">
             <ion-icon class="equi-button-option" name="{{option.icon}}"></ion-icon>
             <br/>
