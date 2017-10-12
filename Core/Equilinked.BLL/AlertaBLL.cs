@@ -10,7 +10,6 @@ namespace Equilinked.BLL
 {
     public class AlertaBLL : BLLBase, IBase<Alerta>
     {
-
         public void DeleteAlertasByIds(int[] alertasIds)
         {
             using(var db = this._dbContext)
@@ -113,7 +112,7 @@ namespace Equilinked.BLL
             }
         }
 
-        public void SaveAlerta(Alerta alerta)
+        public Alerta SaveAlerta(Alerta alerta)
         {
             using(var db = this._dbContext)
             {
@@ -127,6 +126,7 @@ namespace Equilinked.BLL
                 db.AlertaRecordatorio.AddRange(alerta.AlertaRecordatorio);
                 db.SaveChanges();
             }
+            return alerta;
         }
 
         public Alerta GetAlertaById(int propietarioId, int alertaId)
@@ -159,6 +159,43 @@ namespace Equilinked.BLL
 
                 return alerta;
             }
+        }
+
+        public List<AlertasDiaDto> GetAllAlertasByDia(int propietarioId, string inicio)
+        {
+            List<AlertasDiaDto> alertasDiaPropietario = new List<AlertasDiaDto>();
+            DateTime inicioo = DateTime.Parse(inicio);
+            using (var db = this._dbContext)
+            {
+                db.Configuration.LazyLoadingEnabled = false;
+
+                List<Alerta> alertas = db.Alerta
+                    .Include("AlertaRecordatorio")
+                    .Include("AlertaRecordatorio.UnidadTiempo")
+                    .Where(a => a.Propietario_ID == propietarioId)
+                    .Where(a => a.FechaNotificacion >= inicioo)
+                    .OrderBy(a => a.FechaNotificacion)
+                    .ToList();
+                if(alertas != null && alertas.Count() > 0)
+                {
+                    Dictionary<string, AlertasDiaDto> mapAlertasDia = new Dictionary<string, AlertasDiaDto>();
+                    foreach(Alerta a in alertas)
+                    {
+                        string fechaAlerta = a.FechaNotificacion.ToString("yyyy-MM-dd");
+                        AlertasDiaDto alertasDia;
+                        if(!mapAlertasDia.ContainsKey(fechaAlerta))
+                        {
+                            mapAlertasDia.Add(fechaAlerta, new AlertasDiaDto(DateTime.Parse(fechaAlerta)));
+                        }
+                        if(mapAlertasDia.TryGetValue(fechaAlerta, out alertasDia))
+                        {
+                            alertasDia.Alertas.Add(new DetalleAlertaDto(a));
+                        }
+                    }
+                    alertasDiaPropietario = new List<AlertasDiaDto>(mapAlertasDia.Values);
+                }
+            }
+            return alertasDiaPropietario;
         }
 
         public List<Alerta> GetAlertasByFilter(int propietarioId, string inicio, string fin, int[] tipos, int orden, int cantidad, bool todosTipos)

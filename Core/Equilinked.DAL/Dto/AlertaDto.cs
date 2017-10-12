@@ -23,6 +23,7 @@ namespace Equilinked.DAL.Dto
         public Nullable<DateTime> FechaFinal { get; set; }
         public string Resultado { get; set; }
         public Nullable<int> Propietario_ID { get; set; }
+        public ICollection<AlertaRecordatorio> AlertaRecordatorio { get; set; }
 
         public AlertaDto() { }
 
@@ -43,6 +44,7 @@ namespace Equilinked.DAL.Dto
             this.FechaFinal = alerta.FechaFinal;
             this.Resultado = alerta.Resultado;
             this.Propietario_ID = alerta.Propietario_ID;
+            this.AlertaRecordatorio = alerta.AlertaRecordatorio;
         }
 
         private string ToDateToCurrentCulture(DateTime date)

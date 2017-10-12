@@ -52,11 +52,13 @@
   <ItemGroup>
     <Compile Include="Dto\AlertaGrupoDto.cs" />
     <Compile Include="Dto\AlertaDto.cs" />
+    <Compile Include="Dto\AlertasDiaDto.cs" />
     <Compile Include="Dto\CaballoAdjuntosDto.cs" />
     <Compile Include="Dto\CaballoDto.cs" />
     <Compile Include="Dto\CambioPassword.cs" />
     <Compile Include="Dto\ComboBoxDto.cs" />
     <Compile Include="Dto\CuentaEliminacion.cs" />
+    <Compile Include="Dto\DetalleAlertaDto.cs" />
     <Compile Include="Dto\EntidadBase.cs" />
     <Compile Include="Dto\EstabloDto.cs" />
     <Compile Include="Dto\FileDto.cs" />
