@@ -37,6 +37,13 @@ namespace Equilinked.API.Controllers
         {
             try
             {
+                if(alerta.AlertaRecordatorio != null && alerta.AlertaRecordatorio.Count > 0)
+                {
+                    foreach(var a in alerta.AlertaRecordatorio)
+                    {
+                        a.UnidadTiempo = null;
+                    }
+                }
                 alerta = _alertaBLL.SaveAlerta(alerta);
                 return Ok(alerta.ID);
             }
@@ -52,6 +59,13 @@ namespace Equilinked.API.Controllers
         {
             try
             {
+                if (alerta.AlertaRecordatorio != null && alerta.AlertaRecordatorio.Count > 0)
+                {
+                    foreach (var a in alerta.AlertaRecordatorio)
+                    {
+                        a.UnidadTiempo = null;
+                    }
+                }
                 _alertaBLL.UpdateAlerta(alerta);
                 return Ok();
             }
@@ -272,11 +286,3 @@ namespace Equilinked.API.Controllers
         }        
     }
 }
- 
- 
- 
- 
- 
- 
- 
- 
